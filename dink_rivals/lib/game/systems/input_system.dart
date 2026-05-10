@@ -1,10 +1,10 @@
-import '../models/shot_type.dart';
-
 class InputSystem {
   double movementX = 0;
   double movementY = 0;
+  double racketAngle = 0;
+  double racketAngularVelocity = 0;
 
-  final List<ShotType> _queuedShots = <ShotType>[];
+  double _previousRacketAngle = 0;
 
   bool get hasMovementInput => movementX != 0 || movementY != 0;
 
@@ -18,13 +18,23 @@ class InputSystem {
     movementY = 0;
   }
 
-  void queueShot(ShotType shotType) {
-    _queuedShots.add(shotType);
+  void updateRacket(double dt) {
+    if (dt <= 0) {
+      racketAngularVelocity = 0;
+      return;
+    }
+    racketAngularVelocity = (racketAngle - _previousRacketAngle) / dt;
+    _previousRacketAngle = racketAngle;
   }
 
-  List<ShotType> drainShots() {
-    final shots = List<ShotType>.of(_queuedShots);
-    _queuedShots.clear();
-    return shots;
+  void swingRacket(double deltaRadians, double maxAngle) {
+    racketAngle =
+        (racketAngle + deltaRadians).clamp(-maxAngle, maxAngle).toDouble();
+  }
+
+  void resetRacket() {
+    racketAngle = 0;
+    racketAngularVelocity = 0;
+    _previousRacketAngle = 0;
   }
 }

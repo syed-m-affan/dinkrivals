@@ -1,1 +1,1 @@
-enum ShotType { dink, drive }
+enum ShotType { dink, drive, lob, smash, block, serve }

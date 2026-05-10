@@ -36,11 +36,15 @@ A fast retro arcade pickleball game where players move around a 3/4 court, dink 
 The player should understand the game in 30 seconds:
 
 * Move with left thumb.
-* Tap to dink.
-* Hold/release to drive or smash.
+* Swing the racket with right thumb.
+* Racket contact, not shot buttons, creates returns.
+* Soft, angled contact creates dinks/blocks.
+* Fast, clean contact creates drives/smashes.
 * Win rallies.
 * Win matches.
 * Unlock rivals/courts through achievements.
+
+Current control direction is locked around physical racket contact. Do not add separate dink, drive, lob, or smash buttons unless a future ticket explicitly reverses this decision after playtest evidence.
 
 ---
 
@@ -333,7 +337,8 @@ class PlayerState {
   Vector2 velocity;
   PlayerSide side;
   CharacterDef character;
-  double powerMeter;
+  double racketAngle;
+  double racketAngularVelocity;
   bool isInKitchen;
   bool canHit;
   bool isSwinging;
@@ -350,8 +355,8 @@ class MatchState {
   bool pointInProgress;
   bool matchOver;
   int rallyCount;
-  int playerDinksThisMatch;
-  int playerSmashesThisMatch;
+  int playerDinkContactsThisMatch;
+  int playerSmashContactsThisMatch;
   int longestRally;
 }
 ```
@@ -375,18 +380,18 @@ enum ShotType {
 
 ### 8.2 Shot Table
 
-| Shot  | Input               |      Arc |     Speed |   Risk | Purpose            |
-| ----- | ------------------- | -------: | --------: | -----: | ------------------ |
-| Dink  | Tap                 | Low/soft |      Slow |    Low | Drop into kitchen  |
-| Drive | Hold/release        |   Medium |      Fast | Medium | Push opponent deep |
-| Lob   | Swipe/up modifier   |     High |      Slow | Medium | Beat net pressure  |
-| Smash | High ball + power   | Downward | Very fast |   High | Finish point       |
-| Block | Quick defensive hit |      Low |      Slow |    Low | Emergency reset    |
-| Serve | Start point         |   Medium |    Medium |    Low | Begin rally        |
+| Shot  | Contact condition                         |      Arc |     Speed |   Risk | Purpose            |
+| ----- | ----------------------------------------- | -------: | --------: | -----: | ------------------ |
+| Dink  | Soft racket contact with open/short angle | Low/soft |      Slow |    Low | Drop into kitchen  |
+| Drive | Fast racket contact through the ball      |   Medium |      Fast | Medium | Push opponent deep |
+| Lob   | Upward/high-angle racket contact          |     High |      Slow | Medium | Beat net pressure  |
+| Smash | High ball + fast downward contact         | Downward | Very fast |   High | Finish point       |
+| Block | Low-swing-speed defensive contact         |      Low |      Slow |    Low | Emergency reset    |
+| Serve | First racket contact of point             |   Medium |    Medium |    Low | Begin rally        |
 
-### 8.3 Hit Window
+### 8.3 Racket Contact Window
 
-Use generous early hit windows. Mobile users should not feel robbed.
+Use generous early contact windows. Mobile users should not feel robbed. The player racket is represented as a capsule from the player body to the racket tip, not as a tiny endpoint. A hit occurs automatically when the ball intersects this capsule at a hittable height and the racket or incoming ball has enough relative speed.
 
 Initial tuning values:
 
@@ -394,17 +399,20 @@ Initial tuning values:
 hitWindowRadius = 42.0
 perfectHitWindowRadius = 22.0
 maxAimAssistDegrees = 12.0
+racketReach = 42.0
+racketHitRadius = 13.0
 ```
 
 ### 8.4 Targeting
 
-Start simple:
+Start with physical contact rather than explicit target buttons:
 
-* Aim left
-* Aim center
-* Aim right
+* Racket angle changes the outgoing left/center/right direction.
+* Swing speed changes soft vs firm contact.
+* Incoming ball speed and angle affect the return.
+* Shot names are classifications of the contact result, not player-selected commands.
 
-Do not build complex analog aiming until the basic game feels good.
+Do not add separate shot buttons. If future playtesting rejects swing-contact controls, create a new ticket that explicitly changes this control contract before changing implementation.
 
 ---
 
@@ -412,20 +420,23 @@ Do not build complex analog aiming until the basic game feels good.
 
 ### 9.1 Phase 0 Controls
 
-* Left side drag: move player.
-* Tap right side: dink.
-* Hold/release right side: drive.
+* Left virtual stick: move player.
+* Right virtual stick: swing racket left/right through the front 180-degree arc.
+* The right stick controls racket angle and swing velocity only; it does not select shot type.
+* Racket-ball contact automatically hits the ball.
+* Soft contact is classified as dink/block; firm contact is classified as drive.
 * Debug reset button: reset point.
+* No separate dink or drive buttons.
 
 ### 9.2 MVP Controls
 
 Default:
 
-* Left thumb drag = movement.
-* Right tap = dink/soft shot.
-* Right hold/release = drive/power shot.
-* Right swipe-up or contextual button = lob.
-* Smash happens when ball is high and player uses power shot.
+* Left thumb stick = movement.
+* Right thumb stick = racket swing.
+* Racket angle and swing speed determine dink, drive, lob, block, or smash.
+* Smash happens when the ball is high and the player makes fast downward/forward contact.
+* UI must preserve screen space around the swing stick so touch input does not conflict with the reset button, score display, or feedback text.
 
 ### 9.3 Control Feel Acceptance
 
@@ -434,8 +445,10 @@ Controls must feel good within the first 30 seconds.
 Requirements:
 
 * Movement responsive but not twitchy.
-* Hit input forgiving.
-* Dink and drive clearly different.
+* Racket contact forgiving.
+* Soft and firm contacts clearly different.
+* The hitbox feels like the full racket, not the player body or a confusing endpoint marker.
+* First/reset contact uses the same racket segment hitbox as rally contact.
 * Player understands why they won/lost point.
 * Misses should feel fair, not random.
 
@@ -638,8 +651,9 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 * Ball as circle.
 * Ball shadow.
 * Basic movement.
-* Tap to dink.
-* Hold/release to drive.
+* Right-stick racket swing.
+* Automatic racket contact hits.
+* Soft/firm contact classification for debug dink/drive labels.
 * Simple bot that moves toward the ball.
 * Basic rally reset.
 * Debug overlay: FPS, phase label, ball x/y/z, rally count.
@@ -667,9 +681,9 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 8. Create opponent component.
 9. Create ball component.
 10. Create shadow component.
-11. Implement touch movement.
-12. Implement tap dink.
-13. Implement hold/release drive.
+11. Implement left-stick movement.
+12. Implement right-stick racket swing through a front 180-degree arc.
+13. Implement automatic racket-contact hits.
 14. Implement basic ball pseudo-3D physics.
 15. Implement simple bot return logic.
 16. Add debug overlay.
@@ -679,10 +693,12 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 
 * Runs on local Android phone.
 * Player can move on bottom side of court.
+* Player hits by swinging the racket, without separate dink or drive buttons.
 * Ball can cross net.
 * Opponent can return some shots.
 * Rally can last at least 10 seconds.
-* Dink and drive feel different.
+* Soft and firm racket contacts feel different.
+* First/reset hit uses the racket hitbox, not the player body.
 * Ball height is visually readable.
 * Kitchen zones are visible.
 * No crash after 5 minutes.
@@ -693,8 +709,9 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 * Launch app.
 * Confirm Phase 0 label appears.
 * Move player.
-* Tap to dink.
-* Hold/release to drive.
+* Swing racket with right stick.
+* Confirm no dink/drive shot buttons appear.
+* Confirm soft and firm contacts are understandable.
 * Confirm ball shadow appears.
 * Confirm ball crosses net.
 * Confirm opponent moves.
@@ -719,7 +736,7 @@ Make the gray-box rally feel like arcade pickleball.
 * Scorekeeping.
 * First-to-7 match flow.
 * Serve/start point flow.
-* Dink, drive, lob, smash.
+* Racket-contact classification for dink, drive, lob, smash.
 * Feedback text: DINK, DRIVE, LOB, SMASH, FAULT.
 * Centralized tuning constants.
 
@@ -729,8 +746,8 @@ Make the gray-box rally feel like arcade pickleball.
 2. Add `ScoringSystem`.
 3. Add `MatchRulesSystem`.
 4. Add `ShotType` enum.
-5. Add shot target calculation.
-6. Add hit window logic.
+5. Add racket-contact shot classification.
+6. Add contact window logic.
 7. Add kitchen volley rule.
 8. Add serve sequence.
 9. Add match-over state.
@@ -743,7 +760,8 @@ Make the gray-box rally feel like arcade pickleball.
 * Out-of-bounds awards point.
 * Double bounce awards point.
 * Kitchen volley fault works.
-* Dink, drive, lob, smash exist.
+* Dink, drive, lob, smash are produced by racket contact and feedback.
+* No explicit shot buttons are added for dink, drive, lob, or smash.
 * Opponent can sustain beginner rallies.
 * Runs on local Android phone.
 * No crash after 5 minutes.
@@ -754,7 +772,7 @@ Make the gray-box rally feel like arcade pickleball.
 * Force out-of-bounds.
 * Force double bounce.
 * Try kitchen volley.
-* Try all shot types.
+* Produce soft, firm, high, and smash contacts.
 * Confirm match ends at 7.
 * Record tuning notes.
 
@@ -1038,7 +1056,7 @@ Ship a small but complete free ad-supported game.
 * Beat Rally Queen to unlock her.
 * Beat Veteran to unlock him.
 * Win Classic Cup to unlock Park Court.
-* Score 5 dinks in one match to unlock paddle skin.
+* Score 5 dink-contact classifications in one match to unlock paddle skin.
 * Win a tournament to unlock trophy.
 
 ## MVP Ad Placements
@@ -1091,10 +1109,13 @@ class Tuning {
   static const double rivalMoveSpeed = 235;
   static const double ballGravity = 980;
 
-  static const double dinkSpeed = 280;
-  static const double driveSpeed = 560;
-  static const double lobSpeed = 360;
-  static const double smashSpeed = 720;
+  static const double racketReach = 42;
+  static const double racketHitRadius = 13;
+  static const double maxRacketAngleRadians = 1.5708;
+  static const double minRacketContactSpeed = 5;
+  static const double softContactSpeed = 72;
+  static const double firmContactSpeed = 138;
+  static const double driveContactThreshold = 96;
 
   static const double hitWindowRadius = 42;
   static const double perfectHitWindowRadius = 22;
@@ -1165,7 +1186,7 @@ The first coding agent should only build **Phase 0**.
 
 Task:
 
-> Create a Flutter + Flame project that launches directly into a gray-box 3/4 pickleball court with a movable player, simple AI opponent, ball/shadow, tap dink, hold/release drive, and debug overlay. It must run on a local Android device.
+> Create a Flutter + Flame project that launches directly into a gray-box 3/4 pickleball court with a movable player, simple AI opponent, ball/shadow, left-stick movement, right-stick racket swing, automatic racket-contact hits, and debug overlay. It must run on a local Android device.
 
 Do not build menus, ads, art, unlocks, or tournament mode yet.
 

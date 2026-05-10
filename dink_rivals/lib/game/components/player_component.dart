@@ -20,6 +20,6 @@ class PlayerComponent extends Component {
   @override
   void render(Canvas canvas) {
     final center = game.courtToWorld(state.position);
-    canvas.drawCircle(center.toOffset(), game.logicalToScreen(10), _paint);
+    canvas.drawCircle(center.toOffset(), game.logicalToScreen(8), _paint);
   }
 }

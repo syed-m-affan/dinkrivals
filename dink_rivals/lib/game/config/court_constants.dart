@@ -19,5 +19,5 @@ class Court {
   static const double opponentStartY = 80.0;
 
   static const double ballServeX = 110.0;
-  static const double ballServeY = 440.0;
+  static const double ballServeY = 358.0;
 }

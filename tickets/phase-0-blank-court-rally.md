@@ -1,5 +1,17 @@
 # Ticket: Phase 0 — Blank Court Rally Loop
 
+---
+id: P0-001
+phase: 0
+status: review
+priority: high
+parallel_group: legacy
+depends_on: []
+blocks: [P0-002]
+owner: prior-agents
+last_updated: 2026-05-10
+---
+
 ## Context
 
 You are implementing Phase 0 of Dink Rivals, a retro arcade pickleball mobile game. This is the foundational "gray-box" phase. There is no art, no menus, no monetization, no progression. The only goal of this phase is to prove that the core rally loop feels like pickleball when played on an Android phone.
@@ -12,6 +24,19 @@ Read `docs/build-spec.md` before starting. The non-negotiable rules in Section 2
 - Logical court coordinates separate from screen pixels
 
 If anything in this ticket conflicts with the build spec, ask before proceeding. Do not silently resolve conflicts.
+
+## Current Control Direction
+
+This legacy ticket has been superseded by Phase 0 playtesting. Treat the original tap/hold shot-button controls as obsolete. The accepted Phase 0 direction is:
+
+- Left virtual stick moves the player.
+- Right virtual stick swings the racket left/right through the front 180-degree arc.
+- The right stick sets racket angle and swing velocity; it does not choose dink or drive.
+- The full racket segment from player body to racket tip is the hitbox.
+- The ball is hit automatically when racket contact occurs at hittable height with enough relative speed.
+- Soft/firm contact may still be classified as `dink`/`drive` for debug labels, feedback, AI decisions, and tests, but those are not buttons.
+
+If a future agent uses this legacy ticket for context, preserve the current swing-control model and follow `P0-002` for closeout.
 
 ## Goal
 
@@ -108,7 +133,7 @@ The 3/4 projection should compress the y-axis to about 65% of its true length wh
 enum ShotType { dink, drive }
 ```
 
-Only two shot types in Phase 0. Lob, smash, block, serve come in Phase 1.
+Only two debug classifications in Phase 0. They are derived from racket contact strength, racket angle, incoming ball motion, and swing speed, not explicit buttons. Lob, smash, block, serve come in Phase 1.
 
 `player_side.dart`:
 
@@ -139,6 +164,8 @@ class PlayerState {
   Vector2 position;     // logical court coords
   Vector2 velocity;
   PlayerSide side;
+  double racketAngle;
+  double racketAngularVelocity;
   bool canHit;
   bool isSwinging;
 }
@@ -158,20 +185,33 @@ class Tuning {
   // Hit windows
   static const double hitWindowRadius = 42.0;       // logical units
   static const double perfectHitWindowRadius = 22.0;
+  static const double racketReach = 42.0;
+  static const double racketHitRadius = 13.0;
+  static const double maxRacketAngleRadians = 1.5708;
+  static const double minRacketContactSpeed = 5.0;
 
   // Ball physics
   static const double gravity = 520.0;              // logical units / sec^2
   static const double bounceDamping = 0.62;         // z velocity retention on bounce
   static const double airDrag = 0.04;               // per second
 
-  // Shot speeds
-  static const double dinkSpeedXY = 95.0;
-  static const double dinkInitialZ = 75.0;
-  static const double dinkArcGravityScale = 1.4;    // dinks fall faster
+  // Contact output
+  static const double softContactSpeed = 72.0;
+  static const double firmContactSpeed = 138.0;
+  static const double driveContactThreshold = 96.0;
+  static const double swingPowerScale = 0.58;
+  static const double incomingPowerScale = 0.22;
+  static const double contactLiftBase = 36.0;
+  static const double contactLiftScale = 0.16;
 
-  static const double driveSpeedXY = 220.0;
-  static const double driveInitialZ = 45.0;
-  static const double driveArcGravityScale = 0.9;
+  // AI/debug shot speeds
+  static const double dinkSpeedXY = 82.0;
+  static const double dinkInitialZ = 34.0;
+  static const double dinkArcGravityScale = 0.75;
+
+  static const double driveSpeedXY = 132.0;
+  static const double driveInitialZ = 30.0;
+  static const double driveArcGravityScale = 0.5;
 
   // AI
   static const double opponentReactionDelaySec = 0.25;
@@ -218,23 +258,25 @@ Top-left corner text overlay showing:
 - FPS (use Flame's FpsTextComponent or implement simple counter)
 - Ball position: `x: 123.4  y: 234.5  z: 12.3`
 - Rally count (number of times ball has crossed the net this point)
-- Last shot type: "dink" or "drive" or "—"
+- Last contact classification: "dink" or "drive" or "—"
 
 Always visible. White text on a black 50% alpha background.
 
 ### ResetButtonComponent
 
-A button in the top-right corner labeled "RESET POINT". On tap, resets ball to player serve position (x=110, y=440, z=0) with zero velocity, opponent to (110, 80), player keeps current position. Sets `isInPlay = false` until next hit.
+A button in the top-right corner labeled "RESET POINT". On tap, resets ball to a serve/start position reachable by the player's default racket, with zero velocity, opponent to (110, 80), player keeps current position. Sets `isInPlay = false` until next racket contact.
 
 ## Systems
 
 ### InputSystem
 
-- Detects touch on left half of screen → drag input for movement
-- Detects touch on right half of screen → shot input
-  - Tap (touch released within 150ms with movement < 10px): dink
-  - Hold (touch held > 150ms): drive on release
-- Forwards events to MovementSystem and ShotSystem
+- Detects visible left virtual stick input for movement.
+- Detects visible right virtual stick input for racket swing.
+- Right-stick horizontal motion rotates the racket through the front 180-degree arc.
+- Tracks racket angle and angular velocity.
+- Does not queue tap/hold shot button events.
+- Does not create separate dink/drive UI buttons.
+- Forwards movement to MovementSystem and racket state to ShotSystem.
 
 ### MovementSystem
 
@@ -244,13 +286,12 @@ A button in the top-right corner labeled "RESET POINT". On tap, resets ball to p
 
 ### ShotSystem
 
-- On dink/drive trigger, checks if ball is within `hitWindowRadius` of player AND on player's side AND z is between 5 and 90 (hittable height range)
-- If valid: computes target position based on shot type
-  - Dink: target = opponent kitchen, x near opponent's current x ± random spread of 30 units
-  - Drive: target = deep opponent court (y near 40), x = mirror of player's current x
-- Calculates required vx, vy, vz to reach target with appropriate arc
-- Applies to ball, sets `lastHitBy` and resets `hasBouncedThisSide`
-- If invalid hit attempt: ball continues unchanged, no penalty in Phase 0
+- Each update, checks whether the ball intersects the racket capsule from player body to racket tip AND is on the hitter's side AND z is between 0 and 90.
+- If valid contact has enough relative speed, computes outgoing velocity from racket angle, racket swing speed, and incoming ball speed/angle.
+- Classifies contact as `dink` for soft contact or `drive` for firm contact.
+- Applies vx, vy, vz to the ball, sets `lastHitBy`, resets `hasBouncedThisSide`, and starts play.
+- Uses a short hit cooldown so one overlap does not hit the ball every frame.
+- The reset/start hit must use the same racket capsule as in-play hits; do not special-case body contact.
 
 ### BallPhysicsSystem
 
@@ -354,13 +395,13 @@ The ticket is complete when ALL of these are true:
 6. On launch, gameplay scene appears within 3 seconds — no splash, no menu
 7. The "PHASE 0" debug label is visible
 8. Player can move their circle by dragging the left half of the screen
-9. Player can tap the right half to dink, or hold-release to drive
+9. Player can swing the right stick to hit with the racket; there is no dink/drive button
 10. The opponent moves toward the ball and returns shots with at least 60% success rate at default tuning
 11. Sustained rallies of 10+ ball-crossings are achievable by a competent human player within the first 2 minutes of play
 12. The kitchen zones are visibly distinct from the rest of the court
 13. The ball has a visible shadow that stays on the ground while the ball arcs above it
 14. The ball gets visually larger when high (z > 60)
-15. The reset button returns the ball to serve position
+15. The reset button returns the ball to a serve/start position reachable by the racket hitbox
 16. The app runs for 5 minutes of normal play without crashing or dropping below 30fps on a mid-tier 2022+ Android phone
 
 ## Out of Scope (Do NOT Build)
