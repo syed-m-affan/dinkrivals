@@ -20,7 +20,7 @@ final gameplay screenshot coverage is still missing.
 
 | Requirement | Evidence | Status |
 | --- | --- | --- |
-| Use generated bitmap art for new core visuals | `assets/images/environment/classic/park_background_overhaul.png`, `assets/images/vfx/*_generated.png`, `assets/images/sprites/player_*.png`, `assets/images/sprites/opponent_*.png`, `assets/images/court/court_surface_texture_generated.png`, `docs/art/visual-overhaul/contact-sheets/shot-vfx-generated-sheet.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-generated-atlas.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`, `docs/art/visual-overhaul/contact-sheets/court-surface-texture-generated.png`, `docs/art/visual-overhaul/prompts/shot-vfx-generated-sheet.md`, `docs/art/visual-overhaul/prompts/character-sprite-generated-atlas.md`, `docs/art/visual-overhaul/prompts/court-surface-texture-generated.md` | Done for current pass |
+| Use generated bitmap art for new core visuals | `assets/images/environment/classic/park_background_overhaul.png`, `assets/images/vfx/*_generated.png`, `assets/images/sprites/player_*.png`, `assets/images/sprites/opponent_*.png`, `assets/images/court/court_surface_texture_generated.png`, `docs/art/visual-overhaul/contact-sheets/shot-vfx-generated-sheet.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-generated-atlas.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-simple-mid-runtime-sheet.png`, `docs/art/visual-overhaul/contact-sheets/court-surface-texture-generated.png`, `docs/art/visual-overhaul/prompts/shot-vfx-generated-sheet.md`, `docs/art/visual-overhaul/prompts/character-sprite-generated-atlas.md`, `docs/art/visual-overhaul/prompts/court-surface-texture-generated.md` | Done for current pass |
 | Preserve gameplay logic and controls while improving visuals | Guard tests passed after reverting the failed projection experiment: `flutter test test/court_projection_test.dart test/court_layout_system_test.dart test/environment_layout_test.dart`; full suite passed after the generated character integration | Partial |
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
 | Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart`, `court_component_test.dart`, generated court-surface texture overlay | Done for current pass |
@@ -61,6 +61,13 @@ Verification performed during this thread:
 - Character runtime sheets were simplified after review to a mid-detail style
   documented at
   `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`.
+- Character runtime sheets were regenerated again into a simpler mid-detail
+  style with chunkier silhouettes and fewer small clothing/facial details,
+  documented at
+  `docs/art/visual-overhaul/contact-sheets/character-sprite-simple-mid-runtime-sheet.png`.
+- The simple-mid character build was installed on `emulator-5554` and captured
+  at
+  `docs/art/visual-overhaul/evidence/emulator-character-simple-mid-gameplay.png`.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
