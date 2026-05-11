@@ -114,6 +114,9 @@ Verification performed during this thread:
   feedback.
 - The unused `InputSystem.visualSwingPower` getter was removed so there is no
   dead runtime path for the rejected swing power meter.
+- Automated gameplay/web screenshot tickets `P5H-001` and `P5H-002` were moved
+  to `review` deferral to match current direction: do not spend closeout time
+  on screenshot infrastructure unless it directly unblocks a visual decision.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
@@ -170,6 +173,11 @@ Subagent validation:
    `P5H-007` is in `review`, not `todo`, because current feedback prioritized
    fixing wonky animation and frame/facing correctness over adding extra idle
    motion without visual signoff.
+
+6. Automated screenshot infrastructure remains deferred.
+   `P5H-001` and `P5H-002` are in `review` rather than `todo` because the
+   current closeout direction is to use physical Android or live visual review
+   instead of spending more time on harness/web setup.
 
 ## Next Safe Work
 

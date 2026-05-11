@@ -1,7 +1,7 @@
 ---
 id: P5H-002
 phase: 5H
-status: todo
+status: review
 priority: medium
 parallel_group: B
 depends_on: [P5G-001]
@@ -43,3 +43,8 @@ flutter test
 flutter build web --debug
 ```
 
+## Deferral Notes
+
+- Deferred by current user direction: do not add web/platform screenshot
+  infrastructure for this closeout. Physical Android screenshots and live
+  review remain the preferred evidence path for gameplay visuals.

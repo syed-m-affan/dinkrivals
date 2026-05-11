@@ -61,10 +61,16 @@ Android readability/performance validation remains blocked until a physical Andr
 
 ## Follow-Up Tickets
 
-- `P5H-001`: Gameplay golden capture harness for Flame-rendered states.
-- `P5H-002`: Optional Flutter web screenshot capture path.
-- `P5H-003`: Main menu logo prominence and top-band composition.
-- `P5H-004`: Rally Queen portrait readability pass.
-- `P5H-005`: Veteran portrait accent pass.
-- `P5H-006`: Environment depth background band.
-- `P5H-007`: Character idle/ready micro-animation.
+- `P5H-001`: Gameplay golden capture harness for Flame-rendered states;
+  deferred in `review` because automated gameplay screenshot setup is no
+  longer a closeout priority.
+- `P5H-002`: Optional Flutter web screenshot capture path; deferred in
+  `review` for the same reason.
+- `P5H-003`: Main menu logo prominence and top-band composition; absorbed by
+  Phase 5.2 closeout.
+- `P5H-004`: Rally Queen portrait readability pass; absorbed by `P52F-001`.
+- `P5H-005`: Veteran portrait accent pass; absorbed by `P52F-001`.
+- `P5H-006`: Environment depth background band; absorbed by `P52E-001` and
+  `P52K-001`.
+- `P5H-007`: Character idle/ready micro-animation; deferred in `review` until
+  animation polish has explicit visual signoff.

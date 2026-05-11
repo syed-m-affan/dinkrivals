@@ -1,7 +1,7 @@
 ---
 id: P5H-001
 phase: 5H
-status: todo
+status: review
 priority: high
 parallel_group: A
 depends_on: [P5G-001]
@@ -42,3 +42,9 @@ flutter analyze
 flutter test
 ```
 
+## Deferral Notes
+
+- Deferred by current user direction: do not spend more time on automated
+  gameplay screenshot setup unless it directly unblocks a visual decision.
+  Physical Android screenshots and live review remain the preferred evidence
+  path for gameplay visuals.
