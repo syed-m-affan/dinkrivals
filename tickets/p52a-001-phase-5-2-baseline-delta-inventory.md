@@ -39,7 +39,7 @@ Do not edit gameplay, rendering, assets, or UI code in this ticket.
 - Confirm the available Phase 5.1 final screenshots: serve, rally, pause, and any point-feedback capture.
 - If `P51I-001` is still in `review`, record whether its remaining 5-minute Android smoke blocks Phase 5.2 or is absorbed by `P52M-001`.
 - Compare the Phase 5.1 final rally/serve screenshots against `concept-screenshot.png`.
-- Compare HUD, characters, court cards, roster, and power-meter expectations against `concept-sheet.png`.
+- Compare HUD, characters, court cards, roster, and serve-meter/control expectations against `concept-sheet.png`.
 - Number deltas by concept region:
   - projection/framing
   - court zoning
@@ -49,7 +49,7 @@ Do not edit gameplay, rendering, assets, or UI code in this ticket.
   - scoreboard/rally/last-shot readout
   - feedback banner
   - ball trail/contact VFX
-  - power meter/controls
+  - serve meter/controls
   - park depth
   - menu/end-match residual composition
 - Mark each older `P5H-*` visual follow-up as superseded, absorbed, kept, or deferred to Phase 5.3.

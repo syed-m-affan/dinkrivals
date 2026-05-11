@@ -500,7 +500,8 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       return;
     }
     lastRuleResult = result;
-    _showFeedback(_feedbackForRule(result));
+    final pointFeedback = _feedbackForRule(result);
+    _showFeedback(pointFeedback);
     final isFault = result.fault != null;
     if (isFault) {
       audioService.playFault();
@@ -516,10 +517,16 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     opponent.showPointResult(winner);
     vfx.spawnPointBurst(courtPosition: Vector2(Court.width / 2, Court.netY));
     resetPoint();
+    _showFeedback(pointFeedback);
     if (matchState.matchOver) {
       ball.state.isInPlay = false;
       matchOverNotifier.value = true;
     }
+  }
+
+  @visibleForTesting
+  void awardPointForTesting(RuleResult result) {
+    _awardPoint(result);
   }
 
   void _showFeedback(String text) {

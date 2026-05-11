@@ -31,7 +31,7 @@ Open visual follow-ups are handled as follows:
 7. **Scoreboard identity:** Baseline panels show scores but not the concept's labeled YOU/RIVAL hierarchy. Target: labeled panels, serving dot, rally count, and last-shot readout.
 8. **Feedback callout:** Baseline feedback does not read like the concept's top-center callout. Target: banner below the top HUD row, clear shot/fault/point text, no mid-court rally number.
 9. **Ball trail and impact juice:** Baseline VFX is brief and subtle. Target: short arcing trail plus stronger contact/bounce effects while keeping the ball dominant.
-10. **Power meter and controls:** Baseline controls are usable but lack concept chevrons/power readout. Target: visual-only power meter, D-pad chevrons, refined SWING/AIM label, unchanged hit regions.
+10. **Serve meter and controls:** Baseline controls are usable but lack concept chevrons and clear serve-charge readout. Target: serve charge meter, D-pad chevrons, refined swing/aim presentation, unchanged hit regions. Do not restore the rejected swing power meter.
 11. **Park depth:** Baseline has a richer park than earlier phases but still lacks the concept's dense courtside dressing. Target: darker rear tree band plus lamp/bench/planter accents at lower contrast than gameplay objects.
 12. **Menu/end-match carry-through:** Baseline non-game screens are styled, but Phase 5.2 should check the new HUD/signage language does not make menu/end-match feel unrelated. Target: comparison notes only unless small style alignment is needed.
 

@@ -43,7 +43,7 @@ Avoid editing feature components beyond token references needed to keep analyzer
   - signage/banner surfaces
   - feedback banner background and border
   - rally/last-shot labels
-  - power meter fill/empty/lightning accents
+  - serve meter fill/empty states
   - any new Phase 5.2 environment accents
 - Update render-layer notes for backdrop signage, rear fence, net mesh/rail/shadow, ball trail, feedback banner, scoreboard, and controls.
 - Add safe-area guidance: scoreboard, pause, and top-center feedback banner must not overlap; feedback sits below the top HUD row on notched/tall devices.

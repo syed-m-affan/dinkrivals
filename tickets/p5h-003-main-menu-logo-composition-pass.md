@@ -1,7 +1,7 @@
 ---
 id: P5H-003
 phase: 5H
-status: todo
+status: done
 priority: medium
 parallel_group: C
 depends_on: [P5G-001]
@@ -42,3 +42,8 @@ flutter test
 flutter test --update-goldens test/phase5g_visual_golden_test.dart
 ```
 
+## Implementation Notes
+
+- Absorbed by the Phase 5.2 menu/comparison closeout rather than kept as a
+  separate follow-up. Current menu evidence and residual composition notes live
+  in `docs/art/phase-5.2-comparison.md`.

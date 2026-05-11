@@ -142,6 +142,7 @@ class RallyFeedbackComponent extends Component {
     if (upper.contains('DRIVE')) return 'CLEAN STRIKE';
     if (upper.contains('LOB')) return 'HIGH ARC';
     if (upper.contains('DINK')) return 'NICE SHOT';
+    if (upper.contains('MISS')) return 'SWING MISSED';
     return 'NICE SHOT';
   }
 }

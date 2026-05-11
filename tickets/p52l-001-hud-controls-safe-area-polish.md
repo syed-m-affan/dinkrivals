@@ -14,7 +14,7 @@ last_updated: 2026-05-11
 
 ## Goal
 
-Perform the final HUD/control proportion pass after scoreboard, feedback, and power-meter work are in place.
+Perform the final HUD/control proportion pass after scoreboard, feedback, and serve-meter/control polish are in place.
 
 ## Build Spec Coverage
 
@@ -41,7 +41,7 @@ Do not rework feature behavior from P52G, P52H, or P52J.
 ## Requirements
 
 - Check scoreboard, pause, and feedback banner coexistence on tall/notched Android layouts.
-- Check joystick, swing stick, serve button, power meter, and labels for overlap with gesture/navigation areas.
+- Check joystick, swing stick, serve button, serve meter, and labels for overlap with gesture/navigation areas.
 - Preserve touch hit regions from P52J.
 - Make only small spacing/proportion fixes needed for readability.
 - Capture a screenshot showing active controls and feedback/HUD.
@@ -74,5 +74,5 @@ flutter test
 
 ## Implementation Notes
 
-- Implemented: adjusted scoreboard, feedback banner, power meter, and controls together; emulator smoke confirms top/bottom safe-area readability.
+- Implemented: adjusted scoreboard, feedback banner, serve meter, and controls together; emulator smoke confirms top/bottom safe-area readability.
 - Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

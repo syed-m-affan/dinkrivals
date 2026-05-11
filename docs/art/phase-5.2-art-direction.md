@@ -12,7 +12,7 @@ Core additions:
 - signage panel, sign border, and sign lettering
 - feedback banner fill and border
 - rally/last-shot text
-- power meter fill, empty, and lightning accent
+- serve charge meter fill and empty states
 - deeper rear park/fence accents
 
 ## Layering
@@ -26,9 +26,9 @@ Back-to-front ordering:
 5. net cast shadow
 6. characters, paddles, ball, ball shadow, and VFX
 7. net posts/rail/mesh
-8. scoreboard, pause, feedback banner, controls, and power meter
+8. scoreboard, pause, feedback banner, controls, and serve meter
 
-The top HUD row owns the upper safe area. The feedback banner sits below the scoreboard/pause row. Bottom controls and the power meter must stay inside the reduced Flame canvas and must not alter touch hit regions.
+The top HUD row owns the upper safe area. The feedback banner sits below the scoreboard/pause row. Bottom controls and the serve meter must stay inside the reduced Flame canvas and must not alter touch hit regions.
 
 ## AI Asset Rules
 

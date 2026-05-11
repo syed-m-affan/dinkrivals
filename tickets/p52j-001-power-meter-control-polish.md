@@ -10,42 +10,42 @@ owner: codex
 last_updated: 2026-05-11
 ---
 
-# P52J-001 - Power Meter and Swing-Control Polish
+# P52J-001 - Serve Meter and Swing-Control Polish
 
 ## Goal
 
-Add a visual-only swing power meter and concept-style control polish while preserving all control hit regions and shot physics.
+Polish the manual controls while preserving all control hit regions and shot physics. The obsolete swing power meter concept is removed; only serve charge keeps percentage/ring feedback.
 
 ## Build Spec Coverage
 
-Phase 5.2I - Power Meter and HUD Control Polish:
+Phase 5.2I - Serve Meter and HUD Control Polish:
 
-- Lightning-style power meter.
+- Serve charge meter.
 - D-pad chevrons.
-- Refined SWING label.
+- Refined swing/aim control presentation.
 - Pause/control proportion check.
 
 ## Suggested File Ownership
 
 - `dink_rivals/lib/game/components/touch_controls_component.dart`
-- `dink_rivals/lib/game/systems/input_system.dart` only for read-only visual getter if needed
+- `dink_rivals/lib/game/systems/input_system.dart` only for cleanup if needed
 - `dink_rivals/lib/game/systems/touch_input_controller.dart` only for tests proving hit regions are unchanged
 - `dink_rivals/test/touch_input_controller_test.dart`
 - `dink_rivals/test/shot_system_test.dart` only for no-physics-regression assertions if needed
-- `docs/art/phase-5.2-power-meter-controls.png`
+- `docs/art/phase-5.2-final-serve.png`
 - `tickets/status.md`
 
 Coordinate with P52L before making broader pause/control layout changes.
 
 ## Requirements
 
-- Add a power meter near the swing stick using read-only existing swing velocity or serve charge data.
-- Meter fill must reset naturally when swing/serve input ends and must not store progression.
+- Keep serve charge feedback near the serve button using existing serve charge data.
+- Do not add swing power feedback for drive/lob/smash; the manual swipe control intentionally has miss risk rather than a power bar.
 - Add D-pad chevrons inside the move ring.
-- Refine SWING label placement and sizing.
+- Refine swing/aim control presentation.
 - Preserve existing touch hit regions, pointer behavior, and input contract.
 - Add tests proving touch layout hit regions remain stable.
-- Add or update a no-regression test showing the meter does not affect shot physics/scoring outputs.
+- Add or update no-regression coverage if touch regions or shot physics are touched.
 
 ## Non-Goals
 
@@ -65,16 +65,20 @@ flutter test
 
 ## Acceptance Criteria
 
-- Power meter responds visually to existing input data.
-- Meter has no gameplay effect.
+- Serve meter responds visually to existing serve charge data.
+- No swing power meter is rendered.
 - Move/swing/serve hit regions are unchanged.
 - Controls remain readable and concept-like.
 
 ## Planning Notes
 
-- Every reviewer called the power meter a scope-creep risk. Treat it as an instrument panel only.
+- Every reviewer called the power meter a scope-creep risk. Later playtest
+  feedback rejected the swing power bar, so the final scope keeps serve charge
+  feedback only.
 
 ## Implementation Notes
 
-- Implemented: added visual-only swing power meter and move-control chevrons while preserving touch layout/hit regions; input power getter is tested.
+- Implemented: added move-control chevrons and retained visual-only serve charge
+  feedback while preserving touch layout/hit regions. The earlier swing power
+  meter idea was removed after playtest feedback.
 - Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

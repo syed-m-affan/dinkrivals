@@ -16,7 +16,7 @@ Last updated: 2026-05-11
 10. Ball sprite above its shadow.
 11. Ball trail, then short-lived contact, bounce, smash, and point VFX.
 12. HUD score, pause, rally/last-shot readouts, and top-center feedback banner.
-13. Touch controls, serve button, and visual-only power meter.
+13. Touch controls, serve button, and serve charge meter.
 14. Modal overlays such as pause and fake ads.
 
 ## Occlusion Rules
@@ -36,7 +36,7 @@ Last updated: 2026-05-11
 - Score and pause controls belong inside the top safe area.
 - Movement, swing, and serve controls belong above bottom gesture/nav area.
 - Feedback banners sit below the score/pause row and must not collide with scoreboard, pause, far player, rear signage, or tall-phone safe areas.
-- Power meters and labels may not extend outside the reduced Flame canvas or alter touch hit regions.
+- Serve meter and labels may not extend outside the reduced Flame canvas or alter touch hit regions.
 
 ## Asset Folder Conventions
 

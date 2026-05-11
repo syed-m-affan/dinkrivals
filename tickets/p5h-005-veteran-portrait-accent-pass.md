@@ -1,7 +1,7 @@
 ---
 id: P5H-005
 phase: 5H
-status: todo
+status: done
 priority: medium
 parallel_group: D
 depends_on: [P5D-003]
@@ -42,3 +42,8 @@ flutter test
 flutter test --update-goldens test/phase5g_visual_golden_test.dart
 ```
 
+## Implementation Notes
+
+- Absorbed by `P52F-001`. Veteran portrait readability was handled in the
+  Phase 5.2 character identity pass together with the refreshed runtime sprite
+  sheets and roster portraits.

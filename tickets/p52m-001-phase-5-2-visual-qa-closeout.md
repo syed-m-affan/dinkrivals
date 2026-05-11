@@ -54,7 +54,7 @@ Do not implement new visual features in this ticket except tiny documentation-on
   - scoreboard labels, serving dot, rally counter, and last-shot readout
   - top-center feedback banner behavior
   - ball trail/contact/bounce VFX readability
-  - power meter visual-only behavior
+  - serve meter visual-only behavior
   - controls and safe areas
   - park depth without clutter
 - Play at least 5 minutes and watch for frame drops, input lag, crashes, and visual occlusion.

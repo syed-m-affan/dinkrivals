@@ -1,7 +1,7 @@
 ---
 id: P5H-006
 phase: 5H
-status: todo
+status: done
 priority: medium
 parallel_group: E
 depends_on: [P5B-002, P5C-003]
@@ -43,3 +43,8 @@ flutter test
 flutter build apk --debug
 ```
 
+## Implementation Notes
+
+- Absorbed by `P52E-001` and `P52K-001`. The Phase 5.2 pass added rear signage,
+  lamp/planter depth props, and a darker rear tree band without changing
+  gameplay bounds.

@@ -29,7 +29,7 @@ automated evidence set.
 | Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection, asset presence, actual sheet frame counts, horizontal facing reflection, and player point-result visibility after the point ends | Done for current pass |
 | Dink/drive/lob/smash have distinct animation/VFX indicators | `VfxLayerComponent` maps shot types to generated `dinkSpark`, `driveArc`, `lobArc`, `smashBand`, and `missWhiff`; character components load generated shot-specific animation sheets; `vfx_layer_component_test.dart` and `player_component_test.dart` verify sprite/pose selection | Done for current pass |
 | Hitbox indicators match active swing zones | `RacketComponent` draws committed swing lane from `ShotSystem.committedSwingPath` using the same contact radius as `ShotSystem`; miss VFX spawns on expired swing command | Improved; still needs live readability review |
-| Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; shot chips no longer mark `DINK` active when no swing is committed; vertical swipe chip now resolves to `LOB` or `SMASH` while active; `docs/art/phase-5.2-comparison.md` states only serve charge has percentage/ring feedback | Done |
+| Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; shot chips no longer mark `DINK` active when no swing is committed; vertical swipe chip now resolves to `LOB` or `SMASH` while active; `P52J-001` is reconciled to serve-charge feedback only; `docs/art/phase-5.2-comparison.md` states only serve charge has percentage/ring feedback | Done |
 | Android gameplay canvas is full-bleed | `GameScreen` renders `GameWidget` outside of view-padding while keeping the pause button inset-aware; evidence is archived at `docs/art/visual-overhaul/evidence/full-bleed-game-screen-pass/serve.png` | Done for current pass |
 | Menu and result screens share gameplay visual identity | `ParkBackdrop`, updated menu/roster/settings/end-match screens, refreshed `phase-5g-*.png` goldens | Done |
 | Asset manifests document generated sources and ownership | VFX, character, and court generated prompt/source docs exist; runtime asset README files link back to source contact sheets | Done for current pass |
@@ -102,6 +102,12 @@ Verification performed during this thread:
   indicator fixes. A Pixel screenshot recapture attempt was discarded because
   the device remained locked on `AlternateBouncerView` even though ADB focused
   `com.example.dink_rivals/.MainActivity`.
+- Point/fault feedback was corrected to remain visible after point reset, and
+  `MISS` feedback now uses miss-specific secondary copy instead of falling
+  through to `NICE SHOT`.
+- `P52J-001` was reconciled with the current control design: the rejected swing
+  power meter remains removed, while serve charge keeps its ring/percentage
+  feedback.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
