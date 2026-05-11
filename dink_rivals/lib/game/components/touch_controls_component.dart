@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
-import '../models/gameplay_control_mode.dart';
+import '../models/swing_intent.dart';
 import '../systems/touch_input_controller.dart';
 
 class TouchControlsComponent extends Component {
@@ -51,6 +51,14 @@ class TouchControlsComponent extends Component {
   final Paint _meterFillPaint = Paint()..color = VisualPalette.powerMeterFill;
   final Paint _meterHotPaint = Paint()..color = VisualPalette.powerMeterHot;
   final Paint _meterBoltPaint = Paint()..color = VisualPalette.powerMeterBolt;
+  final Paint _shotChipPaint = Paint()
+    ..color = VisualPalette.scoreboardSurface.withValues(alpha: 0.78);
+  final Paint _shotChipActivePaint = Paint()
+    ..color = VisualPalette.uiAccent.withValues(alpha: 0.86);
+  final Paint _shotChipBorderPaint = Paint()
+    ..color = VisualPalette.scoreboardBorder.withValues(alpha: 0.72)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.4;
 
   final TextPainter _swingText = TextPainter(
     textAlign: TextAlign.center,
@@ -87,6 +95,7 @@ class TouchControlsComponent extends Component {
     final waitingToServe = game.isWaitingToServe;
     _renderMoveControl(canvas, layout, waitingToServe);
     _renderSwingControl(canvas, layout);
+    _renderShotIndicators(canvas, layout);
     if (waitingToServe) {
       _renderServeButton(canvas, layout);
     }
@@ -218,11 +227,9 @@ class TouchControlsComponent extends Component {
     canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _strokePaint);
     _drawSwingPowerMeter(canvas, layout, pressed);
 
-    _swingText.text = TextSpan(
-      text: game.controlMode == GameplayControlMode.assistedAimGesture
-          ? 'AIM'
-          : 'SWING',
-      style: const TextStyle(
+    _swingText.text = const TextSpan(
+      text: 'AIM',
+      style: TextStyle(
         color: VisualPalette.textPrimary,
         fontSize: 12,
         fontWeight: FontWeight.bold,
@@ -236,6 +243,53 @@ class TouchControlsComponent extends Component {
         layout.swingCenter.y - baseRadius - 24,
       ),
     );
+  }
+
+  void _renderShotIndicators(Canvas canvas, TouchControlLayout layout) {
+    final active = game.inputSystem.activeSwingCommand?.intent;
+    final y = layout.swingCenter.y - layout.swingVisualRadius - 70;
+    final centerX = layout.swingCenter.x;
+    final items = <({String label, SwingIntent? intent, double dx})>[
+      (label: 'DINK', intent: null, dx: -60),
+      (label: 'DRIVE', intent: SwingIntent.drive, dx: 0),
+      (label: 'LOB/SMASH', intent: SwingIntent.lob, dx: 68),
+    ];
+    for (final item in items) {
+      final isActive = active == item.intent ||
+          (item.intent == SwingIntent.lob && active == SwingIntent.smash);
+      final painter = TextPainter(
+        text: TextSpan(
+          text: item.label,
+          style: TextStyle(
+            color: isActive
+                ? VisualPalette.textInverse
+                : VisualPalette.textPrimary,
+            fontSize: item.label.length > 6 ? 9 : 10,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'monospace',
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      final rect = Rect.fromCenter(
+        center: Offset(centerX + item.dx, y),
+        width: painter.width + 14,
+        height: 22,
+      );
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(4)),
+        isActive ? _shotChipActivePaint : _shotChipPaint,
+      );
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(4)),
+        _shotChipBorderPaint,
+      );
+      painter.paint(
+        canvas,
+        Offset(rect.center.dx - painter.width / 2,
+            rect.center.dy - painter.height / 2),
+      );
+    }
   }
 
   void _drawSwingPowerMeter(

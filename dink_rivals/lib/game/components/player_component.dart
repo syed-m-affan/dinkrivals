@@ -9,6 +9,7 @@ import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 import '../models/player_side.dart';
 import '../models/player_state.dart';
+import '../models/shot_type.dart';
 import '../util/projected_shadow.dart';
 
 class PlayerComponent extends Component {
@@ -60,7 +61,12 @@ class PlayerComponent extends Component {
     priority = state.position.y.round();
     _animationSeconds += dt;
     if (state.isSwinging) {
-      _swingSeconds = 3 / 18;
+      _swingSeconds = switch (state.lastShotType) {
+        ShotType.dink => 2 / 14,
+        ShotType.lob => 3 / 12,
+        ShotType.smash => 3 / 22,
+        ShotType.drive || ShotType.serve || ShotType.block || null => 3 / 18,
+      };
       state.isSwinging = false;
     }
     var startedHitConfirm = false;
@@ -99,6 +105,10 @@ class PlayerComponent extends Component {
       _PlayerPose.idle => _idleSheet,
       _PlayerPose.run => _runSheet,
       _PlayerPose.swing => _swingSheet,
+      _PlayerPose.dink => _swingSheet,
+      _PlayerPose.drive => _swingSheet,
+      _PlayerPose.lob => _swingSheet,
+      _PlayerPose.smash => _swingSheet,
       _PlayerPose.ready => _readySheet,
       _PlayerPose.hitConfirm => _hitConfirmSheet,
       _PlayerPose.pointWin => _pointWinSheet,
@@ -111,6 +121,10 @@ class PlayerComponent extends Component {
       _PlayerPose.idle => 2,
       _PlayerPose.run => 4,
       _PlayerPose.swing => 3,
+      _PlayerPose.dink => 3,
+      _PlayerPose.drive => 3,
+      _PlayerPose.lob => 3,
+      _PlayerPose.smash => 3,
       _PlayerPose.ready => 2,
       _PlayerPose.hitConfirm => 2,
       _PlayerPose.pointWin => 2,
@@ -120,6 +134,10 @@ class PlayerComponent extends Component {
       _PlayerPose.idle => 2,
       _PlayerPose.run => 8,
       _PlayerPose.swing => 18,
+      _PlayerPose.dink => 14,
+      _PlayerPose.drive => 18,
+      _PlayerPose.lob => 12,
+      _PlayerPose.smash => 22,
       _PlayerPose.ready => 3,
       _PlayerPose.hitConfirm => 12,
       _PlayerPose.pointWin => 4,
@@ -148,7 +166,7 @@ class PlayerComponent extends Component {
 
   _PlayerPose _currentPose() {
     if (_swingSeconds > 0) {
-      return _PlayerPose.swing;
+      return _swingPoseForShot(state.lastShotType);
     }
     if (!game.matchState.pointInProgress) {
       return _PlayerPose.idle;
@@ -160,6 +178,16 @@ class PlayerComponent extends Component {
       return _PlayerPose.run;
     }
     return _PlayerPose.idle;
+  }
+
+  _PlayerPose _swingPoseForShot(ShotType? shotType) {
+    return switch (shotType) {
+      ShotType.dink || ShotType.block => _PlayerPose.dink,
+      ShotType.drive || ShotType.serve => _PlayerPose.drive,
+      ShotType.lob => _PlayerPose.lob,
+      ShotType.smash => _PlayerPose.smash,
+      null => _PlayerPose.swing,
+    };
   }
 
   @visibleForTesting
@@ -221,6 +249,10 @@ enum _PlayerPose {
   idle,
   run,
   swing,
+  dink,
+  drive,
+  lob,
+  smash,
   ready,
   hitConfirm,
   pointWin,

@@ -44,7 +44,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   DinkRivalsGame({
     AudioService? audioService,
     HapticsService? hapticsService,
-    this.controlMode = GameplayControlMode.assistedAimGesture,
+    this.controlMode = GameplayControlMode.classicRacketStick,
   })  : audioService = audioService ?? FakeAudioService(),
         hapticsService = hapticsService ?? FakeHapticsService();
 
@@ -177,8 +177,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     opponent.state.position
         .setValues(Court.opponentStartX, Court.opponentStartY);
     opponent.state.velocity.setZero();
+    opponent.state.lastShotType = null;
     player.state.position.setValues(Court.playerStartX, Court.playerStartY);
     player.state.velocity.setZero();
+    player.state.lastShotType = null;
     inputSystem.resetRacket();
     // Pointer IDs and movement state intentionally preserved so a player who
     // is still holding the movement / swing joystick keeps controlling the
@@ -273,7 +275,6 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       size: size,
       canMove: !isWaitingToServe,
       inputSystem: inputSystem,
-      controlMode: controlMode,
     );
   }
 
@@ -333,19 +334,15 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       z: ball.state.z,
       lastHitBy: ball.state.lastHitBy,
     );
-    final racketDirection = playerRacketDirection();
-    final didHit = switch (controlMode) {
-      GameplayControlMode.assistedAimGesture => _tryAssistedPlayerContact(),
-      GameplayControlMode.classicRacketStick => shotSystem.attemptRacketContact(
-          ball: ball.state,
-          hitter: player.state,
-          racketPosition: playerRacketPosition(),
-          racketDirection: racketDirection,
-          racketVelocity: player.state.velocity +
-              playerRacketTangent() *
-                  (inputSystem.racketAngularVelocity * Tuning.racketReach),
-        ),
-    };
+    final command = inputSystem.activeSwingCommand;
+    final didHit = shotSystem.attemptManualContact(
+      ball: ball.state,
+      hitter: player.state,
+      racketPosition: playerRacketPosition(),
+      aimDirection: command?.aimDirection ?? playerRacketDirection(),
+      intent: command?.intent,
+      power: command?.power ?? 0,
+    );
     if (!didHit) {
       return false;
     }
@@ -353,6 +350,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     audioService.playHit();
     hapticsService.light();
     player.showHitConfirm();
+    inputSystem.consumeSwingCommand();
     _showFeedback(shotSystem.lastShotType?.name.toUpperCase() ?? 'HIT');
     vfx.spawnContact(
       courtPosition: Vector2(preHitBall.x, preHitBall.y),
@@ -520,7 +518,6 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       size: size,
       canMove: !isWaitingToServe,
       inputSystem: inputSystem,
-      controlMode: controlMode,
     );
   }
 
@@ -542,7 +539,6 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       pointerId: pointerId,
       size: size,
       inputSystem: inputSystem,
-      controlMode: controlMode,
     );
   }
 
@@ -554,26 +550,6 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       pointerId: pointerId,
       size: size,
       inputSystem: inputSystem,
-      controlMode: controlMode,
     );
-  }
-
-  bool _tryAssistedPlayerContact() {
-    final command = inputSystem.activeSwingCommand;
-    if (command == null) {
-      return false;
-    }
-    final didHit = shotSystem.attemptAssistedContact(
-      ball: ball.state,
-      hitter: player.state,
-      racketPosition: playerRacketPosition(),
-      aimDirection: command.aimDirection,
-      intent: command.intent,
-      power: command.power,
-    );
-    if (didHit) {
-      inputSystem.consumeSwingCommand();
-    }
-    return didHit;
   }
 }

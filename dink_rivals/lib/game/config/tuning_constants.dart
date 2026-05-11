@@ -13,10 +13,8 @@ class Tuning {
   static const double cleanContactRadius = 15.0;
   static const double forgivenContactRadius = 34.0;
   static const double emergencyBodyContactRadius = 30.0;
-  static const double assistedSwingWindowSeconds = 0.24;
-  static const double assistedDriveGestureDistance = 26.0;
-  static const double assistedSmashGestureDistance = 24.0;
-  static const int assistedLobHoldMilliseconds = 260;
+  static const double shotSwipeWindowSeconds = 0.28;
+  static const double shotSwipeDistance = 34.0;
   static const double lowBallMaxZ = 22.0;
   static const double smashableBallMinZ = 48.0;
   static const double playableBallMaxZ = 86.0;

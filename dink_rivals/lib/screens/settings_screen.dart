@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../app/audio_provider.dart';
 import '../app/router.dart';
 import '../game/config/visual_palette.dart';
-import '../game/models/gameplay_control_mode.dart';
 import '../services/save_service.dart';
 import '../widgets/arcade_panel.dart';
 
@@ -46,21 +45,6 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
                 const Divider(color: VisualPalette.netMeshStroke),
-                SwitchListTile(
-                  key: const Key('settings-assisted-controls-toggle'),
-                  title: const Text('Assisted Controls'),
-                  subtitle: Text(data.gameplayControlMode.settingsSubtitle),
-                  value: data.gameplayControlMode ==
-                      GameplayControlMode.assistedAimGesture,
-                  onChanged: (value) {
-                    ref.read(audioServiceProvider).playMenuClick();
-                    notifier.setGameplayControlMode(
-                      value
-                          ? GameplayControlMode.assistedAimGesture
-                          : GameplayControlMode.classicRacketStick,
-                    );
-                  },
-                ),
                 SwitchListTile(
                   key: const Key('settings-sound-toggle'),
                   title: const Text('Sound'),

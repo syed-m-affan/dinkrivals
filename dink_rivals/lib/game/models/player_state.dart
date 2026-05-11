@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 
 import 'player_side.dart';
+import 'shot_type.dart';
 
 class PlayerState {
   PlayerState({
@@ -16,4 +17,5 @@ class PlayerState {
   PlayerSide side;
   bool canHit;
   bool isSwinging;
+  ShotType? lastShotType;
 }

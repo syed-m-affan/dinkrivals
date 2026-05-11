@@ -18,7 +18,7 @@ void main() {
 
     expect(data.soundEnabled, isTrue);
     expect(data.hapticsEnabled, isTrue);
-    expect(data.gameplayControlMode, GameplayControlMode.assistedAimGesture);
+    expect(data.gameplayControlMode, GameplayControlMode.classicRacketStick);
     expect(data.matchesCompleted, 0);
   });
 
@@ -50,7 +50,7 @@ void main() {
     expect(reloaded.soundEnabled, isFalse);
     expect(reloaded.hapticsEnabled, isTrue);
     expect(
-        reloaded.gameplayControlMode, GameplayControlMode.assistedAimGesture);
+        reloaded.gameplayControlMode, GameplayControlMode.classicRacketStick);
   });
 
   test('partial keys still produce a usable SaveData', () async {
@@ -61,7 +61,7 @@ void main() {
     final data = await service.load();
     expect(data.soundEnabled, isFalse);
     expect(data.hapticsEnabled, isTrue);
-    expect(data.gameplayControlMode, GameplayControlMode.assistedAimGesture);
+    expect(data.gameplayControlMode, GameplayControlMode.classicRacketStick);
     expect(data.matchesCompleted, 0);
   });
 

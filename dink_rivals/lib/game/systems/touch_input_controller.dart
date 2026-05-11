@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flame/components.dart';
 
 import '../config/tuning_constants.dart';
-import '../models/gameplay_control_mode.dart';
 import '../models/swing_intent.dart';
 import 'input_system.dart';
 
@@ -41,12 +40,13 @@ class TouchControlLayout {
 class TouchInputController {
   int? _movementPointerId;
   int? _swingPointerId;
-  Vector2? _swingStartPosition;
-  Vector2? _swingLastPosition;
-  DateTime? _swingStartedAt;
+  int? _shotPointerId;
+  Vector2? _shotStartPosition;
+  Vector2? _shotLastPosition;
 
   int? get movementPointerId => _movementPointerId;
   int? get swingPointerId => _swingPointerId;
+  int? get shotPointerId => _shotPointerId;
 
   bool handlePointerStart({
     required int pointerId,
@@ -54,21 +54,15 @@ class TouchInputController {
     required Vector2 size,
     required bool canMove,
     required InputSystem inputSystem,
-    required GameplayControlMode controlMode,
   }) {
     final layout = TouchControlLayout(size);
     if (layout.isInSwingControl(position) && _swingPointerId == null) {
       _swingPointerId = pointerId;
-      _swingStartPosition = position.clone();
-      _swingLastPosition = position.clone();
-      _swingStartedAt = DateTime.now();
-      if (controlMode == GameplayControlMode.assistedAimGesture) {
-        _setAimFromPosition(
-          position: position,
-          layout: layout,
-          inputSystem: inputSystem,
-        );
-      }
+      _setAimFromPosition(
+        position: position,
+        layout: layout,
+        inputSystem: inputSystem,
+      );
       return true;
     }
     if (!canMove) {
@@ -83,6 +77,14 @@ class TouchInputController {
       );
       return true;
     }
+    if (_shotPointerId == null &&
+        !layout.isInMoveControl(position) &&
+        !layout.isInServeButton(position)) {
+      _shotPointerId = pointerId;
+      _shotStartPosition = position.clone();
+      _shotLastPosition = position.clone();
+      return true;
+    }
     return false;
   }
 
@@ -92,7 +94,6 @@ class TouchInputController {
     required Vector2 size,
     required bool canMove,
     required InputSystem inputSystem,
-    required GameplayControlMode controlMode,
   }) {
     final layout = TouchControlLayout(size);
     if (pointerId == _movementPointerId) {
@@ -106,16 +107,15 @@ class TouchInputController {
       return true;
     }
     if (pointerId == _swingPointerId) {
-      if (controlMode == GameplayControlMode.assistedAimGesture) {
-        _setAimFromPosition(
-          position: position,
-          layout: layout,
-          inputSystem: inputSystem,
-        );
-        _swingLastPosition = position.clone();
-        return true;
-      }
-      _swingRacketFromPosition(position, inputSystem);
+      _setAimFromPosition(
+        position: position,
+        layout: layout,
+        inputSystem: inputSystem,
+      );
+      return true;
+    }
+    if (pointerId == _shotPointerId) {
+      _shotLastPosition = position.clone();
       return true;
     }
     return false;
@@ -125,7 +125,6 @@ class TouchInputController {
     required int pointerId,
     required Vector2 size,
     required InputSystem inputSystem,
-    required GameplayControlMode controlMode,
   }) {
     if (pointerId == _movementPointerId) {
       _movementPointerId = null;
@@ -133,21 +132,20 @@ class TouchInputController {
       return true;
     }
     if (pointerId == _swingPointerId) {
-      if (controlMode == GameplayControlMode.assistedAimGesture) {
-        final layout = TouchControlLayout(size);
-        final start = _swingStartPosition ?? layout.swingCenter;
-        final end = _swingLastPosition ?? start;
-        final elapsed = DateTime.now()
-            .difference(_swingStartedAt ?? DateTime.now())
-            .inMilliseconds;
-        _submitAssistedSwing(
+      _clearSwingPointer();
+      return true;
+    }
+    if (pointerId == _shotPointerId) {
+      final start = _shotStartPosition;
+      final end = _shotLastPosition ?? start;
+      if (start != null && end != null) {
+        _submitSwipeShot(
           start: start,
           end: end,
-          elapsedMilliseconds: elapsed,
           inputSystem: inputSystem,
         );
       }
-      _clearSwingPointer();
+      _clearShotPointer();
       return true;
     }
     return false;
@@ -160,9 +158,12 @@ class TouchInputController {
 
   void _clearSwingPointer() {
     _swingPointerId = null;
-    _swingStartPosition = null;
-    _swingLastPosition = null;
-    _swingStartedAt = null;
+  }
+
+  void _clearShotPointer() {
+    _shotPointerId = null;
+    _shotStartPosition = null;
+    _shotLastPosition = null;
   }
 
   void _setJoystickFromPosition({
@@ -200,10 +201,9 @@ class TouchInputController {
     inputSystem.setAimDirection(aim);
   }
 
-  void _submitAssistedSwing({
+  void _submitSwipeShot({
     required Vector2 start,
     required Vector2 end,
-    required int elapsedMilliseconds,
     required InputSystem inputSystem,
   }) {
     final delta = end - start;
@@ -215,18 +215,16 @@ class TouchInputController {
       distance: distance,
       absX: absX,
       absY: absY,
-      elapsedMilliseconds: elapsedMilliseconds,
     );
-    final flickPower = (distance / Tuning.assistedDriveGestureDistance)
-        .clamp(0.0, 1.0)
-        .toDouble();
-    final holdPower = (elapsedMilliseconds / Tuning.assistedLobHoldMilliseconds)
-        .clamp(0.0, 1.0)
-        .toDouble();
+    if (intent == null) {
+      return;
+    }
+    final flickPower =
+        (distance / Tuning.shotSwipeDistance).clamp(0.0, 1.0).toDouble();
     final power = switch (intent) {
-      SwingIntent.dink => 0.22,
-      SwingIntent.drive => math.max(0.42, flickPower),
-      SwingIntent.lob => math.max(0.55, holdPower),
+      SwingIntent.dink => 0.18,
+      SwingIntent.drive => math.max(0.66, flickPower),
+      SwingIntent.lob => math.max(0.62, flickPower * 0.82),
       SwingIntent.smash => math.max(0.72, flickPower),
     };
     inputSystem.submitSwingCommand(
@@ -236,33 +234,26 @@ class TouchInputController {
     );
   }
 
-  SwingIntent _intentForGesture({
+  SwingIntent? _intentForGesture({
     required Vector2 delta,
     required double distance,
     required double absX,
     required double absY,
-    required int elapsedMilliseconds,
   }) {
-    final isMostlyVertical = absY > absX * 0.8;
-    if (delta.y > Tuning.assistedSmashGestureDistance && isMostlyVertical) {
+    if (distance < Tuning.shotSwipeDistance) {
+      return null;
+    }
+    final isMostlyVertical = absY > absX * 1.05;
+    final isMostlyHorizontal = absX >= absY * 0.85;
+    if (delta.y > Tuning.shotSwipeDistance && isMostlyVertical) {
       return SwingIntent.smash;
     }
-    if (elapsedMilliseconds >= Tuning.assistedLobHoldMilliseconds) {
+    if (delta.y < -Tuning.shotSwipeDistance && isMostlyVertical) {
       return SwingIntent.lob;
     }
-    if (distance >= Tuning.assistedDriveGestureDistance) {
+    if (isMostlyHorizontal) {
       return SwingIntent.drive;
     }
-    return SwingIntent.dink;
-  }
-
-  void _swingRacketFromPosition(Vector2 position, InputSystem inputSystem) {
-    final previous = _swingLastPosition ?? position;
-    final delta = position - previous;
-    inputSystem.swingRacket(
-      delta.x * Tuning.racketSwingRadiansPerPixel,
-      Tuning.maxRacketAngleRadians,
-    );
-    _swingLastPosition = position.clone();
+    return null;
   }
 }

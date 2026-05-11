@@ -4,7 +4,7 @@ class SaveData {
   const SaveData({
     this.soundEnabled = true,
     this.hapticsEnabled = true,
-    this.gameplayControlMode = GameplayControlMode.assistedAimGesture,
+    this.gameplayControlMode = GameplayControlMode.classicRacketStick,
     this.matchesCompleted = 0,
   });
 

@@ -97,7 +97,7 @@ class InputSystem {
       intent: intent,
       aimDirection: this.aimDirection.clone(),
       power: power.clamp(0.0, 1.0).toDouble(),
-      remainingSeconds: Tuning.assistedSwingWindowSeconds,
+      remainingSeconds: Tuning.shotSwipeWindowSeconds,
     );
   }
 

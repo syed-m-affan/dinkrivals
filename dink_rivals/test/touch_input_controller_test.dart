@@ -1,7 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
 import 'package:dink_rivals/game/models/swing_intent.dart';
 import 'package:dink_rivals/game/systems/input_system.dart';
 import 'package:dink_rivals/game/systems/touch_input_controller.dart';
@@ -19,7 +18,6 @@ void main() {
       size: size,
       canMove: true,
       inputSystem: input,
-      controlMode: GameplayControlMode.assistedAimGesture,
     );
 
     expect(handled, isTrue);
@@ -30,7 +28,6 @@ void main() {
       pointerId: 1,
       size: size,
       inputSystem: input,
-      controlMode: GameplayControlMode.assistedAimGesture,
     );
 
     expect(input.hasMovementInput, isFalse);
@@ -49,14 +46,13 @@ void main() {
       size: size,
       canMove: false,
       inputSystem: input,
-      controlMode: GameplayControlMode.assistedAimGesture,
     );
 
     expect(handled, isFalse);
     expect(input.hasMovementInput, isFalse);
   });
 
-  test('swing pointer changes racket angle and clears independently', () {
+  test('right stick aims racket and clears independently', () {
     final controller = TouchInputController();
     final input = InputSystem();
     final size = Vector2(360, 720);
@@ -68,7 +64,6 @@ void main() {
       size: size,
       canMove: false,
       inputSystem: input,
-      controlMode: GameplayControlMode.classicRacketStick,
     );
     controller.handlePointerUpdate(
       pointerId: 2,
@@ -76,7 +71,6 @@ void main() {
       size: size,
       canMove: false,
       inputSystem: input,
-      controlMode: GameplayControlMode.classicRacketStick,
     );
 
     expect(input.racketAngle, greaterThan(0));
@@ -86,36 +80,81 @@ void main() {
       pointerId: 2,
       size: size,
       inputSystem: input,
-      controlMode: GameplayControlMode.classicRacketStick,
     );
 
     expect(controller.swingPointerId, isNull);
   });
 
-  test('assisted swing pad submits a dink command on tap release', () {
+  test('screen swipe submits shot command without using aim stick', () {
     final controller = TouchInputController();
     final input = InputSystem();
     final size = Vector2(360, 720);
-    final layout = TouchControlLayout(size);
-    final aimPoint = layout.swingCenter + Vector2(0, -40);
+    final start = Vector2(size.x * 0.5, size.y * 0.45);
 
     controller.handlePointerStart(
       pointerId: 2,
-      position: aimPoint,
+      position: start,
       size: size,
-      canMove: false,
+      canMove: true,
       inputSystem: input,
-      controlMode: GameplayControlMode.assistedAimGesture,
+    );
+    controller.handlePointerUpdate(
+      pointerId: 2,
+      position: start + Vector2(70, 4),
+      size: size,
+      canMove: true,
+      inputSystem: input,
     );
     controller.handlePointerEnd(
       pointerId: 2,
       size: size,
       inputSystem: input,
-      controlMode: GameplayControlMode.assistedAimGesture,
     );
 
-    expect(input.activeSwingCommand?.intent, SwingIntent.dink);
+    expect(input.activeSwingCommand?.intent, SwingIntent.drive);
     expect(input.activeSwingCommand?.aimDirection.y, lessThan(0));
+  });
+
+  test('up and down swipes map to lob and smash', () {
+    final controller = TouchInputController();
+    final input = InputSystem();
+    final size = Vector2(360, 720);
+    final start = Vector2(size.x * 0.5, size.y * 0.45);
+
+    controller.handlePointerStart(
+      pointerId: 3,
+      position: start,
+      size: size,
+      canMove: true,
+      inputSystem: input,
+    );
+    controller.handlePointerUpdate(
+      pointerId: 3,
+      position: start + Vector2(0, -54),
+      size: size,
+      canMove: true,
+      inputSystem: input,
+    );
+    controller.handlePointerEnd(pointerId: 3, size: size, inputSystem: input);
+    expect(input.activeSwingCommand?.intent, SwingIntent.lob);
+
+    input.consumeSwingCommand();
+    controller.handlePointerStart(
+      pointerId: 4,
+      position: start,
+      size: size,
+      canMove: true,
+      inputSystem: input,
+    );
+    controller.handlePointerUpdate(
+      pointerId: 4,
+      position: start + Vector2(0, 54),
+      size: size,
+      canMove: true,
+      inputSystem: input,
+    );
+    controller.handlePointerEnd(pointerId: 4, size: size, inputSystem: input);
+    expect(input.activeSwingCommand?.intent, SwingIntent.smash);
   });
 
   test('swing control accepts a larger mobile touch target', () {

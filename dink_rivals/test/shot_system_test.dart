@@ -344,7 +344,7 @@ void main() {
     expect(shotSystem.lastShotType, ShotType.smash);
   });
 
-  test('assisted contact converts tap intent into a dink', () {
+  test('manual passive contact converts to a low-power dink', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -359,12 +359,11 @@ void main() {
     );
     final shotSystem = ShotSystem();
 
-    final didHit = shotSystem.attemptAssistedContact(
+    final didHit = shotSystem.attemptManualContact(
       ball: ball,
       hitter: player,
       racketPosition: racketPosition,
       aimDirection: Vector2(0, -1),
-      intent: SwingIntent.dink,
     );
 
     expect(didHit, isTrue);
@@ -372,7 +371,7 @@ void main() {
     expect(ball.vy, lessThan(0));
   });
 
-  test('assisted smash requires smashable ball height', () {
+  test('manual smash intent requires smashable ball height', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -395,7 +394,7 @@ void main() {
     final lowShotSystem = ShotSystem();
     final highShotSystem = ShotSystem();
 
-    lowShotSystem.attemptAssistedContact(
+    lowShotSystem.attemptManualContact(
       ball: lowBall,
       hitter: player,
       racketPosition: racketPosition,
@@ -403,7 +402,7 @@ void main() {
       intent: SwingIntent.smash,
       power: 1,
     );
-    highShotSystem.attemptAssistedContact(
+    highShotSystem.attemptManualContact(
       ball: highBall,
       hitter: player,
       racketPosition: racketPosition,
@@ -433,7 +432,7 @@ void main() {
     );
     final shotSystem = ShotSystem();
 
-    final didHit = shotSystem.attemptAssistedContact(
+    final didHit = shotSystem.attemptManualContact(
       ball: ball,
       hitter: player,
       racketPosition: racketPosition,

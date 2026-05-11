@@ -61,17 +61,18 @@ class ShotSystem {
     ball.hasBouncedThisSide = false;
     ball.isInPlay = true;
     hitter.isSwinging = true;
+    hitter.lastShotType = ShotType.serve;
     lastShotType = ShotType.serve;
     _setCooldown(hitter.side);
   }
 
-  bool attemptAssistedContact({
+  bool attemptManualContact({
     required BallState ball,
     required PlayerState hitter,
     required Vector2 racketPosition,
     required Vector2 aimDirection,
-    required SwingIntent intent,
-    double power = 0.5,
+    SwingIntent? intent,
+    double power = 0,
   }) {
     if (_cooldownFor(hitter.side) > 0) {
       return false;
@@ -85,16 +86,19 @@ class ShotSystem {
       return false;
     }
 
-    final shotType = _shotTypeForIntent(intent, contact);
+    final shotIntent = intent ?? SwingIntent.dink;
+    final shotPower = intent == null ? 0.16 : power;
+    final shotType = _shotTypeForIntent(shotIntent, contact);
     _applyProfiledShot(
       ball: ball,
       hitterSide: hitter.side,
       shotType: shotType,
       aimDirection: aimDirection,
-      power: power,
+      power: shotPower,
       quality: contact.quality,
     );
     hitter.isSwinging = true;
+    hitter.lastShotType = shotType;
     lastShotType = shotType;
     _setCooldown(hitter.side);
     return true;
@@ -200,6 +204,7 @@ class ShotSystem {
       quality: contact.quality,
     );
     hitter.isSwinging = true;
+    hitter.lastShotType = shotType;
     lastShotType = shotType;
     _setCooldown(hitter.side);
     return true;
@@ -227,6 +232,7 @@ class ShotSystem {
       quality: ContactQuality.clean,
     );
     hitter.isSwinging = true;
+    hitter.lastShotType = shotType;
     lastShotType = shotType;
     _setCooldown(hitter.side);
     return true;
@@ -332,8 +338,7 @@ class ShotSystem {
     return switch (intent) {
       SwingIntent.dink => ShotType.dink,
       SwingIntent.drive => ShotType.drive,
-      SwingIntent.lob =>
-        contact.heightBand == BallHeightBand.low ? ShotType.dink : ShotType.lob,
+      SwingIntent.lob => ShotType.lob,
       SwingIntent.smash => contact.heightBand == BallHeightBand.smashable
           ? ShotType.smash
           : ShotType.drive,
@@ -394,7 +399,7 @@ class ShotSystem {
         switch (shotType) {
           ShotType.dink || ShotType.block => _lerp(228, 204, power),
           ShotType.drive || ShotType.serve => _lerp(148, 58, depth),
-          ShotType.lob => 52,
+          ShotType.lob => 132,
           ShotType.smash => 36,
         },
       );
@@ -404,7 +409,7 @@ class ShotSystem {
       switch (shotType) {
         ShotType.dink || ShotType.block => _lerp(252, 276, power),
         ShotType.drive || ShotType.serve => _lerp(332, 422, depth),
-        ShotType.lob => 428,
+        ShotType.lob => 348,
         ShotType.smash => 444,
       },
     );
