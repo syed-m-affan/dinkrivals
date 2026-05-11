@@ -21,6 +21,7 @@ import 'models/match_state.dart';
 import 'models/opponent_serve_phase.dart';
 import 'models/player_side.dart';
 import 'models/rule_result.dart';
+import 'models/shot_type.dart';
 import 'systems/ball_physics_system.dart';
 import 'systems/input_system.dart';
 import 'systems/match_rules_system.dart';
@@ -399,12 +400,19 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
 
   void _executeOpponentServe() {
     _glueBallToOpponentServeRacket();
-    shotSystem.serve(
-      ball: ball.state,
-      hitter: opponent.state,
-      racketDirection: _opponentServeDirection,
-      power: 0.55,
-    );
+    // Dedicated beginner-friendly opponent serve profile — slower and lower
+    // than the player parametric serve, so the ball lands around the player
+    // kitchen line and is returnable.
+    ball.state
+      ..vx = _opponentServeDirection.x * Tuning.opponentServeSpeed
+      ..vy = _opponentServeDirection.y * Tuning.opponentServeSpeed
+      ..vz = Tuning.opponentServeLift
+      ..arcGravityScale = Tuning.serveArcGravityScale
+      ..lastHitBy = PlayerSide.opponent
+      ..hasBouncedThisSide = false
+      ..isInPlay = true;
+    opponent.state.isSwinging = true;
+    shotSystem.lastShotType = ShotType.serve;
     if (!matchState.pointInProgress) {
       matchState.startPoint();
     }

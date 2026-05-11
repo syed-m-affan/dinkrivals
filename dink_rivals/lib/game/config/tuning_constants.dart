@@ -46,6 +46,11 @@ class Tuning {
   static const double serveMaxLift = 170.0;
   static const double serveChargeDuration = 1.15;
   static const double serveArcGravityScale = 0.40;
+  // Dedicated opponent-serve profile. Calibrated so the ball lands roughly
+  // around the player's kitchen line (court y ≈ 270-290) instead of the
+  // back baseline — opponent serves should be returnable for a beginner.
+  static const double opponentServeSpeed = 130.0;
+  static const double opponentServeLift = 140.0;
 
   static const double gravity = 440.0;
   static const double bounceDamping = 0.76;
