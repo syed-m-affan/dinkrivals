@@ -42,20 +42,10 @@ class BallPhysicsSystem {
       ball.hasBouncedThisSide = true;
     }
 
-    if (ball.x < Court.left) {
-      ball.x = Court.left;
-      ball.vx = ball.vx.abs() * 0.45;
-    } else if (ball.x > Court.right) {
-      ball.x = Court.right;
-      ball.vx = -ball.vx.abs() * 0.45;
-    }
-    if (ball.y < Court.top) {
-      ball.y = Court.top;
-      ball.vy = ball.vy.abs() * 0.45;
-    } else if (ball.y > Court.bottom) {
-      ball.y = Court.bottom;
-      ball.vy = -ball.vy.abs() * 0.45;
-    }
+    // Soft boundary rebound removed: live balls must be allowed to land out
+    // of bounds so MatchRulesSystem can resolve the OOB fault. Resting balls
+    // (`isInPlay == false`) are short-circuited at the top of update and
+    // repositioned by `DinkRivalsGame.resetPoint()` instead. See P1-008.
 
     final crossedNet = (previousY - Court.netY) * (ball.y - Court.netY) < 0;
     if (crossedNet) {

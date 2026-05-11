@@ -32,17 +32,20 @@ class MatchRulesSystem {
       return const RuleResult.continuePlay();
     }
 
-    if (physics.landedOutOfBounds) {
-      return RuleResult.point(
-        winner: (ball.lastHitBy ?? ball.currentSide).opponent,
-        fault: RuleFault.outOfBounds,
-      );
-    }
-
+    // Double bounce is checked before out-of-bounds: once the receiver has
+    // failed to return a legally-bounced ball, the rally is already won by
+    // the hitter, regardless of where the ball ends up on its second bounce.
     if (physics.wasDoubleBounce) {
       return RuleResult.point(
         winner: ball.currentSide.opponent,
         fault: RuleFault.doubleBounce,
+      );
+    }
+
+    if (physics.landedOutOfBounds) {
+      return RuleResult.point(
+        winner: (ball.lastHitBy ?? ball.currentSide).opponent,
+        fault: RuleFault.outOfBounds,
       );
     }
 

@@ -12,7 +12,6 @@ import 'components/net_component.dart';
 import 'components/opponent_component.dart';
 import 'components/player_component.dart';
 import 'components/rally_feedback_component.dart';
-import 'components/reset_button_component.dart';
 import 'components/score_component.dart';
 import 'components/shadow_component.dart';
 import 'config/court_constants.dart';
@@ -48,6 +47,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   String feedbackText = '';
   double feedbackSeconds = 0;
 
+  bool paused = false;
+  final ValueNotifier<bool> matchOverNotifier = ValueNotifier<bool>(false);
+
   double _courtScale = 1;
   Vector2 _courtOffset = Vector2.zero();
   int? _movementPointerId;
@@ -73,7 +75,6 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     add(ScoreComponent(this));
     add(RallyFeedbackComponent(this));
     add(DebugOverlayComponent(this));
-    add(ResetButtonComponent(this));
   }
 
   @override
@@ -119,6 +120,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   @override
   void update(double dt) {
     super.update(dt);
+    if (paused) {
+      return;
+    }
     inputSystem.updateRacket(dt);
     shotSystem.update(dt);
 
@@ -130,7 +134,15 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       dt: dt,
     );
 
-    if (!matchState.matchOver) {
+    if (!ball.state.isInPlay && !matchState.matchOver) {
+      // Serve state: ball follows the racket tip until the player taps SERVE.
+      final racketTip = playerRacketPosition();
+      ball.state.x = racketTip.x;
+      ball.state.y = racketTip.y;
+      ball.state.z = 0;
+    }
+
+    if (!matchState.matchOver && ball.state.isInPlay) {
       final preHitBall = BallState(
         x: ball.state.x,
         y: ball.state.y,
@@ -249,10 +261,33 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     opponent.state.position
         .setValues(Court.opponentStartX, Court.opponentStartY);
     opponent.state.velocity.setZero();
+    player.state.position
+        .setValues(Court.playerStartX, Court.playerStartY);
+    player.state.velocity.setZero();
     inputSystem.resetRacket();
+    // Pointer IDs and movement state intentionally preserved so a player who
+    // is still holding the movement / swing joystick keeps controlling the
+    // player through point resets (see ticket P0-003). Flame's drag-end
+    // callbacks clean up the pointer state when the finger actually lifts.
     rallyCount = 0;
     matchState.resetPoint();
     shotSystem.lastShotType = null;
+    feedbackText = '';
+    feedbackSeconds = 0;
+  }
+
+  void resetMatch() {
+    matchState.playerScore = 0;
+    matchState.opponentScore = 0;
+    matchState.matchOver = false;
+    matchState.longestRally = 0;
+    matchState.playerDinkContactsThisMatch = 0;
+    matchState.playerSmashContactsThisMatch = 0;
+    lastRuleResult = null;
+    matchOverNotifier.value = false;
+    if (isLoaded) {
+      resetPoint();
+    }
   }
 
   void _awardPoint(RuleResult result) {
@@ -266,6 +301,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     resetPoint();
     if (matchState.matchOver) {
       ball.state.isInPlay = false;
+      matchOverNotifier.value = true;
     }
   }
 
@@ -290,6 +326,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
     final position = event.canvasPosition;
+    if (_isInServeButton(position)) {
+      _triggerServe();
+      return;
+    }
     if (_isInMoveControl(position) && _movementPointerId == null) {
       _movementPointerId = event.pointerId;
       _setJoystickFromPosition(position);
@@ -330,6 +370,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   void onDragStart(DragStartEvent event) {
     super.onDragStart(event);
     final position = event.canvasPosition;
+    if (_isInServeButton(position)) {
+      _triggerServe();
+      return;
+    }
     if (_isInMoveControl(position) && _movementPointerId == null) {
       _movementPointerId = event.pointerId;
       _setJoystickFromPosition(position);
@@ -380,6 +424,36 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   void _clearSwingPointer() {
     _swingPointerId = null;
     _swingLastPosition = null;
+  }
+
+  Vector2 get _serveButtonCenter => Vector2(size.x * 0.5, size.y - 96);
+
+  double get _serveButtonRadius => 44;
+
+  bool _isInServeButton(Vector2 position) {
+    if (ball.state.isInPlay) {
+      return false;
+    }
+    return position.distanceTo(_serveButtonCenter) <= _serveButtonRadius;
+  }
+
+  void _triggerServe() {
+    if (ball.state.isInPlay || matchState.matchOver || paused) {
+      return;
+    }
+    final racketTip = playerRacketPosition();
+    ball.state.x = racketTip.x;
+    ball.state.y = racketTip.y;
+    ball.state.z = 0;
+    shotSystem.serve(
+      ball: ball.state,
+      hitter: player.state,
+      racketDirection: playerRacketDirection(),
+    );
+    if (!matchState.pointInProgress) {
+      matchState.startPoint();
+    }
+    _showFeedback('SERVE');
   }
 
   Vector2 get _joystickCenter => Vector2(size.x * 0.24, size.y - 118);
@@ -537,5 +611,36 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       Offset(swingCenter.x - swingText.width / 2,
           swingCenter.y - _swingJoystickRadius - 22),
     );
+
+    if (!ball.state.isInPlay && !matchState.matchOver) {
+      final serveCenter = _serveButtonCenter;
+      final serveFill = Paint()..color = const Color(0xCCFFCB47);
+      final serveStroke = Paint()
+        ..color = const Color(0xFFFFFFFF)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3;
+      canvas.drawCircle(
+          serveCenter.toOffset(), _serveButtonRadius, serveFill);
+      canvas.drawCircle(
+          serveCenter.toOffset(), _serveButtonRadius, serveStroke);
+      final serveText = TextPainter(
+        text: const TextSpan(
+          text: 'SERVE',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
+        ),
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: _serveButtonRadius * 2);
+      serveText.paint(
+        canvas,
+        Offset(serveCenter.x - serveText.width / 2,
+            serveCenter.y - serveText.height / 2),
+      );
+    }
   }
 }

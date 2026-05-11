@@ -172,6 +172,134 @@ void main() {
     expect(high.vz, Tuning.smashInitialZ);
     expect(low.vz, isNot(Tuning.smashInitialZ));
   });
+
+  test('stationary ball swung left-to-right with forward face goes forward-right', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: 0,
+      isInPlay: false,
+    );
+
+    ShotSystem().attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2(90, 0),
+    );
+
+    expect(ball.vx, greaterThan(0));
+    expect(ball.vy, lessThan(0));
+    expect(ball.vx, greaterThan(-ball.vy * 0.3));
+  });
+
+  test('incoming ball reflects off angled face', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0.5, -0.866);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: 30,
+      vy: 30,
+      isInPlay: true,
+    );
+
+    ShotSystem().attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2.zero(),
+    );
+
+    expect(ball.vx, greaterThan(0));
+    expect(ball.vy, lessThan(0));
+  });
+
+  test('serve launches ball forward at minimum serve speed and lift', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final ball = BallState(
+      x: 110,
+      y: 400 - Tuning.racketReach,
+      z: 0,
+      isInPlay: false,
+    );
+
+    ShotSystem().serve(
+      ball: ball,
+      hitter: player,
+      racketDirection: racketDirection,
+    );
+
+    expect(ball.isInPlay, isTrue);
+    expect(ball.lastHitBy, PlayerSide.player);
+    expect(ball.vy, closeTo(-Tuning.serveMinOutputSpeed, 0.01));
+    expect(ball.vz, Tuning.serveMinLift);
+  });
+
+  test('serve aims along racket direction', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0.6, -0.8);
+    final ball = BallState(x: 110, y: 360, z: 0, isInPlay: false);
+
+    ShotSystem().serve(
+      ball: ball,
+      hitter: player,
+      racketDirection: racketDirection,
+    );
+
+    expect(ball.vx, greaterThan(0));
+    expect(ball.vy, lessThan(0));
+  });
+
+  test('running diagonally biases shot toward run direction', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    player.velocity.setValues(-180, -180);
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: 30,
+      vy: 50,
+      isInPlay: true,
+    );
+
+    ShotSystem().attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2(0, -90),
+    );
+
+    expect(ball.vx, lessThan(0));
+    expect(ball.vy, lessThan(0));
+  });
 }
 
 BallState _hitWithSwingSpeed(double swingSpeed) {

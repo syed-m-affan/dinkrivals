@@ -126,3 +126,84 @@
   - Are smaller player circles still readable?
   - Are 10+ crossing rallies achievable?
   - Does the ball avoid getting stuck at the court edges?
+
+---
+
+# Phase 2 - Notes
+
+## Build info
+- Build date: 2026-05-10
+- Dependencies added: go_router, flutter_riverpod (3.3.1), shared_preferences
+
+## What landed (P2-001..P2-006)
+- App shell: `ProviderScope` + `MaterialApp.router` via GoRouter (routes `/`, `/game`, `/settings`, `/roster`, `/end-match`).
+- Save service: `SaveService` over `shared_preferences` for `soundEnabled`, `hapticsEnabled`, `matchesCompleted`. Riverpod `Notifier`/`NotifierProvider` (3.x API).
+- Main menu screen: Quick Match / Roster / Settings buttons, placeholder DR logo, phase label.
+- Roster screen: read-only list of the four MVP characters (Rookie, Rally Queen, Veteran, Showman).
+- Settings screen: Sound + Haptics `SwitchListTile`s wired to the save provider, persisted on toggle.
+- Game screen wrapper: `GameWidget<DinkRivalsGame>` in a `Stack` with a pause IconButton; tapping pauses, hardware back also pauses (PopScope). Pause overlay shows Resume / Return to Menu.
+- DinkRivalsGame additions: `paused` flag (update(dt) early-returns), `resetMatch()` method, `matchOverNotifier` (ValueNotifier<bool>) that flips true when `_awardPoint` sees `matchOver`.
+- End-match screen: detects `matchOverNotifier` from the game screen, navigates to `/end-match`, increments `matchesCompleted` once, shows winner banner + final score + rally stats, Rematch / Return to Menu buttons.
+
+## Verification done
+- `flutter analyze` clean, zero warnings.
+- `flutter test` passes 47/47 (added: save service tests, save data notifier tests, settings widget tests, end-match screen widget tests, pause flag unit tests; existing 30 still green).
+- `flutter build apk --debug` succeeds.
+- Android install on Pixel 10 Pro XL was pending at end of session (device disconnected before final install).
+
+## Known caveats
+- Riverpod 3.x uses `Notifier`/`NotifierProvider`; legacy `StateNotifier` was abandoned during implementation.
+- DinkRivalsGame is constructed once via `dinkRivalsGameProvider` and persists across navigation. `resetMatch()` is the canonical "fresh match" entry point for Rematch / Menu return.
+- `recordMatchCompleted` fires when the end-match screen listener triggers — exactly once per completed match. Increment happens in `_handleMatchOver`, not on every `matchOver` write.
+- Sound / Haptics toggles persist but have no observable effect; real audio + haptics belong to Phase 5.
+- Pause currently overlays the swing/movement controls without clearing the bottom-left/right joystick zones. On device, pointer cleanup (`clearMovement`, `_movementPointerId = null`) prevents stuck sticks on resume.
+
+## Manual Android QA still required (P2-007)
+- Launch app boots into main menu (not directly into gameplay).
+- Quick Match starts a match.
+- Pause mid-rally freezes physics/AI/input.
+- Resume continues without snapping.
+- Return-to-Menu from pause resets state.
+- Match plays to 7; end-match summary shows correct winner and score.
+- Rematch starts a fresh 0-0 match.
+- Settings toggles persist after app kill/relaunch.
+- Roster shows four characters.
+- Hardware back from `/game` opens pause (not silent quit).
+- Five minutes uptime, no crash.
+
+---
+
+# Playtest 2026-05-10 (post-Phase 2)
+
+## Findings
+- Movement joystick stopped tracking after a point reset until finger lifted and re-pressed.
+- Serving felt off — bumping a static ball with the racket was inconsistent.
+- Swing speed had no felt impact on outgoing ball speed (saturation at the clamp).
+- Out-of-bounds fault never triggered — the ball always rebounded off the soft boundary.
+- Lob and smash classifications never observed in play; dink vs drive only distinguishable by feedback text.
+- Top of the game canvas overlaps the device notch / notification shade on Pixel 10 Pro XL.
+- Pause / hardware back / settings persistence were not tested this pass.
+
+## Implementation pass (2026-05-10)
+- **P0-003**: `DinkRivalsGame.resetPoint()` no longer clears `_movementPointerId`, `_swingPointerId`, or `inputSystem.clearMovement()`. Drag pointers survive a point reset so a held joystick keeps reading; cleanup happens naturally via Flame's drag/tap-end events.
+- **P0-004**: New serve flow. While `!ball.isInPlay`, the ball is glued to the player's racket tip each frame and a bottom-center SERVE button is rendered. Tap launches the ball along racket direction at `serveMinOutputSpeed` + `serveMinLift` via the new `ShotSystem.serve(...)`. Swing-stick auto-contact is suppressed during serve state so the serve is deliberate.
+- **P0-005**: `racketSwingRadiansPerPixel` 0.016 → 0.005, `swingPowerScale` 0.62 → 0.50, `firmContactSpeed` 176 → 150, `driveSpeedXY` 132 → 116, `smashSpeedXY` 170 → 150, `driveContactThreshold` 124 → 118, `driveArcGravityScale` 0.42 → 0.36, `dinkArcGravityScale` 0.75 → 0.92. Slower swings now stay near the soft clamp; fast swings reach the firm clamp; ball top-speed lowered overall.
+- **P1-008**: Removed the unconditional soft boundary rebound from `BallPhysicsSystem.update`. In-play balls now fly past the court rectangle and produce `landedOutOfBounds = true` on ground contact, triggering the OOB fault.
+- **P1-009**: `lobInitialZ` 86 → 130, `lobArcGravityScale` 0.54 → 0.40 (lob peak ~52 units), `smashMinBallHeight` 64 → 28, `opponentSmashMinBallHeight` 80 → 30, `lobAngleThreshold` 0.86 → 0.65, `opponentLobProbability` 0.18 → 0.32. Lobs go visibly higher; returning a lob is now within smash threshold.
+- **P2-008**: `GameScreen` wraps the `GameWidget` and pause-button stack in `SafeArea` so the gameplay canvas no longer extends under the notch / notification bar.
+
+## Automated verification (2026-05-10)
+- `flutter analyze`: zero issues.
+- `flutter test`: 49/49 (added: in-play OOB landing test, two `serve()` tests).
+- `flutter build apk --debug`: pending in this session.
+
+## Manual QA still required (combined P0-002 / P1-007 / P2-007)
+Re-run the previous QA checklists with attention to:
+- Hold the movement joystick across a point loss — player keeps moving.
+- Serve: ball sits on racket tip, swing stick aims, SERVE button launches in aim direction.
+- Soft swing vs hard swing — visibly different outgoing speeds and arcs.
+- Hit the ball into a side wall — FAULT: OUT fires instead of a rebound.
+- Force a lob (sideways racket angle + soft swing); AI should also throw the occasional lob.
+- After AI lob, drive it down — should classify as SMASH.
+- Confirm top of game canvas no longer overlaps notch / notification shade.
+- Untested in last pass — pause mid-rally freeze, resume without snapping, return-to-menu reset, hardware back → pause, settings persistence across kill+relaunch.

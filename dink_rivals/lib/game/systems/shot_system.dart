@@ -22,6 +22,33 @@ class ShotSystem {
     _opponentHitCooldown = math.max(0, _opponentHitCooldown - dt);
   }
 
+  /// Launches the ball from the racket tip toward `racketDirection` using
+  /// fixed serve speed and lift. Used by the SERVE button so the serve is
+  /// independent of swing-stick motion. See ticket P0-004.
+  void serve({
+    required BallState ball,
+    required PlayerState hitter,
+    required Vector2 racketDirection,
+  }) {
+    final dir = racketDirection.length2 > 0.01
+        ? racketDirection.normalized()
+        : (hitter.side == PlayerSide.player ? Vector2(0, -1) : Vector2(0, 1));
+    ball.vx = dir.x * Tuning.serveMinOutputSpeed;
+    ball.vy = dir.y * Tuning.serveMinOutputSpeed;
+    ball.vz = Tuning.serveMinLift;
+    ball.arcGravityScale = Tuning.serveArcGravityScale;
+    ball.lastHitBy = hitter.side;
+    ball.hasBouncedThisSide = false;
+    ball.isInPlay = true;
+    hitter.isSwinging = true;
+    lastShotType = ShotType.serve;
+    if (hitter.side == PlayerSide.player) {
+      _playerHitCooldown = Tuning.racketHitCooldown;
+    } else {
+      _opponentHitCooldown = Tuning.racketHitCooldown;
+    }
+  }
+
   bool attemptRacketContact({
     required BallState ball,
     required PlayerState hitter,
@@ -44,28 +71,52 @@ class ShotSystem {
     final ballVelocity = Vector2(ball.vx, ball.vy);
     final sideForward =
         hitter.side == PlayerSide.player ? Vector2(0, -1) : Vector2(0, 1);
-    final face = racketDirection.clone();
-    if (face.length2 < 0.01) {
-      face.setFrom(sideForward);
-    } else {
-      face.normalize();
+    final shaft = racketDirection.length2 > 0.01
+        ? racketDirection.normalized()
+        : sideForward.clone();
+
+    final swingDir = Vector2.zero();
+    final swingMinSq = Tuning.swingDirMinSpeed * Tuning.swingDirMinSpeed;
+    if (racketVelocity.length2 > swingMinSq) {
+      swingDir.setFrom(racketVelocity.normalized());
     }
-    // Force the face into the forward half-plane so a misaimed racket can
-    // never send the ball backward into the hitter's own court.
-    if (face.dot(sideForward) < 0) {
-      face.y = sideForward.y * face.y.abs();
-      if (face.length2 < 0.01) {
-        face.setFrom(sideForward);
-      } else {
-        face.normalize();
-      }
+
+    final reflectDir = Vector2.zero();
+    var incomingFactor = 0.0;
+    final ballSpeed = ballVelocity.length;
+    if (ballSpeed > 0.1) {
+      final d = ballVelocity / ballSpeed;
+      reflectDir.setFrom(d - shaft * (2 * d.dot(shaft)));
+      incomingFactor =
+          (ballSpeed / Tuning.reflectFullSpeed).clamp(0.0, 1.0).toDouble();
     }
-    final outgoing = face * Tuning.racketFaceWeight +
-        sideForward * (1 - Tuning.racketFaceWeight);
+
+    final pushDir = Vector2.zero();
+    final pushMinSq = Tuning.playerPushMinSpeed * Tuning.playerPushMinSpeed;
+    if (hitter.velocity.length2 > pushMinSq) {
+      pushDir.setFrom(hitter.velocity.normalized());
+    }
+
+    final outgoing = shaft * Tuning.dirShaftWeight +
+        swingDir * Tuning.dirSwingWeight +
+        reflectDir * (Tuning.dirReflectWeight * incomingFactor) +
+        pushDir * Tuning.dirPushWeight;
     if (outgoing.length2 < 0.01) {
       outgoing.setFrom(sideForward);
     }
     outgoing.normalize();
+
+    if (outgoing.dot(sideForward) < Tuning.backwardClampDot) {
+      outgoing.y = sideForward.y * outgoing.y.abs();
+      if (outgoing.length2 < 0.01) {
+        outgoing.setFrom(sideForward);
+      } else {
+        outgoing.normalize();
+      }
+    }
+
+    // `face` retained for shot classification (lob angle test).
+    final face = shaft;
 
     final isServe = !ball.isInPlay;
     final swingSpeed = racketVelocity.length;
@@ -261,7 +312,8 @@ class ShotSystem {
   }
 
   Vector2 _targetFor(ShotType shotType, PlayerSide side) {
-    final x = (Court.width / 2 + (_random.nextDouble() * 2 - 1) * 16)
+    final x = (Court.width / 2 +
+            (_random.nextDouble() * 2 - 1) * Tuning.opponentTargetJitter)
         .clamp(Court.left + 12, Court.right - 12)
         .toDouble();
     if (side == PlayerSide.player) {

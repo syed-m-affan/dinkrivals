@@ -18,6 +18,7 @@ class OpponentAISystem {
   double _idleTimer = 0;
   Vector2 _target = Vector2(Court.opponentStartX, Court.opponentStartY);
   bool _missedCurrentReturn = false;
+  bool _whiffDecidedThisDefense = false;
 
   void update({
     required BallState ball,
@@ -30,6 +31,7 @@ class OpponentAISystem {
     if (ball.currentSide != PlayerSide.opponent ||
         ball.lastHitBy == PlayerSide.opponent) {
       _missedCurrentReturn = false;
+      _whiffDecidedThisDefense = false;
     }
 
     _reactionTimer -= dt;
@@ -56,21 +58,23 @@ class OpponentAISystem {
       return;
     }
 
+    // Decide whiff exactly once per defense opportunity, not every frame.
+    if (!_whiffDecidedThisDefense) {
+      _whiffDecidedThisDefense = true;
+      if (_random.nextDouble() < Tuning.opponentWhiffChance) {
+        _missedCurrentReturn = true;
+        return;
+      }
+    }
+
     final shotType =
         _chooseShot(ball: ball, opponent: opponent, player: player);
-    final attempted = shotSystem.attemptShot(
+    shotSystem.attemptShot(
       ball: ball,
       hitter: opponent,
       opponent: player,
       shotType: shotType,
     );
-    if (attempted && _random.nextDouble() < Tuning.opponentMissChance) {
-      ball.lastHitBy = player.side;
-      ball.vx *= 0.65;
-      ball.vy *= 0.65;
-      ball.vz *= 0.8;
-      _missedCurrentReturn = true;
-    }
   }
 
   ShotType _chooseShot({
@@ -78,7 +82,8 @@ class OpponentAISystem {
     required PlayerState opponent,
     required PlayerState player,
   }) {
-    if (ball.z >= Tuning.smashMinBallHeight && _random.nextDouble() < 0.55) {
+    if (ball.z >= Tuning.opponentSmashMinBallHeight &&
+        _random.nextDouble() < Tuning.opponentSmashProbability) {
       return ShotType.smash;
     }
     final opponentNearKitchen =
@@ -86,7 +91,7 @@ class OpponentAISystem {
     final playerNearKitchen =
         player.position.y <= Court.playerKitchenBottomY + 22;
     if ((opponentNearKitchen || playerNearKitchen) &&
-        _random.nextDouble() < 0.28) {
+        _random.nextDouble() < Tuning.opponentLobProbability) {
       return ShotType.lob;
     }
     return _random.nextDouble() < Tuning.opponentDinkProbability
@@ -102,14 +107,17 @@ class OpponentAISystem {
   }
 
   Vector2 _readyPosition(BallState ball) {
-    final sway = math.sin(_idleTimer * 0.65) * 7;
-    final creep = math.sin(_idleTimer * 0.48) * 3;
+    final sway = math.sin(_idleTimer * 1.6) * 22;
+    final drift = math.sin(_idleTimer * 0.55) * 14;
+    final bob = math.sin(_idleTimer * 0.9) * 8;
     final shadeX = (ball.x * 0.35 + Court.width * 0.65 / 2)
         .clamp(Court.left + 24, Court.right - 24)
         .toDouble();
     return Vector2(
-      (shadeX + sway).clamp(Court.left + 24, Court.right - 24).toDouble(),
-      92 + creep,
+      (shadeX + sway + drift)
+          .clamp(Court.left + 24, Court.right - 24)
+          .toDouble(),
+      (92 + bob).clamp(Court.top + 18, Court.netY - 30).toDouble(),
     );
   }
 

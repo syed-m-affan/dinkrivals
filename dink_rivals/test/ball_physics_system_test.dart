@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/config/court_constants.dart';
 import 'package:dink_rivals/game/models/ball_state.dart';
+import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/systems/ball_physics_system.dart';
 
 void main() {
@@ -56,20 +57,23 @@ void main() {
     expect(ball.z, 0);
   });
 
-  test('ball rebounds from court boundary instead of sticking', () {
+  test('in-play ball can land out of bounds past court boundary', () {
     final ball = BallState(
-      x: Court.right - 1,
+      x: Court.right - 5,
       y: 300,
-      z: 30,
-      vx: 80,
+      z: 6,
+      vx: 200,
+      vz: -40,
       isInPlay: true,
+      lastHitBy: PlayerSide.player,
     );
     final physics = BallPhysicsSystem();
 
-    physics.update(ball, 0.1);
+    final result = physics.update(ball, 0.1);
 
-    expect(ball.x, Court.right);
-    expect(ball.vx, lessThan(0));
+    expect(ball.x, greaterThan(Court.right));
+    expect(result.groundContact, isTrue);
+    expect(result.landedOutOfBounds, isTrue);
   });
 
   test('ball does not move while point is reset', () {

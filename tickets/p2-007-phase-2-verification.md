@@ -1,12 +1,12 @@
 ---
 id: P2-007
 phase: 2
-status: todo
+status: review
 priority: high
 parallel_group: final
 depends_on: [P2-002, P2-003, P2-004, P2-005, P2-006]
 blocks: []
-owner: unassigned
+owner: claude
 last_updated: 2026-05-10
 ---
 
@@ -69,6 +69,15 @@ From build-spec §13 Phase 2:
 - App runs 5 minutes on device without crash.
 - `PHASE_NOTES.md` includes Phase 2 QA results and any known issues.
 - `tickets/status.md` marks Phase 2 complete only after this ticket and all `P2-*` tickets are `done`.
+
+## Automated Evidence
+
+Completed on 2026-05-10:
+
+- `flutter analyze` passed with zero warnings.
+- `flutter test` passed 47/47 (30 prior + 17 Phase 2: save_service, save_data_notifier, settings_screen widget, end_match_screen widget, dink_rivals_game pause).
+- `flutter build apk --debug` succeeded.
+- Android install was attempted via `flutter install -d 58011FDCQ00992 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`; device was disconnected at install time, so the install + on-device smoke test was not completed in-session.
 
 ## Manual QA Still Required
 

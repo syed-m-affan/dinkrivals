@@ -1,12 +1,12 @@
 ---
 id: P2-004
 phase: 2
-status: todo
+status: done
 priority: high
 parallel_group: D
 depends_on: [P2-001, P2-002]
 blocks: [P2-007]
-owner: unassigned
+owner: claude
 last_updated: 2026-05-10
 ---
 

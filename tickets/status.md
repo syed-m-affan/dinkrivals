@@ -4,11 +4,13 @@ Last updated: 2026-05-10
 
 ## Current Assessment
 
-Phase 0 is implemented and has been iterated through ten tuning/control passes. The codebase already includes a playable gray-box court, visible swing controls, full racket-segment hitbox, ball/shadow, pseudo-3D physics, opponent AI, debug overlay, reset point, deterministic tests, and Android install/run notes in `dink_rivals/PHASE_NOTES.md`.
+Phase 0 is implemented and has been iterated through ten tuning/control passes plus a 2026-05-10 playtest follow-up (P0-003 movement pointer reset, P0-004 serve mechanic, P0-005 swing speed/ball speed tuning). The codebase includes a playable gray-box court, visible swing controls, ball-on-racket serve + SERVE button, full racket-segment hitbox, pseudo-3D physics, opponent AI, debug overlay, reset point, and deterministic tests.
 
-Phase 0 remains in `review` until final human playtest confirms the latest swing-control/tuning questions in `PHASE_NOTES.md`. Phase 1 implementation is now present: match state, scoring, rules, point flow, expanded contact classifications, AI classification choices, score display, and rally feedback are implemented. Final Phase 1 manual Android QA is still pending.
+Phase 1 implementation is present: match state, scoring, rules, point flow, expanded contact classifications, AI classification choices, score display, and rally feedback. 2026-05-10 follow-ups added P1-008 (OOB fault now resolves — soft rebound removed for in-play balls) and P1-009 (lob/smash thresholds re-tuned, AI lobs more often).
 
-Phase 2 tickets (`P2-001..P2-007`) are drafted and `todo`. Phase 2 wraps gameplay in a real app shell: GoRouter + Riverpod foundation, save service, main menu, roster placeholder, settings with persisted sound/haptics toggles, pause/resume, end-match summary, and Android verification. No phase-2 implementation work has started.
+Phase 2 implementation is complete (`P2-001..P2-006` are `done`) with 2026-05-10 follow-up P2-008 wrapping the game canvas in `SafeArea` so it no longer overlaps the notch / notification bar.
+
+Open review tickets are P0-002, P1-007, P2-007. All three remain in `review` pending a fresh human Android playtest of the new build (`flutter analyze` clean, 49/49 tests pass, debug APK built 2026-05-10).
 
 ## Dashboard
 
@@ -23,13 +25,19 @@ Phase 2 tickets (`P2-001..P2-007`) are drafted and `todo`. Phase 2 wraps gamepla
 | P1-005 | 1 | done | medium | E | [P1-004] | Improve opponent AI for beginner rallies under Phase 1 shots/rules. |
 | P1-006 | 1 | done | medium | F | [P1-001, P1-003, P1-004] | Add scoreboard and rally feedback text. |
 | P1-007 | 1 | review | high | final | [P1-003, P1-005, P1-006] | Phase 1 verification, Android QA checklist, and notes. |
-| P2-001 | 2 | todo | high | A | [] | App shell: GoRouter + Riverpod, route scaffolding for menu/game/settings/roster. |
-| P2-002 | 2 | todo | high | B | [] | Save service backed by `shared_preferences` for sound/haptics/matches-completed. |
-| P2-003 | 2 | todo | high | C | [P2-001] | Main menu with Quick Match / Roster / Settings, plus roster placeholder listing the four MVP characters. |
-| P2-004 | 2 | todo | high | D | [P2-001, P2-002] | Settings screen with persisted Sound and Haptics toggles. |
-| P2-005 | 2 | todo | high | E | [P2-001] | Game screen wrapper, Pause button, Pause overlay, and pause-aware `update(dt)`. |
-| P2-006 | 2 | todo | high | F | [P2-001, P2-005] | End-match summary screen with Rematch / Return to Menu and `matchesCompleted` increment. |
-| P2-007 | 2 | todo | high | final | [P2-002, P2-003, P2-004, P2-005, P2-006] | Phase 2 verification, Android QA checklist, and notes. |
+| P2-001 | 2 | done | high | A | [] | App shell: GoRouter + Riverpod, route scaffolding for menu/game/settings/roster. |
+| P2-002 | 2 | done | high | B | [] | Save service backed by `shared_preferences` for sound/haptics/matches-completed. |
+| P2-003 | 2 | done | high | C | [P2-001] | Main menu with Quick Match / Roster / Settings, plus roster placeholder listing the four MVP characters. |
+| P2-004 | 2 | done | high | D | [P2-001, P2-002] | Settings screen with persisted Sound and Haptics toggles. |
+| P2-005 | 2 | done | high | E | [P2-001] | Game screen wrapper, Pause button, Pause overlay, and pause-aware `update(dt)`. |
+| P2-006 | 2 | done | high | F | [P2-001, P2-005] | End-match summary screen with Rematch / Return to Menu and `matchesCompleted` increment. |
+| P2-007 | 2 | review | high | final | [P2-002, P2-003, P2-004, P2-005, P2-006] | Phase 2 verification, Android QA checklist, and notes. |
+| P0-003 | 0 | done | high | A | [] | Movement pointer survives `resetPoint()` so the player keeps moving through a point loss. |
+| P0-004 | 0 | done | high | A | [] | Serve mechanic: ball glued to racket tip + SERVE button launches along racket direction. |
+| P0-005 | 0 | done | medium | A | [] | Swing-speed / ball-speed tuning so soft vs firm swings produce visibly different shots. |
+| P1-008 | 1 | done | high | A | [] | Removed soft boundary rebound for in-play balls so OOB faults trigger. |
+| P1-009 | 1 | done | medium | A | [] | Lob/smash thresholds re-tuned + AI lob probability raised. |
+| P2-008 | 2 | done | medium | A | [] | Game canvas wrapped in `SafeArea` so it no longer overlaps notch / status bar. |
 
 ## Open Coordination Notes
 
