@@ -54,7 +54,11 @@ Last updated: 2026-05-11
   evidence at
   `docs/art/visual-overhaul/evidence/character-animation-frame-fix/gameplay.png`.
 - End-match evidence uses the refreshed UI golden because reaching match end deterministically from ADB is not part of the current gameplay harness.
-- The latest Pixel install succeeded when the device was available; the final texture pass used emulator evidence because the Pixel was disconnected.
+- The latest Pixel install succeeded when the device was available. A later
+  Pixel recapture attempt was discarded because the screenshots showed the
+  lockscreen bouncer while the app was only focused behind the keyguard.
+  Current visual evidence therefore remains emulator/device-install based, not
+  fresh physical gameplay screenshot based.
 
 ## Residual Gaps
 

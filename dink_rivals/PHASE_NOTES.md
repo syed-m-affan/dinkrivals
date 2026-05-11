@@ -277,3 +277,11 @@ Re-run the previous QA checklists with attention to:
 - Added rear sign/lamp/planter park depth, fixed-buffer ball trail rendering, refreshed contact/bounce VFX, top-center feedback banner, and visual-only swing power meter/control polish without changing touch hit regions.
 - The original serve-state opponent animation bug is covered by `player_component_test.dart`: opponent velocity selects the `run` pose even while the point is not in progress.
 - Verification passed: `flutter analyze`, `flutter test` (145/145), `flutter build apk --debug`, `flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`, emulator launch, menu screenshot, and Quick Match serve-state screenshot. Physical-device human playtest and subjective concept signoff remain outside this automated closeout.
+- Follow-up visual indicator pass: fixed generated character sheet frame slicing,
+  movement-direction sprite reflection, player point-result visibility after
+  point end, idle shot-chip highlighting, active `LOB`/`SMASH` chip labels, and
+  full-diameter committed swing hitbox lanes. Verification passed with
+  `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator
+  install, and Pixel 10 Pro XL install. Latest Pixel screenshot recapture was
+  discarded because the device remained on the lockscreen bouncer while the app
+  was focused behind keyguard.

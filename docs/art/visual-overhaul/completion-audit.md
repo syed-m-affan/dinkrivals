@@ -34,7 +34,7 @@ automated evidence set.
 | Menu and result screens share gameplay visual identity | `ParkBackdrop`, updated menu/roster/settings/end-match screens, refreshed `phase-5g-*.png` goldens | Done |
 | Asset manifests document generated sources and ownership | VFX, character, and court generated prompt/source docs exist; runtime asset README files link back to source contact sheets | Done for current pass |
 | Emulator and physical Pixel screenshots are captured and archived | Pixel menu screenshot exists at `docs/art/visual-overhaul/evidence/pixel-latest-menu.png`; generated character pass Pixel screenshots exist; final evidence files now exist for menu, serve, rally/countdown, feedback, pause, and end-match | Done for current pass; end-match uses UI golden rather than ADB gameplay capture |
-| Physical Android gameplay readability and performance checked | Current generated character build installed and launched on Pixel 10 Pro XL; no complete five-minute gameplay smoke is archived. Per user direction, physical Pixel evidence is no longer a blocker for continuing implementation unless the device is currently available. | Missing for final closeout only |
+| Physical Android gameplay readability and performance checked | Current build installed on Pixel 10 Pro XL; latest Pixel screenshot recapture attempt reached `com.example.dink_rivals/.MainActivity` but the device stayed on the lockscreen bouncer, so those screenshots were discarded. No complete five-minute gameplay smoke is archived. Per user direction, physical Pixel evidence is no longer a blocker for continuing implementation unless the device is currently unlocked/available. | Missing for final closeout only |
 | Closeout has residual gap backlog | `docs/art/visual-overhaul/perspective-fix-spec.md` covers perspective; this audit lists remaining gaps | Partial |
 
 ## Current Evidence
@@ -98,6 +98,10 @@ Verification performed during this thread:
   idle and vertical swipes identify the active `LOB` or `SMASH` state.
 - Swing-lane rendering was corrected to show the full committed swing contact
   capsule diameter instead of a thinner hint line.
+- The current debug APK was installed on Pixel 10 Pro XL after the visual
+  indicator fixes. A Pixel screenshot recapture attempt was discarded because
+  the device remained locked on `AlternateBouncerView` even though ADB focused
+  `com.example.dink_rivals/.MainActivity`.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
@@ -133,9 +137,10 @@ Subagent validation:
    updated in the same branch.
 
 2. Pixel gameplay evidence is incomplete.
-   The current build installed and launched on Pixel, but do not mark visual
-   closeout complete until fresh serve/rally/feedback screenshots and a short
-   smoke run are archived.
+   The current build installed on Pixel, but latest screenshot capture was a
+   lockscreen capture and was discarded. Do not mark visual closeout complete
+   until fresh serve/rally/feedback screenshots and a short smoke run are
+   archived from an unlocked device.
 
 3. End-match screenshot is not a device gameplay capture.
    The exact final filename exists, but it is copied from the refreshed UI

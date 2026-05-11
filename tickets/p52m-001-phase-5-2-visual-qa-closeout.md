@@ -95,3 +95,4 @@ flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/output
 - Implemented: added `docs/art/phase-5.2-comparison.md`, refreshed goldens, passed analyzer/tests/build, and captured Android emulator menu/gameplay smoke screenshots.
 - Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.
 - Status: remains in `review` because the ticket requires physical Android gameplay smoke or explicit human/device validation before it can be marked `done`.
+- Latest Pixel note: current debug APK installed on Pixel 10 Pro XL, but ADB screenshot capture stayed on the lockscreen bouncer while the app was focused behind keyguard, so those screenshots were discarded and do not satisfy this ticket.
