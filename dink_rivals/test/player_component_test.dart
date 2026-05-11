@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/components/opponent_component.dart';
@@ -9,6 +11,8 @@ import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('player animation switches between idle run and swing', () {
     final game = DinkRivalsGame();
     final component = PlayerComponent(game);
@@ -162,4 +166,46 @@ void main() {
 
     expect(component.currentPoseNameForTesting(), 'pointWin');
   });
+
+  test('sprite frame count follows actual sheet width', () async {
+    final game = DinkRivalsGame();
+    final player = PlayerComponent(game);
+    final opponent = OpponentComponent(game);
+
+    final playerDrive =
+        await _loadImage('assets/images/sprites/player_drive.png');
+    final playerRun = await _loadImage('assets/images/sprites/player_run.png');
+    final opponentSmash =
+        await _loadImage('assets/images/sprites/opponent_smash.png');
+
+    expect(player.frameCountForTesting(playerDrive), 1);
+    expect(player.frameCountForTesting(playerRun), 2);
+    expect(opponent.frameCountForTesting(opponentSmash), 1);
+  });
+
+  test('character facing follows horizontal movement direction', () {
+    final game = DinkRivalsGame();
+    final player = PlayerComponent(game);
+    final opponent = OpponentComponent(game);
+
+    expect(player.facingXForTesting(), 1);
+    player.state.velocity = Vector2(-20, 0);
+    player.update(0.016);
+    expect(player.facingXForTesting(), -1);
+    player.state.velocity = Vector2(20, 0);
+    player.update(0.016);
+    expect(player.facingXForTesting(), 1);
+
+    expect(opponent.facingXForTesting(), -1);
+    opponent.state.velocity = Vector2(20, 0);
+    opponent.update(0.016);
+    expect(opponent.facingXForTesting(), 1);
+  });
+}
+
+Future<ui.Image> _loadImage(String path) async {
+  final data = await rootBundle.load(path);
+  final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+  final frame = await codec.getNextFrame();
+  return frame.image;
 }

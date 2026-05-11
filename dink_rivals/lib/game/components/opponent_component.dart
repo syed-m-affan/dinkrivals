@@ -39,6 +39,7 @@ class OpponentComponent extends Component {
   double _swingSeconds = 0;
   double _hitConfirmSeconds = 0;
   double _pointResultSeconds = 0;
+  double _facingX = -1;
   PlayerSide? _pointResultWinner;
   bool _pendingHitConfirm = false;
 
@@ -71,6 +72,9 @@ class OpponentComponent extends Component {
   void update(double dt) {
     priority = state.position.y.round();
     _animationSeconds += dt;
+    if (state.velocity.x.abs() > _runThreshold * 0.35) {
+      _facingX = state.velocity.x.sign;
+    }
     if (state.isSwinging) {
       _swingSeconds = switch (state.lastShotType) {
         ShotType.dink => 2 / 14,
@@ -128,19 +132,7 @@ class OpponentComponent extends Component {
     if (sheet == null) {
       return false;
     }
-    final frames = switch (pose) {
-      _OpponentPose.idle => 2,
-      _OpponentPose.run => 4,
-      _OpponentPose.swing => 3,
-      _OpponentPose.dink => 3,
-      _OpponentPose.drive => 3,
-      _OpponentPose.lob => 3,
-      _OpponentPose.smash => 3,
-      _OpponentPose.ready => 2,
-      _OpponentPose.hitConfirm => 2,
-      _OpponentPose.pointWin => 2,
-      _OpponentPose.pointLoss => 2,
-    };
+    final frames = _frameCountFor(sheet);
     final fps = switch (pose) {
       _OpponentPose.idle => 2,
       _OpponentPose.run => 8,
@@ -170,17 +162,16 @@ class OpponentComponent extends Component {
       size.width,
       size.height,
     );
-    final visual = _poseVisualFor(pose);
     canvas.save();
     canvas.translate(dst.center.dx, dst.center.dy);
-    canvas.rotate(visual.angle);
+    canvas.scale(_facingX, 1);
     canvas.drawImageRect(
       sheet,
       src,
       Rect.fromCenter(
-        center: Offset(0, visual.offsetY * scale),
-        width: dst.width * visual.scaleX,
-        height: dst.height * visual.scaleY,
+        center: Offset.zero,
+        width: dst.width,
+        height: dst.height,
       ),
       Paint()..filterQuality = FilterQuality.none,
     );
@@ -224,14 +215,25 @@ class OpponentComponent extends Component {
 
   @visibleForTesting
   static double swingLeanForShotForTesting(ShotType? shotType) {
-    return _poseVisualFor(switch (shotType) {
+    return switch (shotType) {
       ShotType.dink || ShotType.block => _OpponentPose.dink,
       ShotType.drive || ShotType.serve => _OpponentPose.drive,
       ShotType.lob => _OpponentPose.lob,
       ShotType.smash => _OpponentPose.smash,
       null => _OpponentPose.swing,
-    })
-        .angle;
+    }
+        .index
+        .toDouble();
+  }
+
+  @visibleForTesting
+  int frameCountForTesting(ui.Image sheet) => _frameCountFor(sheet);
+
+  @visibleForTesting
+  double facingXForTesting() => _facingX;
+
+  int _frameCountFor(ui.Image sheet) {
+    return (sheet.width / 32).round().clamp(1, 8);
   }
 
   void showHitConfirm() {
@@ -290,46 +292,6 @@ class OpponentComponent extends Component {
   static double visualScaleFor(double depthScale) {
     return depthScale * _farCourtReadabilityScale;
   }
-}
-
-_PoseVisual _poseVisualFor(_OpponentPose pose) {
-  return switch (pose) {
-    _OpponentPose.dink => const _PoseVisual(
-        scaleX: 0.96,
-        scaleY: 0.94,
-        angle: 0.04,
-        offsetY: 1.5,
-      ),
-    _OpponentPose.drive =>
-      const _PoseVisual(scaleX: 1.10, scaleY: 0.96, angle: -0.08),
-    _OpponentPose.lob => const _PoseVisual(
-        scaleX: 0.98,
-        scaleY: 1.08,
-        angle: 0.10,
-        offsetY: -2,
-      ),
-    _OpponentPose.smash => const _PoseVisual(
-        scaleX: 1.08,
-        scaleY: 1.12,
-        angle: -0.14,
-        offsetY: -3,
-      ),
-    _ => const _PoseVisual(),
-  };
-}
-
-class _PoseVisual {
-  const _PoseVisual({
-    this.scaleX = 1,
-    this.scaleY = 1,
-    this.angle = 0,
-    this.offsetY = 0,
-  });
-
-  final double scaleX;
-  final double scaleY;
-  final double angle;
-  final double offsetY;
 }
 
 enum _OpponentPose {
