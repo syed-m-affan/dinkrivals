@@ -39,6 +39,9 @@ Last updated: 2026-05-11
 - `flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`: passed.
 - App launched on `emulator-5554`.
 - Menu, serve, rally/countdown, feedback, and pause screenshots were captured from the current emulator build.
+- Repeatable Android evidence capture is available via
+  `tools/capture_android_evidence.ps1`; it launches the app, captures menu,
+  enters Quick Match, captures serve, pauses, and captures pause.
 - The simple-mid character revision was also installed and smoke-captured on
   `emulator-5554` at
   `docs/art/visual-overhaul/evidence/emulator-character-simple-mid-gameplay.png`.

@@ -74,6 +74,9 @@ Verification performed during this thread:
   and `flutter build apk --debug` passed. The debug APK was installed to
   `emulator-5554`; `flutter devices` did not list the physical Pixel at that
   time.
+- `tools/capture_android_evidence.ps1` was added and smoke-tested on
+  `emulator-5554`; it captures menu, serve, and pause evidence through ADB
+  without hand-entered tap/screenshot commands.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
@@ -119,9 +122,11 @@ Subagent validation:
 
 4. Gameplay visual automation is weak.
    UI goldens cover menus/screens, but Flame gameplay screenshots are still
-   primarily device-captured. A direct offscreen Flame render harness was
-   attempted after the simple-mid character pass, but it hung before producing
-   valid image evidence and was not checked in.
+   device-captured. A repeatable ADB capture helper now covers menu, serve, and
+   pause, but rally/feedback/end-match gameplay states are not yet deterministic
+   in local tests. A direct offscreen Flame render harness was attempted after
+   the simple-mid character pass, but it hung before producing valid image
+   evidence and was not checked in.
 
 ## Next Safe Work
 
