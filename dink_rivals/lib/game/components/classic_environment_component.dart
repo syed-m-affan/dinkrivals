@@ -71,14 +71,18 @@ class ClassicEnvironmentComponent extends Component {
 
   @override
   void render(Canvas canvas) {
-    if (_renderGeneratedBackground(canvas)) {
-      return;
+    final hasGeneratedBackground = _drawGeneratedBackgroundBase(canvas);
+    if (hasGeneratedBackground) {
+      _drawCourtApron(canvas);
+      _drawGeneratedFenceAnchor(canvas);
+      _drawGeneratedCourtShadow(canvas);
+      _drawGeneratedDepthWash(canvas);
+    } else {
+      _drawGround(canvas);
+      _drawBackTreeLine(canvas);
+      _drawBackFenceBand(canvas);
+      _drawCourtApron(canvas);
     }
-
-    _drawGround(canvas);
-    _drawBackTreeLine(canvas);
-    _drawBackFenceBand(canvas);
-    _drawCourtApron(canvas);
     final props = [...EnvironmentLayout.classicProps]
       ..sort((a, b) => a.courtAnchor.y.compareTo(b.courtAnchor.y));
     for (final prop in props) {
@@ -86,7 +90,7 @@ class ClassicEnvironmentComponent extends Component {
     }
   }
 
-  bool _renderGeneratedBackground(Canvas canvas) {
+  bool _drawGeneratedBackgroundBase(Canvas canvas) {
     final image = _generatedBackground;
     if (image == null) {
       return false;
@@ -108,11 +112,18 @@ class ClassicEnvironmentComponent extends Component {
       image,
       Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
       dst,
-      Paint()..filterQuality = FilterQuality.medium,
+      Paint()..filterQuality = FilterQuality.none,
     );
-    _drawGeneratedFenceAnchor(canvas);
-    _drawGeneratedCourtShadow(canvas);
     return true;
+  }
+
+  void _drawGeneratedDepthWash(Canvas canvas) {
+    final topBand = Rect.fromLTWH(0, 0, game.size.x, game.size.y * 0.20);
+    canvas.drawRect(
+      topBand,
+      Paint()..color = const Color(0x2210231D),
+    );
+    _drawControlQuieting(canvas);
   }
 
   void _drawGeneratedFenceAnchor(Canvas canvas) {

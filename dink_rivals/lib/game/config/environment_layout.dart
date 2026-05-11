@@ -43,7 +43,7 @@ class EnvironmentPropPlacement {
 
 class EnvironmentLayout {
   static const String generatedBackgroundAsset =
-      'environment/classic/park_background_generated.png';
+      'environment/classic/park_background_overhaul.png';
   static const String groundTileAsset =
       'environment/classic/off_court_ground_tile.png';
   static const String softShadowAsset =
@@ -112,6 +112,20 @@ class EnvironmentLayout {
       assetPath: 'environment/classic/bench.png',
       courtAnchor: Vector2(-82, 236),
       logicalSize: Vector2(64, 42),
+    ),
+    EnvironmentPropPlacement(
+      id: 'bench_right',
+      assetPath: 'environment/classic/bench.png',
+      courtAnchor: Vector2(304, 246),
+      logicalSize: Vector2(58, 38),
+      opacity: 0.88,
+    ),
+    EnvironmentPropPlacement(
+      id: 'lamp_left',
+      assetPath: 'environment/classic/lamp_post.png',
+      courtAnchor: Vector2(-98, 186),
+      logicalSize: Vector2(30, 68),
+      opacity: 0.9,
     ),
     EnvironmentPropPlacement(
       id: 'lamp_right',
@@ -187,6 +201,20 @@ class EnvironmentLayout {
       logicalSize: Vector2(38, 38),
       opacity: 0.82,
       mayUnderlapCourt: true,
+    ),
+    EnvironmentPropPlacement(
+      id: 'planter_side_left',
+      assetPath: 'environment/classic/planter_cluster.png',
+      courtAnchor: Vector2(-98, 178),
+      logicalSize: Vector2(34, 34),
+      opacity: 0.88,
+    ),
+    EnvironmentPropPlacement(
+      id: 'shrub_side_right',
+      assetPath: 'environment/classic/shrub_cluster.png',
+      courtAnchor: Vector2(336, 176),
+      logicalSize: Vector2(46, 28),
+      opacity: 0.86,
     ),
   ];
 }

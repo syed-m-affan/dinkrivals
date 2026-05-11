@@ -35,6 +35,7 @@ class PlayerComponent extends Component {
   double _swingSeconds = 0;
   double _hitConfirmSeconds = 0;
   double _pointResultSeconds = 0;
+  PlayerSide? _pointResultWinner;
   bool _pendingHitConfirm = false;
 
   static const double _runThreshold = 12;
@@ -171,8 +172,13 @@ class PlayerComponent extends Component {
     if (!game.matchState.pointInProgress) {
       return _PlayerPose.idle;
     }
-    if (_hitConfirmSeconds > 0 || _pointResultSeconds > 0) {
-      return _PlayerPose.idle;
+    if (_hitConfirmSeconds > 0) {
+      return _PlayerPose.hitConfirm;
+    }
+    if (_pointResultSeconds > 0) {
+      return _pointResultWinner == state.side
+          ? _PlayerPose.pointWin
+          : _PlayerPose.pointLoss;
     }
     if (state.velocity.length > _runThreshold) {
       return _PlayerPose.run;
@@ -205,6 +211,7 @@ class PlayerComponent extends Component {
     _pendingHitConfirm = false;
     _hitConfirmSeconds = 0;
     _pointResultSeconds = 0.72;
+    _pointResultWinner = winner;
   }
 
   void _renderGroundShadow(Canvas canvas) {

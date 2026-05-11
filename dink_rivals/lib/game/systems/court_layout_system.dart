@@ -7,7 +7,7 @@ import '../util/court_projection.dart';
 
 class CourtLayoutSystem {
   static const double minTopHudReserve = 72;
-  static const double minBottomControlReserve = 180;
+  static const double minBottomControlReserve = 430;
 
   double _courtScale = 1;
   Vector2 _courtOffset = Vector2.zero();
@@ -37,11 +37,11 @@ class CourtLayoutSystem {
     final projectedWidth = maxX - minX;
     final projectedHeight = maxY - minY;
     final topReserve = math.min(size.y * 0.10, minTopHudReserve);
-    final bottomReserve = math.min(size.y * 0.18, minBottomControlReserve);
+    final bottomReserve = math.min(size.y * 0.24, minBottomControlReserve);
     final availableHeight = math.max(1.0, size.y - topReserve - bottomReserve);
 
     _projectedMin = Vector2(minX, minY);
-    _courtScale = (size.x * 0.94 / projectedWidth)
+    _courtScale = (size.x * 0.86 / projectedWidth)
         .clamp(0.1, availableHeight / projectedHeight)
         .toDouble();
     _courtOffset = Vector2(

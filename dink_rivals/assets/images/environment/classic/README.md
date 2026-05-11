@@ -4,6 +4,7 @@ All files in this folder are original low-detail retro placeholder pixel assets 
 
 | File | Size | Intended use | Layer | Dominant hue | Value range | Safe zones | Phone readability note | Status |
 | --- | ---: | --- | --- | --- | --- | --- | --- | --- |
+| `park_background_overhaul.png` | 979x1606 | Generated full-scene park court base used behind procedural court and layered props | Far/base | Park green and court blue | Bright-mid | Keep court corridor readable; props may layer over it | Closest current asset to the concept screenshot target | Overhaul pass |
 | `off_court_ground_tile.png` | 192x128 | Repeating courtside grass/ground tile behind the court | Ground | Desaturated green | Medium-dark | Off-court only; keep quieter under controls | Avoid high-frequency repeats near translucent sticks | Placeholder |
 | `far_fence_segment.png` | 192x160 | Far-background fence or low wall segment | Far backdrop | Blue-gray | Dark-mid | Behind far baseline only | Mesh should stay dimmer than net and ball | Placeholder |
 | `tree_cluster.png` | 192x192 | Off-court tree mass placed behind active play | Far/side prop | Olive green | Dark-mid | Outside active lines and HUD | Chunky masses only; avoid saturated leaves near court edge | Placeholder |
@@ -19,4 +20,4 @@ Shared support asset:
 | --- | ---: | --- | --- | --- | --- | --- | --- | --- |
 | `../shared/soft_shadow_patch.png` | 128x64 | Soft environmental shadow under props | Shadow | Black alpha | Low contrast | Under props only | Must not look like ball shadow or fault marker | Placeholder |
 
-Generation approach: a low-detail ChatGPT image-generation source sheet was created under `.codex/generated_images`, then a local Pillow import pass cropped each prop, removed the flat chroma-key background, normalized purple-blue fringe toward the fence palette, and resized into the asset files above. No third-party art was used.
+Generation approach: a low-detail ChatGPT image-generation source sheet was created under `.codex/generated_images`, then a local Pillow import pass cropped each prop, removed the flat chroma-key background, normalized purple-blue fringe toward the fence palette, and resized into the asset files above. The overhaul background was generated with the built-in image generation tool and copied from `C:\Users\saffa\.codex\generated_images\019e17dc-950d-7d92-a846-b0ee361d56e5\ig_0d1d334c34e07226016a022744fe188195909c178b3bf6f96e.png`. No third-party art was used.

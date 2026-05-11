@@ -124,6 +124,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     }
 
     inputSystem.updateRacket(dt);
+    _spawnMissForExpiredSwing();
     _startPlayerSwingAnimation();
     shotSystem.update(dt);
 
@@ -393,6 +394,19 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
         SwingIntent.smash => ShotType.smash,
       };
     inputSystem.markSwingAnimationStarted();
+  }
+
+  void _spawnMissForExpiredSwing() {
+    final command = inputSystem.consumeExpiredSwingCommand();
+    if (command == null || matchState.matchOver || !ball.state.isInPlay) {
+      return;
+    }
+    vfx.spawnSwingMiss(
+      hitter: player.state,
+      intent: command.intent,
+      swipeDirection: command.swipeDirection,
+    );
+    _showFeedback('MISS');
   }
 
   void _updateFeedback(double dt) {

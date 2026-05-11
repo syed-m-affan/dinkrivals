@@ -70,10 +70,10 @@ void main() {
     expect(component.currentPoseNameForTesting(), 'swing');
 
     component.update(0.18);
-    expect(component.currentPoseNameForTesting(), 'idle');
+    expect(component.currentPoseNameForTesting(), 'hitConfirm');
   });
 
-  test('point result keeps character model visually consistent', () {
+  test('point result switches to win and loss poses', () {
     final game = DinkRivalsGame();
     final player = PlayerComponent(game);
     final opponent = OpponentComponent(game);
@@ -82,8 +82,8 @@ void main() {
     player.showPointResult(player.state.side);
     opponent.showPointResult(player.state.side);
 
-    expect(player.currentPoseNameForTesting(), 'idle');
-    expect(opponent.currentPoseNameForTesting(), 'idle');
+    expect(player.currentPoseNameForTesting(), 'pointWin');
+    expect(opponent.currentPoseNameForTesting(), 'pointLoss');
 
     player.update(0.73);
     opponent.update(0.73);
@@ -91,7 +91,7 @@ void main() {
     expect(opponent.currentPoseNameForTesting(), 'idle');
   });
 
-  test('point result clears queued hit confirm without changing model', () {
+  test('point result clears queued hit confirm and shows result pose', () {
     final game = DinkRivalsGame();
     final component = PlayerComponent(game);
     game.matchState.startPoint();
@@ -99,6 +99,6 @@ void main() {
     component.showHitConfirm();
     component.showPointResult(component.state.side);
 
-    expect(component.currentPoseNameForTesting(), 'idle');
+    expect(component.currentPoseNameForTesting(), 'pointWin');
   });
 }

@@ -4,8 +4,12 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/debug_flags.dart';
+import '../../config/tuning_constants.dart';
 import '../../dink_rivals_game.dart';
+import '../../models/player_state.dart';
 import '../../models/shot_type.dart';
+import '../../models/swing_intent.dart';
+import '../../systems/shot_system.dart';
 
 enum VfxSprite {
   hitSpark('vfx/hit_spark.png'),
@@ -112,18 +116,71 @@ class VfxLayerComponent extends Component {
     }
     clearBallTrail();
     final isSmash = shotType == ShotType.smash;
+    final isLob = shotType == ShotType.lob;
+    final isDrive = shotType == ShotType.drive || shotType == ShotType.serve;
     final sprite = isSmash ? VfxSprite.smashFlash : VfxSprite.hitSpark;
     final depthScale = game.depthScaleForY(courtPosition.y);
     _addEffect(
       _ActiveVfx(
         sprite: sprite,
         position: game.courtToWorld(courtPosition, z),
-        logicalSize: Vector2.all(
-          game.logicalToScreen((isSmash ? 28 : 24) * depthScale),
+        logicalSize: Vector2(
+          game.logicalToScreen(
+            (isSmash
+                    ? 34
+                    : isDrive
+                        ? 30
+                        : isLob
+                            ? 28
+                            : 22) *
+                depthScale,
+          ),
+          game.logicalToScreen(
+            (isLob
+                    ? 18
+                    : isDrive
+                        ? 20
+                        : isSmash
+                            ? 34
+                            : 22) *
+                depthScale,
+          ),
         ),
         lifetime: 0.16,
         startScale: 0.85,
-        endScale: 1.18,
+        endScale: isDrive ? 1.32 : 1.18,
+      ),
+    );
+  }
+
+  void spawnSwingMiss({
+    required PlayerState hitter,
+    required SwingIntent intent,
+    required Vector2 swipeDirection,
+  }) {
+    if (!DebugFlags.useVfx) {
+      return;
+    }
+    final path = ShotSystem.committedSwingPath(
+      hitter: hitter,
+      intent: intent,
+      swipeDirection: swipeDirection,
+    );
+    final center = (path.start + path.end) * 0.5;
+    final depthScale = game.depthScaleForY(hitter.position.y);
+    final isVertical = intent == SwingIntent.lob || intent == SwingIntent.smash;
+    _addEffect(
+      _ActiveVfx(
+        sprite: VfxSprite.trailSegment,
+        position: game.courtToWorld(center, Tuning.racketContactZ),
+        logicalSize: Vector2(
+          game.logicalToScreen((isVertical ? 16 : 34) * depthScale),
+          game.logicalToScreen((isVertical ? 34 : 13) * depthScale),
+        ),
+        lifetime: 0.20,
+        startScale: 0.92,
+        endScale: 1.15,
+        opacityScale: 0.58,
       ),
     );
   }

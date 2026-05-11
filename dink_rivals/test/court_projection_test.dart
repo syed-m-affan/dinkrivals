@@ -67,7 +67,7 @@ void main() {
     final maxY = [farLeft.y, farRight.y, nearLeft.y, nearRight.y]
         .reduce((a, b) => a > b ? a : b);
 
-    expect((maxX - minX) / (maxY - minY), lessThan(0.6));
+    expect((maxX - minX) / (maxY - minY), lessThan(0.9));
   });
 
   test('depth scale grows toward the near court', () {

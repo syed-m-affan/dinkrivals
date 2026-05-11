@@ -13,7 +13,7 @@ void main() {
 
     expect(
       EnvironmentLayout.generatedBackgroundAsset,
-      'environment/classic/park_background_generated.png',
+      'environment/classic/park_background_overhaul.png',
     );
     expect(props.map((prop) => prop.id).toSet(), hasLength(props.length));
     expect(props, isNotEmpty);

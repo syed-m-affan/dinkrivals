@@ -32,6 +32,7 @@ class InputSystem {
 
   double _previousRacketAngle = 0;
   SwingCommand? _activeSwingCommand;
+  SwingCommand? _expiredSwingCommand;
   double _swingRecoverySeconds = 0;
 
   SwingCommand? get activeSwingCommand => _activeSwingCommand;
@@ -72,6 +73,7 @@ class InputSystem {
     }
     command.remainingSeconds -= dt;
     if (command.remainingSeconds <= 0) {
+      _expiredSwingCommand = command;
       _activeSwingCommand = null;
       _swingRecoverySeconds = Tuning.swingMissRecoverySeconds;
     }
@@ -116,6 +118,13 @@ class InputSystem {
 
   void consumeSwingCommand() {
     _activeSwingCommand = null;
+    _expiredSwingCommand = null;
+  }
+
+  SwingCommand? consumeExpiredSwingCommand() {
+    final command = _expiredSwingCommand;
+    _expiredSwingCommand = null;
+    return command;
   }
 
   void markSwingAnimationStarted() {
@@ -128,6 +137,7 @@ class InputSystem {
     aimDirection.setValues(0, -1);
     _previousRacketAngle = 0;
     _activeSwingCommand = null;
+    _expiredSwingCommand = null;
     _swingRecoverySeconds = 0;
   }
 

@@ -3,7 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/components/vfx/vfx_layer_component.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
+import 'package:dink_rivals/game/models/player_side.dart';
+import 'package:dink_rivals/game/models/player_state.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
+import 'package:dink_rivals/game/models/swing_intent.dart';
 
 void main() {
   test('contact and bounce effects expire deterministically', () {
@@ -56,6 +59,27 @@ void main() {
     expect(vfx.activeSpriteNamesForTesting, contains('pointBurst'));
 
     vfx.update(0.43);
+    expect(vfx.activeEffectCountForTesting, 0);
+  });
+
+  test('swing miss uses a short trail-style whiff effect', () {
+    final game = DinkRivalsGame();
+    game.courtLayoutSystem.resize(Vector2(412, 915));
+    final vfx = VfxLayerComponent(game);
+
+    vfx.spawnSwingMiss(
+      hitter: PlayerState(
+        position: Vector2(110, 370),
+        side: PlayerSide.player,
+      ),
+      intent: SwingIntent.drive,
+      swipeDirection: Vector2(1, 0),
+    );
+
+    expect(vfx.activeEffectCountForTesting, 1);
+    expect(vfx.activeSpriteNamesForTesting, contains('trailSegment'));
+
+    vfx.update(0.21);
     expect(vfx.activeEffectCountForTesting, 0);
   });
 

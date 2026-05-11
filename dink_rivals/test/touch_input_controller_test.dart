@@ -197,6 +197,8 @@ void main() {
 
     expect(input.activeSwingCommand, isNull);
     expect(input.isRecoveringFromSwingMiss, isTrue);
+    expect(input.consumeExpiredSwingCommand()?.intent, SwingIntent.drive);
+    expect(input.consumeExpiredSwingCommand(), isNull);
 
     input.updateRacket(0.25);
     expect(input.isRecoveringFromSwingMiss, isFalse);

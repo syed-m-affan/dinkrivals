@@ -58,8 +58,7 @@ class ScoreComponent extends Component {
     final panelWidth = game.size.x < 390 ? 62.0 : 66.0;
     final panelHeight = 58.0;
     final gap = game.size.x < 390 ? 14.0 : 18.0;
-    final totalWidth = panelWidth * 2 + gap;
-    final left = game.size.x / 2 - totalWidth / 2;
+    final left = math.max(10.0, game.size.x * 0.035);
     final top = 8.0;
     final playerRect = Rect.fromLTWH(left, top, panelWidth, panelHeight);
     final opponentRect = Rect.fromLTWH(

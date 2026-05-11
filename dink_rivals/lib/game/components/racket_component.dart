@@ -8,6 +8,7 @@ import '../config/debug_flags.dart';
 import '../config/tuning_constants.dart';
 import '../dink_rivals_game.dart';
 import '../config/visual_palette.dart';
+import '../models/swing_intent.dart';
 import '../systems/shot_system.dart';
 
 class RacketComponent extends Component {
@@ -77,12 +78,26 @@ class RacketComponent extends Component {
     final start = game.courtToWorld(path.start, Tuning.racketContactZ);
     final end = game.courtToWorld(path.end, Tuning.racketContactZ);
     final depthScale = game.depthScaleForY(game.player.state.position.y);
+    final laneColor = _laneColorFor(command.intent);
+    _swingLanePaint.color = laneColor.withValues(alpha: 0.34);
+    _swingLaneBorderPaint.color = VisualPalette.textPrimary.withValues(
+      alpha: command.intent == SwingIntent.smash ? 0.88 : 0.72,
+    );
     _swingLanePaint.strokeWidth =
         game.logicalToScreen(Tuning.committedSwingContactRadius * depthScale);
     _swingLaneBorderPaint.strokeWidth = game.logicalToScreen(2.2 * depthScale);
     canvas.drawLine(start.toOffset(), end.toOffset(), _swingLanePaint);
     canvas.drawLine(start.toOffset(), end.toOffset(), _swingLaneBorderPaint);
     _drawPixelSwipe(canvas, start.toOffset(), end.toOffset(), depthScale);
+  }
+
+  Color _laneColorFor(SwingIntent intent) {
+    return switch (intent) {
+      SwingIntent.dink => VisualPalette.feedbackDink,
+      SwingIntent.drive => VisualPalette.feedbackDrive,
+      SwingIntent.lob => VisualPalette.feedbackLob,
+      SwingIntent.smash => VisualPalette.feedbackSmash,
+    };
   }
 
   void _drawPixelSwipe(
