@@ -672,6 +672,8 @@ The game view should eventually read like a polished mobile arcade sports scene,
 
 Visual upgrades must never reduce gameplay clarity. If a prop, shadow, texture, particle, or UI treatment makes the ball, court lines, kitchen, net, or controls harder to read, revise or remove it.
 
+The visual expansion runs in three escalating passes. Phase 5A-5G establishes the initial concept-art expansion. Phase 5.1 is the correction pass that cleans up artifacts and grounds the court without revising perspective or HUD structure. Phase 5.2 is the comprehensive composition and identity pass that may revise perspective strength, court zoning, scoreboard, feedback callouts, and ball/contact juice under screenshot-evidence gates. Concept gaps that survive Phase 5.2 belong to Phase 5.3 follow-up tickets, not silent scope creep.
+
 Until the design is finalized:
 
 * Treat newer concept art in `docs/art/` as a candidate update, not an automatic replacement for the current target.
@@ -1437,6 +1439,181 @@ flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/output
 
 ---
 
+# Phase 5.2 — Concept Composition and Identity Pass
+
+## Goal
+
+Close the remaining structural gap between `docs/art/phase-5.1-final-screenshot.png` and `docs/art/concept-screenshot.png`. Phase 5.1 cleaned up sprite artifacts, environment proportions, and court grounding, but the current screenshot still reads as a near-top-down arcade with a flat blue court, generic score boxes, sparse character detail, no rally feedback callout, no ball trail, and no backdrop signage. Phase 5.2 is the comprehensive composition and identity pass that brings perspective strength, court zoning, character readability, backdrop signage, rally feedback, and ball juice to concept parity while keeping the locked control contract, the 3/4 perspective non-negotiable, and the §2 product rules intact.
+
+Phase 5.2 differs from Phase 5.1 in scope. Phase 5.1 was a cleanup pass that intentionally avoided `CourtProjection` and HUD restructuring. Phase 5.2 is a composition pass that is permitted to revise perspective strength, court zoning, scoreboard layout, and feedback systems — but must produce screenshot evidence before, during, and after each subphase, and must not change scoring, physics, AI, ad placement, or the control contract.
+
+## Reference Inputs
+
+* Concept screenshot: `docs/art/concept-screenshot.png`.
+* Concept sheet: `docs/art/concept-sheet.png`.
+* Phase 5.1 final captures: `docs/art/phase-5.1-final-screenshot.png`, `docs/art/phase-5.1-final-rally.png`, `docs/art/phase-5.1-final-serve.png`, `docs/art/phase-5.1-final-pause.png`.
+* Phase 5.1 closeout notes: `docs/art/phase-5.1-comparison.md`, `docs/art/phase-5.1-delta-inventory.md`.
+* Visual direction note: `docs/art/visual-direction.md`.
+
+## Phase Gate and Prior Ticket Handling
+
+Phase 5.2 should start from `P51I-001`. If `P51I-001` is still in `review`, `P52A-001` must explicitly record which Phase 5.1 QA evidence is accepted as enough to begin 5.2 and which 5-minute Android smoke risk remains open.
+
+Phase 5.2 absorbs or supersedes the older non-blocking `P5H-*` visual follow-ups where they overlap:
+
+* `P5H-003` main-menu composition is handled by `P52M-001` comparison targets and any Phase 5.3 backlog.
+* `P5H-004` and `P5H-005` portrait readability are handled by `P52F-001`.
+* `P5H-006` far-background band is handled by `P52K-001`.
+* `P5H-007` idle/ready micro-animation may be deferred to Phase 5.3 unless `P52F-001` can include it without risking sprite cohesion.
+
+`P5E-003`, `P5G-002`, and `P5G-003` remain historical review gates. Phase 5.2 may absorb their unfinished Android visual smoke only if `P52A-001` records that decision and `P52M-001` includes the final Android performance/readability closeout.
+
+## Concept Gap Summary
+
+Phase 5.2 inherits the following concrete gaps from Phase 5.1 closeout:
+
+1. **Perspective is too flat.** The current rally screenshot reads close to top-down; the concept reads as 3/4 with the player baseline visibly wider than the opponent baseline.
+2. **Court surface has no zoning.** Current court is a single light blue rectangle; concept has a dark navy outer apron frame, a brighter blue playing surface, and a slightly muted kitchen tint.
+3. **Net is a flat horizontal band with a stray indicator coin.** Concept net has angled rail, vertical mesh strands, posts at each end, and a coherent cast shadow.
+4. **No backdrop signage.** Concept shows a "DINK RIVALS" banner and a "Pickleball Legends"-style sign on the rear fence; current build shows none.
+5. **Characters lack identity at gameplay scale.** Concept characters have visible heads, baseball caps, outfits, and held paddles; current sprites read as low-detail chunky blobs and paddles are barely visible.
+6. **Scoreboard does not match concept.** Current uses generic "04 00" boxes; concept uses "YOU" / "RIVAL" labelled panels with a serving-side indicator, plus a top-left "RALLY: N" and "LAST SHOT: …" readout.
+7. **Rally feedback is wrong.** Current shows a floating mid-court rally number ("1"); concept shows a top-center "DINK! NICE SHOT" classification banner.
+8. **No ball trail or contact juice.** Concept shows a green arcing ball trail; current draws no trail and contact effects are minimal.
+9. **No power meter.** Concept sheet shows a lightning-style meter near the swing stick.
+10. **Park depth is thin.** Concept shows a lamp post, planters, benches, and a deeper rear tree band; current has trees but limited courtside structure.
+11. **HUD controls have minor proportion issues.** Concept move-ring shows D-pad chevrons; current move ring is plain and slightly oversized.
+
+## Build Contents
+
+* Visual token extension: add shared `VisualPalette` entries for court apron, kitchen tint, signage, feedback banner, last-shot label, power meter, and any new Phase 5.2 HUD accents before implementation tickets add new colors.
+* Render-layer and AI-art rules: update render ordering, safe-area constraints, asset prompt packets, alpha-fringe checks, palette ramps, and contact-sheet requirements so AI-assisted assets stay cohesive.
+* Reinforced 3/4 perspective: the player baseline reads visibly wider than the opponent baseline, with the court tilted toward camera in line with the concept screenshot, gated by readability checks on a real Android phone.
+* Court surface zoning: dark navy outer apron framing the court rectangle, light blue main playing surface, and a slightly muted kitchen tint that distinguishes the non-volley zone without dimming court lines.
+* Net upgrade: angled net rail aligned with the court perspective, vertical mesh strands, posts at each sideline end, and a coherent cast shadow that does not float across the kitchen. The stray rally-state indicator coin currently rendered over the net is relocated into the scoreboard serving indicator.
+* Backdrop signage band: rear-fence component that hosts a "DINK RIVALS" banner and an original secondary park sign such as "PARK COURTS" or "PICKLEBALL LEAGUE", sized so it does not crowd the opponent silhouette or scoreboard.
+* Character identity upgrade: visible head, cap, torso outfit, shorts/legs, shoes, and a hand/paddle cue readable from gameplay distance, with Rookie/Rally Queen/Veteran/Showman color identity matching the roster cards. The actual swinging paddle remains the existing `RacketComponent`; do not bake the gameplay paddle into character sprites.
+* Scoreboard restyle: "YOU" / "RIVAL" vertical label panels with score numerals and a serving-side indicator dot, plus a top-left rally counter and last-shot readout ("RALLY: N" / "LAST SHOT: DINK").
+* Rally feedback callout: top-center banner that displays shot classification ("DINK!", "DRIVE!", "LOB!", "SMASH!", "FAULT!", "NICE SHOT") for a short interval after the event, replacing the floating mid-court rally number.
+* Ball trail and contact juice: short arcing trail behind the ball during flight, backed by a fixed-size sample buffer with no per-frame allocations, with refreshed hit spark on racket contact and bounce dust on ground contact, reusing or extending Phase 5E VFX components.
+* Power meter element: lightning-style meter near the swing stick driven by read-only existing swing-speed or serve-charge signals. The meter is a visual readout of existing input, not a purchasable advantage, not an energy gate, and not a shot-buff toggle.
+* Park depth pass two: lamp post on at least one sideline, a small back-row planter or bench cluster, and a slightly darker tree band behind the back fence to reinforce depth beyond what 5.1F delivered.
+* HUD control polish: D-pad chevrons inside the move ring, refined "SWING" label above the swing knob, pause panel proportion check, and safe-area validation on tall and notched Android devices.
+* Visual QA artifacts: Phase 5.2 baseline, intermediate, and final screenshot sets; a side-by-side comparison note; and a residual gap backlog.
+
+## Visual Quality Targets
+
+* The final Phase 5.2 rally screenshot must read at a glance as the same composition as `concept-screenshot.png`: a tilted court framed by park detail, with clear color zoning, visible backdrop signage, recognizable characters, a feedback callout, and a ball trail.
+* Kitchen, sidelines, baselines, and center line must remain brighter than the surrounding court fill and brighter than every environmental element.
+* Ball, ball shadow, and paddles must remain the highest-contrast small objects on screen.
+* No new element may obstruct the joystick, swing stick, serve button, score panels, pause button, or feedback banner hit regions.
+* Scoreboard, pause, and top-center feedback banner must share the safe-area band without overlap. The feedback banner sits below the scoreboard/pause row on notched and tall Android devices.
+* The 3/4 perspective must remain a true 3/4 read: the kitchen on each side must remain visible and meaningful, and the camera must not slip toward pure side-view or pure top-down.
+* No element may imply pay-to-win, energy, gem, or gacha mechanics. The power meter is a visual readout of existing swing speed only.
+* Frame rate and input responsiveness must match or beat Phase 5.1 on the same Android device.
+* Main-menu and end-match screenshots should inherit the new concept-HUD identity without becoming Phase 6 feature work: the logo should read in the upper composition, primary actions should remain immediately usable, and no new tournament/unlock navigation should be introduced.
+
+## AI Visual Production Rules
+
+Phase 5.2 is explicitly allowed to use AI-assisted visual generation, but tickets must constrain it so agents produce cohesive shippable assets instead of unrelated one-off images:
+
+* `P52A-002` owns the reusable prompt packets, palette ramps, target sprite dimensions, outline weight, lighting direction, and export rules for all Phase 5.2 art.
+* Generated sprites, portraits, signs, and props must be original, hard-edge, transparent where needed, and checked for black matte halos, premultiplied-alpha fringe, accidental background pixels, and inconsistent baseline alignment.
+* Every asset-producing ticket must include a small contact sheet or screenshot proof under `docs/art/` before closeout.
+* Prefer replacing whole cohesive sheets or manifests over mixing one-off frames from different styles.
+* Avoid trademarked sign text, copied logos, licensed art, or image-search-derived production assets.
+* If an AI asset reads worse than the current in-engine shape at gameplay scale, keep the current asset and record the failed attempt in the ticket notes rather than landing noisy art.
+
+## Implementation Tasks
+
+1. Capture a Phase 5.2 baseline screenshot set against the live Phase 5.1 build and produce `docs/art/phase-5.2-delta-inventory.md` keyed to specific concept-screenshot regions.
+2. Extend `VisualPalette`, update render-layer/safe-area rules, and publish AI art prompt/export rules before implementation tickets create new visual assets.
+3. Strengthen 3/4 projection inside `CourtProjection` and `CourtLayoutSystem`, gated by before/after screenshot evidence, deterministic projection tests, and coordinate-stability checks. Preserve `Court` logical bounds and keep all gameplay systems coordinate-stable.
+4. Introduce a court-zoning render pass that draws a dark apron frame, light playing surface, kitchen tint, and refreshed line treatment without changing logical court bounds.
+5. Rebuild the net component to draw posts, an angled top rail, vertical mesh strands, and a single cohesive shadow under the rail; relocate the stray serve/indicator coin to the scoreboard.
+6. Add a back-wall/signage component anchored behind the opponent baseline, with placement data in `config/` or `data/` rather than hardcoded pixels, and content for the "DINK RIVALS" banner plus an original secondary park sign.
+7. Expand character sprite sheets so each roster member ships visible head/cap/outfit/hand cue at gameplay scale; update visual config and roster portraits where needed while keeping the gameplay paddle in `RacketComponent`.
+8. Restyle the scoreboard into "YOU" / "RIVAL" panels with a serving indicator, and add a rally counter and last-shot label fed by existing match/shot state without modifying scoring or rules.
+9. Move rally feedback into a top-center banner component that displays shot classification and fault/point callouts from existing events, and remove the floating mid-court rally number.
+10. Add or extend a ball-trail component that samples ball positions into a fixed-size buffer for a short window, and refresh hit-spark and bounce-dust VFX hookups from Phase 5E without obscuring the ball.
+11. Add a power-meter HUD component that visualizes existing swing velocity or serve charge via read-only getters; do not introduce new gameplay buffs, costs, cooldowns, or unlock gates.
+12. Layer additional park depth (lamp post, planter, back tree band) using existing environment manifests; keep contrast lower than the court fill.
+13. Polish controls: D-pad chevrons inside the move ring, refined "SWING" label, pause panel proportion check, and notch/gesture-area validation on tall Android devices.
+14. Capture Phase 5.2 final Android screenshots (serve, rally, point feedback, pause, end-match, main menu) and produce `docs/art/phase-5.2-comparison.md` side-by-side notes.
+15. Convert remaining concept gaps into Phase 5.3 follow-up tickets if any defects fall outside the 5.2 scope.
+
+## Suggested Subphases
+
+* **Phase 5.2A — Composition Baseline and Concept Mapping.** Capture current rally/serve/pause/feedback/end-match screenshots, produce `phase-5.2-delta-inventory.md` keyed to specific concept regions, and confirm Phase 5.1 closeout state.
+* **Phase 5.2A2 — Visual Tokens, Layering, and AI Art Rules.** Extend `VisualPalette`, update render-layer/safe-area rules, define prompt packets and contact-sheet expectations, and record prior-ticket supersession.
+* **Phase 5.2B — 3/4 Perspective Reinforcement.** Tighten `CourtProjection` and `CourtLayoutSystem` so the court visibly tilts toward camera, gated by before/after screenshot evidence, deterministic projection tests, and gameplay-clarity acceptance checks.
+* **Phase 5.2C — Court Surface Zoning.** Add the navy outer apron frame, light playing surface, kitchen tint, and updated line contrast inside the existing logical court bounds.
+* **Phase 5.2D — Net Rebuild and Serving Indicator Relocation.** Rebuild the net component to concept fidelity and move the serving indicator into the scoreboard flow.
+* **Phase 5.2D2 — Backdrop Signage Band.** Add a rear fence signage band hosting the game logo and an original secondary park sign.
+* **Phase 5.2E — Character Identity Upgrade.** Expand sprite sheets so each roster member ships visible head/cap/outfit/paddle detail and matching roster portraits.
+* **Phase 5.2F — Scoreboard, Rally Counter, and Last-Shot Readout.** Restyle the top scoreboard into YOU/RIVAL panels with a serving indicator, and add the rally and last-shot readouts.
+* **Phase 5.2G — Top-Center Feedback Banner.** Replace the floating mid-court rally number with a top-center shot classification or fault callout driven by existing shot and rules events.
+* **Phase 5.2H — Ball Trail and Contact Juice.** Add a ball trail component and rewire hit-spark and bounce-dust effects across the rally, point-win, and smash flows.
+* **Phase 5.2I — Power Meter and Control Polish.** Add a swing-speed-driven visual meter near the swing stick and polish move-ring chevrons and the SWING label.
+* **Phase 5.2I2 — HUD Safe-Area Polish.** Check scoreboard, pause, feedback banner, power meter, and controls together on tall/notched layouts.
+* **Phase 5.2J — Park Depth Pass Two.** Add a lamp post, a planter or bench cluster, and a darker tree band behind the back fence using existing environment manifests.
+* **Phase 5.2K — Visual QA, Android Capture, and Closeout.** Capture the final Phase 5.2 screenshot set, write the side-by-side comparison, complete the Android readability and performance smoke, and queue any Phase 5.3 gaps.
+
+## Scope Exclusions
+
+* No scoring, match rules, ball physics, AI, serve mechanics, racket hitboxes, shot classification, ad behavior, monetization, unlocks, tournament work, real AdMob, IAP, energy systems, gems, gacha, or pay-to-win.
+* The power meter is a visual readout only. It must not gate, charge, cost, or boost shots in a way that changes scoring or physics outcomes.
+* No new shot buttons; the locked left-stick movement + right-stick swing + automatic racket contact contract remains.
+* No animated crowd, weather, day/night system, seasonal courts, or dynamic billboards.
+* No menu/roster/settings redesign beyond what is needed to reflect the new HUD theme. New courts, characters, or unlocks remain out of scope.
+* No untracked third-party art, licensed assets, trademarked sign text, copied logos, or production assets derived from image search. New backdrop signage must use original or already-tracked art.
+* Do not bake the gameplay paddle into player/opponent sprites. Character sheets may include a hand/paddle cue for identity, but the swinging paddle and hit visualization remain `RacketComponent`.
+* `CourtProjection` and `CourtLayoutSystem` changes are allowed in Phase 5.2B only when accompanied by before/after screenshot evidence and a readability check on a real Android phone.
+
+## Verification Commands
+
+Run from `dink_rivals/`:
+
+```bash
+flutter pub get
+flutter analyze
+flutter test
+flutter build apk --debug
+flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
+```
+
+## Android QA Checklist
+
+* Fresh install on a physical Android phone.
+* Capture serve, rally, point-feedback, pause, end-match, and main-menu screenshots.
+* Compare each Phase 5.2A delta concept / Phase 5.1 final / Phase 5.2 final.
+* Confirm the court visibly tilts toward camera and the kitchen on both sides remains readable.
+* Confirm court zoning (apron / playing surface / kitchen) reads without dimming court lines.
+* Confirm net rail, posts, mesh, and cast shadow look like the concept net rather than a flat band.
+* Confirm backdrop signage is present and does not crowd opponent or scoreboard.
+* Confirm characters show head, cap, outfit, and paddle detail at gameplay distance.
+* Confirm scoreboard panels show YOU/RIVAL labels and a serving indicator.
+* Confirm the rally counter and last-shot readout are present and update correctly.
+* Confirm the top-center feedback banner fires on dink/drive/lob/smash/fault/point and clears within a short interval.
+* Confirm the ball trail draws during flight and clears on bounce or contact without obscuring the ball.
+* Confirm the power meter responds to swing-speed input and does not affect physics or scoring.
+* Confirm move-ring chevrons, the SWING label, and the pause panel preserve hit regions and safe areas.
+* Play at least 5 minutes and verify frame rate parity with Phase 5.1.
+* Record remaining gaps in `PHASE_NOTES.md`, `docs/art/phase-5.2-comparison.md`, or Phase 5.3 follow-up tickets.
+
+## Acceptance Criteria
+
+* `docs/art/phase-5.2-delta-inventory.md` identifies the target gaps relative to `phase-5.1-final-screenshot.png` and `concept-screenshot.png`.
+* `docs/art/phase-5.2-comparison.md` shows each Phase 5.2A high-priority delta resolved, improved, or explicitly deferred to Phase 5.3.
+* `flutter analyze` and `flutter test` pass.
+* Debug APK builds, installs, and launches on Android.
+* The final rally screenshot reads at a glance as the concept composition: tilted court, zoned surface, dressed net, backdrop signage, recognizable characters, scoreboard restyle, feedback banner, and ball trail.
+* No scoring, physics, AI, ad, audio, haptics, or control regressions.
+* No element implies pay-to-win, energy, gems, gacha, or any mechanic forbidden by §2.
+* Remaining concept gaps are tracked as Phase 5.3 tickets instead of left implicit.
+
+---
+
 # Phase 6 — Tournament MVP
 
 ## Goal
@@ -1670,7 +1847,9 @@ Build in this order:
 5. Real test ads.
 6. Initial art pass.
 7. Concept-art visual expansion.
-8. Tournament.
-9. MVP polish.
+8. Concept fidelity correction pass.
+9. Concept composition and identity pass.
+10. Tournament.
+11. MVP polish.
 
 A fun ugly prototype is valuable. A beautiful monetized game that does not feel good is worthless.
