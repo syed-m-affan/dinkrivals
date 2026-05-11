@@ -77,12 +77,22 @@ class ShotSystem {
     if (_cooldownFor(hitter.side) > 0) {
       return false;
     }
-    final contact = _contactProfile(
-      ball: ball,
-      hitter: hitter,
-      racketPosition: racketPosition,
-    );
+    final contact = intent == null
+        ? _contactProfile(
+            ball: ball,
+            hitter: hitter,
+            racketPosition: racketPosition,
+          )
+        : _committedSwingContactProfile(
+            ball: ball,
+            hitter: hitter,
+            racketPosition: racketPosition,
+          );
     if (!contact.didHit) {
+      return false;
+    }
+    if (intent == SwingIntent.smash &&
+        contact.heightBand != BallHeightBand.smashable) {
       return false;
     }
 
@@ -293,6 +303,33 @@ class ShotSystem {
     if (canEmergencyBlock &&
         bodyDistance <= Tuning.emergencyBodyContactRadius) {
       return ContactProfile(ContactQuality.emergency, _heightBand(ball));
+    }
+    return ContactProfile(ContactQuality.miss, _heightBand(ball));
+  }
+
+  ContactProfile _committedSwingContactProfile({
+    required BallState ball,
+    required PlayerState hitter,
+    required Vector2 racketPosition,
+  }) {
+    final onHitterSide = hitter.side == PlayerSide.player
+        ? ball.y >= Court.netY
+        : ball.y <= Court.netY;
+    if (!onHitterSide || ball.z < 0 || ball.z > Tuning.playableBallMaxZ) {
+      return ContactProfile(ContactQuality.miss, _heightBand(ball));
+    }
+
+    final shaft = racketPosition - hitter.position;
+    final racketStart = shaft.length2 > 0.01
+        ? hitter.position + shaft.normalized() * (Tuning.racketReach * 0.55)
+        : hitter.position.clone();
+    final racketDistance = _distanceToSegment(
+      point: Vector2(ball.x, ball.y),
+      start: racketStart,
+      end: racketPosition,
+    );
+    if (racketDistance <= Tuning.committedSwingContactRadius) {
+      return ContactProfile(ContactQuality.clean, _heightBand(ball));
     }
     return ContactProfile(ContactQuality.miss, _heightBand(ball));
   }

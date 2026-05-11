@@ -47,10 +47,6 @@ class TouchControlsComponent extends Component {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 7
     ..strokeCap = StrokeCap.round;
-  final Paint _meterEmptyPaint = Paint()..color = VisualPalette.powerMeterEmpty;
-  final Paint _meterFillPaint = Paint()..color = VisualPalette.powerMeterFill;
-  final Paint _meterHotPaint = Paint()..color = VisualPalette.powerMeterHot;
-  final Paint _meterBoltPaint = Paint()..color = VisualPalette.powerMeterBolt;
   final Paint _shotChipPaint = Paint()
     ..color = VisualPalette.scoreboardSurface.withValues(alpha: 0.78);
   final Paint _shotChipActivePaint = Paint()
@@ -225,7 +221,6 @@ class TouchControlsComponent extends Component {
     final knobRadius = pressed ? 21.0 + pulse * 1.5 : 18.0;
     canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _swingPaint);
     canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _strokePaint);
-    _drawSwingPowerMeter(canvas, layout, pressed);
 
     _swingText.text = const TextSpan(
       text: 'AIM',
@@ -288,55 +283,6 @@ class TouchControlsComponent extends Component {
         canvas,
         Offset(rect.center.dx - painter.width / 2,
             rect.center.dy - painter.height / 2),
-      );
-    }
-  }
-
-  void _drawSwingPowerMeter(
-    Canvas canvas,
-    TouchControlLayout layout,
-    bool pressed,
-  ) {
-    final power = game.isServeCharging
-        ? game.serveChargeFraction
-        : game.inputSystem.visualSwingPower;
-    final meterWidth = 54.0;
-    final meterHeight = 10.0;
-    final left = layout.swingCenter.x - meterWidth / 2;
-    final top = layout.swingCenter.y - layout.swingVisualRadius - 42;
-    final rect = Rect.fromLTWH(left, top, meterWidth, meterHeight);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(2)),
-      _meterEmptyPaint,
-    );
-    const segments = 5;
-    final fillSegments = (power * segments).ceil().clamp(0, segments);
-    for (var i = 0; i < fillSegments; i += 1) {
-      final segmentRect = Rect.fromLTWH(
-        left + 4 + i * 9.5,
-        top + 2,
-        7.0,
-        meterHeight - 4,
-      );
-      canvas.drawRect(
-        segmentRect,
-        power > 0.76 ? _meterHotPaint : _meterFillPaint,
-      );
-    }
-    final bolt = Path()
-      ..moveTo(rect.right + 7, rect.top - 2)
-      ..lineTo(rect.right + 1, rect.center.dy + 1)
-      ..lineTo(rect.right + 6, rect.center.dy + 1)
-      ..lineTo(rect.right + 1, rect.bottom + 5)
-      ..lineTo(rect.right + 11, rect.center.dy - 2)
-      ..lineTo(rect.right + 6, rect.center.dy - 2)
-      ..close();
-    canvas.drawPath(bolt, _meterBoltPaint);
-    if (pressed && power <= 0.02) {
-      canvas.drawCircle(
-        Offset(rect.right + 6, rect.center.dy),
-        2.2,
-        _meterFillPaint,
       );
     }
   }

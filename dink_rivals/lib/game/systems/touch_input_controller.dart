@@ -229,8 +229,28 @@ class TouchInputController {
     };
     inputSystem.submitSwingCommand(
       intent: intent,
-      aimDirection: inputSystem.aimDirection,
+      aimDirection: _aimForGesture(
+        intent: intent,
+        delta: delta,
+        distance: distance,
+        inputSystem: inputSystem,
+      ),
       power: power,
+    );
+  }
+
+  Vector2 _aimForGesture({
+    required SwingIntent intent,
+    required Vector2 delta,
+    required double distance,
+    required InputSystem inputSystem,
+  }) {
+    if (intent != SwingIntent.drive || distance < 0.01) {
+      return inputSystem.aimDirection;
+    }
+    return Vector2(
+      (delta.x / distance).clamp(-1.0, 1.0).toDouble(),
+      -0.95,
     );
   }
 

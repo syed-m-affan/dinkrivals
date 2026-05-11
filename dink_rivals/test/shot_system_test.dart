@@ -371,7 +371,7 @@ void main() {
     expect(ball.vy, lessThan(0));
   });
 
-  test('manual smash intent requires smashable ball height', () {
+  test('manual smash intent misses below smashable ball height', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -394,7 +394,7 @@ void main() {
     final lowShotSystem = ShotSystem();
     final highShotSystem = ShotSystem();
 
-    lowShotSystem.attemptManualContact(
+    final lowHit = lowShotSystem.attemptManualContact(
       ball: lowBall,
       hitter: player,
       racketPosition: racketPosition,
@@ -411,19 +411,49 @@ void main() {
       power: 1,
     );
 
-    expect(lowShotSystem.lastShotType, ShotType.drive);
+    expect(lowHit, isFalse);
+    expect(lowShotSystem.lastShotType, isNull);
     expect(highShotSystem.lastShotType, ShotType.smash);
   });
 
-  test('forgiven contact outside exact racket radius still returns the ball',
-      () {
+  test('committed swing outside strict hitbox misses instead of dinking', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
+    final swingBall = BallState(
+      x: racketPosition.x + Tuning.committedSwingContactRadius + 4,
+      y: racketPosition.y,
+      z: Tuning.racketContactZ,
+      vy: 40,
+      isInPlay: true,
+      lastHitBy: PlayerSide.opponent,
+    );
+    final shotSystem = ShotSystem();
+
+    final didHit = shotSystem.attemptManualContact(
+      ball: swingBall,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: Vector2(0.4, -1),
+      intent: SwingIntent.drive,
+      power: 0.8,
+    );
+
+    expect(didHit, isFalse);
+    expect(shotSystem.lastShotType, isNull);
+    expect(swingBall.vy, 40);
+  });
+
+  test('passive contact can still dink inside forgiving hitbox', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
     );
     final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
     final ball = BallState(
-      x: racketPosition.x + Tuning.racketHitRadius + 4,
+      x: racketPosition.x + Tuning.committedSwingContactRadius + 4,
       y: racketPosition.y,
       z: Tuning.racketContactZ,
       vy: 40,
@@ -437,12 +467,10 @@ void main() {
       hitter: player,
       racketPosition: racketPosition,
       aimDirection: Vector2(0.4, -1),
-      intent: SwingIntent.drive,
-      power: 0.8,
     );
 
     expect(didHit, isTrue);
-    expect(shotSystem.lastShotType, ShotType.drive);
+    expect(shotSystem.lastShotType, ShotType.dink);
     expect(ball.vy, lessThan(0));
   });
 

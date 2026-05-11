@@ -17,6 +17,7 @@ class SwingCommand {
   final Vector2 aimDirection;
   final double power;
   double remainingSeconds;
+  bool animationStarted = false;
 }
 
 class InputSystem {
@@ -28,8 +29,10 @@ class InputSystem {
 
   double _previousRacketAngle = 0;
   SwingCommand? _activeSwingCommand;
+  double _swingRecoverySeconds = 0;
 
   SwingCommand? get activeSwingCommand => _activeSwingCommand;
+  bool get isRecoveringFromSwingMiss => _swingRecoverySeconds > 0;
 
   bool get hasMovementInput => movementX != 0 || movementY != 0;
 
@@ -58,6 +61,7 @@ class InputSystem {
     }
     racketAngularVelocity = (racketAngle - _previousRacketAngle) / dt;
     _previousRacketAngle = racketAngle;
+    _swingRecoverySeconds = math.max(0, _swingRecoverySeconds - dt);
 
     final command = _activeSwingCommand;
     if (command == null) {
@@ -66,6 +70,7 @@ class InputSystem {
     command.remainingSeconds -= dt;
     if (command.remainingSeconds <= 0) {
       _activeSwingCommand = null;
+      _swingRecoverySeconds = Tuning.swingMissRecoverySeconds;
     }
   }
 
@@ -93,6 +98,7 @@ class InputSystem {
     required double power,
   }) {
     setAimDirection(aimDirection);
+    _swingRecoverySeconds = 0;
     _activeSwingCommand = SwingCommand(
       intent: intent,
       aimDirection: this.aimDirection.clone(),
@@ -105,12 +111,17 @@ class InputSystem {
     _activeSwingCommand = null;
   }
 
+  void markSwingAnimationStarted() {
+    _activeSwingCommand?.animationStarted = true;
+  }
+
   void resetRacket() {
     racketAngle = 0;
     racketAngularVelocity = 0;
     aimDirection.setValues(0, -1);
     _previousRacketAngle = 0;
     _activeSwingCommand = null;
+    _swingRecoverySeconds = 0;
   }
 
   void _setAimFromRacketAngle() {

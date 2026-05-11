@@ -112,6 +112,7 @@ void main() {
     );
 
     expect(input.activeSwingCommand?.intent, SwingIntent.drive);
+    expect(input.activeSwingCommand?.aimDirection.x, greaterThan(0));
     expect(input.activeSwingCommand?.aimDirection.y, lessThan(0));
   });
 
@@ -182,17 +183,20 @@ void main() {
         isTrue);
   });
 
-  test('visual swing power is read-only and clamps input values', () {
+  test('expired swing command creates miss recovery window', () {
     final input = InputSystem();
-
-    input.racketAngularVelocity = 100;
-    expect(input.visualSwingPower, 1);
 
     input.submitSwingCommand(
       intent: SwingIntent.drive,
       aimDirection: Vector2(0, -1),
       power: 0.48,
     );
-    expect(input.visualSwingPower, closeTo(0.48, 0.001));
+    input.updateRacket(0.30);
+
+    expect(input.activeSwingCommand, isNull);
+    expect(input.isRecoveringFromSwingMiss, isTrue);
+
+    input.updateRacket(0.25);
+    expect(input.isRecoveringFromSwingMiss, isFalse);
   });
 }

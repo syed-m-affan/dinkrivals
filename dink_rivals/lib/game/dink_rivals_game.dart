@@ -27,6 +27,8 @@ import 'models/match_state.dart';
 import 'models/opponent_serve_phase.dart';
 import 'models/player_side.dart';
 import 'models/rule_result.dart';
+import 'models/shot_type.dart';
+import 'models/swing_intent.dart';
 import 'systems/ball_physics_system.dart';
 import 'systems/court_layout_system.dart';
 import 'systems/input_system.dart';
@@ -122,6 +124,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     }
 
     inputSystem.updateRacket(dt);
+    _startPlayerSwingAnimation();
     shotSystem.update(dt);
 
     if (_updateOpponentServeGate(dt)) {
@@ -335,6 +338,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       lastHitBy: ball.state.lastHitBy,
     );
     final command = inputSystem.activeSwingCommand;
+    if (command == null && inputSystem.isRecoveringFromSwingMiss) {
+      return false;
+    }
     final didHit = shotSystem.attemptManualContact(
       ball: ball.state,
       hitter: player.state,
@@ -370,6 +376,22 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       return true;
     }
     return false;
+  }
+
+  void _startPlayerSwingAnimation() {
+    final command = inputSystem.activeSwingCommand;
+    if (command == null || command.animationStarted) {
+      return;
+    }
+    player.state
+      ..isSwinging = true
+      ..lastShotType = switch (command.intent) {
+        SwingIntent.dink => ShotType.dink,
+        SwingIntent.drive => ShotType.drive,
+        SwingIntent.lob => ShotType.lob,
+        SwingIntent.smash => ShotType.smash,
+      };
+    inputSystem.markSwingAnimationStarted();
   }
 
   void _updateFeedback(double dt) {
