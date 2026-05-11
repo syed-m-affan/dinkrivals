@@ -13,6 +13,11 @@ class RallyFeedbackComponent extends Component {
     fontWeight: FontWeight.bold,
     fontFamily: 'monospace',
   );
+  final Paint _panelPaint = Paint()..color = VisualPalette.feedbackPanel;
+  final Paint _panelBorderPaint = Paint()
+    ..color = VisualPalette.scoreboardBorder
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2;
   String _lastText = '';
   double _popSeconds = 0;
 
@@ -42,6 +47,19 @@ class RallyFeedbackComponent extends Component {
     canvas.save();
     canvas.translate(game.size.x / 2, game.size.y * 0.22);
     canvas.scale(scale);
+    final panelRect = Rect.fromCenter(
+      center: Offset.zero,
+      width: textPainter.width + 28,
+      height: textPainter.height + 12,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(panelRect, const Radius.circular(6)),
+      _panelPaint,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(panelRect, const Radius.circular(6)),
+      _panelBorderPaint,
+    );
     textPainter.paint(
       canvas,
       Offset(-textPainter.width / 2, -textPainter.height / 2),

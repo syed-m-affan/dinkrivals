@@ -1,7 +1,7 @@
 ---
 id: P5E-001
 phase: 5E
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P5A-003]
@@ -65,3 +65,8 @@ flutter build apk --debug
 - Effect lifetime/update behavior is deterministic.
 - No gameplay behavior changes.
 
+## Implementation Notes
+
+- Added low-detail retro VFX placeholder sprites and manifest under `assets/images/vfx/`.
+- Added `VfxLayerComponent` with deterministic short-lived effects and tests for expiry behavior.
+- The layer was mounted inertly first, then P5E-002 wired existing events.

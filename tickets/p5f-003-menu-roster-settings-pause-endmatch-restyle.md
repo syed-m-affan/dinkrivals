@@ -1,7 +1,7 @@
 ---
 id: P5F-003
 phase: 5F
-status: todo
+status: done
 priority: high
 parallel_group: C
 depends_on: [P5F-001]
@@ -70,3 +70,20 @@ flutter build apk --debug
 - Existing screen tests pass.
 - New player can still start first match in under 3 taps.
 
+## Implementation Notes
+
+- Applied shared arcade panels/buttons across main menu, roster, settings, pause overlay, opponent-serve ready prompt, and end-match actions.
+- Preserved route flow, Quick Match one-tap behavior, fake ad surfaces, settings persistence, and existing widget keys used by tests.
+- Claude review flagged text-fit and consistency risks; button widths, opponent-win layout, reward-ad label length, roster text wrapping, and the opponent-serve ready button were adjusted before verification.
+
+## Verification Result
+
+Passed from `dink_rivals/` on 2026-05-11:
+
+```bash
+flutter analyze
+flutter test
+flutter build apk --debug
+```
+
+`flutter devices` did not show an Android device for install, so the debug APK was refreshed at workspace root as `dink_rivals-debug.apk` and is covered by `.gitignore`.

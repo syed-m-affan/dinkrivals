@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
@@ -17,6 +18,7 @@ void main() {
 
     expect(data.soundEnabled, isTrue);
     expect(data.hapticsEnabled, isTrue);
+    expect(data.gameplayControlMode, GameplayControlMode.assistedAimGesture);
     expect(data.matchesCompleted, 0);
   });
 
@@ -27,6 +29,7 @@ void main() {
     const target = SaveData(
       soundEnabled: false,
       hapticsEnabled: false,
+      gameplayControlMode: GameplayControlMode.classicRacketStick,
       matchesCompleted: 7,
     );
     await service.save(target);
@@ -39,13 +42,15 @@ void main() {
       () async {
     final prefs = await SharedPreferences.getInstance();
     final service = SaveService(prefs);
-    await service.save(
-        const SaveData(soundEnabled: false, hapticsEnabled: true));
+    await service
+        .save(const SaveData(soundEnabled: false, hapticsEnabled: true));
 
     final fresh = SaveService(prefs);
     final reloaded = await fresh.load();
     expect(reloaded.soundEnabled, isFalse);
     expect(reloaded.hapticsEnabled, isTrue);
+    expect(
+        reloaded.gameplayControlMode, GameplayControlMode.assistedAimGesture);
   });
 
   test('partial keys still produce a usable SaveData', () async {
@@ -56,6 +61,7 @@ void main() {
     final data = await service.load();
     expect(data.soundEnabled, isFalse);
     expect(data.hapticsEnabled, isTrue);
+    expect(data.gameplayControlMode, GameplayControlMode.assistedAimGesture);
     expect(data.matchesCompleted, 0);
   });
 
@@ -66,5 +72,6 @@ void main() {
     expect(updated.matchesCompleted, 6);
     expect(updated.soundEnabled, original.soundEnabled);
     expect(updated.hapticsEnabled, original.hapticsEnabled);
+    expect(updated.gameplayControlMode, original.gameplayControlMode);
   });
 }

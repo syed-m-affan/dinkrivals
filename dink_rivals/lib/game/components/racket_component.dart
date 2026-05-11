@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 import '../config/debug_flags.dart';
 import '../config/tuning_constants.dart';
-import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
+import '../config/visual_palette.dart';
 
 class RacketComponent extends Component {
   RacketComponent(this.game);

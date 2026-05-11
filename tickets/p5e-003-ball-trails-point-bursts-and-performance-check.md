@@ -1,7 +1,7 @@
 ---
 id: P5E-003
 phase: 5E
-status: todo
+status: review
 priority: medium
 parallel_group: C
 depends_on: [P5E-002]
@@ -70,3 +70,21 @@ Android smoke:
 - Android performance remains acceptable.
 - Any remaining issues are documented as follow-up tickets.
 
+## Implementation Notes
+
+- Added short-lived ball trail effects for high in-play balls with a cooldown and global VFX cap to avoid persistent particle growth.
+- Added point-burst support tied to the existing point-award path before `resetPoint()`.
+- Preserved scoring, physics, shot classification, and rule logic; only visual VFX calls were added.
+- Claude review found no code-level blockers and recommended keeping the ticket in `review` until Android performance smoke can be completed.
+
+## Verification Result
+
+Passed from `dink_rivals/` on 2026-05-11:
+
+```bash
+flutter analyze
+flutter test
+flutter build apk --debug
+```
+
+Android smoke/performance verification remains pending because no Android device was visible to Flutter in this session.

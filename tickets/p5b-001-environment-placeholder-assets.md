@@ -1,7 +1,7 @@
 ---
 id: P5B-001
 phase: 5B
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P5A-002, P5A-003]
@@ -65,3 +65,8 @@ Avoid editing Dart code in this ticket.
 - All assets are original placeholder art or explicitly license-safe.
 - No runtime behavior changes.
 
+## Implementation Notes
+
+- Added low-detail retro ChatGPT-generated placeholder environment props and shared shadow asset.
+- Added `assets/images/environment/classic/README.md` with dimensions, intended layers, safe zones, readability notes, and placeholder status.
+- Claude remained unavailable after retry; fallback Codex visual critique reviewed the generated art direction and cleanup precautions.

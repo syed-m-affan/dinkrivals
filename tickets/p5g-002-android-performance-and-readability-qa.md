@@ -1,7 +1,7 @@
 ---
 id: P5G-002
 phase: 5G
-status: todo
+status: review
 priority: high
 parallel_group: B
 depends_on: [P5G-001]
@@ -64,3 +64,9 @@ flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/output
 - Manual QA results are recorded in `PHASE_NOTES.md`.
 - Any non-trivial issues have follow-up tickets.
 
+## Review Notes
+
+- Local verification passed with `flutter pub get`, `flutter analyze`, `flutter test`, and `flutter build apk --debug`.
+- Android install/launch and the manual 10-minute readability/performance checklist are blocked because `flutter devices` did not show an Android device in this session.
+- The latest `app-debug.apk` was copied to workspace root as `dink_rivals-debug.apk` and is covered by `.gitignore` for manual install/retry.
+- This ticket stays in `review` until physical Android QA records device model, performance observations, screenshots/readability results, and any follow-up issues.

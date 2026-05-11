@@ -1,7 +1,7 @@
 ---
 id: P5E-002
 phase: 5E
-status: todo
+status: done
 priority: high
 parallel_group: B
 depends_on: [P5E-001]
@@ -66,3 +66,8 @@ flutter build apk --debug
 - VFX do not change physics, scoring, AI, or controls.
 - Existing shot/physics/rules tests remain green.
 
+## Implementation Notes
+
+- Existing player/opponent contact events now spawn hit/smash contact VFX.
+- Existing physics ground-contact events now spawn bounce-ring VFX.
+- Claude review flagged ball-occlusion risk; smash/bounce sizes, lifetimes, and alpha curve were reduced before verification.

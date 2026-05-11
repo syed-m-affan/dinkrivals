@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/models/gameplay_control_mode.dart';
 import '../game/models/save_data.dart';
 
 class SaveService {
@@ -9,6 +10,7 @@ class SaveService {
   static const _versionKey = 'save_version';
   static const _soundKey = 'sound_enabled';
   static const _hapticsKey = 'haptics_enabled';
+  static const _controlModeKey = 'gameplay_control_mode';
   static const _matchesKey = 'matches_completed';
   static const _currentVersion = 1;
 
@@ -18,6 +20,8 @@ class SaveService {
     return SaveData(
       soundEnabled: _prefs.getBool(_soundKey) ?? true,
       hapticsEnabled: _prefs.getBool(_hapticsKey) ?? true,
+      gameplayControlMode: gameplayControlModeFromStorageValue(
+          _prefs.getString(_controlModeKey)),
       matchesCompleted: _prefs.getInt(_matchesKey) ?? 0,
     );
   }
@@ -26,12 +30,17 @@ class SaveService {
     await _prefs.setInt(_versionKey, _currentVersion);
     await _prefs.setBool(_soundKey, data.soundEnabled);
     await _prefs.setBool(_hapticsKey, data.hapticsEnabled);
+    await _prefs.setString(
+      _controlModeKey,
+      data.gameplayControlMode.storageValue,
+    );
     await _prefs.setInt(_matchesKey, data.matchesCompleted);
   }
 }
 
 final saveServiceProvider = Provider<SaveService>((ref) {
-  throw UnimplementedError('saveServiceProvider must be overridden in main.dart');
+  throw UnimplementedError(
+      'saveServiceProvider must be overridden in main.dart');
 });
 
 class SaveDataNotifier extends Notifier<SaveData> {
@@ -50,6 +59,11 @@ class SaveDataNotifier extends Notifier<SaveData> {
 
   Future<void> setHapticsEnabled(bool value) async {
     state = state.copyWith(hapticsEnabled: value);
+    await _service.save(state);
+  }
+
+  Future<void> setGameplayControlMode(GameplayControlMode value) async {
+    state = state.copyWith(gameplayControlMode: value);
     await _service.save(state);
   }
 

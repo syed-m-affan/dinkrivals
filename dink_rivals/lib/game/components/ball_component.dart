@@ -20,6 +20,9 @@ class BallComponent extends Component {
   final DinkRivalsGame game;
   final BallState state;
   final Paint _paint = Paint()..color = VisualPalette.ballPrimary;
+  final Paint _rimPaint = Paint()..color = VisualPalette.ballRim;
+  final Paint _accentRimPaint = Paint()..color = VisualPalette.ballAccentRim;
+  final Paint _highlightPaint = Paint()..color = VisualPalette.ballHighlight;
   ui.Image? _ballSprite;
 
   @override
@@ -41,8 +44,9 @@ class BallComponent extends Component {
     final center = game.courtToWorld(Vector2(state.x, state.y), state.z);
     final depthScale = game.depthScaleForY(state.y);
     final radius = visualRadiusFor(state.z, depthScale);
+    final screenRadius = game.logicalToScreen(radius);
+    _drawReadabilityRim(canvas, center, screenRadius);
     if (DebugFlags.useSprites && _ballSprite != null) {
-      final screenRadius = game.logicalToScreen(radius);
       final dst = Rect.fromCircle(
         center: center.toOffset(),
         radius: screenRadius,
@@ -58,9 +62,25 @@ class BallComponent extends Component {
         dst,
         Paint()..filterQuality = FilterQuality.none,
       );
+      _drawHighlight(canvas, center, screenRadius);
       return;
     }
-    canvas.drawCircle(center.toOffset(), game.logicalToScreen(radius), _paint);
+    canvas.drawCircle(center.toOffset(), screenRadius, _paint);
+    _drawHighlight(canvas, center, screenRadius);
+  }
+
+  void _drawReadabilityRim(Canvas canvas, Vector2 center, double screenRadius) {
+    final outerRadius = screenRadius + 2.2;
+    canvas.drawCircle(center.toOffset(), outerRadius, _rimPaint);
+    canvas.drawCircle(center.toOffset(), screenRadius + 0.9, _accentRimPaint);
+  }
+
+  void _drawHighlight(Canvas canvas, Vector2 center, double screenRadius) {
+    final highlightCenter = Offset(
+      center.x - screenRadius * 0.32,
+      center.y - screenRadius * 0.38,
+    );
+    canvas.drawCircle(highlightCenter, screenRadius * 0.22, _highlightPaint);
   }
 
   @visibleForTesting

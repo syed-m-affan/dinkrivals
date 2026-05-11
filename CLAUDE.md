@@ -22,11 +22,46 @@ flutter test test/ball_physics_system_test.dart   # single file
 flutter test --plain-name "ball bounces"          # single test by name
 
 flutter run -d <ANDROID_DEVICE_ID>
+flutter run -d emulator-5554
 flutter build apk --debug
-adb install -r build/app/outputs/flutter-apk/app-debug.apk
+flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
 ```
 
 Phase definition-of-done (from `docs/build-spec.md` §5.4) requires the app to install on a physical Android device and run for 5 minutes without crash; known issues go in `dink_rivals/PHASE_NOTES.md`.
+
+## Local emulator QA
+
+This machine may have a reusable Android AVD named `dink_rivals_qa`.
+
+Start it from any directory:
+
+```powershell
+& "$env:LOCALAPPDATA\Android\sdk\emulator\emulator.exe" -avd dink_rivals_qa
+```
+
+Then from `dink_rivals/`:
+
+```bash
+flutter devices
+flutter run -d emulator-5554
+```
+
+If the app is already built:
+
+```bash
+flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
+```
+
+If `adb` is not on `PATH`, use the SDK-local binary:
+
+```powershell
+$adb = "$env:LOCALAPPDATA\Android\sdk\platform-tools\adb.exe"
+& $adb -s emulator-5554 shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1
+& $adb -s emulator-5554 shell screencap -p /sdcard/dink_rivals_qa.png
+& $adb -s emulator-5554 pull /sdcard/dink_rivals_qa.png ..\dink_rivals_qa.png
+```
+
+Use emulator QA for quick launch, screenshot, and basic gameplay smoke checks. Do not treat it as a substitute for required physical-device phase closeout.
 
 ## Architecture
 
@@ -36,7 +71,7 @@ The game uses a deliberate **components / systems / models / config** split insi
 
 - Owns the singleton systems: `InputSystem`, `MovementSystem`, `ShotSystem`, `BallPhysicsSystem`, `OpponentAISystem`.
 - Owns `player.state`, `opponent.state`, `ball.state` and threads them into systems each `update(dt)`.
-- Translates raw Flame pointer events into `InputSystem` calls. Left-half drag = movement; right-half tap = dink, hold/release = drive (see `_queueShotForRelease` — the tap-vs-hold threshold is 0.15 s / 10 px).
+- Translates raw Flame pointer events into `InputSystem` and `TouchInputController` calls. Left virtual stick moves the player; right virtual stick controls racket angle and swing velocity; the SERVE button charges and releases the serve. Racket-ball contact automatically classifies dink, drive, lob, smash, block, and serve. Do not add shot buttons unless a new accepted playtest ticket changes the control contract.
 - Computes `_courtScale` and `_courtOffset` in `onGameResize`, which `courtToWorld` uses for rendering.
 
 ### Logical court coordinates vs. screen pixels

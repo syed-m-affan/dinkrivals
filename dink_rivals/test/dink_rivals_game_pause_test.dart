@@ -21,7 +21,8 @@ void main() {
     expect(game.matchOverNotifier.value, isFalse);
   });
 
-  test('manually setting matchState.matchOver does not automatically '
+  test(
+      'manually setting matchState.matchOver does not automatically '
       'flip the notifier (notifier flips only via _awardPoint)', () {
     final game = DinkRivalsGame();
     game.matchState.matchOver = true;

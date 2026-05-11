@@ -1,7 +1,7 @@
 ---
 id: P5D-001
 phase: 5D
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P5A-002]
@@ -63,3 +63,8 @@ flutter test
 - All four MVP characters have visual definitions.
 - No gameplay behavior changes.
 
+## Implementation Notes
+
+- Added `CharacterVisuals` data for Rookie, Rally Queen, Veteran, and Showman.
+- Roster portrait lookup now reads from the config instead of duplicating asset paths.
+- Added tests for unique definitions, existing portrait/paddle assets, lookup behavior, and cosmetic-only notes.

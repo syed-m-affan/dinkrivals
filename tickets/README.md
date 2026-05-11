@@ -40,6 +40,27 @@ flutter analyze
 flutter test
 ```
 
+For emulator smoke checks, use the local `dink_rivals_qa` AVD when available:
+
+```powershell
+& "$env:LOCALAPPDATA\Android\sdk\emulator\emulator.exe" -avd dink_rivals_qa
+```
+
+Then from `dink_rivals/`:
+
+```bash
+flutter devices
+flutter run -d emulator-5554
+```
+
+Or install a built APK:
+
+```bash
+flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
+```
+
+Emulator screenshots and launch checks are useful for ticket review notes, but physical Android QA is still required when the ticket or build spec says a phase cannot be marked done without it.
+
 6. When finished, update the ticket with verification results, known issues, and any follow-up tickets needed.
 7. Move the ticket to `review` if Android device QA or human playtest remains. Move it to `done` only when all ticket acceptance criteria are met.
 8. Update `tickets/status.md` in the same change.

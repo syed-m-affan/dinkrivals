@@ -1,7 +1,7 @@
 ---
 id: P5C-002
 phase: 5C
-status: todo
+status: done
 priority: high
 parallel_group: B
 depends_on: [P5A-003]
@@ -63,3 +63,7 @@ flutter build apk --debug
 - Ball and players remain readable when crossing or standing near the net.
 - No scoring, physics, AI, or controls changes.
 
+## Implementation Notes
+
+- Upgraded drawn net with cast shadow, top-rail shadow, post highlights, vertical mesh, and reduced diagonal mesh.
+- Claude review flagged mesh busyness and rail-shadow risks; diagonal mesh density/alpha and top-rail shadow width were reduced before verification.

@@ -1,7 +1,7 @@
 ---
 id: P5A-002
 phase: 5A
-status: todo
+status: done
 priority: high
 parallel_group: B
 depends_on: [P5A-001]
@@ -67,3 +67,7 @@ Avoid editing Dart source or binary assets in this ticket.
 - Later tickets can cite locked/provisional decisions from the document.
 - No implementation files are changed.
 
+## Implementation Notes
+
+- Added `docs/art/visual-direction.md` with locked/provisional/deferred decisions, readable-size rules, concept intake rules, contrast rules, motion readability rules, and asset direction.
+- Incorporated fallback Codex visual critique because Claude was unavailable due usage limit.

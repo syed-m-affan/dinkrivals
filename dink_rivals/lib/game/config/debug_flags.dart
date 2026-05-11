@@ -1,4 +1,6 @@
 class DebugFlags {
-  static const bool showOverlay = true;
+  static const bool showOverlay = false;
   static const bool useSprites = true;
+  static const bool useVfx = true;
+  static const bool useProjectedShadows = true;
 }

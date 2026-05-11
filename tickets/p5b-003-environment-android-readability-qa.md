@@ -1,7 +1,7 @@
 ---
 id: P5B-003
 phase: 5B
-status: todo
+status: review
 priority: medium
 parallel_group: final
 depends_on: [P5B-002]
@@ -54,3 +54,9 @@ flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/output
 - `PHASE_NOTES.md` records environment readability results.
 - Follow-up tickets exist for any non-trivial issues.
 
+## Review Notes
+
+- Automated verification passed during the Phase 5A-G implementation pass.
+- Android screenshot capture is blocked in this session because `flutter devices` did not show an Android device, only Windows, Chrome, and Edge.
+- The latest debug APK was copied to workspace root as `dink_rivals-debug.apk` for manual install/retry and is covered by `.gitignore`.
+- Environment readability results still need a physical Android pass before this ticket can move to `done`.

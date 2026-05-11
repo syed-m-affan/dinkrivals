@@ -30,7 +30,9 @@ class MovementSystem {
     }
 
     player.position.add(player.velocity * dt);
-    player.position.x = player.position.x.clamp(Court.left, Court.right).toDouble();
-    player.position.y = player.position.y.clamp(Court.netY, Court.bottom).toDouble();
+    player.position.x =
+        player.position.x.clamp(Court.left, Court.right).toDouble();
+    player.position.y =
+        player.position.y.clamp(Court.netY, Court.bottom).toDouble();
   }
 }

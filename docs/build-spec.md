@@ -102,6 +102,7 @@ Developer should have:
 * Developer Options enabled
 * USB Debugging enabled
 * USB cable or wireless debugging
+* Optional local Android emulator for agent smoke tests
 
 ### 5.2 Standard Commands
 
@@ -114,13 +115,27 @@ flutter test
 flutter run -d <ANDROID_DEVICE_ID>
 ```
 
+If the local QA emulator exists, start it from any directory:
+
+```powershell
+& "$env:LOCALAPPDATA\Android\sdk\emulator\emulator.exe" -avd dink_rivals_qa
+```
+
+Then use:
+
+```bash
+flutter devices
+flutter run -d emulator-5554
+```
+
 ### 5.3 Build APK Locally
 
 Debug APK:
 
 ```bash
 flutter build apk --debug
-adb install -r build/app/outputs/flutter-apk/app-debug.apk
+flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
+flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
 ```
 
 Release APK for local testing:
@@ -129,6 +144,17 @@ Release APK for local testing:
 flutter build apk --release
 adb install -r build/app/outputs/flutter-apk/app-release.apk
 ```
+
+On Windows, if `adb` is not on `PATH`, use:
+
+```powershell
+$adb = "$env:LOCALAPPDATA\Android\sdk\platform-tools\adb.exe"
+& $adb -s emulator-5554 shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1
+& $adb -s emulator-5554 shell screencap -p /sdcard/dink_rivals_qa.png
+& $adb -s emulator-5554 pull /sdcard/dink_rivals_qa.png ..\dink_rivals_qa.png
+```
+
+The emulator is acceptable for fast launch, screenshot, and basic gameplay smoke checks. It does not replace required physical-device QA for phase closeout.
 
 ### 5.4 Per-Phase Definition of Done
 
@@ -1300,6 +1326,114 @@ flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/output
 * Expanded visuals are materially closer to the concept art.
 * No gameplay, scoring, controls, ads, audio toggle, or haptics regressions.
 * Known visual gaps are tracked instead of left implicit.
+
+---
+
+# Phase 5.1 — Concept Fidelity Correction Pass
+
+## Goal
+
+Bring the current Phase 5.1 gameplay screenshot materially closer to `docs/art/concept-screenshot.png` after the first Phase 5A-G visual expansion exposed specific quality gaps.
+
+Phase 5.1 is a correction pass, not a new feature phase. It targets the visible mismatch between the current screenshot and the concept: black artifacts around player models, stretched-looking trees/fence assets, a basic environment, grass/background wonkiness, a floating-court read, and player model inconsistency before and after serve.
+
+## Build Contents
+
+* Current-vs-concept delta inventory for `docs/art/phase-5-screenshot.png` or the latest `docs/art/phase-5.1-screenshot.png`.
+* Cleaner player/opponent silhouettes with no accidental black matte artifacts.
+* Unified player/opponent proportions across pre-serve, rally, hit-confirm, and point-result states.
+* De-stretched courtside fence, trees, shrubs, and props.
+* Ground/apron/court-edge treatment that makes the court feel embedded in the park surface.
+* Richer layered park depth: far trees, fence/wall, benches, lamps, planters, banners/signage, bags, and muted courtside details.
+* Court surface, kitchen, net, and shadow polish closer to the concept screenshot.
+* HUD/control proportion review only where the latest gameplay screenshot shows oversized or crowded elements.
+* Android screenshot comparison and residual gap backlog.
+
+## Visual Quality Targets
+
+* The environment should read like one coherent park court, not repeated square tiles or isolated prop stickers.
+* Fence and trees must keep believable proportions; avoid stretching small raster assets to fill large screen regions.
+* The court must have visual contact with the ground through apron, edge wear, contact shadow, and/or pavement transition.
+* Decorative environment detail must be lower contrast than court lines, ball, ball shadow, players, net, score, pause, and controls.
+* Player and opponent sprites must use consistent outline weight, alpha handling, palette, proportions, and foot baseline across all gameplay states.
+* The concept screenshot is the visual target, not a pixel-perfect contract. Gameplay clarity and the locked 3/4 perspective win any conflict.
+
+## Implementation Tasks
+
+1. Capture or preserve a current Phase 5.1 gameplay screenshot and produce a numbered delta inventory against `docs/art/concept-screenshot.png`.
+2. Diagnose and remove black artifacts around player/opponent sprites and shadows.
+3. Normalize character pose sheets so serve/rally/special states keep the same model identity.
+4. Replace or revise stretched environment rendering with properly proportioned assets and data-driven placement.
+5. Build a grounded court surround: apron, soft court shadow, grass/pavement transitions, and quiet control-area treatment.
+6. Add layered park richness behind and beside the court without hiding gameplay.
+7. Polish court surface color/texture, net contrast, kitchen visibility, and shadow cohesion.
+8. Review HUD/control proportions against the concept and the latest phone screenshot.
+9. Capture final Android screenshots, compare before/after/concept, and convert remaining gaps into follow-up tickets.
+
+## Suggested Subphases
+
+* **Phase 5.1A — Screenshot Baseline and Visual Triage**
+  * Lock current screenshots, enumerate concept deltas, map overlapping P5H tickets, and update render-layer/acceptance-shot notes.
+* **Phase 5.1B — Player Sprite Artifact Cleanup**
+  * Remove black matte/fringe artifacts around player and opponent models without changing hit detection.
+* **Phase 5.1C — Character Scale, Pose, and Direction Readability**
+  * Make serve, rally, and special poses read as the same character model with consistent silhouette and readable paddle direction.
+* **Phase 5.1D — Environment De-Stretch and Asset Placement**
+  * Fix stretched-looking fence/trees and replace repeated tile bands with proportionate courtside elements.
+* **Phase 5.1E — Grounding, Grass, and Court Integration**
+  * Fix the floating-court read with believable ground transitions, apron/contact shadows, and quiet control-area ground.
+* **Phase 5.1F — Park Depth and Background Richness**
+  * Add layered concept-style park detail: far trees, fence, banners, benches, lamps, bags, planters, and side depth.
+* **Phase 5.1G — Concept Court Surface and Net Polish**
+  * Refine blue court material, kitchen treatment, court lines, net rail/mesh/posts, and cast shadows.
+* **Phase 5.1H — HUD and Control Proportion Pass**
+  * Tune score panels, pause, feedback, joystick, swing stick, and serve button only where they block concept fidelity or gameplay readability.
+* **Phase 5.1I — Visual QA, Android Capture, and Closeout**
+  * Capture the final screenshot set, write side-by-side comparison notes, verify Android performance/readability, and queue any Phase 5.2 gaps.
+
+## Scope Exclusions
+
+* No scoring, match rules, ball physics, AI, serve mechanics, racket hitboxes, shot classification, ad behavior, monetization, unlocks, tournament work, real AdMob, IAP, energy systems, gems, gacha, or pay-to-win.
+* No new shot buttons.
+* No animated crowd, weather, day/night system, seasonal courts, or dynamic billboard system.
+* No menu/roster/settings redesign unless Phase 5.1A identifies a regression caused by gameplay-HUD changes.
+* Avoid `CourtProjection` changes. `CourtLayoutSystem` framing changes require Phase 5.1A evidence that framing is blocking concept fidelity and must preserve phone readability.
+* No untracked third-party art or licensed assets.
+
+## Verification Commands
+
+Run from `dink_rivals/`:
+
+```bash
+flutter pub get
+flutter analyze
+flutter test
+flutter build apk --debug
+flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
+```
+
+## Android QA Checklist
+
+* Fresh install on Android phone.
+* Capture serve, post-serve/rally, point feedback, pause, and post-match screenshots.
+* Compare concept / before / after for each Phase 5.1A delta.
+* Confirm no black halos or accidental matte artifacts around player/opponent sprites.
+* Confirm player model identity does not visibly change between waiting-to-serve, serve release, rally, hit-confirm, and point-result moments.
+* Confirm fence, trees, shrubs, and props are not visibly stretched.
+* Confirm court appears grounded in the environment.
+* Confirm ball, ball shadow, court lines, kitchen, net, score, pause, joystick, swing stick, and serve button remain readable.
+* Play at least 5 minutes and watch for frame drops or input lag.
+* Record remaining gaps in `PHASE_NOTES.md`, `docs/art/phase-5.1-comparison.md`, or follow-up tickets.
+
+## Acceptance Criteria
+
+* `docs/art/phase-5.1-delta-inventory.md` identifies the target gaps.
+* Final comparison shows each high-priority Phase 5.1 visual defect resolved, improved, or explicitly deferred.
+* `flutter analyze` and `flutter test` pass.
+* Debug APK builds, installs, and launches on Android.
+* Environment reads closer to the concept screenshot without reducing gameplay clarity.
+* Player/opponent sprites no longer show unintended black artifacts or model identity jumps.
+* Remaining concept gaps are tracked instead of left implicit.
 
 ---
 

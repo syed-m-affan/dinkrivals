@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
+import '../models/gameplay_control_mode.dart';
 import '../systems/touch_input_controller.dart';
 
 class TouchControlsComponent extends Component {
@@ -15,6 +16,10 @@ class TouchControlsComponent extends Component {
     ..color = VisualPalette.controlStroke
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2;
+  final Paint _controlOuterPaint = Paint()
+    ..color = VisualPalette.scoreboardSurface
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 5;
   final Paint _disabledMoveControlPaint = Paint()
     ..color = VisualPalette.controlSurfaceDisabled;
   final Paint _enabledMoveControlPaint = Paint()
@@ -27,6 +32,12 @@ class TouchControlsComponent extends Component {
   final Paint _swingTrackPaint = Paint()
     ..color = VisualPalette.controlSurface
     ..style = PaintingStyle.stroke;
+  final Paint _swingPressedPaint = Paint()
+    ..color = VisualPalette.uiAccent.withValues(alpha: 0.4)
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+  final Paint _swingPressedFill = Paint()
+    ..color = VisualPalette.uiAccent.withValues(alpha: 0.10);
   final Paint _serveStroke = Paint()
     ..color = VisualPalette.textPrimary
     ..style = PaintingStyle.stroke
@@ -38,14 +49,6 @@ class TouchControlsComponent extends Component {
     ..strokeCap = StrokeCap.round;
 
   final TextPainter _swingText = TextPainter(
-    text: const TextSpan(
-      text: 'SWING',
-      style: TextStyle(
-        color: VisualPalette.textPrimary,
-        fontSize: 11,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
@@ -66,10 +69,12 @@ class TouchControlsComponent extends Component {
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
+  double _pulseSeconds = 0;
 
   @override
   void update(double dt) {
     priority = 10000;
+    _pulseSeconds += dt;
   }
 
   @override
@@ -94,64 +99,108 @@ class TouchControlsComponent extends Component {
     if (stickVector.length > 1) {
       stickVector.normalize();
     }
-    final knobCenter =
-        layout.moveCenter + stickVector * (layout.moveRadius * 0.62);
+    final visualRadius = layout.moveVisualRadius;
+    final knobCenter = layout.moveCenter + stickVector * (visualRadius * 0.62);
     canvas.drawCircle(
       layout.moveCenter.toOffset(),
-      layout.moveRadius,
+      visualRadius,
       waitingToServe ? _disabledMoveControlPaint : _enabledMoveControlPaint,
     );
     canvas.drawCircle(
       layout.moveCenter.toOffset(),
-      layout.moveRadius,
+      visualRadius + 4,
+      _controlOuterPaint,
+    );
+    canvas.drawCircle(
+      layout.moveCenter.toOffset(),
+      visualRadius,
       _strokePaint,
     );
     canvas.drawCircle(
       knobCenter.toOffset(),
-      23,
+      19,
       waitingToServe ? _disabledMoveKnobPaint : _enabledMoveKnobPaint,
     );
-    canvas.drawCircle(knobCenter.toOffset(), 23, _strokePaint);
+    canvas.drawCircle(knobCenter.toOffset(), 19, _strokePaint);
   }
 
   void _renderSwingControl(Canvas canvas, TouchControlLayout layout) {
+    final pressed = game.touchInputController.swingPointerId != null;
+    final pulse = pressed ? (math.sin(_pulseSeconds * 12) + 1) * 0.5 : 0.0;
+    final baseRadius = layout.swingVisualRadius;
+    final visualRadius = baseRadius + (pressed ? 4 + pulse * 2 : 0);
     final swingKnobCenter = layout.swingCenter +
         Vector2(
               math.sin(game.inputSystem.racketAngle),
               -math.cos(game.inputSystem.racketAngle),
             ) *
-            (layout.swingRadius * 0.62);
-    _swingTrackPaint.strokeWidth = layout.swingRadius * 0.62;
+            (baseRadius * 0.62);
+    _swingTrackPaint.strokeWidth = baseRadius * 0.58;
     canvas.drawArc(
       Rect.fromCircle(
         center: layout.swingCenter.toOffset(),
-        radius: layout.swingRadius,
+        radius: visualRadius,
       ),
       math.pi,
       -math.pi,
       false,
       _swingTrackPaint,
     );
+    if (pressed) {
+      _swingPressedPaint.strokeWidth = 5 + pulse * 2;
+      canvas.drawCircle(
+        layout.swingCenter.toOffset(),
+        visualRadius + 12 + pulse * 2,
+        _swingPressedFill,
+      );
+      canvas.drawArc(
+        Rect.fromCircle(
+          center: layout.swingCenter.toOffset(),
+          radius: visualRadius + 8,
+        ),
+        math.pi,
+        -math.pi,
+        false,
+        _swingPressedPaint,
+      );
+    }
     canvas.drawCircle(
       layout.swingCenter.toOffset(),
-      layout.swingRadius,
+      visualRadius + 4,
+      _controlOuterPaint,
+    );
+    canvas.drawCircle(
+      layout.swingCenter.toOffset(),
+      visualRadius,
       _strokePaint,
     );
-    canvas.drawCircle(swingKnobCenter.toOffset(), 19, _swingPaint);
-    canvas.drawCircle(swingKnobCenter.toOffset(), 19, _strokePaint);
+    final knobRadius = pressed ? 21.0 + pulse * 1.5 : 18.0;
+    canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _swingPaint);
+    canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _strokePaint);
 
+    _swingText.text = TextSpan(
+      text: game.controlMode == GameplayControlMode.assistedAimGesture
+          ? 'AIM'
+          : 'SWING',
+      style: const TextStyle(
+        color: VisualPalette.textPrimary,
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+      ),
+    );
     _swingText.layout(maxWidth: layout.swingRadius * 2);
     _swingText.paint(
       canvas,
       Offset(
         layout.swingCenter.x - _swingText.width / 2,
-        layout.swingCenter.y - layout.swingRadius - 22,
+        layout.swingCenter.y - baseRadius - 20,
       ),
     );
   }
 
   void _renderServeButton(Canvas canvas, TouchControlLayout layout) {
     final charge = game.serveChargeFraction;
+    final visualRadius = layout.serveVisualRadius;
     final serveFill = Paint()
       ..color = Color.lerp(
         VisualPalette.uiAccent.withValues(alpha: 0.8),
@@ -161,19 +210,19 @@ class TouchControlsComponent extends Component {
 
     canvas.drawCircle(
       layout.serveCenter.toOffset(),
-      layout.serveRadius,
+      visualRadius,
       serveFill,
     );
     canvas.drawCircle(
       layout.serveCenter.toOffset(),
-      layout.serveRadius,
+      visualRadius,
       _serveStroke,
     );
     if (charge > 0) {
       canvas.drawArc(
         Rect.fromCircle(
           center: layout.serveCenter.toOffset(),
-          radius: layout.serveRadius + 10,
+          radius: visualRadius + 9,
         ),
         -math.pi / 2,
         math.pi * 2 * charge,
@@ -182,7 +231,7 @@ class TouchControlsComponent extends Component {
       );
     }
 
-    _serveText.layout(maxWidth: layout.serveRadius * 2);
+    _serveText.layout(maxWidth: visualRadius * 2);
     _serveText.paint(
       canvas,
       Offset(
@@ -201,12 +250,12 @@ class TouchControlsComponent extends Component {
         fontWeight: FontWeight.bold,
       ),
     );
-    _powerText.layout(maxWidth: layout.serveRadius * 2.8);
+    _powerText.layout(maxWidth: visualRadius * 2.8);
     _powerText.paint(
       canvas,
       Offset(
         layout.serveCenter.x - _powerText.width / 2,
-        layout.serveCenter.y + layout.serveRadius + 14,
+        layout.serveCenter.y + visualRadius + 13,
       ),
     );
   }

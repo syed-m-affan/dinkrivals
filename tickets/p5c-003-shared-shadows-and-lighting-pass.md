@@ -1,7 +1,7 @@
 ---
 id: P5C-003
 phase: 5C
-status: todo
+status: done
 priority: medium
 parallel_group: C
 depends_on: [P5C-001, P5C-002]
@@ -67,3 +67,20 @@ flutter build apk --debug
 - Court lines, kitchen, and ball remain readable.
 - Existing physics, scoring, AI, and shot tests remain green.
 
+## Implementation Notes
+
+- Added `ProjectedShadow` as the shared screen-space shadow helper with centralized offset, palette color, max alpha, and a `DebugFlags.useProjectedShadows` toggle.
+- Replaced the existing ball shadow draw with the shared helper while preserving z-based size/fade behavior.
+- Replaced player/opponent primitive foot shadows with subtle shared directional ground shadows that render before sprites/primitives.
+- Updated Classic environment prop soft-shadow placement to use the shared offset and added a small paddle-head shadow without adding gameplay state or hitbox changes.
+- Claude review flagged a high-priority racket shadow layering risk; the racket shadow was reduced to only the paddle-head oval to avoid drawing a handle shadow over character feet.
+
+## Verification Result
+
+Passed from `dink_rivals/` on 2026-05-11:
+
+```bash
+flutter analyze
+flutter test
+flutter build apk --debug
+```

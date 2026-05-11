@@ -1,7 +1,7 @@
 ---
 id: P5D-003
 phase: 5D
-status: todo
+status: done
 priority: medium
 parallel_group: C
 depends_on: [P5D-001, P5D-002]
@@ -63,3 +63,19 @@ flutter build apk --debug
 - All four portraits render.
 - Character readability issues are documented or resolved.
 
+## Implementation Notes
+
+- Regenerated the existing four roster portrait PNG paths as original hard-edge low-detail pixel bust portraits using the character palette tokens.
+- Added `docs/art/phase-5d-character-check.png` as a quick portrait contact sheet for visual review.
+- Preserved roster screen layout, image paths, and existing roster tests.
+- Claude review found no blockers. Remaining readability notes: Rally Queen reads more as yellow hair on pink than a distinct headband at portrait scale; Veteran's mint accent is subtle against the gray kit.
+
+## Verification Result
+
+Passed from `dink_rivals/` on 2026-05-11:
+
+```bash
+flutter analyze
+flutter test
+flutter build apk --debug
+```

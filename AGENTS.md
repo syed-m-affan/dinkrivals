@@ -21,10 +21,38 @@ flutter pub get
 flutter analyze
 flutter test
 flutter run -d <ANDROID_DEVICE_ID>
+flutter run -d emulator-5554
 flutter build apk --debug
 ```
 
 `flutter pub get` installs dependencies. `flutter analyze` applies Dart analyzer and lint checks. `flutter test` runs unit/widget tests. `flutter run` starts the game on a connected device or emulator. `flutter build apk --debug` creates an Android debug APK.
+
+## Local Emulator QA
+
+A local Android QA emulator may be available as `dink_rivals_qa`. Start it from any directory:
+
+```powershell
+& "$env:LOCALAPPDATA\Android\sdk\emulator\emulator.exe" -avd dink_rivals_qa
+```
+
+Then run from `dink_rivals/`:
+
+```bash
+flutter devices
+flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
+flutter run -d emulator-5554
+```
+
+For launcher/screenshot checks on Windows, use the SDK-local ADB path if `adb` is not on `PATH`:
+
+```powershell
+$adb = "$env:LOCALAPPDATA\Android\sdk\platform-tools\adb.exe"
+& $adb -s emulator-5554 shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1
+& $adb -s emulator-5554 shell screencap -p /sdcard/dink_rivals_qa.png
+& $adb -s emulator-5554 pull /sdcard/dink_rivals_qa.png ..\dink_rivals_qa.png
+```
+
+Use the emulator for fast smoke tests and screenshots. Physical Android device QA is still required before marking a phase done when the ticket or build spec calls for it.
 
 ## Coding Style & Naming Conventions
 

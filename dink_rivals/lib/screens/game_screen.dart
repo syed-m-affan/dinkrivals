@@ -11,6 +11,8 @@ import '../game/config/visual_palette.dart';
 import '../game/dink_rivals_game.dart';
 import '../game/models/opponent_serve_phase.dart';
 import '../services/save_service.dart';
+import '../widgets/arcade_button.dart';
+import '../widgets/arcade_panel.dart';
 
 class GameScreen extends ConsumerStatefulWidget {
   const GameScreen({super.key});
@@ -90,17 +92,26 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               Positioned(
                 top: 8,
                 right: 8,
-                child: IconButton(
-                  key: const Key('game-pause-button'),
-                  iconSize: 36,
-                  icon: const Icon(Icons.pause_circle_filled,
-                      color: VisualPalette.controlStroke),
-                  onPressed: _showPause
-                      ? null
-                      : () {
-                          ref.read(audioServiceProvider).playMenuClick();
-                          _setPaused(true);
-                        },
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: VisualPalette.scoreboardSurface,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: VisualPalette.scoreboardBorder),
+                  ),
+                  child: IconButton(
+                    key: const Key('game-pause-button'),
+                    iconSize: 30,
+                    icon: const Icon(
+                      Icons.pause,
+                      color: VisualPalette.courtLineWhite,
+                    ),
+                    onPressed: _showPause
+                        ? null
+                        : () {
+                            ref.read(audioServiceProvider).playMenuClick();
+                            _setPaused(true);
+                          },
+                  ),
                 ),
               ),
               if (_showPause)
@@ -165,10 +176,11 @@ class _OpponentServeOverlay extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    ElevatedButton(
+                    ArcadeButton(
                       key: const Key('opponent-serve-ready'),
+                      label: 'READY',
+                      icon: Icons.sports_tennis,
                       onPressed: onReady,
-                      child: const Text('READY'),
                     ),
                   ],
                 ),
@@ -226,31 +238,42 @@ class _PauseOverlay extends StatelessWidget {
       child: ColoredBox(
         color: VisualPalette.overlayScrim,
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'PAUSED',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 4,
-                  color: VisualPalette.courtLineWhite,
+          child: ArcadePanel(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'PAUSED',
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 4,
+                    color: VisualPalette.courtLineWhite,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                key: const Key('pause-resume'),
-                onPressed: onResume,
-                child: const Text('RESUME'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                key: const Key('pause-menu'),
-                onPressed: onMenu,
-                child: const Text('RETURN TO MENU'),
-              ),
-            ],
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: ArcadeButton(
+                    key: const Key('pause-resume'),
+                    label: 'RESUME',
+                    icon: Icons.play_arrow,
+                    onPressed: onResume,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ArcadeButton(
+                    key: const Key('pause-menu'),
+                    label: 'RETURN TO MENU',
+                    icon: Icons.home,
+                    onPressed: onMenu,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

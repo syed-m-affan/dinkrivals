@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dink_rivals/app/audio_provider.dart';
+import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/screens/settings_screen.dart';
 import 'package:dink_rivals/services/audio_service.dart';
@@ -62,5 +63,27 @@ void main() {
 
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.hapticsEnabled, isFalse);
+  });
+
+  testWidgets('toggling Assisted Controls persists classic mode',
+      (tester) async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+
+    await tester
+        .pumpWidget(_wrap(const SettingsScreen(), service, const SaveData()));
+
+    final controlsFinder =
+        find.byKey(const Key('settings-assisted-controls-toggle'));
+    expect(tester.widget<SwitchListTile>(controlsFinder).value, isTrue);
+
+    await tester.tap(controlsFinder);
+    await tester.pumpAndSettle();
+
+    expect(tester.widget<SwitchListTile>(controlsFinder).value, isFalse);
+
+    final reloaded = await SaveService(prefs).load();
+    expect(
+        reloaded.gameplayControlMode, GameplayControlMode.classicRacketStick);
   });
 }

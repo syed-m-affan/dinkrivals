@@ -23,6 +23,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/court/
+    - assets/images/environment/classic/
+    - assets/images/environment/shared/
     - assets/images/sprites/
     - assets/images/ui/
+    - assets/images/ui/hud/
+    - assets/images/ui/court_cards/
+    - assets/images/vfx/
     - assets/audio/sfx/

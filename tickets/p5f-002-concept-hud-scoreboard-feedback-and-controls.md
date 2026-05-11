@@ -1,7 +1,7 @@
 ---
 id: P5F-002
 phase: 5F
-status: todo
+status: done
 priority: high
 parallel_group: B
 depends_on: [P5F-001]
@@ -69,3 +69,8 @@ flutter build apk --debug
 - Scores, serving indicator, pause, feedback, joystick, swing stick, and serve button do not clip or overlap.
 - New player can still start and control a match without changed input behavior.
 
+## Implementation Notes
+
+- Reworked score rendering into separate chunky player/opponent panels with active-serve border and center status chip.
+- Added rally feedback panel backing, bordered pause button treatment, and outer rings for movement/swing controls without changing hit regions.
+- Claude review flagged match-over chip overflow and serve-dot/digit collision; both were corrected before verification.

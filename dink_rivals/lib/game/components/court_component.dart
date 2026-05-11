@@ -19,12 +19,18 @@ class CourtComponent extends Component {
     ..strokeCap = StrokeCap.square;
   final Paint _pixelLightPaint = Paint()..color = VisualPalette.courtPixelLight;
   final Paint _pixelDarkPaint = Paint()..color = VisualPalette.courtPixelDark;
+  final Paint _scuffLightPaint = Paint()..color = VisualPalette.courtScuffLight;
+  final Paint _scuffDarkPaint = Paint()..color = VisualPalette.courtScuffDark;
+  final Paint _lineWearPaint = Paint()..color = VisualPalette.courtLineWear;
+  final Paint _edgeShadePaint = Paint()..color = VisualPalette.courtEdgeShade;
 
   @override
   void render(Canvas canvas) {
     _quad(canvas, Court.top, Court.bottom, _courtPaint);
     _drawServicePanels(canvas);
+    _drawEdgeShade(canvas);
     _drawPixelTexture(canvas);
+    _drawScuffs(canvas);
 
     _line(canvas, Vector2(Court.left, Court.top),
         Vector2(Court.right, Court.top));
@@ -105,13 +111,64 @@ class CourtComponent extends Component {
     for (var y = Court.top + cell; y < Court.bottom - cell; y += cell) {
       for (var x = Court.left + cell; x < Court.right - cell; x += cell) {
         final seed = (x ~/ cell) * 17 + (y ~/ cell) * 31;
-        if (seed % 5 != 0) {
+        if (seed % 7 != 0) {
           continue;
         }
         final paint = seed.isEven ? _pixelLightPaint : _pixelDarkPaint;
         _quadRect(canvas, x, y, x + pixel, y + pixel, paint);
       }
     }
+  }
+
+  void _drawScuffs(Canvas canvas) {
+    const scuffs = <_CourtScuff>[
+      _CourtScuff(34, 68, 22, 2, true),
+      _CourtScuff(158, 104, 18, 2, false),
+      _CourtScuff(74, 154, 26, 3, false),
+      _CourtScuff(148, 204, 16, 2, true),
+      _CourtScuff(42, 304, 20, 2, false),
+      _CourtScuff(128, 334, 28, 3, true),
+      _CourtScuff(180, 394, 18, 2, false),
+      _CourtScuff(62, 430, 24, 2, true),
+    ];
+    for (final scuff in scuffs) {
+      _quadRect(
+        canvas,
+        scuff.x,
+        scuff.y,
+        scuff.x + scuff.width,
+        scuff.y + scuff.height,
+        scuff.light ? _scuffLightPaint : _scuffDarkPaint,
+      );
+    }
+  }
+
+  void _drawEdgeShade(Canvas canvas) {
+    const edge = 3.4;
+    _quadRect(
+      canvas,
+      Court.left,
+      Court.top,
+      Court.left + edge,
+      Court.bottom,
+      _edgeShadePaint,
+    );
+    _quadRect(
+      canvas,
+      Court.right - edge,
+      Court.top,
+      Court.right,
+      Court.bottom,
+      _edgeShadePaint,
+    );
+    _quadRect(
+      canvas,
+      Court.left,
+      Court.bottom - edge,
+      Court.right,
+      Court.bottom,
+      _edgeShadePaint,
+    );
   }
 
   void _quad(Canvas canvas, double topY, double bottomY, Paint paint) {
@@ -144,5 +201,47 @@ class CourtComponent extends Component {
     final end = game.courtToWorld(b);
     _linePaint.strokeWidth = game.logicalToScreen(1.15).clamp(1.5, 3.0);
     canvas.drawLine(start.toOffset(), end.toOffset(), _linePaint);
+    _drawLineWear(canvas, a, b);
   }
+
+  void _drawLineWear(Canvas canvas, Vector2 a, Vector2 b) {
+    final horizontal = (a.y - b.y).abs() < 0.01;
+    final length = horizontal ? (a.x - b.x).abs() : (a.y - b.y).abs();
+    if (length < 150) {
+      return;
+    }
+    final startOffset = horizontal ? 52.0 : 46.0;
+    for (var offset = startOffset; offset < length - 18; offset += 96) {
+      final t0 = offset / length;
+      final t1 = (offset + 8).clamp(0, length) / length;
+      final start = Vector2(
+        a.x + (b.x - a.x) * t0,
+        a.y + (b.y - a.y) * t0,
+      );
+      final end = Vector2(
+        a.x + (b.x - a.x) * t1,
+        a.y + (b.y - a.y) * t1,
+      );
+      final worldStart = game.courtToWorld(start);
+      final worldEnd = game.courtToWorld(end);
+      final width = game.logicalToScreen(1.35).clamp(1.5, 3.2);
+      canvas.drawLine(
+        worldStart.toOffset(),
+        worldEnd.toOffset(),
+        _lineWearPaint
+          ..strokeWidth = width
+          ..strokeCap = StrokeCap.square,
+      );
+    }
+  }
+}
+
+class _CourtScuff {
+  const _CourtScuff(this.x, this.y, this.width, this.height, this.light);
+
+  final double x;
+  final double y;
+  final double width;
+  final double height;
+  final bool light;
 }

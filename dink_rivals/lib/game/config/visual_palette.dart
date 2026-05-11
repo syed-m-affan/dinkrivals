@@ -1,18 +1,56 @@
 import 'package:flutter/material.dart';
 
 class VisualPalette {
-  static const Color courtSurface = Color(0xFF287E72);
-  static const Color courtSurfaceShade = Color(0xFF226B62);
-  static const Color courtSurfaceHighlight = Color(0xFF319283);
-  static const Color courtPixelLight = Color(0x223FE0B0);
-  static const Color courtPixelDark = Color(0x2220524E);
+  static const Color courtSurface = Color(0xFF2B76AA);
+  static const Color courtSurfaceShade = Color(0xFF225E90);
+  static const Color courtSurfaceHighlight = Color(0xFF3486BC);
+  static const Color courtPixelLight = Color(0x2248B8E8);
+  static const Color courtPixelDark = Color(0x22214D74);
+  static const Color courtScuffLight = Color(0x2FC7E8F6);
+  static const Color courtScuffDark = Color(0x25173E5D);
+  static const Color courtEdgeShade = Color(0x2610253B);
+  static const Color courtLineWear = Color(0x402B76AA);
   static const Color courtLineWhite = Color(0xFFF4F7E8);
-  static const Color kitchenOverlay = Color(0x4055D4E6);
+  static const Color kitchenOverlay = Color(0x4A6BD8E9);
+  static const Color kitchenEdge = Color(0x6687F2FF);
+
+  static const Color environmentGround = Color(0xFF4F6241);
+  static const Color environmentGroundCool = Color(0xFF304A34);
+  static const Color environmentGroundWarm = Color(0xFF5B6C48);
+  static const Color environmentGroundShade = Color(0xCC172822);
+  static const Color environmentControlQuiet = Color(0x33223529);
+  static const Color environmentApron = Color(0xFF6F755D);
+  static const Color environmentApronShade = Color(0xFF3B4638);
+  static const Color environmentApronLine = Color(0x554D5746);
+  static const Color environmentApronFeather = Color(0x3635442E);
+  static const Color environmentApronContact = Color(0x45101B19);
+  static const Color environmentBackWall = Color(0xDD10231D);
+  static const Color environmentTreeLineDark = Color(0xFF162819);
+  static const Color environmentTreeLineMid = Color(0xFF284523);
+  static const Color environmentTreeLineLight = Color(0xFF486326);
+  static const Color environmentTreeTrunk = Color(0xFF3B2D21);
+  static const Color environmentHedge = Color(0xFF2D4928);
+  static const Color environmentFenceRail = Color(0xAA121E26);
+  static const Color environmentFenceMesh = Color(0x77263B45);
+  static const Color environmentFencePost = Color(0xCC182832);
+  static const Color environmentFoliageShadow = Color(0x55203A24);
+  static const Color environmentFoliageMid = Color(0x443F5E2E);
+  static const Color environmentFoliageLight = Color(0x335E7B35);
+  static const Color courtOuterShadow = Color(0x66081316);
+  static const Color projectedShadow = Color(0xFF061211);
+  static const double projectedShadowMaxAlpha = 0.34;
+  static const Offset shadowScreenOffset = Offset(4, 3);
 
   static const Color netRail = Color(0xFFF1F3E5);
+  static const Color netRailHighlight = Color(0xFFFFFFFF);
+  static const Color netRailShadow = Color(0xDD1A2D35);
+  static const Color netDropOutline = Color(0xEE0A181C);
   static const Color netPost = Color(0xFF1E2630);
+  static const Color netPostHighlight = Color(0xFF6F8492);
   static const Color netMesh = Color(0x55314A54);
-  static const Color netMeshStroke = Color(0x88314A54);
+  static const Color netMeshStroke = Color(0xBB1B363D);
+  static const Color netMeshDiagonal = Color(0x77314A54);
+  static const Color netCastShadow = Color(0x44122224);
 
   static const Color playerPrimary = Color(0xFF3C86FF);
   static const Color opponentPrimary = Color(0xFFFF5F5F);
@@ -22,6 +60,18 @@ class VisualPalette {
   static const Color playerPaddle = Color(0xAA4AA3FF);
   static const Color opponentPaddle = Color(0x99FF5A5A);
   static const Color ballPrimary = Color(0xFFFFE24A);
+  static const Color ballRim = Color(0xFFF8FFE8);
+  static const Color ballAccentRim = Color(0xFFFFD84C);
+  static const Color ballHighlight = Color(0xDDF8FFE8);
+
+  static const Color rookiePrimary = Color(0xFF3C86FF);
+  static const Color rookieSecondary = Color(0xFFE9F2FF);
+  static const Color rallyQueenPrimary = Color(0xFFFF5FA8);
+  static const Color rallyQueenSecondary = Color(0xFFFFD65A);
+  static const Color veteranPrimary = Color(0xFF526072);
+  static const Color veteranSecondary = Color(0xFFC7E3D2);
+  static const Color showmanPrimary = Color(0xFFFF6A3D);
+  static const Color showmanSecondary = Color(0xFF7CE7FF);
 
   static const Color feedbackDink = Color(0xFF77E6C6);
   static const Color feedbackDrive = Color(0xFFFFCB47);
@@ -33,6 +83,10 @@ class VisualPalette {
   static const Color uiSurface = Color(0xFF1B2530);
   static const Color uiAccent = Color(0xFFFFCB47);
   static const Color scoreboardSurface = Color(0xCC1B2530);
+  static const Color scoreboardPlayer = Color(0xDD1C5FA8);
+  static const Color scoreboardOpponent = Color(0xDDA83E3E);
+  static const Color scoreboardBorder = Color(0xFFF4F7E8);
+  static const Color feedbackPanel = Color(0xBB10151B);
   static const Color overlayScrim = Color(0xCC000000);
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textInverse = Color(0xFF000000);

@@ -8,6 +8,8 @@ import '../app/game_provider.dart';
 import '../app/router.dart';
 import '../game/config/visual_palette.dart';
 import '../game/models/player_side.dart';
+import '../widgets/arcade_button.dart';
+import '../widgets/arcade_panel.dart';
 
 class EndMatchScreen extends ConsumerStatefulWidget {
   const EndMatchScreen({super.key});
@@ -117,49 +119,62 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        winnerPortrait,
-                        key: const Key('end-match-winner-portrait'),
-                        width: 80,
-                        height: 80,
-                        filterQuality: FilterQuality.none,
-                      ),
-                      const SizedBox(width: 16),
-                      Flexible(
-                        child: Text(
-                          winnerText,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 3,
-                            color: winnerColor,
+                  ArcadePanel(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          winnerPortrait,
+                          key: const Key('end-match-winner-portrait'),
+                          width: 64,
+                          height: 64,
+                          filterQuality: FilterQuality.none,
+                        ),
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: Text(
+                            winnerText,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              color: winnerColor,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 32),
-                  _ScoreLine(
-                    label: 'YOU',
-                    side: PlayerSide.player,
-                    score: match.playerScore,
-                    highlight: playerWon,
+                  ArcadePanel(
+                    child: Column(
+                      children: [
+                        _ScoreLine(
+                          label: 'YOU',
+                          side: PlayerSide.player,
+                          score: match.playerScore,
+                          highlight: playerWon,
+                        ),
+                        const SizedBox(height: 8),
+                        _ScoreLine(
+                          label: 'OPPONENT',
+                          side: PlayerSide.opponent,
+                          score: match.opponentScore,
+                          highlight: !playerWon,
+                        ),
+                        const Divider(color: VisualPalette.netMeshStroke),
+                        _StatRow(
+                          label: 'Rally count',
+                          value: '${match.rallyCount}',
+                        ),
+                        _StatRow(
+                          label: 'Longest rally',
+                          value: '${match.longestRally}',
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  _ScoreLine(
-                    label: 'OPPONENT',
-                    side: PlayerSide.opponent,
-                    score: match.opponentScore,
-                    highlight: !playerWon,
-                  ),
-                  const SizedBox(height: 32),
-                  _StatRow(label: 'Rally count', value: '${match.rallyCount}'),
-                  _StatRow(
-                      label: 'Longest rally', value: '${match.longestRally}'),
                   const SizedBox(height: 24),
                   Text(
                     rewardText,
@@ -174,18 +189,17 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  ElevatedButton(
+                  ArcadeButton(
                     key: const Key('end-match-rewarded-ad'),
+                    label: _rewardClaimed
+                        ? 'REWARD CLAIMED'
+                        : _rewardAvailable
+                            ? '2X REWARD AD'
+                            : 'AD UNAVAILABLE',
+                    icon: Icons.play_circle,
                     onPressed: _rewardAvailable && !_rewardClaimed
                         ? _claimReward
                         : null,
-                    child: Text(
-                      _rewardClaimed
-                          ? 'REWARD CLAIMED'
-                          : _rewardAvailable
-                              ? 'WATCH AD: 2X REWARD'
-                              : 'REWARDED AD UNAVAILABLE',
-                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -199,20 +213,22 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  ElevatedButton(
+                  ArcadeButton(
                     key: const Key('end-match-rematch'),
+                    label: 'REMATCH',
+                    icon: Icons.replay,
                     onPressed: () {
                       ref.read(audioServiceProvider).playMenuClick();
                       game.resetMatch();
                       context.go(AppRoutes.game);
                     },
-                    child: const Text('REMATCH'),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
+                  ArcadeButton(
                     key: const Key('end-match-menu'),
+                    label: 'RETURN TO MENU',
+                    icon: Icons.home,
                     onPressed: _returnToMenu,
-                    child: const Text('RETURN TO MENU'),
                   ),
                 ],
               ),

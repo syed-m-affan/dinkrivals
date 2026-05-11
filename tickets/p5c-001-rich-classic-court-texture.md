@@ -1,7 +1,7 @@
 ---
 id: P5C-001
 phase: 5C
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P5A-002]
@@ -66,3 +66,8 @@ flutter build apk --debug
 - Court lines and kitchen remain readable on phone.
 - No gameplay behavior changes.
 
+## Implementation Notes
+
+- Added projected low-contrast scuffs, reduced pixel texture density, and line-wear details through `CourtComponent`.
+- Added a thinner inset kitchen edge treatment through `KitchenZoneComponent`.
+- Claude review flagged scuff/kitchen-line risks; scuff positions, line-wear offsets, and kitchen edge placement were adjusted before verification.

@@ -1,7 +1,7 @@
 ---
 id: P5G-003
 phase: 5G
-status: todo
+status: review
 priority: high
 parallel_group: final
 depends_on: [P5G-001, P5G-002]
@@ -53,3 +53,8 @@ Do not make implementation changes in this ticket.
 - `tickets/status.md` and `PHASE_NOTES.md` reflect the final Phase 5A-5G state.
 - No code or asset implementation changes are made in this closeout ticket.
 
+## Review Notes
+
+- Known non-device visual gaps from P5G-001 were converted into follow-up tickets P5H-001 through P5H-007.
+- Phase 5A-G cannot be fully closed yet because P5G-002 physical Android QA is still pending.
+- This ticket remains in `review` until Android QA results are recorded and the final closeout decision can be made.

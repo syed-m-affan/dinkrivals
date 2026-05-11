@@ -1,7 +1,7 @@
 ---
 id: P5A-003
 phase: 5A
-status: todo
+status: done
 priority: high
 parallel_group: C
 depends_on: [P5A-002]
@@ -81,3 +81,7 @@ flutter test
 - Render-layer and occlusion rules are documented.
 - Later implementation tickets can avoid draw-order conflicts.
 
+## Implementation Notes
+
+- Added `docs/art/render-layer-map.md` with draw order, occlusion rules, SafeArea rules, folder conventions, and naming conventions.
+- Added the Phase 5A target asset folders and registered them in `pubspec.yaml`.

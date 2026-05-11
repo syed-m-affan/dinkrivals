@@ -26,6 +26,12 @@ Phase 5 implementation (2026-05-11): P5-001 through P5-006 are complete. The pro
 
 Phase 5A-5G planning (2026-05-11): Visual expansion tickets are queued as discrete work, not phase-sized wrappers. Phase 5A locks concept direction and rendering conventions; 5B adds Classic Court environment dressing; 5C polishes court/net/shadows; 5D expands character personality and animation; 5E adds short-lived VFX and rally juice; 5F restyles HUD/screens/court cards; 5G verifies screenshots, Android performance, and closeout. These tickets must preserve the locked control contract, scoring/rules, ball physics, AI, ad placement, and existing settings behavior unless a future non-visual ticket explicitly changes them.
 
+Phase 5A-5G implementation start (2026-05-11): P5A-001 through P5A-003 are complete with baseline/gap docs, visual direction, render-layer rules, asset folders, and pubspec declarations. P5B-001/P5B-002 are complete with low-detail retro ChatGPT-generated environment placeholder assets, manifests, and data-driven Classic environment rendering; P5B-003 is in `review` pending Android environment screenshots. P5C-001/P5C-003 are complete with projected court/kitchen polish, upgraded net/cast-shadow rendering, and a shared directional shadow helper across ball/player/opponent/props/paddle head. P5D-001/P5D-003 are complete with data-driven character visual definitions, roster wiring, expanded ready/hit-confirm/point-result animation states, refreshed roster portraits, and a character-check contact sheet. P5E-001/P5E-002 are complete with placeholder VFX assets, deterministic VFX layer, and contact/bounce event wiring; P5E-003 code is implemented and in `review` pending Android performance smoke. P5F-001/P5F-002/P5F-003/P5F-004 are complete with reusable arcade UI primitives, in-match HUD/control restyle, restyled menu/roster/settings/pause/end-match screens, and court-card placeholder assets. P5G-001 is complete with repeatable UI goldens and blocker-documented gameplay screenshot gaps; P5G-002/P5G-003 are in `review` pending Android QA and final closeout. P5H-001 through P5H-007 are queued as discrete follow-up tickets for remaining non-blocking visual gaps. Claude review was used when available for court/net/shadows/character/VFX/HUD/screen-restyle/backlog decisions; Codex subagent fallback critique was used when Claude was rate-limited. Latest verification passed with `flutter pub get`, `flutter analyze`, `flutter test` (127 tests), and `flutter build apk --debug`; no Android device was visible for the latest install, so the refreshed `dink_rivals-debug.apk` is at workspace root and ignored.
+
+Phase 5.1 planning (2026-05-11): Phase 5.1 Concept Fidelity Correction Pass is queued to close the gap between the latest Phase 5.1 gameplay screenshot and `docs/art/concept-screenshot.png`. The work is split into screenshot triage (P51A), player artifact cleanup (P51B), character pose/scale consistency (P51C), environment de-stretching (P51D), court grounding/grass integration (P51E), park depth/richness (P51F), court/net polish (P51G), HUD/control proportions (P51H), and Android visual QA/closeout (P51I). Claude and a Codex subagent both contributed to the planning breakdown. Phase 5.1 remains visual-only and must preserve scoring/rules/physics/AI/ad behavior and the locked movement + swing-stick control contract.
+
+Phase 5.1 implementation (2026-05-11): P51A through P51H are implemented. The pass added a delta inventory and comparison note, removed high-priority racket-head shadows that read as black player artifacts, regenerated chunkier transparent player/opponent/paddle sprite sheets, preserved raster prop aspect ratios, added a procedural tree/fence backdrop, improved court grounding with apron feather/contact shadow/edge shade, added richer park detail, and reduced visual control dominance while preserving touch hit regions. Claude and a Codex subagent both reviewed the implementation plan. Verification passed with `flutter analyze`, `flutter test` (133 tests), `flutter build apk --debug`, Android install/launch on Pixel 10 Pro XL (`58011FDCQ00992`), and Android screenshot capture for serve/rally/pause states. P51I is in `review`: the full 5-minute Android smoke is still incomplete because the long-running smoke was interrupted around 3 minutes and the Pixel disconnected from Flutter/ADB before a clean restart could finish. The refreshed `dink_rivals-debug.apk` is copied to the workspace root and ignored.
+
 ## Dashboard
 
 | ID | Phase | Status | Priority | Parallel | Depends on | Summary |
@@ -68,32 +74,49 @@ Phase 5A-5G planning (2026-05-11): Visual expansion tickets are queued as discre
 | P5-005 | 5 | done | high | A | [] | Audio service + hit/bounce/point/fault/menu-click SFX wired to `soundEnabled`. |
 | P5-006 | 5 | done | medium | A | [] | Haptics service for player hit (light) and player point win (medium), wired to `hapticsEnabled`. |
 | P5-007 | 5 | review | high | final | [P5-001, P5-002, P5-003, P5-004, P5-005, P5-006] | Phase 5 verification, Android QA checklist, and notes. |
-| P5A-001 | 5A | todo | high | A | [P5-007] | Capture current Phase 5 screenshot baseline and concept gap inventory. |
-| P5A-002 | 5A | todo | high | B | [P5A-001] | Create visual-direction source of truth with locked/provisional decisions and readability rules. |
-| P5A-003 | 5A | todo | high | C | [P5A-002] | Define asset folders, render-layer map, occlusion rules, and SafeArea conventions. |
-| P5B-001 | 5B | todo | high | A | [P5A-002, P5A-003] | Generate Classic Court environment placeholder assets and manifest. |
-| P5B-002 | 5B | todo | high | B | [P5B-001] | Add data-driven Classic environment component and prop placement. |
-| P5B-003 | 5B | todo | medium | final | [P5B-002] | Android environment readability QA and screenshots. |
-| P5C-001 | 5C | todo | high | A | [P5A-002] | Replace early court surface with richer Classic Court texture and kitchen treatment. |
-| P5C-002 | 5C | todo | high | B | [P5A-003] | Upgrade net art with posts, rail, mesh, and cast shadow. |
-| P5C-003 | 5C | todo | medium | C | [P5C-001, P5C-002] | Add shared directional shadows and subtle lighting pass. |
-| P5D-001 | 5D | todo | high | A | [P5A-002] | Add data-driven character visual definitions for the four MVP characters. |
-| P5D-002 | 5D | todo | high | B | [P5D-001] | Expand character sprite sheets and animation states without hitbox changes. |
-| P5D-003 | 5D | todo | medium | C | [P5D-001, P5D-002] | Update matching roster portraits and document character visual QA. |
-| P5E-001 | 5E | todo | high | A | [P5A-003] | Add VFX framework and placeholder VFX assets. |
-| P5E-002 | 5E | todo | high | B | [P5E-001] | Wire contact, bounce, dink/drive/lob/smash VFX to existing events. |
-| P5E-003 | 5E | todo | medium | C | [P5E-002] | Add ball trails, point bursts, and Android VFX performance check. |
-| P5F-001 | 5F | todo | high | A | [P5A-002] | Add reusable arcade UI primitives and theme tokens. |
-| P5F-002 | 5F | todo | high | B | [P5F-001] | Restyle concept HUD, scoreboard, feedback, pause button, and controls. |
-| P5F-003 | 5F | todo | high | C | [P5F-001] | Restyle menu, roster, settings, pause overlay, and end-match screens. |
-| P5F-004 | 5F | todo | medium | D | [P5F-001] | Add court card assets/placeholders without court-selection scope. |
-| P5G-001 | 5G | todo | high | A | [P5B-003, P5C-003, P5D-003, P5E-003, P5F-002, P5F-003, P5F-004] | Automated visual verification and screenshot comparison set. |
-| P5G-002 | 5G | todo | high | B | [P5G-001] | Android performance and readability QA for expanded visuals. |
-| P5G-003 | 5G | todo | high | final | [P5G-001, P5G-002] | Visual gap backlog and Phase 5A-5G closeout. |
+| P5A-001 | 5A | done | high | A | [P5-007] | Capture current Phase 5 screenshot baseline and concept gap inventory. |
+| P5A-002 | 5A | done | high | B | [P5A-001] | Create visual-direction source of truth with locked/provisional decisions and readability rules. |
+| P5A-003 | 5A | done | high | C | [P5A-002] | Define asset folders, render-layer map, occlusion rules, and SafeArea conventions. |
+| P5B-001 | 5B | done | high | A | [P5A-002, P5A-003] | Generate Classic Court environment placeholder assets and manifest. |
+| P5B-002 | 5B | done | high | B | [P5B-001] | Add data-driven Classic environment component and prop placement. |
+| P5B-003 | 5B | review | medium | final | [P5B-002] | Android environment readability QA and screenshots. |
+| P5C-001 | 5C | done | high | A | [P5A-002] | Replace early court surface with richer Classic Court texture and kitchen treatment. |
+| P5C-002 | 5C | done | high | B | [P5A-003] | Upgrade net art with posts, rail, mesh, and cast shadow. |
+| P5C-003 | 5C | done | medium | C | [P5C-001, P5C-002] | Add shared directional shadows and subtle lighting pass. |
+| P5D-001 | 5D | done | high | A | [P5A-002] | Add data-driven character visual definitions for the four MVP characters. |
+| P5D-002 | 5D | done | high | B | [P5D-001] | Expand character sprite sheets and animation states without hitbox changes. |
+| P5D-003 | 5D | done | medium | C | [P5D-001, P5D-002] | Update matching roster portraits and document character visual QA. |
+| P5E-001 | 5E | done | high | A | [P5A-003] | Add VFX framework and placeholder VFX assets. |
+| P5E-002 | 5E | done | high | B | [P5E-001] | Wire contact, bounce, dink/drive/lob/smash VFX to existing events. |
+| P5E-003 | 5E | review | medium | C | [P5E-002] | Add ball trails, point bursts, and Android VFX performance check. |
+| P5F-001 | 5F | done | high | A | [P5A-002] | Add reusable arcade UI primitives and theme tokens. |
+| P5F-002 | 5F | done | high | B | [P5F-001] | Restyle concept HUD, scoreboard, feedback, pause button, and controls. |
+| P5F-003 | 5F | done | high | C | [P5F-001] | Restyle menu, roster, settings, pause overlay, and end-match screens. |
+| P5F-004 | 5F | done | medium | D | [P5F-001] | Add court card assets/placeholders without court-selection scope. |
+| P5G-001 | 5G | done | high | A | [P5B-003, P5C-003, P5D-003, P5E-003, P5F-002, P5F-003, P5F-004] | Automated visual verification and screenshot comparison set. |
+| P5G-002 | 5G | review | high | B | [P5G-001] | Android performance and readability QA for expanded visuals. |
+| P5G-003 | 5G | review | high | final | [P5G-001, P5G-002] | Visual gap backlog and Phase 5A-5G closeout. |
+| P51A-001 | 5.1A | done | high | A | [P5G-001] | Lock current Phase 5.1 baseline and create concept delta inventory. |
+| P51B-001 | 5.1B | done | high | B | [P51A-001, P5D-002] | Remove black artifacts/matte halos around player and opponent models. |
+| P51C-001 | 5.1C | done | high | C | [P51B-001] | Make character scale, pose, and direction readable and consistent before/after serve. |
+| P51D-001 | 5.1D | done | high | D | [P51A-001, P5B-002] | Fix stretched fence/trees/props with proportionate data-driven placement. |
+| P51E-001 | 5.1E | done | high | E | [P51D-001, P5C-003] | Ground the court with believable grass/pavement transitions and contact shadows. |
+| P51F-001 | 5.1F | done | high | F | [P51D-001, P51E-001] | Add layered park depth and background richness closer to the concept screenshot. |
+| P51G-001 | 5.1G | done | medium | G | [P51E-001, P5C-003] | Polish court surface, kitchen, net, lines, and shadow cohesion. |
+| P51H-001 | 5.1H | done | medium | H | [P51A-001, P5F-002] | Tune HUD and control proportions against concept and latest gameplay screenshot. |
+| P51I-001 | 5.1I | review | high | final | [P51B-001, P51C-001, P51D-001, P51E-001, P51F-001, P51G-001, P51H-001] | Verify Phase 5.1 on Android, write comparison, and queue residual gaps. |
+| P5H-001 | 5H | todo | high | A | [P5G-001] | Add a reliable gameplay golden capture harness for Flame-rendered states. |
+| P5H-002 | 5H | todo | medium | B | [P5G-001] | Evaluate and add a Flutter web screenshot capture path if accepted. |
+| P5H-003 | 5H | todo | medium | C | [P5G-001] | Improve main menu logo prominence and top-band composition. |
+| P5H-004 | 5H | todo | medium | D | [P5D-003] | Improve Rally Queen portrait readability at roster-card scale. |
+| P5H-005 | 5H | todo | medium | D | [P5D-003] | Strengthen Veteran portrait accent readability. |
+| P5H-006 | 5H | todo | medium | E | [P5B-002, P5C-003] | Add a cheap far-background band for more environment depth. |
+| P5H-007 | 5H | todo | low | F | [P5D-002] | Add subtle idle/ready character micro-animation without gameplay changes. |
 
 ## Open Coordination Notes
 
 - Phase 5A-5G is visual expansion work only. It may add assets, visual components, UI style, and QA documentation, but it must not alter scoring/rules, ball physics, AI, ad placement, the movement + swing-stick control contract, or monetization/progression scope. Phase 5A direction tickets should be completed before broad environment, court, character, VFX, or UI expansion tickets.
+- Phase 5.1 is a concept-fidelity correction pass. Start with P51A-001; do not implement visual fixes until current-vs-concept deltas and acceptance shots are documented. It may supersede some P5H follow-ups, but only after P51A maps them. Preserve controls/scoring/rules/physics/AI/ads. Avoid `CourtProjection`; change `CourtLayoutSystem` only if P51A proves framing blocks concept fidelity.
 - Existing worktree has local changes from prior Phase 0 tuning. Do not revert them.
 - `dink_rivals/PHASE_NOTES.md` is the authoritative playtest history.
 - Phase 1 should preserve the current visible movement joystick, swing-stick racket control, automatic racket contact, full racket-segment hitbox, and enlarged play area unless a ticket explicitly changes them.

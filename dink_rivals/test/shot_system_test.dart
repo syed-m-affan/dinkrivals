@@ -7,6 +7,7 @@ import 'package:dink_rivals/game/models/ball_state.dart';
 import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/models/player_state.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
+import 'package:dink_rivals/game/models/swing_intent.dart';
 import 'package:dink_rivals/game/systems/shot_system.dart';
 
 void main() {
@@ -166,11 +167,15 @@ void main() {
   });
 
   test('smash requires ball height threshold', () {
-    final high = _hitHighBall(z: Tuning.smashMinBallHeight + 5);
-    final low = _hitHighBall(z: Tuning.smashMinBallHeight - 5);
+    final highShotSystem = ShotSystem();
+    final lowShotSystem = ShotSystem();
+    final high = _hitHighBall(
+        z: Tuning.smashMinBallHeight + 5, shotSystem: highShotSystem);
+    _hitHighBall(z: Tuning.smashMinBallHeight - 5, shotSystem: lowShotSystem);
 
-    expect(high.vz, Tuning.smashInitialZ);
-    expect(low.vz, isNot(Tuning.smashInitialZ));
+    expect(highShotSystem.lastShotType, ShotType.smash);
+    expect(high.vz, greaterThan(0));
+    expect(lowShotSystem.lastShotType, isNot(ShotType.smash));
   });
 
   test(
@@ -231,7 +236,7 @@ void main() {
     expect(ball.vy, lessThan(0));
   });
 
-  test('ball above vertical capsule top is not hittable', () {
+  test('ball above playable height is not hittable', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -242,7 +247,7 @@ void main() {
     final ball = BallState(
       x: racketPosition.x,
       y: racketPosition.y,
-      z: Tuning.racketContactZ + Tuning.verticalHitRadius + 2,
+      z: Tuning.playableBallMaxZ + 2,
       isInPlay: true,
     );
 
@@ -284,7 +289,7 @@ void main() {
     expect(didHit, isFalse);
   });
 
-  test('ball horizontally past racketHitRadius is not hittable', () {
+  test('ball past fuzzy contact radius is not hittable', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -293,7 +298,7 @@ void main() {
     final racketPosition =
         player.position + racketDirection * Tuning.racketReach;
     final ball = BallState(
-      x: racketPosition.x + Tuning.racketHitRadius + 2,
+      x: racketPosition.x + Tuning.forgivenContactRadius + 2,
       y: racketPosition.y,
       z: Tuning.racketContactZ,
       isInPlay: true,
@@ -337,6 +342,109 @@ void main() {
 
     expect(didHit, isTrue);
     expect(shotSystem.lastShotType, ShotType.smash);
+  });
+
+  test('assisted contact converts tap intent into a dink', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: Tuning.lowBallMaxZ,
+      vy: 40,
+      isInPlay: true,
+    );
+    final shotSystem = ShotSystem();
+
+    final didHit = shotSystem.attemptAssistedContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: Vector2(0, -1),
+      intent: SwingIntent.dink,
+    );
+
+    expect(didHit, isTrue);
+    expect(shotSystem.lastShotType, ShotType.dink);
+    expect(ball.vy, lessThan(0));
+  });
+
+  test('assisted smash requires smashable ball height', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
+    final lowBall = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: Tuning.lowBallMaxZ,
+      vy: 40,
+      isInPlay: true,
+    );
+    final highBall = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: Tuning.smashableBallMinZ + 4,
+      vy: 40,
+      isInPlay: true,
+    );
+    final lowShotSystem = ShotSystem();
+    final highShotSystem = ShotSystem();
+
+    lowShotSystem.attemptAssistedContact(
+      ball: lowBall,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: Vector2(0, -1),
+      intent: SwingIntent.smash,
+      power: 1,
+    );
+    highShotSystem.attemptAssistedContact(
+      ball: highBall,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: Vector2(0, -1),
+      intent: SwingIntent.smash,
+      power: 1,
+    );
+
+    expect(lowShotSystem.lastShotType, ShotType.drive);
+    expect(highShotSystem.lastShotType, ShotType.smash);
+  });
+
+  test('forgiven contact outside exact racket radius still returns the ball',
+      () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
+    final ball = BallState(
+      x: racketPosition.x + Tuning.racketHitRadius + 4,
+      y: racketPosition.y,
+      z: Tuning.racketContactZ,
+      vy: 40,
+      isInPlay: true,
+      lastHitBy: PlayerSide.opponent,
+    );
+    final shotSystem = ShotSystem();
+
+    final didHit = shotSystem.attemptAssistedContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: Vector2(0.4, -1),
+      intent: SwingIntent.drive,
+      power: 0.8,
+    );
+
+    expect(didHit, isTrue);
+    expect(shotSystem.lastShotType, ShotType.drive);
+    expect(ball.vy, lessThan(0));
   });
 
   test('serve launches ball forward at minimum serve speed and lift', () {
@@ -506,7 +614,7 @@ BallState _hitWithDirection(Vector2 racketDirection) {
   return ball;
 }
 
-BallState _hitHighBall({required double z}) {
+BallState _hitHighBall({required double z, ShotSystem? shotSystem}) {
   final player = PlayerState(
     position: Vector2(110, 400),
     side: PlayerSide.player,
@@ -521,7 +629,7 @@ BallState _hitHighBall({required double z}) {
     isInPlay: true,
   );
 
-  ShotSystem().attemptRacketContact(
+  (shotSystem ?? ShotSystem()).attemptRacketContact(
     ball: ball,
     hitter: player,
     racketPosition: racketPosition,

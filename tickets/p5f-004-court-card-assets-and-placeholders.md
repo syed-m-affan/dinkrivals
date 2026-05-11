@@ -1,7 +1,7 @@
 ---
 id: P5F-004
 phase: 5F
-status: todo
+status: done
 priority: medium
 parallel_group: D
 depends_on: [P5F-001]
@@ -65,3 +65,8 @@ flutter test
 - Assets are ready for a future UI ticket.
 - No runtime feature scope is added.
 
+## Implementation Notes
+
+- Added low-detail retro ChatGPT-generated placeholder cards for Classic Court, Park Court, and Locked/Coming Soon.
+- Added `assets/images/ui/court_cards/README.md` with intended use and placeholder status.
+- No court selection, unlock, purchase, route, or runtime screen behavior was added.

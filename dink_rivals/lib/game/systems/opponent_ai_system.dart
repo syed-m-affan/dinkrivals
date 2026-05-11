@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import '../config/court_constants.dart';
 import '../config/tuning_constants.dart';
 import '../models/ball_state.dart';
+import '../models/match_state.dart';
 import '../models/player_side.dart';
 import '../models/player_state.dart';
 import '../models/shot_type.dart';
@@ -22,6 +23,7 @@ class OpponentAISystem {
 
   void update({
     required BallState ball,
+    required MatchState matchState,
     required PlayerState opponent,
     required PlayerState player,
     required ShotSystem shotSystem,
@@ -54,7 +56,10 @@ class OpponentAISystem {
       opponent.velocity.setZero();
     }
 
-    if (_missedCurrentReturn || !ball.isInPlay || !_shouldDefend(ball)) {
+    if (_missedCurrentReturn ||
+        !ball.isInPlay ||
+        !_shouldDefend(ball) ||
+        !_canAttemptReturn(matchState: matchState, opponent: opponent)) {
       return;
     }
 
@@ -104,6 +109,16 @@ class OpponentAISystem {
       return false;
     }
     return ball.currentSide == PlayerSide.opponent || ball.vy < 0;
+  }
+
+  bool _canAttemptReturn({
+    required MatchState matchState,
+    required PlayerState opponent,
+  }) {
+    if (!matchState.pointInProgress || matchState.twoBounceRuleSatisfied) {
+      return true;
+    }
+    return matchState.hasCourtBounce(opponent.side);
   }
 
   Vector2 _readyPosition(BallState ball) {

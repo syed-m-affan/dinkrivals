@@ -1,7 +1,7 @@
 ---
 id: P5G-001
 phase: 5G
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P5B-003, P5C-003, P5D-003, P5E-003, P5F-002, P5F-003, P5F-004]
@@ -63,3 +63,24 @@ flutter build apk --debug
 - Screenshot set exists or missing captures are blocker-documented.
 - Comparison note identifies remaining visual gaps.
 
+## Implementation Notes
+
+- Added `dink_rivals/test/phase5g_visual_golden_test.dart` as a repeatable golden harness for UI screenshot states.
+- Captured and checked in:
+  - `docs/art/phase-5g-menu.png`
+  - `docs/art/phase-5g-roster.png`
+  - `docs/art/phase-5g-settings.png`
+  - `docs/art/phase-5g-endmatch.png`
+- Added `docs/art/phase-5g-comparison.md` with concept/baseline comparison notes and explicit blockers for the missing game-canvas screenshots.
+- `phase-5g-serve.png`, `phase-5g-rally.png`, `phase-5g-point.png`, and `phase-5g-pause.png` are not checked in because the widget golden harness renders the Flame game canvas as black, web is not configured, and no Android device was visible for physical capture.
+
+## Verification Result
+
+Passed from `dink_rivals/` on 2026-05-11:
+
+```bash
+flutter pub get
+flutter analyze
+flutter test
+flutter build apk --debug
+```

@@ -1,7 +1,7 @@
 ---
 id: P5A-001
 phase: 5A
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P5-007]
@@ -71,3 +71,8 @@ Manual/asset verification:
 - Gap inventory exists and is specific enough to feed P5A-002 and implementation tickets.
 - No gameplay behavior changes.
 
+## Implementation Notes
+
+- Added `docs/art/phase-5-current-serve.png` from the latest available local Phase 5 screenshot.
+- Added `docs/art/visual-gap-inventory.md` with categorized gaps and blocker notes for rally/feedback screenshots.
+- No gameplay code was changed for this ticket.

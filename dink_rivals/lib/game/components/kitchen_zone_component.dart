@@ -12,11 +12,16 @@ class KitchenZoneComponent extends Component {
 
   final DinkRivalsGame game;
   final Paint _paint = Paint()..color = VisualPalette.kitchenOverlay;
+  final Paint _edgePaint = Paint()
+    ..color = VisualPalette.kitchenEdge
+    ..strokeCap = StrokeCap.square;
 
   @override
   void render(Canvas canvas) {
     _drawZone(canvas, Court.opponentKitchenTopY, Court.opponentKitchenBottomY);
     _drawZone(canvas, Court.playerKitchenTopY, Court.playerKitchenBottomY);
+    _drawKitchenEdge(canvas, Court.opponentKitchenTopY + 1.4);
+    _drawKitchenEdge(canvas, Court.playerKitchenBottomY - 1.4);
   }
 
   void _drawZone(Canvas canvas, double topY, double bottomY) {
@@ -31,5 +36,12 @@ class KitchenZoneComponent extends Component {
       ..lineTo(bottomLeft.x, bottomLeft.y)
       ..close();
     canvas.drawPath(path, _paint);
+  }
+
+  void _drawKitchenEdge(Canvas canvas, double y) {
+    final start = game.courtToWorld(Vector2(Court.left, y));
+    final end = game.courtToWorld(Vector2(Court.right, y));
+    _edgePaint.strokeWidth = game.logicalToScreen(0.5).clamp(1.0, 1.2);
+    canvas.drawLine(start.toOffset(), end.toOffset(), _edgePaint);
   }
 }

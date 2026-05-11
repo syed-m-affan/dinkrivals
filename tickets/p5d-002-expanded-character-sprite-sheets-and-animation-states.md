@@ -1,7 +1,7 @@
 ---
 id: P5D-002
 phase: 5D
-status: todo
+status: done
 priority: high
 parallel_group: B
 depends_on: [P5D-001]
@@ -67,3 +67,20 @@ flutter build apk --debug
 - No animation hides the paddle or ball contact moment.
 - Existing physics, shot, and rules tests remain green.
 
+## Implementation Notes
+
+- Added original low-detail 32x48-frame sprite sheets for ready, hit-confirm, point-win, and point-loss poses for player and opponent.
+- `PlayerComponent` and `OpponentComponent` now load the new sheets and select poses with swing priority preserved before hit-confirm/point-result states.
+- `DinkRivalsGame` sends visual-only hit-confirm cues on the hitter's own contact and point-result cues to both characters during existing point-award timing.
+- Hit-confirm cues are queued behind swing and cleared when point-result poses begin so the contact moment and point reaction remain readable.
+- Claude review was used for the sprite/state-machine constraints and final blocker check.
+
+## Verification Result
+
+Passed from `dink_rivals/` on 2026-05-11:
+
+```bash
+flutter analyze
+flutter test
+flutter build apk --debug
+```

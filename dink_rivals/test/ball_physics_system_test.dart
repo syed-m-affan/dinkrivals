@@ -47,7 +47,8 @@ void main() {
   });
 
   test('ball position updates across one second of integration', () {
-    final ball = BallState(x: 50, y: 100, z: 50, vx: 20, vy: 40, vz: 0, isInPlay: true);
+    final ball =
+        BallState(x: 50, y: 100, z: 50, vx: 20, vy: 40, vz: 0, isInPlay: true);
     final physics = BallPhysicsSystem();
 
     physics.update(ball, 1);

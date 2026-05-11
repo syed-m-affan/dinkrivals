@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 import 'components/ball_component.dart';
+import 'components/classic_environment_component.dart';
 import 'components/court_component.dart';
 import 'components/debug_overlay_component.dart';
 import 'components/kitchen_zone_component.dart';
@@ -16,9 +17,12 @@ import 'components/rally_feedback_component.dart';
 import 'components/score_component.dart';
 import 'components/shadow_component.dart';
 import 'components/touch_controls_component.dart';
+import 'components/vfx/vfx_layer_component.dart';
 import 'config/court_constants.dart';
+import 'config/debug_flags.dart';
 import 'config/tuning_constants.dart';
 import 'models/ball_state.dart';
+import 'models/gameplay_control_mode.dart';
 import 'models/match_state.dart';
 import 'models/opponent_serve_phase.dart';
 import 'models/player_side.dart';
@@ -40,14 +44,17 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   DinkRivalsGame({
     AudioService? audioService,
     HapticsService? hapticsService,
+    this.controlMode = GameplayControlMode.assistedAimGesture,
   })  : audioService = audioService ?? FakeAudioService(),
         hapticsService = hapticsService ?? FakeHapticsService();
 
   late final PlayerComponent player;
   late final OpponentComponent opponent;
   late final BallComponent ball;
+  late final VfxLayerComponent vfx;
   final AudioService audioService;
   final HapticsService hapticsService;
+  final GameplayControlMode controlMode;
 
   final CourtLayoutSystem courtLayoutSystem = CourtLayoutSystem();
   final InputSystem inputSystem = InputSystem();
@@ -81,7 +88,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     player = PlayerComponent(this);
     opponent = OpponentComponent(this);
     ball = BallComponent(this);
+    vfx = VfxLayerComponent(this);
 
+    add(ClassicEnvironmentComponent(this));
     add(CourtComponent(this));
     add(KitchenZoneComponent(this));
     add(NetComponent(this));
@@ -90,10 +99,13 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     add(opponent);
     add(ball);
     add(RacketComponent(this));
+    add(vfx);
     add(ScoreComponent(this));
     add(RallyFeedbackComponent(this));
     add(TouchControlsComponent(this));
-    add(DebugOverlayComponent(this));
+    if (DebugFlags.showOverlay) {
+      add(DebugOverlayComponent(this));
+    }
   }
 
   @override
@@ -258,6 +270,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       size: size,
       canMove: !isWaitingToServe,
       inputSystem: inputSystem,
+      controlMode: controlMode,
     );
   }
 
@@ -318,22 +331,31 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       lastHitBy: ball.state.lastHitBy,
     );
     final racketDirection = playerRacketDirection();
-    final didHit = shotSystem.attemptRacketContact(
-      ball: ball.state,
-      hitter: player.state,
-      racketPosition: playerRacketPosition(),
-      racketDirection: racketDirection,
-      racketVelocity: player.state.velocity +
-          playerRacketTangent() *
-              (inputSystem.racketAngularVelocity * Tuning.racketReach),
-    );
+    final didHit = switch (controlMode) {
+      GameplayControlMode.assistedAimGesture => _tryAssistedPlayerContact(),
+      GameplayControlMode.classicRacketStick => shotSystem.attemptRacketContact(
+          ball: ball.state,
+          hitter: player.state,
+          racketPosition: playerRacketPosition(),
+          racketDirection: racketDirection,
+          racketVelocity: player.state.velocity +
+              playerRacketTangent() *
+                  (inputSystem.racketAngularVelocity * Tuning.racketReach),
+        ),
+    };
     if (!didHit) {
       return false;
     }
 
     audioService.playHit();
     hapticsService.light();
+    player.showHitConfirm();
     _showFeedback(shotSystem.lastShotType?.name.toUpperCase() ?? 'HIT');
+    vfx.spawnContact(
+      courtPosition: Vector2(preHitBall.x, preHitBall.y),
+      z: preHitBall.z,
+      shotType: shotSystem.lastShotType,
+    );
     if (!matchState.pointInProgress) {
       matchState.startPoint();
     }
@@ -363,6 +385,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     final physics = ballPhysicsSystem.update(ball.state, dt);
     if (physics.groundContact) {
       audioService.playBounce();
+      vfx.spawnBounce(courtPosition: Vector2(ball.state.x, ball.state.y));
     }
     if (physics.crossedNet) {
       scoringSystem.recordRallyCrossing(matchState);
@@ -404,6 +427,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     final preAiLastHitBy = ball.state.lastHitBy;
     opponentAiSystem.update(
       ball: ball.state,
+      matchState: matchState,
       opponent: opponent.state,
       player: player.state,
       shotSystem: shotSystem,
@@ -412,7 +436,13 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     if (ball.state.lastHitBy != preAiLastHitBy &&
         ball.state.lastHitBy == opponent.state.side) {
       audioService.playHit();
+      opponent.showHitConfirm();
       _showFeedback(shotSystem.lastShotType?.name.toUpperCase() ?? 'HIT');
+      vfx.spawnContact(
+        courtPosition: Vector2(preAiBall.x, preAiBall.y),
+        z: preAiBall.z,
+        shotType: shotSystem.lastShotType,
+      );
       final volleyResult = matchRulesSystem.evaluateVolley(
         hitter: opponent.state,
         ball: preAiBall,
@@ -442,6 +472,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
         hapticsService.medium();
       }
     }
+    player.showPointResult(winner);
+    opponent.showPointResult(winner);
+    vfx.spawnPointBurst(courtPosition: Vector2(Court.width / 2, Court.netY));
     resetPoint();
     if (matchState.matchOver) {
       ball.state.isInPlay = false;
@@ -484,6 +517,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       size: size,
       canMove: !isWaitingToServe,
       inputSystem: inputSystem,
+      controlMode: controlMode,
     );
   }
 
@@ -503,7 +537,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     }
     touchInputController.handlePointerEnd(
       pointerId: pointerId,
+      size: size,
       inputSystem: inputSystem,
+      controlMode: controlMode,
     );
   }
 
@@ -513,7 +549,28 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     }
     touchInputController.handlePointerEnd(
       pointerId: pointerId,
+      size: size,
       inputSystem: inputSystem,
+      controlMode: controlMode,
     );
+  }
+
+  bool _tryAssistedPlayerContact() {
+    final command = inputSystem.activeSwingCommand;
+    if (command == null) {
+      return false;
+    }
+    final didHit = shotSystem.attemptAssistedContact(
+      ball: ball.state,
+      hitter: player.state,
+      racketPosition: playerRacketPosition(),
+      aimDirection: command.aimDirection,
+      intent: command.intent,
+      power: command.power,
+    );
+    if (didHit) {
+      inputSystem.consumeSwingCommand();
+    }
+    return didHit;
   }
 }

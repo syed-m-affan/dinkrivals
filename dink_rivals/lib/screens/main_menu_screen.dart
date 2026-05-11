@@ -7,6 +7,8 @@ import '../app/app_config.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
 import '../game/config/visual_palette.dart';
+import '../widgets/arcade_button.dart';
+import '../widgets/arcade_panel.dart';
 
 class MainMenuScreen extends ConsumerWidget {
   const MainMenuScreen({super.key});
@@ -33,33 +35,53 @@ class MainMenuScreen extends ConsumerWidget {
                     letterSpacing: 1.2,
                   ),
                 ),
-                const SizedBox(height: 48),
-                ElevatedButton(
-                  key: const Key('menu-quick-match'),
-                  onPressed: () {
-                    ref.read(audioServiceProvider).playMenuClick();
-                    ref.read(dinkRivalsGameProvider).resetMatch();
-                    context.go(AppRoutes.game);
-                  },
-                  child: const Text('QUICK MATCH'),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  key: const Key('menu-roster'),
-                  onPressed: () {
-                    ref.read(audioServiceProvider).playMenuClick();
-                    context.go(AppRoutes.roster);
-                  },
-                  child: const Text('ROSTER'),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  key: const Key('menu-settings'),
-                  onPressed: () {
-                    ref.read(audioServiceProvider).playMenuClick();
-                    context.go(AppRoutes.settings);
-                  },
-                  child: const Text('SETTINGS'),
+                const SizedBox(height: 42),
+                ArcadePanel(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ArcadeButton(
+                          key: const Key('menu-quick-match'),
+                          label: 'QUICK MATCH',
+                          icon: Icons.sports_tennis,
+                          onPressed: () {
+                            ref.read(audioServiceProvider).playMenuClick();
+                            ref.read(dinkRivalsGameProvider).resetMatch();
+                            context.go(AppRoutes.game);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ArcadeButton(
+                          key: const Key('menu-roster'),
+                          label: 'ROSTER',
+                          icon: Icons.groups,
+                          onPressed: () {
+                            ref.read(audioServiceProvider).playMenuClick();
+                            context.go(AppRoutes.roster);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ArcadeButton(
+                          key: const Key('menu-settings'),
+                          label: 'SETTINGS',
+                          icon: Icons.settings,
+                          onPressed: () {
+                            ref.read(audioServiceProvider).playMenuClick();
+                            context.go(AppRoutes.settings);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

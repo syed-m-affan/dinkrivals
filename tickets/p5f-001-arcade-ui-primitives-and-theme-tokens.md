@@ -1,7 +1,7 @@
 ---
 id: P5F-001
 phase: 5F
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P5A-002]
@@ -63,3 +63,8 @@ flutter test
 - Later Phase 5F tickets can replace generic screen widgets without duplicating style code.
 - Existing screen tests remain green.
 
+## Implementation Notes
+
+- Added `ArcadeUiTokens`, `ArcadePanel`, and `ArcadeButton`.
+- Kept runtime screens unchanged except existing theme token exposure; this ticket only prepares reusable primitives.
+- Added widget smoke tests for panel content and button taps.

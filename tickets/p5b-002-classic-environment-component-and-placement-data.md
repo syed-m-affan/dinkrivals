@@ -1,7 +1,7 @@
 ---
 id: P5B-002
 phase: 5B
-status: todo
+status: done
 priority: high
 parallel_group: B
 depends_on: [P5B-001]
@@ -68,3 +68,8 @@ flutter build apk --debug
 - Full court, kitchen, net, ball, and controls remain readable.
 - Prop placement is data-driven and bounded.
 
+## Implementation Notes
+
+- Added `EnvironmentLayout` placement data and `ClassicEnvironmentComponent`.
+- Environment renders low-detail retro ground, far fence/backdrop, and courtside props behind the court/gameplay layer.
+- Added projected-rectangle tests for prop bounds against court, HUD, and bottom control bands.
