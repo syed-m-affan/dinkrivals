@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flame/components.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -72,6 +74,49 @@ void main() {
       OpponentComponent.swingLeanForShotForTesting(ShotType.drive),
       isNot(OpponentComponent.swingLeanForShotForTesting(ShotType.smash)),
     );
+  });
+
+  test('shot-specific generated character sheets are checked in', () {
+    const files = [
+      'assets/images/sprites/player_dink.png',
+      'assets/images/sprites/player_drive.png',
+      'assets/images/sprites/player_lob.png',
+      'assets/images/sprites/player_smash.png',
+      'assets/images/sprites/opponent_dink.png',
+      'assets/images/sprites/opponent_drive.png',
+      'assets/images/sprites/opponent_lob.png',
+      'assets/images/sprites/opponent_smash.png',
+    ];
+
+    for (final file in files) {
+      expect(File(file).existsSync(), isTrue, reason: '$file must exist');
+    }
+  });
+
+  test('shot types select shot-specific animation poses', () {
+    final game = DinkRivalsGame();
+    final player = PlayerComponent(game);
+    final opponent = OpponentComponent(game);
+
+    for (final entry in {
+      ShotType.dink: 'dink',
+      ShotType.drive: 'drive',
+      ShotType.lob: 'lob',
+      ShotType.smash: 'smash',
+    }.entries) {
+      player.state
+        ..lastShotType = entry.key
+        ..isSwinging = true;
+      opponent.state
+        ..lastShotType = entry.key
+        ..isSwinging = true;
+
+      player.update(0.016);
+      opponent.update(0.016);
+
+      expect(player.currentPoseNameForTesting(), entry.value);
+      expect(opponent.currentPoseNameForTesting(), entry.value);
+    }
   });
 
   test('hit confirm keeps the same character model after swing pose expires',

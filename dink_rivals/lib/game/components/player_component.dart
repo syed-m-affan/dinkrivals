@@ -27,6 +27,10 @@ class PlayerComponent extends Component {
   ui.Image? _idleSheet;
   ui.Image? _runSheet;
   ui.Image? _swingSheet;
+  ui.Image? _dinkSheet;
+  ui.Image? _driveSheet;
+  ui.Image? _lobSheet;
+  ui.Image? _smashSheet;
   ui.Image? _readySheet;
   ui.Image? _hitConfirmSheet;
   ui.Image? _pointWinSheet;
@@ -51,6 +55,10 @@ class PlayerComponent extends Component {
     _idleSheet = await game.images.load('sprites/player_idle.png');
     _runSheet = await game.images.load('sprites/player_run.png');
     _swingSheet = await game.images.load('sprites/player_swing.png');
+    _dinkSheet = await game.images.load('sprites/player_dink.png');
+    _driveSheet = await game.images.load('sprites/player_drive.png');
+    _lobSheet = await game.images.load('sprites/player_lob.png');
+    _smashSheet = await game.images.load('sprites/player_smash.png');
     _readySheet = await game.images.load('sprites/player_ready.png');
     _hitConfirmSheet = await game.images.load('sprites/player_hit_confirm.png');
     _pointWinSheet = await game.images.load('sprites/player_point_win.png');
@@ -106,10 +114,10 @@ class PlayerComponent extends Component {
       _PlayerPose.idle => _idleSheet,
       _PlayerPose.run => _runSheet,
       _PlayerPose.swing => _swingSheet,
-      _PlayerPose.dink => _swingSheet,
-      _PlayerPose.drive => _swingSheet,
-      _PlayerPose.lob => _swingSheet,
-      _PlayerPose.smash => _swingSheet,
+      _PlayerPose.dink => _dinkSheet,
+      _PlayerPose.drive => _driveSheet,
+      _PlayerPose.lob => _lobSheet,
+      _PlayerPose.smash => _smashSheet,
       _PlayerPose.ready => _readySheet,
       _PlayerPose.hitConfirm => _hitConfirmSheet,
       _PlayerPose.pointWin => _pointWinSheet,

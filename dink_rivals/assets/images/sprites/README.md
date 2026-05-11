@@ -1,10 +1,15 @@
-Phase 5D sprite notes
-=====================
+Generated character sprite notes
+================================
 
-The ready, hit-confirm, point-win, and point-loss sheets are original low-detail
-pixel sprites generated locally with Pillow using the same 32x48 frame footprint
-as the existing idle/run/swing sheets.
+The player and opponent sheets are normalized from the generated character atlas
+archived at:
 
-All frames keep feet on the bottom row so the existing Flame renderer can keep
-using the same court-position anchor, sprite width, and sprite height. These
-assets are visual only and do not change hitboxes, movement, or shot timing.
+- `docs/art/visual-overhaul/contact-sheets/character-sprite-generated-atlas.png`
+- `docs/art/visual-overhaul/contact-sheets/character-sprite-normalized-runtime-sheet.png`
+- `docs/art/visual-overhaul/prompts/character-sprite-generated-atlas.md`
+
+Runtime sheets keep the existing 32x48 frame footprint and feet-on-bottom-row
+anchor so the Flame renderer can use the same court-position logic. Dink, drive,
+lob, and smash each have their own generated sheet instead of reusing a generic
+swing sheet. These assets are visual only and do not change hitboxes, movement,
+or shot timing.
