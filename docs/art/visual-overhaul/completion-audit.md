@@ -41,7 +41,11 @@ automated evidence set.
 
 Latest pushed commits:
 
-- Current pass: `fix visual state indicators`
+- `230b23e` `fix point feedback visibility`
+- `4e3dbb8` `document pixel capture lockscreen state`
+- `7575a2a` `show full swing hitbox lane`
+- `f9969e4` `fix visual state indicators`
+- `3eee7c7` `update visual closeout after animation fix`
 - `469f158` `fix character sprite frame rendering`
 - `f2300a1` `make gameplay screen full bleed`
 - `f00f739` `add android evidence capture helper`
@@ -108,6 +112,8 @@ Verification performed during this thread:
 - `P52J-001` was reconciled with the current control design: the rejected swing
   power meter remains removed, while serve charge keeps its ring/percentage
   feedback.
+- The unused `InputSystem.visualSwingPower` getter was removed so there is no
+  dead runtime path for the rejected swing power meter.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
@@ -159,6 +165,11 @@ Subagent validation:
    through more screenshot automation. The idle shot-chip highlight issue has
    been fixed and the lane now renders at the actual contact capsule diameter,
    but live lane readability remains subjective.
+
+5. Character idle/ready micro-animation remains deferred.
+   `P5H-007` is in `review`, not `todo`, because current feedback prioritized
+   fixing wonky animation and frame/facing correctness over adding extra idle
+   motion without visual signoff.
 
 ## Next Safe Work
 

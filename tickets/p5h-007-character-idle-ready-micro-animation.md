@@ -1,7 +1,7 @@
 ---
 id: P5H-007
 phase: 5H
-status: todo
+status: review
 priority: low
 parallel_group: F
 depends_on: [P5D-002]
@@ -42,3 +42,11 @@ flutter analyze
 flutter test
 flutter build apk --debug
 ```
+
+## Deferral Notes
+
+- Deferred rather than implemented in the Phase 5.2 closeout because the current
+  user feedback prioritizes correcting wonky animations over adding extra idle
+  motion. Generated character sheets, frame-count handling, and movement-facing
+  reflection were fixed in the visual overhaul pass; further micro-animation
+  should wait for explicit visual review.

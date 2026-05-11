@@ -40,14 +40,6 @@ class InputSystem {
 
   bool get hasMovementInput => movementX != 0 || movementY != 0;
 
-  double get visualSwingPower {
-    final commandPower = _activeSwingCommand?.power;
-    if (commandPower != null) {
-      return commandPower.clamp(0.0, 1.0).toDouble();
-    }
-    return (racketAngularVelocity.abs() / 7.5).clamp(0.0, 1.0).toDouble();
-  }
-
   void setMovement(double x, double y) {
     movementX = x;
     movementY = y;

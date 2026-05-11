@@ -115,7 +115,7 @@ Phase 5.2 implementation (2026-05-11): P52A-001 through P52L-001 are complete; P
 | P5H-004 | 5H | done | medium | D | [P5D-003] | Improve Rally Queen portrait readability at roster-card scale. |
 | P5H-005 | 5H | done | medium | D | [P5D-003] | Strengthen Veteran portrait accent readability. |
 | P5H-006 | 5H | done | medium | E | [P5B-002, P5C-003] | Add a cheap far-background band for more environment depth. |
-| P5H-007 | 5H | todo | low | F | [P5D-002] | Add subtle idle/ready character micro-animation without gameplay changes. |
+| P5H-007 | 5H | review | low | F | [P5D-002] | Add subtle idle/ready character micro-animation without gameplay changes. |
 | P52A-001 | 5.2A | done | high | A | [P51I-001] | Capture Phase 5.2 baseline screenshots and create concept delta inventory. |
 | P52A-002 | 5.2A | done | high | A | [P52A-001] | Extend visual tokens, render-layer rules, safe-area rules, and AI art prompts/export checks. |
 | P52B-001 | 5.2B | done | high | B | [P52A-002] | Reinforce 3/4 projection and framing with screenshot and coordinate-stability gates. |
