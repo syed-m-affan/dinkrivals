@@ -24,7 +24,7 @@ final gameplay screenshot coverage is still missing.
 | Preserve gameplay logic and controls while improving visuals | Guard tests passed after reverting the failed projection experiment: `flutter test test/court_projection_test.dart test/court_layout_system_test.dart test/environment_layout_test.dart`; full suite passed after the generated character integration | Partial |
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
 | Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart` | Partial: readable, but court texture remains procedural rather than a generated overlay package |
-| Perspective should match concept art better and not feel top-down | `docs/art/visual-overhaul/perspective-fix-spec.md` documents the next safe approach; aggressive non-linear experiment was rejected because it clashed with art and gameplay | Missing |
+| Perspective should match concept art better and not feel top-down | `docs/art/visual-overhaul/perspective-fix-spec.md` documents the safe approach; `perspective-metrics.md` records the baseline and first linear tuning pass; before/after emulator screenshots are archived | Partial: improved with a guarded linear pass, but still needs human visual review |
 | Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection and asset presence | Done for current pass |
 | Dink/drive/lob/smash have distinct animation/VFX indicators | `VfxLayerComponent` maps shot types to generated `dinkSpark`, `driveArc`, `lobArc`, `smashBand`, and `missWhiff`; character components load generated shot-specific animation sheets; `vfx_layer_component_test.dart` and `player_component_test.dart` verify sprite/pose selection | Done for current pass |
 | Hitbox indicators match active swing zones | `RacketComponent` draws committed swing lane from `ShotSystem.committedSwingPath`; miss VFX spawns on expired swing command | Partial |
@@ -66,6 +66,9 @@ Verification performed during this thread:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
   `docs/art/visual-overhaul/evidence/perspective-before-serve.png`, and
   `docs/art/visual-overhaul/perspective-metrics.md`.
+- First linear perspective tuning pass completed with after screenshots:
+  `docs/art/visual-overhaul/evidence/perspective-after-menu.png` and
+  `docs/art/visual-overhaul/evidence/perspective-after-serve.png`.
 
 Subagent validation:
 
@@ -76,10 +79,10 @@ Subagent validation:
 
 ## Remaining Gaps
 
-1. Perspective still needs a safe visual-only pass.
-   The next pass should follow `perspective-fix-spec.md`, capture baseline
-   evidence first, and avoid aggressive non-linear projection changes unless
-   environment props and controls are updated in the same branch.
+1. Perspective still needs human visual review.
+   The first safe linear pass is implemented and evidenced. Avoid further
+   aggressive projection changes unless environment props and controls are
+   updated in the same branch.
 
 2. Pixel gameplay evidence is incomplete.
    The current build installed and launched on Pixel, but do not mark visual

@@ -3,9 +3,9 @@ import 'package:flame/components.dart';
 import '../config/court_constants.dart';
 
 class CourtProjection {
-  static const double yCompression = 0.66;
-  static const double farWidthScale = 0.50;
-  static const double nearWidthScale = 1.18;
+  static const double yCompression = 0.62;
+  static const double farWidthScale = 0.46;
+  static const double nearWidthScale = 1.20;
   static const double zDisplacement = 1.10;
 
   static Vector2 courtToScreen(Vector2 courtPos, double z) {

@@ -110,7 +110,7 @@ class EnvironmentLayout {
     EnvironmentPropPlacement(
       id: 'bench_left',
       assetPath: 'environment/classic/bench.png',
-      courtAnchor: Vector2(-82, 236),
+      courtAnchor: Vector2(-96, 236),
       logicalSize: Vector2(64, 42),
     ),
     EnvironmentPropPlacement(
