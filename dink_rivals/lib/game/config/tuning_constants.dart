@@ -51,20 +51,20 @@ class Tuning {
   static const double backwardClampDot = -0.15;
   static const double contactLiftBase = 48.0;
   static const double contactLiftScale = 0.30;
-  static const double serveMinOutputSpeed = 175.0;
-  static const double serveMaxOutputSpeed = 245.0;
+  static const double serveMinOutputSpeed = 210.0;
+  static const double serveMaxOutputSpeed = 235.0;
   static const double serveMinLift = 130.0;
-  static const double serveMaxLift = 170.0;
+  static const double serveMaxLift = 150.0;
   static const double serveChargeDuration = 1.15;
-  static const double serveArcGravityScale = 0.40;
+  static const double serveArcGravityScale = 0.65;
   // Dedicated opponent-serve profile. Calibrated so the ball lands roughly
   // around the player's kitchen line (court y ≈ 270-290) instead of the
   // back baseline — opponent serves should be returnable for a beginner.
-  static const double opponentServeSpeed = 130.0;
-  static const double opponentServeLift = 140.0;
+  static const double opponentServeSpeed = 205.0;
+  static const double opponentServeLift = 145.0;
 
-  static const double gravity = 440.0;
-  static const double bounceDamping = 0.76;
+  static const double gravity = 500.0;
+  static const double bounceDamping = 0.62;
   static const double minBounceVelocity = 11.0;
   static const double airDrag = 0.03;
 
@@ -74,11 +74,11 @@ class Tuning {
 
   static const double driveSpeedXY = 116.0;
   static const double driveInitialZ = 30.0;
-  static const double driveArcGravityScale = 0.36;
+  static const double driveArcGravityScale = 0.58;
 
   static const double lobSpeedXY = 92.0;
   static const double lobInitialZ = 130.0;
-  static const double lobArcGravityScale = 0.40;
+  static const double lobArcGravityScale = 0.55;
 
   static const double smashSpeedXY = 150.0;
   static const double smashInitialZ = 10.0;

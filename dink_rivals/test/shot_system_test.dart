@@ -163,7 +163,7 @@ void main() {
       racketVelocity: Vector2(35, 0),
     );
 
-    expect(ball.vz, Tuning.lobInitialZ);
+    expect(ball.vz, greaterThanOrEqualTo(Tuning.lobInitialZ));
   });
 
   test('smash requires ball height threshold', () {

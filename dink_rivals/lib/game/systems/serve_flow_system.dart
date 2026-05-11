@@ -99,7 +99,7 @@ class ServeFlowSystem {
     shotSystem.serve(
       ball: ball,
       hitter: player,
-      racketDirection: racketDirection,
+      racketDirection: _playerLegalServeDirection(matchState, racketPosition),
       power: power,
     );
     if (!matchState.pointInProgress) {
@@ -251,6 +251,23 @@ class ServeFlowSystem {
     );
     if (direction.length2 < 0.01) {
       direction.setValues(targetLeftHalf ? -0.2 : 0.2, 1);
+    }
+    return direction..normalize();
+  }
+
+  Vector2 _playerLegalServeDirection(
+    MatchState matchState,
+    Vector2 racketPosition,
+  ) {
+    final targetLeftHalf = matchState.playerScore.isEven;
+    final targetX = targetLeftHalf ? Court.width * 0.25 : Court.width * 0.75;
+    final targetY = (Court.top + Court.opponentKitchenTopY) / 2;
+    final direction = Vector2(
+      targetX - racketPosition.x,
+      targetY - racketPosition.y,
+    );
+    if (direction.length2 < 0.01) {
+      direction.setValues(targetLeftHalf ? -0.2 : 0.2, -1);
     }
     return direction..normalize();
   }
