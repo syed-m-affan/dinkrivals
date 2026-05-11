@@ -42,6 +42,18 @@ void main() {
     expect(component.currentPoseNameForTesting(), 'swing');
   });
 
+  test('opponent run animation plays while player is preparing serve', () {
+    final game = DinkRivalsGame();
+    final component = OpponentComponent(game);
+
+    expect(game.matchState.pointInProgress, isFalse);
+
+    component.state.velocity = Vector2(0, 20);
+    component.update(0.016);
+
+    expect(component.currentPoseNameForTesting(), 'run');
+  });
+
   test('opponent renders slightly larger for far-court readability', () {
     expect(OpponentComponent.visualScaleFor(0.7), closeTo(0.938, 0.0001));
   });

@@ -156,14 +156,14 @@ class OpponentComponent extends Component {
     if (_swingSeconds > 0) {
       return _OpponentPose.swing;
     }
-    if (!game.matchState.pointInProgress) {
-      return _OpponentPose.idle;
-    }
     if (_hitConfirmSeconds > 0 || _pointResultSeconds > 0) {
       return _OpponentPose.idle;
     }
     if (state.velocity.length > _runThreshold) {
       return _OpponentPose.run;
+    }
+    if (!game.matchState.pointInProgress) {
+      return _OpponentPose.idle;
     }
     return _OpponentPose.idle;
   }
