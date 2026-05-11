@@ -20,7 +20,7 @@ final gameplay screenshot coverage is still missing.
 
 | Requirement | Evidence | Status |
 | --- | --- | --- |
-| Use generated bitmap art for new core visuals | `assets/images/environment/classic/park_background_overhaul.png`, `assets/images/vfx/*_generated.png`, `assets/images/sprites/player_*.png`, `assets/images/sprites/opponent_*.png`, `docs/art/visual-overhaul/contact-sheets/shot-vfx-generated-sheet.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-generated-atlas.png`, `docs/art/visual-overhaul/prompts/shot-vfx-generated-sheet.md`, `docs/art/visual-overhaul/prompts/character-sprite-generated-atlas.md` | Partial: environment, VFX, and character sheets comply; court surface remains procedural rather than a generated overlay package |
+| Use generated bitmap art for new core visuals | `assets/images/environment/classic/park_background_overhaul.png`, `assets/images/vfx/*_generated.png`, `assets/images/sprites/player_*.png`, `assets/images/sprites/opponent_*.png`, `docs/art/visual-overhaul/contact-sheets/shot-vfx-generated-sheet.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-generated-atlas.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`, `docs/art/visual-overhaul/prompts/shot-vfx-generated-sheet.md`, `docs/art/visual-overhaul/prompts/character-sprite-generated-atlas.md` | Partial: environment, VFX, and character sheets comply; court surface remains procedural rather than a generated overlay package |
 | Preserve gameplay logic and controls while improving visuals | Guard tests passed after reverting the failed projection experiment: `flutter test test/court_projection_test.dart test/court_layout_system_test.dart test/environment_layout_test.dart`; full suite passed after the generated character integration | Partial |
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
 | Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart` | Partial: readable, but court texture remains procedural rather than a generated overlay package |
@@ -58,6 +58,9 @@ Verification performed during this thread:
 - `flutter install -d 58011FDCQ00992 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk` passed for the generated character build.
 - Pixel launch smoke succeeded with `adb shell monkey`; screenshot archived at
   `docs/art/visual-overhaul/evidence/pixel-character-pass-menu.png`.
+- Character runtime sheets were simplified after review to a mid-detail style
+  documented at
+  `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`.
 
 Subagent validation:
 
