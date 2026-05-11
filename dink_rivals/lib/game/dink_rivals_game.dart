@@ -18,6 +18,8 @@ import 'config/court_constants.dart';
 import 'config/tuning_constants.dart';
 import 'models/ball_state.dart';
 import 'models/match_state.dart';
+import 'models/opponent_serve_phase.dart';
+import 'models/player_side.dart';
 import 'models/rule_result.dart';
 import 'systems/ball_physics_system.dart';
 import 'systems/input_system.dart';
@@ -29,6 +31,10 @@ import 'systems/shot_system.dart';
 import 'util/court_projection.dart';
 
 class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
+  static const double _minTopHudReserve = 72;
+  static const double _minBottomControlReserve = 180;
+  static const double _opponentServeCountdownSeconds = 3.0;
+
   late final PlayerComponent player;
   late final OpponentComponent opponent;
   late final BallComponent ball;
@@ -50,12 +56,23 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   bool paused = false;
   final ValueNotifier<bool> matchOverNotifier = ValueNotifier<bool>(false);
 
+  // Opponent serve flow notifiers — read by GameScreen to drive the
+  // "READY?" dialog and on-screen countdown.
+  final ValueNotifier<OpponentServePhase> opponentServePhase =
+      ValueNotifier<OpponentServePhase>(OpponentServePhase.none);
+  final ValueNotifier<int> opponentServeCountdown = ValueNotifier<int>(0);
+  final math.Random _opponentServeRandom = math.Random();
+  Vector2 _opponentServeDirection = Vector2(0, 1);
+  double _opponentServeSecondsRemaining = 0;
+
   double _courtScale = 1;
   Vector2 _courtOffset = Vector2.zero();
   int? _movementPointerId;
   int? _swingPointerId;
+  int? _servePointerId;
   Vector2? _swingLastPosition;
   Vector2 _projectedMin = Vector2.zero();
+  double _serveChargeSeconds = 0;
 
   @override
   Future<void> onLoad() async {
@@ -100,13 +117,16 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
         .reduce((a, b) => a > b ? a : b);
     final projectedWidth = maxX - minX;
     final projectedHeight = maxY - minY;
+    final topReserve = math.min(size.y * 0.10, _minTopHudReserve);
+    final bottomReserve = math.min(size.y * 0.18, _minBottomControlReserve);
+    final availableHeight = math.max(1.0, size.y - topReserve - bottomReserve);
     _projectedMin = Vector2(minX, minY);
     _courtScale = (size.x * 0.99 / projectedWidth)
-        .clamp(0.1, size.y * 0.94 / projectedHeight)
+        .clamp(0.1, availableHeight / projectedHeight)
         .toDouble();
     _courtOffset = Vector2(
       (size.x - projectedWidth * _courtScale) / 2,
-      (size.y - projectedHeight * _courtScale) / 2,
+      topReserve + (availableHeight - projectedHeight * _courtScale) / 2,
     );
   }
 
@@ -126,16 +146,55 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     inputSystem.updateRacket(dt);
     shotSystem.update(dt);
 
-    movementSystem.update(
-      player: player.state,
-      inputX: inputSystem.movementX,
-      inputY: inputSystem.movementY,
-      hasInput: inputSystem.hasMovementInput,
-      dt: dt,
-    );
+    // Opponent serve phases — opponent is parked at serve spot with the
+    // ball glued to their racket; player movement is gated and the AI/physics
+    // pipeline short-circuits until either the player taps Ready or the
+    // countdown elapses.
+    final servePhase = opponentServePhase.value;
+    if (servePhase == OpponentServePhase.awaitingReady ||
+        servePhase == OpponentServePhase.countingDown) {
+      _clearServeCharge();
+      player.state.velocity.setZero();
+      opponent.state.velocity.setZero();
+      opponent.state.position
+          .setValues(Court.opponentStartX, Court.opponentStartY);
+      _glueBallToOpponentServeRacket();
+      if (servePhase == OpponentServePhase.countingDown) {
+        _opponentServeSecondsRemaining =
+            math.max(0, _opponentServeSecondsRemaining - dt);
+        final displayed = _opponentServeSecondsRemaining.ceil();
+        if (displayed != opponentServeCountdown.value) {
+          opponentServeCountdown.value = displayed;
+        }
+        if (_opponentServeSecondsRemaining <= 0) {
+          _executeOpponentServe();
+        }
+      }
+      return;
+    }
 
-    if (!ball.state.isInPlay && !matchState.matchOver) {
-      // Serve state: ball follows the racket tip until the player taps SERVE.
+    final waitingToServe = _isWaitingToServe;
+    if (waitingToServe) {
+      player.state.velocity.setZero();
+      if (_servePointerId != null) {
+        _serveChargeSeconds = math.min(
+          Tuning.serveChargeDuration,
+          _serveChargeSeconds + dt,
+        );
+      }
+    } else {
+      _clearServeCharge();
+      movementSystem.update(
+        player: player.state,
+        inputX: inputSystem.movementX,
+        inputY: inputSystem.movementY,
+        hasInput: inputSystem.hasMovementInput,
+        dt: dt,
+      );
+    }
+
+    if (waitingToServe) {
+      // Serve state: ball follows the player's racket tip until button release.
       final racketTip = playerRacketPosition();
       ball.state.x = racketTip.x;
       ball.state.y = racketTip.y;
@@ -246,6 +305,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     return logicalUnits * _courtScale;
   }
 
+  double depthScaleForY(double courtY) {
+    return CourtProjection.depthScaleForY(courtY);
+  }
+
   void resetPoint() {
     ball.state
       ..x = Court.ballServeX
@@ -261,8 +324,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     opponent.state.position
         .setValues(Court.opponentStartX, Court.opponentStartY);
     opponent.state.velocity.setZero();
-    player.state.position
-        .setValues(Court.playerStartX, Court.playerStartY);
+    player.state.position.setValues(Court.playerStartX, Court.playerStartY);
     player.state.velocity.setZero();
     inputSystem.resetRacket();
     // Pointer IDs and movement state intentionally preserved so a player who
@@ -274,6 +336,8 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     shotSystem.lastShotType = null;
     feedbackText = '';
     feedbackSeconds = 0;
+    _clearServeCharge();
+    _refreshOpponentServePhase();
   }
 
   void resetMatch() {
@@ -283,11 +347,71 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     matchState.longestRally = 0;
     matchState.playerDinkContactsThisMatch = 0;
     matchState.playerSmashContactsThisMatch = 0;
+    matchState.servingSide = PlayerSide.player;
     lastRuleResult = null;
     matchOverNotifier.value = false;
     if (isLoaded) {
       resetPoint();
     }
+  }
+
+  /// Called by the UI when the player taps the "Ready" button on the opponent
+  /// serve dialog. Transitions [opponentServePhase] from [awaitingReady] to
+  /// [countingDown] and starts the on-screen countdown.
+  void confirmOpponentServeReady() {
+    if (opponentServePhase.value != OpponentServePhase.awaitingReady) {
+      return;
+    }
+    _opponentServeSecondsRemaining = _opponentServeCountdownSeconds;
+    opponentServeCountdown.value = _opponentServeCountdownSeconds.ceil();
+    opponentServePhase.value = OpponentServePhase.countingDown;
+  }
+
+  void _refreshOpponentServePhase() {
+    if (matchState.servingSide == PlayerSide.opponent &&
+        !matchState.matchOver) {
+      // Slight horizontal jitter so AI serves don't always land on the same
+      // line. Direction points down-court toward the player's half.
+      final aimX = (_opponentServeRandom.nextDouble() * 2 - 1) * 0.25;
+      _opponentServeDirection = Vector2(aimX, 1)..normalize();
+      _opponentServeSecondsRemaining = 0;
+      opponentServeCountdown.value = _opponentServeCountdownSeconds.ceil();
+      opponentServePhase.value = OpponentServePhase.awaitingReady;
+    } else {
+      _opponentServeSecondsRemaining = 0;
+      opponentServeCountdown.value = 0;
+      opponentServePhase.value = OpponentServePhase.none;
+    }
+  }
+
+  void _glueBallToOpponentServeRacket() {
+    final racketTip =
+        opponent.state.position + _opponentServeDirection * Tuning.racketReach;
+    ball.state
+      ..x = racketTip.x
+      ..y = racketTip.y
+      ..z = 0
+      ..vx = 0
+      ..vy = 0
+      ..vz = 0
+      ..isInPlay = false;
+  }
+
+  void _executeOpponentServe() {
+    _glueBallToOpponentServeRacket();
+    shotSystem.serve(
+      ball: ball.state,
+      hitter: opponent.state,
+      racketDirection: _opponentServeDirection,
+      power: 0.55,
+    );
+    if (!matchState.pointInProgress) {
+      matchState.startPoint();
+    }
+    _showFeedback('SERVE');
+    _opponentServeSecondsRemaining = 0;
+    opponentServeCountdown.value = 0;
+    opponentServePhase.value = OpponentServePhase.none;
   }
 
   void _awardPoint(RuleResult result) {
@@ -327,7 +451,15 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     super.onTapDown(event);
     final position = event.canvasPosition;
     if (_isInServeButton(position)) {
-      _triggerServe();
+      _beginServeCharge(event.pointerId);
+      return;
+    }
+    if (_isInSwingControl(position) && _swingPointerId == null) {
+      _swingPointerId = event.pointerId;
+      _swingLastPosition = position.clone();
+      return;
+    }
+    if (_isWaitingToServe) {
       return;
     }
     if (_isInMoveControl(position) && _movementPointerId == null) {
@@ -335,15 +467,15 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       _setJoystickFromPosition(position);
       return;
     }
-    if (_isInSwingControl(position) && _swingPointerId == null) {
-      _swingPointerId = event.pointerId;
-      _swingLastPosition = position.clone();
-    }
   }
 
   @override
   void onTapUp(TapUpEvent event) {
     super.onTapUp(event);
+    if (event.pointerId == _servePointerId) {
+      _releaseServe();
+      return;
+    }
     if (event.pointerId == _movementPointerId) {
       _movementPointerId = null;
       inputSystem.clearMovement();
@@ -357,6 +489,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   @override
   void onTapCancel(TapCancelEvent event) {
     super.onTapCancel(event);
+    if (event.pointerId == _servePointerId) {
+      _clearServeCharge();
+    }
     if (event.pointerId == _movementPointerId) {
       _movementPointerId = null;
       inputSystem.clearMovement();
@@ -371,7 +506,15 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     super.onDragStart(event);
     final position = event.canvasPosition;
     if (_isInServeButton(position)) {
-      _triggerServe();
+      _beginServeCharge(event.pointerId);
+      return;
+    }
+    if (_isInSwingControl(position) && _swingPointerId == null) {
+      _swingPointerId = event.pointerId;
+      _swingLastPosition = position.clone();
+      return;
+    }
+    if (_isWaitingToServe) {
       return;
     }
     if (_isInMoveControl(position) && _movementPointerId == null) {
@@ -379,16 +522,18 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       _setJoystickFromPosition(position);
       return;
     }
-    if (_isInSwingControl(position) && _swingPointerId == null) {
-      _swingPointerId = event.pointerId;
-      _swingLastPosition = position.clone();
-    }
   }
 
   @override
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
+    if (event.pointerId == _servePointerId) {
+      return;
+    }
     if (event.pointerId == _movementPointerId) {
+      if (_isWaitingToServe) {
+        return;
+      }
       _setJoystickFromPosition(event.canvasEndPosition);
     }
     if (event.pointerId == _swingPointerId) {
@@ -399,6 +544,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   @override
   void onDragEnd(DragEndEvent event) {
     super.onDragEnd(event);
+    if (event.pointerId == _servePointerId) {
+      _releaseServe();
+      return;
+    }
     if (event.pointerId == _movementPointerId) {
       _movementPointerId = null;
       inputSystem.clearMovement();
@@ -412,6 +561,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   @override
   void onDragCancel(DragCancelEvent event) {
     super.onDragCancel(event);
+    if (event.pointerId == _servePointerId) {
+      _clearServeCharge();
+    }
     if (event.pointerId == _movementPointerId) {
       _movementPointerId = null;
       inputSystem.clearMovement();
@@ -426,6 +578,30 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     _swingLastPosition = null;
   }
 
+  bool get _isWaitingToServe =>
+      !ball.state.isInPlay &&
+      !matchState.matchOver &&
+      matchState.servingSide == PlayerSide.player &&
+      opponentServePhase.value == OpponentServePhase.none;
+
+  double get serveChargeFraction =>
+      (_serveChargeSeconds / Tuning.serveChargeDuration)
+          .clamp(0.0, 1.0)
+          .toDouble();
+
+  void _beginServeCharge(int pointerId) {
+    if (!_isWaitingToServe || paused || _servePointerId != null) {
+      return;
+    }
+    _servePointerId = pointerId;
+    _serveChargeSeconds = 0;
+  }
+
+  void _clearServeCharge() {
+    _servePointerId = null;
+    _serveChargeSeconds = 0;
+  }
+
   Vector2 get _serveButtonCenter => Vector2(size.x * 0.5, size.y - 96);
 
   double get _serveButtonRadius => 44;
@@ -437,10 +613,12 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     return position.distanceTo(_serveButtonCenter) <= _serveButtonRadius;
   }
 
-  void _triggerServe() {
+  void _releaseServe() {
     if (ball.state.isInPlay || matchState.matchOver || paused) {
+      _clearServeCharge();
       return;
     }
+    final power = serveChargeFraction;
     final racketTip = playerRacketPosition();
     ball.state.x = racketTip.x;
     ball.state.y = racketTip.y;
@@ -449,11 +627,13 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       ball: ball.state,
       hitter: player.state,
       racketDirection: playerRacketDirection(),
+      power: power,
     );
     if (!matchState.pointInProgress) {
       matchState.startPoint();
     }
-    _showFeedback('SERVE');
+    _showFeedback('SERVE ${math.max(1, (power * 100).round())}%');
+    _clearServeCharge();
   }
 
   Vector2 get _joystickCenter => Vector2(size.x * 0.24, size.y - 118);
@@ -524,50 +704,68 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   void _renderRackets(Canvas canvas) {
-    final playerStart = courtToWorld(player.state.position);
-    final playerEnd = courtToWorld(playerRacketPosition());
-    final opponentStart = courtToWorld(opponent.state.position);
-    final opponentEnd = courtToWorld(_opponentRacketPosition());
     final playerPaint = Paint()
       ..color = const Color(0xAA4AA3FF)
-      ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
     final opponentPaint = Paint()
       ..color = const Color(0x99FF5A5A)
-      ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
 
-    _drawRacket(canvas, playerStart, playerEnd, playerPaint);
-    _drawRacket(canvas, opponentStart, opponentEnd, opponentPaint);
+    _drawRacket(
+      canvas,
+      player.state.position,
+      playerRacketPosition(),
+      playerPaint,
+    );
+    _drawRacket(
+      canvas,
+      opponent.state.position,
+      _opponentRacketPosition(),
+      opponentPaint,
+    );
   }
 
-  void _drawRacket(Canvas canvas, Vector2 start, Vector2 end, Paint paint) {
+  void _drawRacket(
+      Canvas canvas, Vector2 courtStart, Vector2 courtEnd, Paint paint) {
+    final start = courtToWorld(courtStart, Tuning.racketContactZ);
+    final end = courtToWorld(courtEnd, Tuning.racketContactZ);
     final direction = end - start;
     if (direction.length < 1) {
       return;
     }
+    final depthScale = depthScaleForY(courtStart.y);
+    paint.strokeWidth = logicalToScreen(2.6 * depthScale);
     canvas.drawLine(start.toOffset(), end.toOffset(), paint);
-    canvas.drawCircle(end.toOffset(), 6, paint);
+    canvas.drawCircle(end.toOffset(), logicalToScreen(4.6 * depthScale), paint);
   }
 
   void _renderTouchControls(Canvas canvas) {
     final joystickCenter = _joystickCenter;
-    final stickVector = Vector2(inputSystem.movementX, inputSystem.movementY);
+    final waitingToServe = _isWaitingToServe;
+    final stickVector = waitingToServe
+        ? Vector2.zero()
+        : Vector2(inputSystem.movementX, inputSystem.movementY);
     if (stickVector.length > 1) {
       stickVector.normalize();
     }
     final knobCenter = joystickCenter + stickVector * (_joystickRadius * 0.62);
 
-    final controlPaint = Paint()..color = const Color(0x55303030);
     final strokePaint = Paint()
       ..color = const Color(0xAAFFFFFF)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
-    final knobPaint = Paint()..color = const Color(0xAA4AA3FF);
 
-    canvas.drawCircle(joystickCenter.toOffset(), _joystickRadius, controlPaint);
+    final moveControlPaint = Paint()
+      ..color =
+          waitingToServe ? const Color(0x22303030) : const Color(0x55303030);
+    final moveKnobPaint = Paint()
+      ..color =
+          waitingToServe ? const Color(0x554AA3FF) : const Color(0xAA4AA3FF);
+
+    canvas.drawCircle(
+        joystickCenter.toOffset(), _joystickRadius, moveControlPaint);
     canvas.drawCircle(joystickCenter.toOffset(), _joystickRadius, strokePaint);
-    canvas.drawCircle(knobCenter.toOffset(), 23, knobPaint);
+    canvas.drawCircle(knobCenter.toOffset(), 23, moveKnobPaint);
     canvas.drawCircle(knobCenter.toOffset(), 23, strokePaint);
 
     final swingCenter = _swingJoystickCenter;
@@ -612,17 +810,39 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
           swingCenter.y - _swingJoystickRadius - 22),
     );
 
-    if (!ball.state.isInPlay && !matchState.matchOver) {
+    if (waitingToServe) {
       final serveCenter = _serveButtonCenter;
-      final serveFill = Paint()..color = const Color(0xCCFFCB47);
+      final charge = serveChargeFraction;
+      final serveFill = Paint()
+        ..color = Color.lerp(
+          const Color(0xCCFFCB47),
+          const Color(0xFFFF8C2E),
+          charge,
+        )!;
       final serveStroke = Paint()
         ..color = const Color(0xFFFFFFFF)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3;
-      canvas.drawCircle(
-          serveCenter.toOffset(), _serveButtonRadius, serveFill);
+      final powerRing = Paint()
+        ..color = const Color(0xFFFFFFFF)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 7
+        ..strokeCap = StrokeCap.round;
+      canvas.drawCircle(serveCenter.toOffset(), _serveButtonRadius, serveFill);
       canvas.drawCircle(
           serveCenter.toOffset(), _serveButtonRadius, serveStroke);
+      if (charge > 0) {
+        canvas.drawArc(
+          Rect.fromCircle(
+            center: serveCenter.toOffset(),
+            radius: _serveButtonRadius + 10,
+          ),
+          -math.pi / 2,
+          math.pi * 2 * charge,
+          false,
+          powerRing,
+        );
+      }
       final serveText = TextPainter(
         text: const TextSpan(
           text: 'SERVE',
@@ -640,6 +860,27 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
         canvas,
         Offset(serveCenter.x - serveText.width / 2,
             serveCenter.y - serveText.height / 2),
+      );
+      final powerText = TextPainter(
+        text: TextSpan(
+          text: _servePointerId == null
+              ? 'HOLD'
+              : '${math.max(1, (charge * 100).round())}%',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: _serveButtonRadius * 2.8);
+      powerText.paint(
+        canvas,
+        Offset(
+          serveCenter.x - powerText.width / 2,
+          serveCenter.y + _serveButtonRadius + 14,
+        ),
       );
     }
   }

@@ -3,11 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:dink_rivals/app/ad_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/screens/end_match_screen.dart';
 
-Widget _wrap(DinkRivalsGame game) {
+Widget _wrap(
+  DinkRivalsGame game, {
+  FakeAdService? adService,
+  AdPlacementSystem? adPlacement,
+}) {
   final router = GoRouter(
     initialLocation: '/end-match',
     routes: [
@@ -15,14 +20,19 @@ Widget _wrap(DinkRivalsGame game) {
         path: '/end-match',
         builder: (context, state) => const EndMatchScreen(),
       ),
-      GoRoute(path: '/', builder: (context, state) => const _StubScreen('menu')),
       GoRoute(
-          path: '/game', builder: (context, state) => const _StubScreen('game')),
+          path: '/', builder: (context, state) => const _StubScreen('menu')),
+      GoRoute(
+          path: '/game',
+          builder: (context, state) => const _StubScreen('game')),
     ],
   );
   return ProviderScope(
     overrides: [
       dinkRivalsGameProvider.overrideWithValue(game),
+      adServiceProvider.overrideWithValue(adService ?? FakeAdService()),
+      adPlacementSystemProvider
+          .overrideWithValue(adPlacement ?? AdPlacementSystem()),
     ],
     child: MaterialApp.router(routerConfig: router),
   );
@@ -76,5 +86,103 @@ void main() {
 
     expect(find.byKey(const Key('end-match-rematch')), findsOneWidget);
     expect(find.byKey(const Key('end-match-menu')), findsOneWidget);
+  });
+
+  testWidgets('rewarded ad is optional and grants placeholder reward',
+      (tester) async {
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 7;
+    game.matchState.opponentScore = 3;
+    final adService = FakeAdService();
+
+    await tester.pumpWidget(_wrap(game, adService: adService));
+    await tester.pump();
+
+    expect(find.text('MATCH REWARD 100'), findsOneWidget);
+    expect(adService.rewardedShows, 0);
+
+    await tester.ensureVisible(find.byKey(const Key('end-match-rewarded-ad')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('end-match-rewarded-ad')));
+    await tester.pump();
+
+    expect(adService.rewardedShows, 1);
+    expect(find.text('REWARD CLAIMED 2X'), findsOneWidget);
+  });
+
+  testWidgets('return to menu skips interstitial before eligibility',
+      (tester) async {
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 7;
+    game.matchState.opponentScore = 3;
+    final adService = FakeAdService();
+
+    await tester.pumpWidget(_wrap(game, adService: adService));
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('end-match-menu')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('end-match-menu')));
+    await tester.pumpAndSettle();
+
+    expect(adService.interstitialShows, 0);
+    expect(find.text('stub-menu'), findsOneWidget);
+  });
+
+  testWidgets('eligible return to menu shows fake interstitial then navigates',
+      (tester) async {
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 7;
+    game.matchState.opponentScore = 3;
+    final adService = FakeAdService();
+    final adPlacement = AdPlacementSystem()
+      ..advance(AdPlacementSystem.minTimeBetweenInterstitials);
+    for (var i = 0; i < 3; i++) {
+      adPlacement.recordMatchCompleted();
+    }
+
+    await tester.pumpWidget(
+      _wrap(game, adService: adService, adPlacement: adPlacement),
+    );
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('end-match-menu')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('end-match-menu')));
+    await tester.pump();
+
+    expect(adService.interstitialShows, 1);
+    expect(find.byKey(const Key('fake-interstitial-dialog')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('fake-interstitial-close')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('stub-menu'), findsOneWidget);
+    expect(adPlacement.matchesSinceInterstitial, 0);
+  });
+
+  testWidgets('rematch does not trigger interstitial', (tester) async {
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 7;
+    game.matchState.opponentScore = 3;
+    final adService = FakeAdService();
+    final adPlacement = AdPlacementSystem()
+      ..advance(AdPlacementSystem.minTimeBetweenInterstitials);
+    for (var i = 0; i < 3; i++) {
+      adPlacement.recordMatchCompleted();
+    }
+
+    await tester.pumpWidget(
+      _wrap(game, adService: adService, adPlacement: adPlacement),
+    );
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('end-match-rematch')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('end-match-rematch')));
+    await tester.pumpAndSettle();
+
+    expect(adService.interstitialShows, 0);
+    expect(find.text('stub-game'), findsOneWidget);
   });
 }

@@ -1,7 +1,7 @@
 ---
 id: P0-002
 phase: 0
-status: review
+status: done
 priority: high
 parallel_group: closeout
 depends_on: []

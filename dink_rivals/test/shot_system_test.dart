@@ -173,7 +173,9 @@ void main() {
     expect(low.vz, isNot(Tuning.smashInitialZ));
   });
 
-  test('stationary ball swung left-to-right with forward face goes forward-right', () {
+  test(
+      'stationary ball swung left-to-right with forward face goes forward-right',
+      () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -229,6 +231,114 @@ void main() {
     expect(ball.vy, lessThan(0));
   });
 
+  test('ball above vertical capsule top is not hittable', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: Tuning.racketContactZ + Tuning.verticalHitRadius + 2,
+      isInPlay: true,
+    );
+
+    final didHit = ShotSystem().attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2(90, 0),
+    );
+
+    expect(didHit, isFalse);
+  });
+
+  test('ball below vertical capsule bottom is not hittable', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final belowZ = Tuning.racketContactZ - Tuning.verticalHitRadius - 2;
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: belowZ < 0 ? -1 : belowZ,
+      isInPlay: true,
+    );
+
+    final didHit = ShotSystem().attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2(90, 0),
+    );
+
+    expect(didHit, isFalse);
+  });
+
+  test('ball horizontally past racketHitRadius is not hittable', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: racketPosition.x + Tuning.racketHitRadius + 2,
+      y: racketPosition.y,
+      z: Tuning.racketContactZ,
+      isInPlay: true,
+    );
+
+    final didHit = ShotSystem().attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2(90, 0),
+    );
+
+    expect(didHit, isFalse);
+  });
+
+  test('smash threshold remains within vertical capsule', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: Tuning.smashMinBallHeight + 1,
+      vy: 80,
+      isInPlay: true,
+    );
+    final shotSystem = ShotSystem();
+
+    final didHit = shotSystem.attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2(180, 0),
+    );
+
+    expect(didHit, isTrue);
+    expect(shotSystem.lastShotType, ShotType.smash);
+  });
+
   test('serve launches ball forward at minimum serve speed and lift', () {
     final player = PlayerState(
       position: Vector2(110, 400),
@@ -270,6 +380,51 @@ void main() {
 
     expect(ball.vx, greaterThan(0));
     expect(ball.vy, lessThan(0));
+  });
+
+  test('charged serve is faster and higher than minimum serve', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final weakServe = BallState(x: 110, y: 360, z: 0, isInPlay: false);
+    final chargedServe = BallState(x: 110, y: 360, z: 0, isInPlay: false);
+
+    ShotSystem().serve(
+      ball: weakServe,
+      hitter: player,
+      racketDirection: Vector2(0, -1),
+      power: 0,
+    );
+    ShotSystem().serve(
+      ball: chargedServe,
+      hitter: player,
+      racketDirection: Vector2(0, -1),
+      power: 1,
+    );
+
+    expect(chargedServe.vy.abs(), greaterThan(weakServe.vy.abs()));
+    expect(chargedServe.vz, greaterThan(weakServe.vz));
+    expect(chargedServe.vy, closeTo(-Tuning.serveMaxOutputSpeed, 0.01));
+    expect(chargedServe.vz, Tuning.serveMaxLift);
+  });
+
+  test('serve power clamps to valid range', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final ball = BallState(x: 110, y: 360, z: 0, isInPlay: false);
+
+    ShotSystem().serve(
+      ball: ball,
+      hitter: player,
+      racketDirection: Vector2(0, -1),
+      power: 4,
+    );
+
+    expect(ball.vy, closeTo(-Tuning.serveMaxOutputSpeed, 0.01));
+    expect(ball.vz, Tuning.serveMaxLift);
   });
 
   test('running diagonally biases shot toward run direction', () {

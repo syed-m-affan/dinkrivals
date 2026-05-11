@@ -29,13 +29,19 @@ class ShotSystem {
     required BallState ball,
     required PlayerState hitter,
     required Vector2 racketDirection,
+    double power = 0,
   }) {
     final dir = racketDirection.length2 > 0.01
         ? racketDirection.normalized()
         : (hitter.side == PlayerSide.player ? Vector2(0, -1) : Vector2(0, 1));
-    ball.vx = dir.x * Tuning.serveMinOutputSpeed;
-    ball.vy = dir.y * Tuning.serveMinOutputSpeed;
-    ball.vz = Tuning.serveMinLift;
+    final servePower = power.clamp(0.0, 1.0).toDouble();
+    final outputSpeed = Tuning.serveMinOutputSpeed +
+        (Tuning.serveMaxOutputSpeed - Tuning.serveMinOutputSpeed) * servePower;
+    final lift = Tuning.serveMinLift +
+        (Tuning.serveMaxLift - Tuning.serveMinLift) * servePower;
+    ball.vx = dir.x * outputSpeed;
+    ball.vy = dir.y * outputSpeed;
+    ball.vz = lift;
     ball.arcGravityScale = Tuning.serveArcGravityScale;
     ball.lastHitBy = hitter.side;
     ball.hasBouncedThisSide = false;
@@ -262,8 +268,11 @@ class ShotSystem {
     final onHitterSide = hitter.side == PlayerSide.player
         ? ball.y >= Court.netY
         : ball.y <= Court.netY;
-    final validHeight = ball.z >= 0 && ball.z <= 90;
-    return validHeight && distance <= Tuning.racketHitRadius && onHitterSide;
+    final verticalOffset = (ball.z - Tuning.racketContactZ).abs();
+    final withinCapsule = ball.z >= 0 &&
+        verticalOffset <= Tuning.verticalHitRadius &&
+        distance <= Tuning.racketHitRadius;
+    return withinCapsule && onHitterSide;
   }
 
   double _distanceToSegment({
@@ -290,8 +299,11 @@ class ShotSystem {
     final onHitterSide = hitter.side == PlayerSide.player
         ? ball.y >= Court.netY
         : ball.y <= Court.netY;
-    final validHeight = ball.z >= 0 && ball.z <= 90;
-    return validHeight && distance <= Tuning.racketHitRadius && onHitterSide;
+    final verticalOffset = (ball.z - Tuning.racketContactZ).abs();
+    final withinCapsule = ball.z >= 0 &&
+        verticalOffset <= Tuning.verticalHitRadius &&
+        distance <= Tuning.racketHitRadius;
+    return withinCapsule && onHitterSide;
   }
 
   Vector2 _racketPositionFor(BallState ball, PlayerState hitter, Vector2? aim) {

@@ -1,7 +1,7 @@
 ---
 id: P2-007
 phase: 2
-status: review
+status: done
 priority: high
 parallel_group: final
 depends_on: [P2-002, P2-003, P2-004, P2-005, P2-006]

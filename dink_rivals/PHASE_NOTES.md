@@ -197,6 +197,27 @@
 - `flutter test`: 49/49 (added: in-play OOB landing test, two `serve()` tests).
 - `flutter build apk --debug`: pending in this session.
 
+## Perspective implementation pass (2026-05-11)
+- **P0-006**: Retuned the gray-box court projection to a taller 3/4 view with stronger near/far width scaling, stronger z displacement, explicit top/bottom framing reserves, and a compressed one-line debug overlay. Added projection tests for near/far width ratio, portrait-friendly aspect, and depth scaling.
+- **P0-007**: Added gray-box depth cues: raised net with posts/mesh, projected player/opponent body shapes, smooth ball altitude scale, stronger altitude-sensitive ball shadow, depth-scaled racket visuals, and y-based component priority for more coherent net/entity ordering.
+- Verification passed on 2026-05-11: `flutter analyze`, `flutter test` (52/52), `flutter build apk --debug`, `flutter install -d 58011FDCQ00992 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`.
+- Pixel 10 Pro XL Quick Match screenshot spot-check confirmed the view is materially less top-down than `docs/art/phase-2-screenshot.png`; the court is taller, the raised net reads as an obstacle, player/opponent bodies have vertical presence, and bottom controls no longer cover the court baseline.
+
+## Serve control update (2026-05-11)
+- Serve state now locks the player in place until launch. Movement-stick input is ignored while waiting to serve, but the swing stick remains active for aiming.
+- SERVE changed from tap-to-launch fixed speed to press-and-hold charge: press starts charging, release launches along the current racket direction, and the serve button shows a charge ring plus percentage / HOLD label.
+- `ShotSystem.serve(...)` now accepts normalized power and maps it between `serveMinOutputSpeed` / `serveMaxOutputSpeed` and `serveMinLift` / `serveMaxLift`.
+- Verification passed on 2026-05-11: `flutter analyze`, `flutter test` (60/60), and `flutter build apk --debug`.
+
+## Phase 3 fake ad framework (2026-05-11)
+- Added fake-only ad stack: `AdService`, `FakeAdService`, Riverpod provider wiring, and initialized fake service in `main.dart`. No real AdMob dependency, production ad IDs, banners, IAP, or remove-ads logic were added.
+- Added `AdPlacementSystem` with in-memory session counters and deterministic elapsed-time advancement. Interstitial eligibility requires a natural break, 3 completed matches this session, 3 matches since the last interstitial, and 4 minutes since the last interstitial.
+- End-match screen now has optional `WATCH AD: 2X REWARD` fake rewarded action. It is one-shot per screen visit, user-initiated, and only changes a placeholder reward label.
+- Fake interstitials are checked only when tapping Return to Menu from the end-match screen. Eligible interstitials show a dismissible fake dialog before deferred navigation to `/`; Rematch and active gameplay do not trigger interstitials.
+- Added post-match debug text for ad eligibility: session matches, matches until eligible, time until eligible, and natural-break state.
+- Verification passed on 2026-05-11: `flutter analyze`, `flutter test` (73/73), `flutter build apk --debug`, and `flutter install -d 58011FDCQ00992 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`.
+- Android launch command returned `Status: ok` for `com.example.dink_rivals/.MainActivity`, but screenshot capture showed the physical device lock screen. Manual Phase 3 fake-ad QA remains required for P3-006.
+
 ## Manual QA still required (combined P0-002 / P1-007 / P2-007)
 Re-run the previous QA checklists with attention to:
 - Hold the movement joystick across a point loss — player keeps moving.

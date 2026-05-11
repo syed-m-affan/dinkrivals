@@ -10,7 +10,7 @@ class DebugOverlayComponent extends Component {
   final TextPaint _textPaint = TextPaint(
     style: const TextStyle(
       color: Colors.white,
-      fontSize: 13,
+      fontSize: 11,
       fontFamily: 'monospace',
     ),
   );
@@ -34,14 +34,11 @@ class DebugOverlayComponent extends Component {
   void render(Canvas canvas) {
     final ball = game.ball.state;
     final shot = game.shotSystem.lastShotType?.name ?? '-';
-    final text = 'PHASE 0\n'
-        'FPS: ${_fps.toStringAsFixed(0)}\n'
-        'Ball x: ${ball.x.toStringAsFixed(1)}  '
-        'y: ${ball.y.toStringAsFixed(1)}  '
-        'z: ${ball.z.toStringAsFixed(1)}\n'
-        'Rally: ${game.rallyCount}\n'
-        'Last shot: $shot';
-    canvas.drawRect(const Rect.fromLTWH(8, 8, 230, 88), _background);
-    _textPaint.render(canvas, text, Vector2(14, 12));
+    final text = 'PHASE 0  FPS ${_fps.toStringAsFixed(0)}  '
+        'Ball ${ball.x.toStringAsFixed(0)},${ball.y.toStringAsFixed(0)},${ball.z.toStringAsFixed(0)}  '
+        'Rally ${game.rallyCount}  Shot $shot';
+    // Below the centered score chip (which extends to ~y=38 at the top).
+    canvas.drawRect(const Rect.fromLTWH(8, 44, 342, 20), _background);
+    _textPaint.render(canvas, text, Vector2(12, 48));
   }
 }

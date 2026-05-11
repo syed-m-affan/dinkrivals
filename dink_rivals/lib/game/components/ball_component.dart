@@ -18,9 +18,16 @@ class BallComponent extends Component {
   final Paint _paint = Paint()..color = Colors.yellow;
 
   @override
+  void update(double dt) {
+    priority = state.y.round();
+  }
+
+  @override
   void render(Canvas canvas) {
     final center = game.courtToWorld(Vector2(state.x, state.y), state.z);
-    final radius = state.z > 60 ? 6.0 : 4.0;
+    final heightScale = (state.z / 100).clamp(0, 1).toDouble();
+    final depthScale = game.depthScaleForY(state.y);
+    final radius = (4.2 + heightScale * 4.0) * depthScale;
     canvas.drawCircle(center.toOffset(), game.logicalToScreen(radius), _paint);
   }
 }

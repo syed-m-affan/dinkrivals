@@ -15,11 +15,39 @@ class PlayerComponent extends Component {
 
   final DinkRivalsGame game;
   final PlayerState state;
-  final Paint _paint = Paint()..color = Colors.blue;
+  final Paint _bodyPaint = Paint()..color = Colors.blue;
+  final Paint _headPaint = Paint()..color = const Color(0xFF58B7FF);
+  final Paint _footPaint = Paint()..color = const Color(0xAA002D63);
+
+  @override
+  void update(double dt) {
+    priority = state.position.y.round();
+  }
 
   @override
   void render(Canvas canvas) {
-    final center = game.courtToWorld(state.position);
-    canvas.drawCircle(center.toOffset(), game.logicalToScreen(8), _paint);
+    final depthScale = game.depthScaleForY(state.position.y);
+    final feet = game.courtToWorld(state.position);
+    final torso = game.courtToWorld(state.position, 16);
+    final head = game.courtToWorld(state.position, 28);
+    final bodyRadius = game.logicalToScreen(7.4 * depthScale);
+    final headRadius = game.logicalToScreen(5.6 * depthScale);
+    final footRect = Rect.fromCenter(
+      center: feet.toOffset(),
+      width: game.logicalToScreen(15 * depthScale),
+      height: game.logicalToScreen(6 * depthScale),
+    );
+
+    canvas.drawOval(footRect, _footPaint);
+    canvas.drawLine(
+      feet.toOffset(),
+      torso.toOffset(),
+      Paint()
+        ..color = _bodyPaint.color
+        ..strokeWidth = bodyRadius * 1.35
+        ..strokeCap = StrokeCap.round,
+    );
+    canvas.drawCircle(torso.toOffset(), bodyRadius, _bodyPaint);
+    canvas.drawCircle(head.toOffset(), headRadius, _headPaint);
   }
 }

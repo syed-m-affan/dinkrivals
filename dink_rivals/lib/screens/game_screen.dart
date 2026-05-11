@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../app/ad_provider.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
 import '../game/dink_rivals_game.dart';
+import '../game/models/opponent_serve_phase.dart';
 import '../services/save_service.dart';
 
 class GameScreen extends ConsumerStatefulWidget {
@@ -18,23 +22,29 @@ class GameScreen extends ConsumerStatefulWidget {
 class _GameScreenState extends ConsumerState<GameScreen> {
   bool _showPause = false;
   late final DinkRivalsGame _game;
+  Timer? _adTimer;
 
   @override
   void initState() {
     super.initState();
     _game = ref.read(dinkRivalsGameProvider);
     _game.matchOverNotifier.addListener(_handleMatchOver);
+    _adTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      ref.read(adPlacementSystemProvider).advance(const Duration(seconds: 1));
+    });
   }
 
   @override
   void dispose() {
     _game.matchOverNotifier.removeListener(_handleMatchOver);
+    _adTimer?.cancel();
     super.dispose();
   }
 
   void _handleMatchOver() {
     if (!_game.matchOverNotifier.value) return;
     if (!mounted) return;
+    ref.read(adPlacementSystemProvider).recordMatchCompleted();
     ref.read(saveDataProvider.notifier).recordMatchCompleted();
     context.go(AppRoutes.endMatch);
   }
@@ -98,10 +108,99 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   onResume: () => _setPaused(false),
                   onMenu: _returnToMenu,
                 ),
+              if (!_showPause)
+                _OpponentServeOverlay(
+                  phaseNotifier: _game.opponentServePhase,
+                  countdownNotifier: _game.opponentServeCountdown,
+                  onReady: _game.confirmOpponentServeReady,
+                ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _OpponentServeOverlay extends StatelessWidget {
+  const _OpponentServeOverlay({
+    required this.phaseNotifier,
+    required this.countdownNotifier,
+    required this.onReady,
+  });
+
+  final ValueNotifier<OpponentServePhase> phaseNotifier;
+  final ValueNotifier<int> countdownNotifier;
+  final VoidCallback onReady;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<OpponentServePhase>(
+      valueListenable: phaseNotifier,
+      builder: (context, phase, _) {
+        if (phase == OpponentServePhase.awaitingReady) {
+          return Positioned.fill(
+            child: ColoredBox(
+              color: const Color(0xAA000000),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'OPPONENT TO SERVE',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 3,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      key: const Key('opponent-serve-ready'),
+                      onPressed: onReady,
+                      child: const Text('READY'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        if (phase == OpponentServePhase.countingDown) {
+          return Positioned.fill(
+            child: IgnorePointer(
+              child: ValueListenableBuilder<int>(
+                valueListenable: countdownNotifier,
+                builder: (context, count, _) {
+                  if (count <= 0) {
+                    return const SizedBox.shrink();
+                  }
+                  return Center(
+                    child: Text(
+                      '$count',
+                      key: const Key('opponent-serve-countdown'),
+                      style: const TextStyle(
+                        fontSize: 120,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: Color(0xCC000000),
+                            offset: Offset(0, 4),
+                            blurRadius: 12,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }

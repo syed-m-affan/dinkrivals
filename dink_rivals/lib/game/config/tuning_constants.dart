@@ -8,7 +8,15 @@ class Tuning {
   static const double hitWindowRadius = 50.0;
   static const double perfectHitWindowRadius = 22.0;
   static const double racketReach = 42.0;
-  static const double racketHitRadius = 13.0;
+  static const double racketHitRadius = 10.0;
+  // Canonical racket-plane altitude used by both the visual draw and the
+  // hitbox capsule. Matches the player torso line (z=0→16) so the racket
+  // visually emerges from where the player would hold it.
+  static const double racketContactZ = 16.0;
+  // Vertical half-extent of the hitbox capsule around `racketContactZ`. Must
+  // stay >= (smashMinBallHeight - racketContactZ) so smash-height balls
+  // remain hittable.
+  static const double verticalHitRadius = 18.0;
   static const double maxRacketAngleRadians = 1.5708;
   static const double racketSwingRadiansPerPixel = 0.005;
   static const double racketHitCooldown = 0.18;
@@ -33,7 +41,10 @@ class Tuning {
   static const double contactLiftBase = 48.0;
   static const double contactLiftScale = 0.30;
   static const double serveMinOutputSpeed = 175.0;
+  static const double serveMaxOutputSpeed = 245.0;
   static const double serveMinLift = 130.0;
+  static const double serveMaxLift = 170.0;
+  static const double serveChargeDuration = 1.15;
   static const double serveArcGravityScale = 0.40;
 
   static const double gravity = 440.0;
