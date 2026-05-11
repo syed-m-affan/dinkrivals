@@ -61,6 +61,11 @@ Verification performed during this thread:
 - Character runtime sheets were simplified after review to a mid-detail style
   documented at
   `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`.
+- Perspective baseline screenshots and projection metrics were archived before
+  the next camera tuning pass:
+  `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
+  `docs/art/visual-overhaul/evidence/perspective-before-serve.png`, and
+  `docs/art/visual-overhaul/perspective-metrics.md`.
 
 Subagent validation:
 
