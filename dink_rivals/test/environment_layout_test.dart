@@ -11,6 +11,10 @@ void main() {
   test('classic environment prop placements are unique and bounded', () {
     final props = EnvironmentLayout.classicProps;
 
+    expect(
+      EnvironmentLayout.generatedBackgroundAsset,
+      'environment/classic/park_background_generated.png',
+    );
     expect(props.map((prop) => prop.id).toSet(), hasLength(props.length));
     expect(props, isNotEmpty);
     expect(

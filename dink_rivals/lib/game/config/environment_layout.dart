@@ -42,6 +42,8 @@ class EnvironmentPropPlacement {
 }
 
 class EnvironmentLayout {
+  static const String generatedBackgroundAsset =
+      'environment/classic/park_background_generated.png';
   static const String groundTileAsset =
       'environment/classic/off_court_ground_tile.png';
   static const String softShadowAsset =

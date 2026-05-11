@@ -45,6 +45,12 @@ class ScoreComponent extends Component {
     ..strokeWidth = 3;
   final Paint _serveIndicator = Paint()..color = VisualPalette.uiAccent;
   final Paint _shadowPaint = Paint()..color = VisualPalette.scoreboardShadow;
+  final Paint _readoutChipPaint = Paint()
+    ..color = VisualPalette.scoreboardSurface.withValues(alpha: 0.84);
+  final Paint _readoutChipBorderPaint = Paint()
+    ..color = VisualPalette.scoreboardBorder.withValues(alpha: 0.72)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.3;
 
   @override
   void render(Canvas canvas) {
@@ -139,6 +145,17 @@ class ScoreComponent extends Component {
         _readoutStyle.copyWith(
           color: VisualPalette.hudLastShotLabel,
         ));
+    final chipWidth = math.max(rally.width, last.width) + 18;
+    final chipHeight = rally.height + last.height + 15;
+    final chipRect = Rect.fromLTWH(left - 8, top - 7, chipWidth, chipHeight);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(chipRect, const Radius.circular(5)),
+      _readoutChipPaint,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(chipRect, const Radius.circular(5)),
+      _readoutChipBorderPaint,
+    );
     rally.paint(canvas, Offset(left, top));
     last.paint(canvas, Offset(left, top + rally.height + 5));
   }

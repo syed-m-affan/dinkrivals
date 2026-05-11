@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
@@ -17,6 +18,7 @@ class ClassicEnvironmentComponent extends Component {
 
   final DinkRivalsGame game;
   final Map<String, ui.Image> _images = {};
+  ui.Image? _generatedBackground;
   ui.Image? _softShadow;
 
   final Paint _groundPaint = Paint()..color = VisualPalette.environmentGround;
@@ -59,6 +61,8 @@ class ClassicEnvironmentComponent extends Component {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    _generatedBackground =
+        await game.images.load(EnvironmentLayout.generatedBackgroundAsset);
     _softShadow = await game.images.load(EnvironmentLayout.softShadowAsset);
     for (final prop in EnvironmentLayout.classicProps) {
       _images[prop.assetPath] = await game.images.load(prop.assetPath);
@@ -67,6 +71,10 @@ class ClassicEnvironmentComponent extends Component {
 
   @override
   void render(Canvas canvas) {
+    if (_renderGeneratedBackground(canvas)) {
+      return;
+    }
+
     _drawGround(canvas);
     _drawBackTreeLine(canvas);
     _drawBackFenceBand(canvas);
@@ -76,6 +84,56 @@ class ClassicEnvironmentComponent extends Component {
     for (final prop in props) {
       _drawProp(canvas, prop);
     }
+  }
+
+  bool _renderGeneratedBackground(Canvas canvas) {
+    final image = _generatedBackground;
+    if (image == null) {
+      return false;
+    }
+    final screen = Offset.zero & game.size.toSize();
+    final imageSize = Size(image.width.toDouble(), image.height.toDouble());
+    final scale = math.max(
+      screen.width / imageSize.width,
+      screen.height / imageSize.height,
+    );
+    final fitted = Size(imageSize.width * scale, imageSize.height * scale);
+    final dst = Rect.fromLTWH(
+      (screen.width - fitted.width) / 2,
+      (screen.height - fitted.height) / 2,
+      fitted.width,
+      fitted.height,
+    );
+    canvas.drawImageRect(
+      image,
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+      dst,
+      Paint()..filterQuality = FilterQuality.medium,
+    );
+    _drawGeneratedFenceAnchor(canvas);
+    _drawGeneratedCourtShadow(canvas);
+    return true;
+  }
+
+  void _drawGeneratedFenceAnchor(Canvas canvas) {
+    final left = game.courtToWorld(Vector2(Court.left - 44, Court.top - 9));
+    final right = game.courtToWorld(Vector2(Court.right + 44, Court.top - 9));
+    final railPaint = Paint()
+      ..color = const Color(0xAA0C241F)
+      ..strokeWidth = game.logicalToScreen(1.4).clamp(1.5, 2.8)
+      ..strokeCap = StrokeCap.square;
+    canvas.drawLine(left.toOffset(), right.toOffset(), railPaint);
+  }
+
+  void _drawGeneratedCourtShadow(Canvas canvas) {
+    final outer = _courtPath(margin: 8);
+    canvas.save();
+    canvas.translate(game.logicalToScreen(2.4), game.logicalToScreen(6.4));
+    canvas.drawPath(
+      outer,
+      Paint()..color = const Color(0x66203128),
+    );
+    canvas.restore();
   }
 
   void _drawGround(Canvas canvas) {
