@@ -9,12 +9,15 @@ class SwingCommand {
   SwingCommand({
     required this.intent,
     required Vector2 aimDirection,
+    required Vector2 swipeDirection,
     required this.power,
     required this.remainingSeconds,
-  }) : aimDirection = aimDirection.normalized();
+  })  : aimDirection = aimDirection.normalized(),
+        swipeDirection = swipeDirection.normalized();
 
   final SwingIntent intent;
   final Vector2 aimDirection;
+  final Vector2 swipeDirection;
   final double power;
   double remainingSeconds;
   bool animationStarted = false;
@@ -95,6 +98,7 @@ class InputSystem {
   void submitSwingCommand({
     required SwingIntent intent,
     required Vector2 aimDirection,
+    required Vector2 swipeDirection,
     required double power,
   }) {
     setAimDirection(aimDirection);
@@ -102,6 +106,9 @@ class InputSystem {
     _activeSwingCommand = SwingCommand(
       intent: intent,
       aimDirection: this.aimDirection.clone(),
+      swipeDirection: swipeDirection.length2 > 0.01
+          ? swipeDirection.clone()
+          : this.aimDirection.clone(),
       power: power.clamp(0.0, 1.0).toDouble(),
       remainingSeconds: Tuning.shotSwipeWindowSeconds,
     );

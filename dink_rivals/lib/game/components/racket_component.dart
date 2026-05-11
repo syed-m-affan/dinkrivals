@@ -8,6 +8,7 @@ import '../config/debug_flags.dart';
 import '../config/tuning_constants.dart';
 import '../dink_rivals_game.dart';
 import '../config/visual_palette.dart';
+import '../systems/shot_system.dart';
 
 class RacketComponent extends Component {
   RacketComponent(this.game);
@@ -68,26 +69,48 @@ class RacketComponent extends Component {
     if (command == null) {
       return;
     }
-    final direction = command.aimDirection.length2 > 0.01
-        ? command.aimDirection.normalized()
-        : game.playerRacketDirection();
-    final courtStart =
-        game.player.state.position + direction * Tuning.committedSwingLaneStart;
-    final courtEnd = game.player.state.position +
-        direction * Tuning.committedSwingLaneLength;
-    final start = game.courtToWorld(courtStart, Tuning.racketContactZ);
-    final end = game.courtToWorld(courtEnd, Tuning.racketContactZ);
+    final path = ShotSystem.committedSwingPath(
+      hitter: game.player.state,
+      intent: command.intent,
+      swipeDirection: command.swipeDirection,
+    );
+    final start = game.courtToWorld(path.start, Tuning.racketContactZ);
+    final end = game.courtToWorld(path.end, Tuning.racketContactZ);
     final depthScale = game.depthScaleForY(game.player.state.position.y);
     _swingLanePaint.strokeWidth =
         game.logicalToScreen(Tuning.committedSwingContactRadius * depthScale);
     _swingLaneBorderPaint.strokeWidth = game.logicalToScreen(2.2 * depthScale);
     canvas.drawLine(start.toOffset(), end.toOffset(), _swingLanePaint);
     canvas.drawLine(start.toOffset(), end.toOffset(), _swingLaneBorderPaint);
-    canvas.drawCircle(
-      end.toOffset(),
-      game.logicalToScreen(3.4 * depthScale),
-      _swingLaneBorderPaint,
-    );
+    _drawPixelSwipe(canvas, start.toOffset(), end.toOffset(), depthScale);
+  }
+
+  void _drawPixelSwipe(
+    Canvas canvas,
+    Offset start,
+    Offset end,
+    double depthScale,
+  ) {
+    final blocks = 7;
+    final blockSize = game.logicalToScreen(4.6 * depthScale);
+    final delta = end - start;
+    final angle = math.atan2(delta.dy, delta.dx);
+    final paint = Paint()..color = VisualPalette.textPrimary;
+    for (var i = 0; i < blocks; i += 1) {
+      final t = blocks == 1 ? 1.0 : i / (blocks - 1);
+      final center = Offset.lerp(start, end, t)!;
+      final size = blockSize * (0.55 + t * 0.65);
+      canvas.save();
+      canvas.translate(center.dx, center.dy);
+      canvas.rotate(angle);
+      canvas.drawRect(
+        Rect.fromCenter(center: Offset.zero, width: size, height: size),
+        paint
+          ..color =
+              VisualPalette.textPrimary.withValues(alpha: 0.32 + t * 0.48),
+      );
+      canvas.restore();
+    }
   }
 
   void _drawRacket(

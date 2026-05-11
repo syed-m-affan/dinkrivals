@@ -235,8 +235,16 @@ class TouchInputController {
         distance: distance,
         inputSystem: inputSystem,
       ),
+      swipeDirection: _courtSwipeDirection(delta),
       power: power,
     );
+  }
+
+  Vector2 _courtSwipeDirection(Vector2 delta) {
+    if (delta.length2 < 0.01) {
+      return Vector2(0, -1);
+    }
+    return Vector2(delta.x, delta.y)..normalize();
   }
 
   Vector2 _aimForGesture({

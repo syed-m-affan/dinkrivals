@@ -23,6 +23,13 @@ class ContactProfile {
   bool get didHit => quality != ContactQuality.miss;
 }
 
+class SwingPath {
+  const SwingPath(this.start, this.end);
+
+  final Vector2 start;
+  final Vector2 end;
+}
+
 class ShotSystem {
   ShotSystem({math.Random? random}) : _random = random ?? math.Random();
 
@@ -71,6 +78,7 @@ class ShotSystem {
     required PlayerState hitter,
     required Vector2 racketPosition,
     required Vector2 aimDirection,
+    Vector2? swipeDirection,
     SwingIntent? intent,
     double power = 0,
   }) {
@@ -86,7 +94,8 @@ class ShotSystem {
         : _committedSwingContactProfile(
             ball: ball,
             hitter: hitter,
-            aimDirection: aimDirection,
+            intent: intent,
+            swipeDirection: swipeDirection ?? aimDirection,
           );
     if (!contact.didHit) {
       return false;
@@ -103,7 +112,14 @@ class ShotSystem {
       ball: ball,
       hitterSide: hitter.side,
       shotType: shotType,
-      aimDirection: aimDirection,
+      aimDirection: intent == null
+          ? aimDirection
+          : _committedSwingAim(
+              ball: ball,
+              hitter: hitter,
+              intent: shotIntent,
+              swipeDirection: swipeDirection ?? aimDirection,
+            ),
       power: shotPower,
       quality: contact.quality,
     );
@@ -310,7 +326,8 @@ class ShotSystem {
   ContactProfile _committedSwingContactProfile({
     required BallState ball,
     required PlayerState hitter,
-    required Vector2 aimDirection,
+    required SwingIntent? intent,
+    required Vector2 swipeDirection,
   }) {
     final onHitterSide = hitter.side == PlayerSide.player
         ? ball.y >= Court.netY
@@ -319,20 +336,88 @@ class ShotSystem {
       return ContactProfile(ContactQuality.miss, _heightBand(ball));
     }
 
-    final swingDirection = _sideCorrectedAim(aimDirection, hitter.side);
-    final racketStart =
-        hitter.position + swingDirection * Tuning.committedSwingLaneStart;
-    final racketEnd =
-        hitter.position + swingDirection * Tuning.committedSwingLaneLength;
+    final path = committedSwingPath(
+      hitter: hitter,
+      intent: intent ?? SwingIntent.drive,
+      swipeDirection: swipeDirection,
+    );
     final racketDistance = _distanceToSegment(
       point: Vector2(ball.x, ball.y),
-      start: racketStart,
-      end: racketEnd,
+      start: path.start,
+      end: path.end,
     );
     if (racketDistance <= Tuning.committedSwingContactRadius) {
       return ContactProfile(ContactQuality.clean, _heightBand(ball));
     }
     return ContactProfile(ContactQuality.miss, _heightBand(ball));
+  }
+
+  Vector2 _committedSwingAim({
+    required BallState ball,
+    required PlayerState hitter,
+    required SwingIntent intent,
+    required Vector2 swipeDirection,
+  }) {
+    final forward = Vector2(0, hitter.side == PlayerSide.player ? -1 : 1);
+    final swipe = swipeDirection.length2 > 0.01
+        ? swipeDirection.normalized()
+        : forward.clone();
+    final ballVelocity = Vector2(ball.vx, ball.vy);
+    final ballSpeed = ballVelocity.length;
+    final ballInfluence =
+        ballSpeed > 0.01 ? ballVelocity.normalized() * 0.16 : Vector2.zero();
+    final playerInfluence = hitter.velocity.length2 > 1
+        ? hitter.velocity.normalized() * 0.12
+        : Vector2.zero();
+    final relativeBall = Vector2(ball.x, ball.y) - hitter.position;
+    final positionInfluence = relativeBall.length2 > 1
+        ? relativeBall.normalized() * 0.14
+        : Vector2.zero();
+
+    final base = switch (intent) {
+      SwingIntent.drive => Vector2(swipe.x * 0.72, forward.y * 0.74),
+      SwingIntent.lob => Vector2(swipe.x * 0.30, forward.y * 1.0),
+      SwingIntent.smash => Vector2(swipe.x * 0.18, forward.y * 1.12),
+      SwingIntent.dink => forward.clone(),
+    };
+    final aim = base + ballInfluence + playerInfluence + positionInfluence;
+    if (aim.length2 < 0.01) {
+      return forward;
+    }
+    return _sideCorrectedAim(aim, hitter.side);
+  }
+
+  static SwingPath committedSwingPath({
+    required PlayerState hitter,
+    required SwingIntent intent,
+    required Vector2 swipeDirection,
+  }) {
+    final forward = Vector2(0, hitter.side == PlayerSide.player ? -1 : 1);
+    final lateral = Vector2(1, 0);
+    final swipe = swipeDirection.length2 > 0.01
+        ? swipeDirection.normalized()
+        : forward.clone();
+    if (intent == SwingIntent.drive) {
+      final center =
+          hitter.position + forward * Tuning.committedSwingForwardOffset;
+      final startSign = swipe.x >= 0 ? -1.0 : 1.0;
+      final start = center +
+          lateral * (Tuning.committedSwingHorizontalHalfLength * startSign);
+      final end = center -
+          lateral * (Tuning.committedSwingHorizontalHalfLength * startSign);
+      return SwingPath(start, end);
+    }
+
+    final lateralOffset = (swipe.x * 16).clamp(-18.0, 18.0).toDouble();
+    final start = hitter.position +
+        lateral * lateralOffset +
+        forward * Tuning.committedSwingVerticalStart;
+    final end = hitter.position +
+        lateral * lateralOffset +
+        forward * Tuning.committedSwingVerticalLength;
+    return intent == SwingIntent.smash
+        ? SwingPath(end, start)
+        : SwingPath(start, end);
   }
 
   BallHeightBand _heightBand(BallState ball) {

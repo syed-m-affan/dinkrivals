@@ -416,15 +416,18 @@ void main() {
     expect(highShotSystem.lastShotType, ShotType.smash);
   });
 
-  test('committed swing outside strict hitbox misses instead of dinking', () {
+  test('horizontal committed swing outside path misses instead of dinking', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
     );
     final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
     final swingBall = BallState(
-      x: player.position.x + Tuning.committedSwingContactRadius + 4,
-      y: racketPosition.y,
+      x: player.position.x,
+      y: player.position.y -
+          Tuning.committedSwingForwardOffset -
+          Tuning.committedSwingContactRadius -
+          4,
       z: Tuning.racketContactZ,
       vy: 40,
       isInPlay: true,
@@ -437,6 +440,7 @@ void main() {
       hitter: player,
       racketPosition: racketPosition,
       aimDirection: Vector2(0, -1),
+      swipeDirection: Vector2(0, -1),
       intent: SwingIntent.drive,
       power: 0.8,
     );
@@ -446,15 +450,15 @@ void main() {
     expect(swingBall.vy, 40);
   });
 
-  test('committed swing hits along extended forward lane', () {
+  test('horizontal committed swing hits across front arc', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
     );
     final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
     final ball = BallState(
-      x: player.position.x,
-      y: player.position.y - Tuning.committedSwingLaneLength + 4,
+      x: player.position.x + Tuning.committedSwingHorizontalHalfLength - 4,
+      y: player.position.y - Tuning.committedSwingForwardOffset,
       z: Tuning.racketContactZ,
       vy: 40,
       isInPlay: true,
@@ -467,12 +471,44 @@ void main() {
       hitter: player,
       racketPosition: racketPosition,
       aimDirection: Vector2(0, -1),
+      swipeDirection: Vector2(1, 0),
       intent: SwingIntent.drive,
       power: 0.8,
     );
 
     expect(didHit, isTrue);
     expect(shotSystem.lastShotType, ShotType.drive);
+    expect(ball.vy, lessThan(0));
+  });
+
+  test('vertical committed swing hits along forward path', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
+    final ball = BallState(
+      x: player.position.x,
+      y: player.position.y - Tuning.committedSwingVerticalLength + 4,
+      z: Tuning.smashableBallMinZ + 4,
+      vy: 40,
+      isInPlay: true,
+      lastHitBy: PlayerSide.opponent,
+    );
+    final shotSystem = ShotSystem();
+
+    final didHit = shotSystem.attemptManualContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: Vector2(0, -1),
+      swipeDirection: Vector2(0, 1),
+      intent: SwingIntent.smash,
+      power: 0.8,
+    );
+
+    expect(didHit, isTrue);
+    expect(shotSystem.lastShotType, ShotType.smash);
     expect(ball.vy, lessThan(0));
   });
 

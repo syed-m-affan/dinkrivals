@@ -113,6 +113,7 @@ void main() {
 
     expect(input.activeSwingCommand?.intent, SwingIntent.drive);
     expect(input.activeSwingCommand?.aimDirection.x, greaterThan(0));
+    expect(input.activeSwingCommand?.swipeDirection.x, greaterThan(0));
     expect(input.activeSwingCommand?.aimDirection.y, lessThan(0));
   });
 
@@ -189,6 +190,7 @@ void main() {
     input.submitSwingCommand(
       intent: SwingIntent.drive,
       aimDirection: Vector2(0, -1),
+      swipeDirection: Vector2(1, 0),
       power: 0.48,
     );
     input.updateRacket(0.30);

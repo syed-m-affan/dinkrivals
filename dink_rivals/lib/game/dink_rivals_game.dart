@@ -346,6 +346,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       hitter: player.state,
       racketPosition: playerRacketPosition(),
       aimDirection: command?.aimDirection ?? playerRacketDirection(),
+      swipeDirection: command?.swipeDirection,
       intent: command?.intent,
       power: command?.power ?? 0,
     );

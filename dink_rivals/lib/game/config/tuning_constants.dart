@@ -12,8 +12,10 @@ class Tuning {
   static const double racketHitRadius = 10.0;
   static const double cleanContactRadius = 15.0;
   static const double committedSwingContactRadius = 18.0;
-  static const double committedSwingLaneStart = 18.0;
-  static const double committedSwingLaneLength = 74.0;
+  static const double committedSwingForwardOffset = 44.0;
+  static const double committedSwingHorizontalHalfLength = 56.0;
+  static const double committedSwingVerticalStart = 18.0;
+  static const double committedSwingVerticalLength = 84.0;
   static const double forgivenContactRadius = 34.0;
   static const double emergencyBodyContactRadius = 30.0;
   static const double shotSwipeWindowSeconds = 0.28;
