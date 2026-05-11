@@ -26,6 +26,7 @@ Last updated: 2026-05-11
 | Net and serving indicator | Resolved | Net has thicker posts, rail, mesh, and a stronger visual footprint. Serving state is integrated into the scoreboard flow instead of relying on a loose mid-scene marker. |
 | Backdrop signage | Improved | Rear environment now includes original `DINK RIVALS` and `PARK COURTS` sign assets plus lamp/planter depth props. |
 | Character identity | Improved | Player and opponent sprite sheets were regenerated into a simpler mid-detail pixel style with chunkier silhouettes and fewer small details, sitting between the old placeholders and the too-detailed first generated pass. Dink, drive, lob, and smash now have distinct generated sheets. |
+| Character animation framing | Resolved | Generated shot sheets now render using their actual frame counts instead of hardcoded multi-frame slicing, so one-frame shot poses no longer show only half the character. Player and opponent sprites also reflect horizontally based on movement direction. |
 | Scoreboard/rally/last-shot readout | Resolved | HUD now shows YOU/RIVAL score panels, serving dot, rally count, and last-shot readout. |
 | Feedback banner | Resolved | Rally feedback renders in a top-center banner with primary/secondary text helpers and safe-area-aware placement. |
 | Ball trail/contact VFX | Resolved | VFX layer uses fixed-size trail buffering, refreshed contact/bounce sprites, and clears trails on contact, bounce, and point reset. |
@@ -48,10 +49,15 @@ Last updated: 2026-05-11
 - The simple-mid character revision was also installed and smoke-captured on
   `emulator-5554` at
   `docs/art/visual-overhaul/evidence/emulator-character-simple-mid-gameplay.png`.
+- Character frame-count/facing fix was verified on `emulator-5554` with
+  evidence at
+  `docs/art/visual-overhaul/evidence/character-animation-frame-fix/gameplay.png`.
 - End-match evidence uses the refreshed UI golden because reaching match end deterministically from ADB is not part of the current gameplay harness.
 - The latest Pixel install succeeded when the device was available; the final texture pass used emulator evidence because the Pixel was disconnected.
 
 ## Residual Gaps
 
 - Physical-device human playtest and subjective concept-art signoff remain outside this automated closeout.
-- Gameplay screenshot automation is still device-driven rather than a deterministic Flame screenshot harness.
+- Swing/hitbox indicator readability still needs live visual review; avoid
+  spending more time on screenshot automation unless it directly unblocks a
+  gameplay or visual decision.

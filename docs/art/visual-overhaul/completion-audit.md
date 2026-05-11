@@ -26,7 +26,7 @@ automated evidence set.
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
 | Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart`, `court_component_test.dart`, generated court-surface texture overlay | Done for current pass |
 | Perspective should match concept art better and not feel top-down | `docs/art/visual-overhaul/perspective-fix-spec.md` documents the safe approach; `perspective-metrics.md` records the baseline and first linear tuning pass; before/after emulator screenshots are archived | Partial: improved with a guarded linear pass, but still needs human visual review |
-| Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection and asset presence | Done for current pass |
+| Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection, asset presence, actual sheet frame counts, and horizontal facing reflection | Done for current pass |
 | Dink/drive/lob/smash have distinct animation/VFX indicators | `VfxLayerComponent` maps shot types to generated `dinkSpark`, `driveArc`, `lobArc`, `smashBand`, and `missWhiff`; character components load generated shot-specific animation sheets; `vfx_layer_component_test.dart` and `player_component_test.dart` verify sprite/pose selection | Done for current pass |
 | Hitbox indicators match active swing zones | `RacketComponent` draws committed swing lane from `ShotSystem.committedSwingPath`; miss VFX spawns on expired swing command | Partial |
 | Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; `docs/art/phase-5.2-comparison.md` now states only serve charge has percentage/ring feedback | Done |
@@ -41,6 +41,10 @@ automated evidence set.
 
 Latest pushed commits:
 
+- `469f158` `fix character sprite frame rendering`
+- `f2300a1` `make gameplay screen full bleed`
+- `f00f739` `add android evidence capture helper`
+- `52258d8` `update visual overhaul closeout audit`
 - `1e44bd1` `simplify character sprite style`
 - `9d7736a` `add generated court texture overlay`
 - `27df0e5` `tune court perspective safely`
@@ -81,6 +85,11 @@ Verification performed during this thread:
 - The Android gameplay screen was changed to render full-bleed behind hidden
   system UI instead of exposing a black top band; evidence is archived at
   `docs/art/visual-overhaul/evidence/full-bleed-game-screen-pass/serve.png`.
+- Character rendering was corrected so one-frame generated shot sheets are no
+  longer sliced as multi-frame animations, preventing half-character rendering.
+  Player and opponent sprites now reflect horizontally based on movement
+  direction, and the emulator gameplay screenshot is archived at
+  `docs/art/visual-overhaul/evidence/character-animation-frame-fix/gameplay.png`.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
@@ -124,18 +133,16 @@ Subagent validation:
    The exact final filename exists, but it is copied from the refreshed UI
    golden because there is no deterministic ADB path to reach match end.
 
-4. Gameplay visual automation is weak.
-   UI goldens cover menus/screens, but Flame gameplay screenshots are still
-   device-captured. A repeatable ADB capture helper now covers menu, serve, and
-   pause, but rally/feedback/end-match gameplay states are not yet deterministic
-   in local tests. A direct offscreen Flame render harness was attempted after
-   the simple-mid character pass, but it hung before producing valid image
-   evidence and was not checked in.
+4. Swing/hitbox presentation still needs human visual review.
+   The gameplay system uses committed swing lanes for drive/lob/smash contact
+   and the runtime indicator is tied to that path, but the feel and readability
+   of the pixel swipe lane should be judged in live play rather than expanded
+   through more screenshot automation.
 
 ## Next Safe Work
 
-1. Add a deterministic Flame gameplay screenshot harness so final rally,
-   feedback, pause, and end-match states do not depend on ADB/manual timing.
+1. Review and tune swing/hitbox indicator readability during live play,
+   especially horizontal drive arcs and vertical lob/smash lanes.
 2. Capture Pixel gameplay again only when the physical Pixel is already
    connected.
 3. Use human visual review to decide whether the first linear perspective pass
