@@ -9,17 +9,23 @@ Last updated: 2026-05-11
 - Generated asset contact sheet: `docs/art/phase-5.2-generated-asset-contact-sheet.png`
 - Emulator menu smoke: `docs/art/phase-5.2-emulator-smoke.png`
 - Emulator gameplay smoke: `docs/art/phase-5.2-gameplay-emulator-smoke.png`
+- Final menu screenshot: `docs/art/phase-5.2-final-menu.png`
+- Final serve screenshot: `docs/art/phase-5.2-final-serve.png`
+- Final rally screenshot: `docs/art/phase-5.2-final-rally.png`
+- Final feedback screenshot: `docs/art/phase-5.2-final-feedback.png`
+- Final pause screenshot: `docs/art/phase-5.2-final-pause.png`
+- Final end-match screenshot: `docs/art/phase-5.2-final-endmatch.png`
 - Updated UI golden: `docs/art/phase-5g-endmatch.png`
 
 ## Concept Delta Results
 
 | Region | Result | Notes |
 | --- | --- | --- |
-| Projection/framing | Improved | Court projection uses stronger near/far width and z displacement while preserving logical coordinate tests. Emulator gameplay reads as a taller 3/4 court with bottom controls clear of the baseline. |
-| Court zoning | Resolved | Court now has a navy apron, lighter playing surface, tinted kitchen zone, stronger line contrast, scuffs, and subtle surface texture. |
+| Projection/framing | Improved | Court projection uses stronger near/far width and z displacement while preserving logical coordinate tests. Emulator gameplay reads as a taller 3/4 court with bottom controls clear of the baseline. The final pass uses the guarded linear tuning documented in `docs/art/visual-overhaul/perspective-metrics.md`. |
+| Court zoning | Resolved | Court now has a navy apron, lighter playing surface, tinted kitchen zone, stronger line contrast, generated low-opacity acrylic texture, scuffs, and subtle surface wear. |
 | Net and serving indicator | Resolved | Net has thicker posts, rail, mesh, and a stronger visual footprint. Serving state is integrated into the scoreboard flow instead of relying on a loose mid-scene marker. |
 | Backdrop signage | Improved | Rear environment now includes original `DINK RIVALS` and `PARK COURTS` sign assets plus lamp/planter depth props. |
-| Character identity | Improved | Player and opponent sprite sheets were regenerated with clearer outfit identity and run/swing frames; opponent now reads separately from the blue court. Roster portraits were regenerated, including a Rally Queen readability fix after Claude review. |
+| Character identity | Improved | Player and opponent sprite sheets were generated, then simplified into a mid-detail pixel style that sits between the old placeholders and the too-detailed first generated pass. Dink, drive, lob, and smash now have distinct generated sheets. |
 | Scoreboard/rally/last-shot readout | Resolved | HUD now shows YOU/RIVAL score panels, serving dot, rally count, and last-shot readout. |
 | Feedback banner | Resolved | Rally feedback renders in a top-center banner with primary/secondary text helpers and safe-area-aware placement. |
 | Ball trail/contact VFX | Resolved | VFX layer uses fixed-size trail buffering, refreshed contact/bounce sprites, and clears trails on contact, bounce, and point reset. |
@@ -27,19 +33,16 @@ Last updated: 2026-05-11
 | Park depth | Improved | Added a darker rear tree band treatment, lamp, planters, and signage without changing gameplay bounds. |
 | Menu/end-match residual composition | Improved | Generated portraits and updated goldens keep the existing menu/end-match flow intact; deeper screen redesign is deferred unless requested. |
 
-## Claude Visual Review
-
-Claude reviewed the generated contact sheet twice. The first pass found one blocker: `portrait_rally_queen.png` label occlusion. The portrait was regenerated with the label in a separate lower band, the contact sheet and goldens were refreshed, and Claude's final check reported no remaining blockers.
-
 ## Android/Emulator QA
 
 - `flutter build apk --debug`: passed.
 - `flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`: passed.
 - App launched on `emulator-5554`.
-- Menu screenshot captured after splash.
-- Quick Match screenshot captured in serve state; court, HUD, controls, generated characters, park props, and serve-charge feedback render correctly on Android emulator.
+- Menu, serve, rally/countdown, feedback, and pause screenshots were captured from the current emulator build.
+- End-match evidence uses the refreshed UI golden because reaching match end deterministically from ADB is not part of the current gameplay harness.
+- The latest Pixel install succeeded when the device was available; the final texture pass used emulator evidence because the Pixel was disconnected.
 
 ## Residual Gaps
 
 - Physical-device human playtest and subjective concept-art signoff remain outside this automated closeout.
-- No Phase 5.3 blocker was identified from automated tests, emulator smoke, or Claude review.
+- Gameplay screenshot automation is still device-driven rather than a deterministic Flame screenshot harness.

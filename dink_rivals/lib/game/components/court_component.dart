@@ -1,3 +1,6 @@
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +10,9 @@ import '../dink_rivals_game.dart';
 
 class CourtComponent extends Component {
   CourtComponent(this.game);
+
+  static const String surfaceTextureAsset =
+      'court/court_surface_texture_generated.png';
 
   final DinkRivalsGame game;
   final Paint _courtPaint = Paint()..color = VisualPalette.courtSurface;
@@ -26,12 +32,20 @@ class CourtComponent extends Component {
   final Paint _scuffDarkPaint = Paint()..color = VisualPalette.courtScuffDark;
   final Paint _lineWearPaint = Paint()..color = VisualPalette.courtLineWear;
   final Paint _edgeShadePaint = Paint()..color = VisualPalette.courtEdgeShade;
+  ui.Image? _surfaceTexture;
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    _surfaceTexture = await game.images.load(surfaceTextureAsset);
+  }
 
   @override
   void render(Canvas canvas) {
     _quad(canvas, Court.top, Court.bottom, _courtApronPaint);
     _drawInnerPlayingSurface(canvas);
     _drawServicePanels(canvas);
+    _drawGeneratedSurfaceTexture(canvas);
     _drawEdgeShade(canvas);
     _drawPixelTexture(canvas);
     _drawScuffs(canvas);
@@ -168,6 +182,49 @@ class CourtComponent extends Component {
     }
   }
 
+  void _drawGeneratedSurfaceTexture(Canvas canvas) {
+    final texture = _surfaceTexture;
+    if (texture == null) {
+      return;
+    }
+    const inset = 7.5;
+    final path = _quadPath(
+      Court.left + inset,
+      Court.top + inset,
+      Court.right - inset,
+      Court.bottom - inset,
+    );
+    final paint = Paint()
+      ..shader = ImageShader(
+        texture,
+        TileMode.repeated,
+        TileMode.repeated,
+        Float64List.fromList(const [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+        ]),
+      )
+      ..colorFilter = const ColorFilter.mode(
+        Color(0x28FFFFFF),
+        BlendMode.modulate,
+      );
+    canvas.drawPath(path, paint);
+  }
+
   void _drawEdgeShade(Canvas canvas) {
     const edge = 3.4;
     _quadRect(
@@ -208,17 +265,25 @@ class CourtComponent extends Component {
     double bottomY,
     Paint paint,
   ) {
+    canvas.drawPath(_quadPath(leftX, topY, rightX, bottomY), paint);
+  }
+
+  Path _quadPath(
+    double leftX,
+    double topY,
+    double rightX,
+    double bottomY,
+  ) {
     final topLeft = game.courtToWorld(Vector2(leftX, topY));
     final topRight = game.courtToWorld(Vector2(rightX, topY));
     final bottomRight = game.courtToWorld(Vector2(rightX, bottomY));
     final bottomLeft = game.courtToWorld(Vector2(leftX, bottomY));
-    final path = Path()
+    return Path()
       ..moveTo(topLeft.x, topLeft.y)
       ..lineTo(topRight.x, topRight.y)
       ..lineTo(bottomRight.x, bottomRight.y)
       ..lineTo(bottomLeft.x, bottomLeft.y)
       ..close();
-    canvas.drawPath(path, paint);
   }
 
   void _line(Canvas canvas, Vector2 a, Vector2 b) {

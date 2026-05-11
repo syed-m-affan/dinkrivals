@@ -20,18 +20,18 @@ final gameplay screenshot coverage is still missing.
 
 | Requirement | Evidence | Status |
 | --- | --- | --- |
-| Use generated bitmap art for new core visuals | `assets/images/environment/classic/park_background_overhaul.png`, `assets/images/vfx/*_generated.png`, `assets/images/sprites/player_*.png`, `assets/images/sprites/opponent_*.png`, `docs/art/visual-overhaul/contact-sheets/shot-vfx-generated-sheet.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-generated-atlas.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`, `docs/art/visual-overhaul/prompts/shot-vfx-generated-sheet.md`, `docs/art/visual-overhaul/prompts/character-sprite-generated-atlas.md` | Partial: environment, VFX, and character sheets comply; court surface remains procedural rather than a generated overlay package |
+| Use generated bitmap art for new core visuals | `assets/images/environment/classic/park_background_overhaul.png`, `assets/images/vfx/*_generated.png`, `assets/images/sprites/player_*.png`, `assets/images/sprites/opponent_*.png`, `assets/images/court/court_surface_texture_generated.png`, `docs/art/visual-overhaul/contact-sheets/shot-vfx-generated-sheet.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-generated-atlas.png`, `docs/art/visual-overhaul/contact-sheets/character-sprite-mid-detail-runtime-sheet.png`, `docs/art/visual-overhaul/contact-sheets/court-surface-texture-generated.png`, `docs/art/visual-overhaul/prompts/shot-vfx-generated-sheet.md`, `docs/art/visual-overhaul/prompts/character-sprite-generated-atlas.md`, `docs/art/visual-overhaul/prompts/court-surface-texture-generated.md` | Done for current pass |
 | Preserve gameplay logic and controls while improving visuals | Guard tests passed after reverting the failed projection experiment: `flutter test test/court_projection_test.dart test/court_layout_system_test.dart test/environment_layout_test.dart`; full suite passed after the generated character integration | Partial |
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
-| Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart` | Partial: readable, but court texture remains procedural rather than a generated overlay package |
+| Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart`, `court_component_test.dart`, generated court-surface texture overlay | Done for current pass |
 | Perspective should match concept art better and not feel top-down | `docs/art/visual-overhaul/perspective-fix-spec.md` documents the safe approach; `perspective-metrics.md` records the baseline and first linear tuning pass; before/after emulator screenshots are archived | Partial: improved with a guarded linear pass, but still needs human visual review |
 | Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection and asset presence | Done for current pass |
 | Dink/drive/lob/smash have distinct animation/VFX indicators | `VfxLayerComponent` maps shot types to generated `dinkSpark`, `driveArc`, `lobArc`, `smashBand`, and `missWhiff`; character components load generated shot-specific animation sheets; `vfx_layer_component_test.dart` and `player_component_test.dart` verify sprite/pose selection | Done for current pass |
 | Hitbox indicators match active swing zones | `RacketComponent` draws committed swing lane from `ShotSystem.committedSwingPath`; miss VFX spawns on expired swing command | Partial |
 | Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; `docs/art/phase-5.2-comparison.md` now states only serve charge has percentage/ring feedback | Done |
 | Menu and result screens share gameplay visual identity | `ParkBackdrop`, updated menu/roster/settings/end-match screens, refreshed `phase-5g-*.png` goldens | Done |
-| Asset manifests document generated sources and ownership | VFX manifest updated; generated VFX prompt/source documented; environment manifest exists | Partial |
-| Emulator and physical Pixel screenshots are captured and archived | Pixel menu screenshot exists at `docs/art/visual-overhaul/evidence/pixel-latest-menu.png`; generated character pass Pixel screenshot exists at `docs/art/visual-overhaul/evidence/pixel-character-pass-menu.png`; existing emulator smoke files are `docs/art/phase-5.2-emulator-smoke.png` and `docs/art/phase-5.2-gameplay-emulator-smoke.png` | Missing: required final files `phase-5.2-final-serve.png`, `phase-5.2-final-rally.png`, `phase-5.2-final-feedback.png`, `phase-5.2-final-pause.png`, `phase-5.2-final-endmatch.png`, and `phase-5.2-final-menu.png` are absent |
+| Asset manifests document generated sources and ownership | VFX, character, and court generated prompt/source docs exist; runtime asset README files link back to source contact sheets | Done for current pass |
+| Emulator and physical Pixel screenshots are captured and archived | Pixel menu screenshot exists at `docs/art/visual-overhaul/evidence/pixel-latest-menu.png`; generated character pass Pixel screenshots exist; final evidence files now exist for menu, serve, rally/countdown, feedback, pause, and end-match | Done for current pass; end-match uses UI golden rather than ADB gameplay capture |
 | Physical Android gameplay readability and performance checked | Current generated character build installed and launched on Pixel 10 Pro XL; no complete five-minute gameplay smoke is archived. Per user direction, physical Pixel evidence is no longer a blocker for continuing implementation unless the device is currently available. | Missing for final closeout only |
 | Closeout has residual gap backlog | `docs/art/visual-overhaul/perspective-fix-spec.md` covers perspective; this audit lists remaining gaps | Partial |
 
@@ -69,6 +69,17 @@ Verification performed during this thread:
 - First linear perspective tuning pass completed with after screenshots:
   `docs/art/visual-overhaul/evidence/perspective-after-menu.png` and
   `docs/art/visual-overhaul/evidence/perspective-after-serve.png`.
+- Generated court surface texture added as a low-opacity runtime overlay with
+  source prompt/contact sheet documented at
+  `docs/art/visual-overhaul/prompts/court-surface-texture-generated.md` and
+  `docs/art/visual-overhaul/contact-sheets/court-surface-texture-generated.png`.
+- Required final screenshot filenames were populated:
+  `docs/art/phase-5.2-final-menu.png`,
+  `docs/art/phase-5.2-final-serve.png`,
+  `docs/art/phase-5.2-final-rally.png`,
+  `docs/art/phase-5.2-final-feedback.png`,
+  `docs/art/phase-5.2-final-pause.png`, and
+  `docs/art/phase-5.2-final-endmatch.png`.
 
 Subagent validation:
 
@@ -89,9 +100,9 @@ Subagent validation:
    closeout complete until fresh serve/rally/feedback screenshots and a short
    smoke run are archived.
 
-3. Court surface is still not generated art.
-   The environment, VFX, and gameplay character sheets now have generated
-   provenance, but the court itself remains a procedural/runtime composition.
+3. End-match screenshot is not a device gameplay capture.
+   The exact final filename exists, but it is copied from the refreshed UI
+   golden because there is no deterministic ADB path to reach match end.
 
 4. Gameplay visual automation is weak.
    UI goldens cover menus/screens, but Flame gameplay screenshots are still
@@ -102,15 +113,11 @@ Subagent validation:
    the app, so those captures were discarded. The emulator can be used for
    continued work when available.
 
-6. Required final screenshot filenames are missing.
-   `phase-5.2-delta-inventory.md` names final serve, rally, feedback, pause,
-   end-match, and menu screenshots, but those exact artifacts are not present.
-
 ## Next Safe Work
 
-1. Capture clean emulator baselines named in `perspective-fix-spec.md`; capture
-   Pixel baselines only when the physical Pixel is already connected.
-2. Make a small linear projection adjustment only after baseline capture.
-3. Re-run environment overlap tests and install on Pixel only if available.
-4. Capture after screenshots and decide with human review whether the camera
-   change is acceptable.
+1. Add a deterministic Flame gameplay screenshot harness so final rally,
+   feedback, pause, and end-match states do not depend on ADB/manual timing.
+2. Capture Pixel gameplay again only when the physical Pixel is already
+   connected.
+3. Use human visual review to decide whether the first linear perspective pass
+   should be tuned further.
