@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
@@ -12,11 +13,14 @@ import '../../models/swing_intent.dart';
 import '../../systems/shot_system.dart';
 
 enum VfxSprite {
-  hitSpark('vfx/hit_spark.png'),
-  bounceRing('vfx/bounce_ring.png'),
-  trailSegment('vfx/trail_segment.png'),
-  smashFlash('vfx/smash_flash.png'),
-  pointBurst('vfx/point_burst.png');
+  dinkSpark('vfx/dink_spark_generated.png'),
+  driveArc('vfx/drive_arc_generated.png'),
+  lobArc('vfx/lob_arc_generated.png'),
+  smashBand('vfx/smash_band_generated.png'),
+  missWhiff('vfx/miss_whiff_generated.png'),
+  bounceRing('vfx/bounce_ring_generated.png'),
+  trailSegment('vfx/trail_segment_generated.png'),
+  pointBurst('vfx/point_burst_generated.png');
 
   const VfxSprite(this.assetPath);
 
@@ -85,13 +89,14 @@ class VfxLayerComponent extends Component {
       );
       final scale =
           effect.startScale + (effect.endScale - effect.startScale) * progress;
-      final width = effect.logicalSize.x * scale;
-      final height = effect.logicalSize.y * scale;
       final dst = Rect.fromCenter(
-        center: effect.position.toOffset(),
-        width: width,
-        height: height,
+        center: Offset.zero,
+        width: effect.logicalSize.x * scale,
+        height: effect.logicalSize.y * scale,
       );
+      canvas.save();
+      canvas.translate(effect.position.x, effect.position.y);
+      canvas.rotate(effect.angle);
       canvas.drawImageRect(
         image,
         Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
@@ -103,6 +108,7 @@ class VfxLayerComponent extends Component {
             BlendMode.modulate,
           ),
       );
+      canvas.restore();
     }
   }
 
@@ -110,6 +116,7 @@ class VfxLayerComponent extends Component {
     required Vector2 courtPosition,
     double z = 0,
     ShotType? shotType,
+    Vector2? shotVelocity,
   }) {
     if (!DebugFlags.useVfx) {
       return;
@@ -118,11 +125,13 @@ class VfxLayerComponent extends Component {
     final isSmash = shotType == ShotType.smash;
     final isLob = shotType == ShotType.lob;
     final isDrive = shotType == ShotType.drive || shotType == ShotType.serve;
-    final sprite = isSmash ? VfxSprite.smashFlash : VfxSprite.hitSpark;
     final depthScale = game.depthScaleForY(courtPosition.y);
+    final shotAngle = shotVelocity == null || shotVelocity.length2 < 0.01
+        ? 0.0
+        : math.atan2(shotVelocity.y, shotVelocity.x);
     _addEffect(
       _ActiveVfx(
-        sprite: sprite,
+        sprite: _contactSpriteFor(shotType),
         position: game.courtToWorld(courtPosition, z),
         logicalSize: Vector2(
           game.logicalToScreen(
@@ -136,19 +145,24 @@ class VfxLayerComponent extends Component {
                 depthScale,
           ),
           game.logicalToScreen(
-            (isLob
-                    ? 18
-                    : isDrive
-                        ? 20
+            (isDrive
+                    ? 16
+                    : isLob
+                        ? 18
                         : isSmash
                             ? 34
                             : 22) *
                 depthScale,
           ),
         ),
-        lifetime: 0.16,
+        lifetime: isLob ? 0.20 : 0.16,
         startScale: 0.85,
         endScale: isDrive ? 1.32 : 1.18,
+        angle: switch (shotType) {
+          ShotType.drive || ShotType.serve => shotAngle,
+          ShotType.lob => -math.pi / 2,
+          _ => 0,
+        },
       ),
     );
   }
@@ -167,11 +181,12 @@ class VfxLayerComponent extends Component {
       swipeDirection: swipeDirection,
     );
     final center = (path.start + path.end) * 0.5;
+    final delta = path.end - path.start;
     final depthScale = game.depthScaleForY(hitter.position.y);
     final isVertical = intent == SwingIntent.lob || intent == SwingIntent.smash;
     _addEffect(
       _ActiveVfx(
-        sprite: VfxSprite.trailSegment,
+        sprite: VfxSprite.missWhiff,
         position: game.courtToWorld(center, Tuning.racketContactZ),
         logicalSize: Vector2(
           game.logicalToScreen((isVertical ? 16 : 34) * depthScale),
@@ -181,6 +196,7 @@ class VfxLayerComponent extends Component {
         startScale: 0.92,
         endScale: 1.15,
         opacityScale: 0.58,
+        angle: delta.length2 < 0.01 ? 0 : math.atan2(delta.y, delta.x),
       ),
     );
   }
@@ -323,6 +339,15 @@ class VfxLayerComponent extends Component {
     }
     _effects.removeRange(0, _effects.length - _maxEffects);
   }
+
+  VfxSprite _contactSpriteFor(ShotType? shotType) {
+    return switch (shotType) {
+      ShotType.drive || ShotType.serve => VfxSprite.driveArc,
+      ShotType.lob => VfxSprite.lobArc,
+      ShotType.smash => VfxSprite.smashBand,
+      ShotType.dink || ShotType.block || null => VfxSprite.dinkSpark,
+    };
+  }
 }
 
 class _TrailSample {
@@ -339,6 +364,7 @@ class _ActiveVfx {
     required this.startScale,
     required this.endScale,
     this.opacityScale = 1,
+    this.angle = 0,
   });
 
   final VfxSprite sprite;
@@ -348,6 +374,7 @@ class _ActiveVfx {
   final double startScale;
   final double endScale;
   final double opacityScale;
+  final double angle;
   double age = 0;
 
   bool get isExpired => age >= lifetime;

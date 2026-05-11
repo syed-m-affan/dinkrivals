@@ -62,7 +62,40 @@ void main() {
     expect(vfx.activeEffectCountForTesting, 0);
   });
 
-  test('swing miss uses a short trail-style whiff effect', () {
+  test('shot contact effects use distinct generated sprites', () {
+    final game = DinkRivalsGame();
+    game.courtLayoutSystem.resize(Vector2(412, 915));
+    final vfx = VfxLayerComponent(game);
+
+    vfx.spawnContact(
+      courtPosition: Vector2(110, 240),
+      shotType: ShotType.dink,
+    );
+    vfx.spawnContact(
+      courtPosition: Vector2(110, 240),
+      shotType: ShotType.drive,
+      shotVelocity: Vector2(20, -80),
+    );
+    vfx.spawnContact(
+      courtPosition: Vector2(110, 240),
+      shotType: ShotType.lob,
+    );
+    vfx.spawnContact(
+      courtPosition: Vector2(110, 240),
+      shotType: ShotType.smash,
+    );
+
+    expect(
+        vfx.activeSpriteNamesForTesting,
+        containsAll([
+          'dinkSpark',
+          'driveArc',
+          'lobArc',
+          'smashBand',
+        ]));
+  });
+
+  test('swing miss uses a short generated whiff effect', () {
     final game = DinkRivalsGame();
     game.courtLayoutSystem.resize(Vector2(412, 915));
     final vfx = VfxLayerComponent(game);
@@ -77,7 +110,7 @@ void main() {
     );
 
     expect(vfx.activeEffectCountForTesting, 1);
-    expect(vfx.activeSpriteNamesForTesting, contains('trailSegment'));
+    expect(vfx.activeSpriteNamesForTesting, contains('missWhiff'));
 
     vfx.update(0.21);
     expect(vfx.activeEffectCountForTesting, 0);

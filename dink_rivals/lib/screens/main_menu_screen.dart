@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/audio_provider.dart';
-import '../app/app_config.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
 import '../game/config/visual_palette.dart';
@@ -31,24 +30,7 @@ class MainMenuScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const _Logo(),
-                    const SizedBox(height: 12),
-                    const Text(
-                      AppConfig.phaseLabel,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: VisualPalette.courtLineWhite,
-                        fontSize: 12,
-                        letterSpacing: 1.2,
-                        shadows: [
-                          Shadow(
-                            color: VisualPalette.uiBackground,
-                            offset: Offset(0, 2),
-                            blurRadius: 0,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 42),
+                    const SizedBox(height: 54),
                     ArcadePanel(
                       backgroundColor:
                           VisualPalette.uiSurface.withValues(alpha: 0.86),

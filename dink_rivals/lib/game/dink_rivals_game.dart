@@ -364,6 +364,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       courtPosition: Vector2(preHitBall.x, preHitBall.y),
       z: preHitBall.z,
       shotType: shotSystem.lastShotType,
+      shotVelocity: Vector2(ball.state.vx, ball.state.vy),
     );
     if (!matchState.pointInProgress) {
       matchState.startPoint();
@@ -480,6 +481,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
         courtPosition: Vector2(preAiBall.x, preAiBall.y),
         z: preAiBall.z,
         shotType: shotSystem.lastShotType,
+        shotVelocity: Vector2(ball.state.vx, ball.state.vy),
       );
       final volleyResult = matchRulesSystem.evaluateVolley(
         hitter: opponent.state,
