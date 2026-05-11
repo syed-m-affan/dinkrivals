@@ -11,10 +11,11 @@ subagent validation for human-review-style checks.
 Not complete.
 
 The implementation has materially advanced environment density, screen cohesion,
-shot VFX, HUD feedback, menu styling, generated character sheets, and Android
-build/install coverage. It does not yet satisfy the visual-overhaul definition
-of done because the perspective fix needs a separate safe pass and complete
-final gameplay screenshot coverage is still missing.
+shot VFX, HUD feedback, menu styling, generated character sheets, court surface
+polish, perspective tuning, and Android build/install coverage. It does not yet
+satisfy the visual-overhaul definition of done because subjective perspective
+signoff and physical-device gameplay evidence remain outside the current
+automated evidence set.
 
 ## Requirement Checklist
 
@@ -39,11 +40,12 @@ final gameplay screenshot coverage is still missing.
 
 Latest pushed commits:
 
-- `a339983` `implement visual overhaul pass`
-- `5dbfe5b` `unify screens with park backdrop`
-- `ba2222b` `add generated shot vfx assets`
-- `0e566f7` `document perspective fix plan`
-- `a6bad40` `clarify control visual closeout`
+- `1e44bd1` `simplify character sprite style`
+- `9d7736a` `add generated court texture overlay`
+- `27df0e5` `tune court perspective safely`
+- `d208cc4` `archive perspective baselines`
+- `2f0fb53` `simplify generated character sprites`
+- `aa8e8eb` `add generated character shot sheets`
 - `dca60ec` `differentiate shot swing poses`
 
 Verification performed during this thread:
@@ -68,6 +70,10 @@ Verification performed during this thread:
 - The simple-mid character build was installed on `emulator-5554` and captured
   at
   `docs/art/visual-overhaul/evidence/emulator-character-simple-mid-gameplay.png`.
+- After the simple-mid character revision, `flutter test`, `flutter analyze`,
+  and `flutter build apk --debug` passed. The debug APK was installed to
+  `emulator-5554`; `flutter devices` did not list the physical Pixel at that
+  time.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
@@ -113,12 +119,9 @@ Subagent validation:
 
 4. Gameplay visual automation is weak.
    UI goldens cover menus/screens, but Flame gameplay screenshots are still
-   primarily device-captured and not robustly automated.
-
-5. Emulator QA needs a fresh pass after reboot.
-   The prior emulator screenshot attempt showed a system ANR dialog rather than
-   the app, so those captures were discarded. The emulator can be used for
-   continued work when available.
+   primarily device-captured. A direct offscreen Flame render harness was
+   attempted after the simple-mid character pass, but it hung before producing
+   valid image evidence and was not checked in.
 
 ## Next Safe Work
 

@@ -39,6 +39,9 @@ Last updated: 2026-05-11
 - `flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`: passed.
 - App launched on `emulator-5554`.
 - Menu, serve, rally/countdown, feedback, and pause screenshots were captured from the current emulator build.
+- The simple-mid character revision was also installed and smoke-captured on
+  `emulator-5554` at
+  `docs/art/visual-overhaul/evidence/emulator-character-simple-mid-gameplay.png`.
 - End-match evidence uses the refreshed UI golden because reaching match end deterministically from ADB is not part of the current gameplay harness.
 - The latest Pixel install succeeded when the device was available; the final texture pass used emulator evidence because the Pixel was disconnected.
 
