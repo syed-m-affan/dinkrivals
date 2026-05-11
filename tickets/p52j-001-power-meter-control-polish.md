@@ -1,12 +1,12 @@
 ---
 id: P52J-001
 phase: 5.2I
-status: todo
+status: done
 priority: high
 parallel_group: H
 depends_on: [P52A-002]
 blocks: [P52L-001, P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -73,3 +73,8 @@ flutter test
 ## Planning Notes
 
 - Every reviewer called the power meter a scope-creep risk. Treat it as an instrument panel only.
+
+## Implementation Notes
+
+- Implemented: added visual-only swing power meter and move-control chevrons while preserving touch layout/hit regions; input power getter is tested.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

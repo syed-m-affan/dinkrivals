@@ -4,6 +4,10 @@ class VisualPalette {
   static const Color courtSurface = Color(0xFF2B76AA);
   static const Color courtSurfaceShade = Color(0xFF225E90);
   static const Color courtSurfaceHighlight = Color(0xFF3486BC);
+  static const Color courtApronNavy = Color(0xFF163B57);
+  static const Color courtApronNavyShade = Color(0xFF0E283E);
+  static const Color courtPlayingLight = Color(0xFF3894C9);
+  static const Color courtKitchenTint = Color(0x706BD8E9);
   static const Color courtPixelLight = Color(0x2248B8E8);
   static const Color courtPixelDark = Color(0x22214D74);
   static const Color courtScuffLight = Color(0x2FC7E8F6);
@@ -33,6 +37,11 @@ class VisualPalette {
   static const Color environmentFenceRail = Color(0xAA121E26);
   static const Color environmentFenceMesh = Color(0x77263B45);
   static const Color environmentFencePost = Color(0xCC182832);
+  static const Color environmentSignPanel = Color(0xDD102946);
+  static const Color environmentSignPanelAlt = Color(0xDD193628);
+  static const Color environmentSignBorder = Color(0xCCF4F7E8);
+  static const Color environmentSignText = Color(0xFFF4F7E8);
+  static const Color environmentTreeLineBack = Color(0xFF0C1B12);
   static const Color environmentFoliageShadow = Color(0x55203A24);
   static const Color environmentFoliageMid = Color(0x443F5E2E);
   static const Color environmentFoliageLight = Color(0x335E7B35);
@@ -86,7 +95,13 @@ class VisualPalette {
   static const Color scoreboardPlayer = Color(0xDD1C5FA8);
   static const Color scoreboardOpponent = Color(0xDDA83E3E);
   static const Color scoreboardBorder = Color(0xFFF4F7E8);
+  static const Color scoreboardShadow = Color(0x9908121A);
+  static const Color hudReadoutText = Color(0xFFF4F7E8);
+  static const Color hudLastShotLabel = Color(0xFFBEEB76);
   static const Color feedbackPanel = Color(0xBB10151B);
+  static const Color feedbackBanner = Color(0xF2F1E8C8);
+  static const Color feedbackBannerBorder = Color(0xFF533F28);
+  static const Color feedbackBannerText = Color(0xFF0D2030);
   static const Color overlayScrim = Color(0xCC000000);
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textInverse = Color(0xFF000000);
@@ -99,4 +114,8 @@ class VisualPalette {
   static const Color controlMoveKnob = Color(0xAA4AA3FF);
   static const Color controlSwingKnob = Color(0xAA4FD08B);
   static const Color servePowerEnd = Color(0xFFFF8C2E);
+  static const Color powerMeterFill = Color(0xFFFFCB47);
+  static const Color powerMeterHot = Color(0xFFFF6A3D);
+  static const Color powerMeterEmpty = Color(0xAA24313A);
+  static const Color powerMeterBolt = Color(0xFFFFFF7A);
 }

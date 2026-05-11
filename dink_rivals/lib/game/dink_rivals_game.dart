@@ -189,6 +189,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     shotSystem.lastShotType = null;
     feedbackText = '';
     feedbackSeconds = 0;
+    if (isLoaded) {
+      vfx.clearBallTrail();
+    }
     serveFlowSystem.clearPlayerServeCharge();
     serveFlowSystem.refreshOpponentServePhase(matchState);
   }

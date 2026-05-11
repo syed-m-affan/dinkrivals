@@ -1,12 +1,12 @@
 ---
 id: P52A-002
 phase: 5.2A
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P52A-001]
 blocks: [P52B-001, P52C-001, P52D-001, P52E-001, P52F-001, P52G-001, P52H-001, P52I-001, P52J-001, P52K-001, P52L-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -81,3 +81,8 @@ flutter test
 ## Planning Notes
 
 - Claude specifically identified token drift and AI asset inconsistency as high risks. Codex subagents agreed this foundation ticket should block parallel implementation.
+
+## Implementation Notes
+
+- Implemented: extended `VisualPalette`, updated `docs/art/render-layer-map.md`, and added `docs/art/phase-5.2-art-direction.md` with generated-asset constraints.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

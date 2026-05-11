@@ -34,6 +34,8 @@ Phase 5.1 implementation (2026-05-11): P51A through P51H are implemented. The pa
 
 Phase 5.2 planning (2026-05-11): Phase 5.2 Concept Composition and Identity Pass is queued to move the current Phase 5.1 visuals materially closer to `docs/art/concept-screenshot.png` and `docs/art/concept-sheet.png`. The work is split into baseline/delta inventory (P52A-001), visual tokens/layering/AI art rules (P52A-002), projection reinforcement (P52B), court zoning (P52C), net rebuild and serving-indicator relocation (P52D), backdrop signage (P52E), character identity sprites/portraits (P52F), scoreboard/rally/last-shot readout (P52G), top-center feedback banner (P52H), ball trail/contact juice (P52I), visual-only power meter/control polish (P52J), park depth pass two (P52K), final HUD safe-area polish (P52L), and Android visual QA/closeout (P52M). Claude and two Codex subagents reviewed the plan; their conditional signoff is recorded in `docs/art/phase-5.2-planning-review.md`. Phase 5.2 remains visual-only and must preserve scoring/rules/physics/AI/ad behavior and the locked movement + swing-stick control contract.
 
+Phase 5.2 implementation (2026-05-11): P52A-001 through P52M-001 are complete for non-human scope. The pass added delta/art-direction docs, extended `VisualPalette`/layering rules, reinforced the 3/4 court projection, rebuilt court zoning and net treatment, added rear signage/lamp/planter park depth, regenerated player/opponent sprites and roster portraits, added scoreboard rally/last-shot readouts, top-center feedback banner, fixed-buffer ball trail/contact/bounce VFX, and a visual-only swing power meter. Claude reviewed the generated contact sheet, requested a Rally Queen portrait readability fix, then reported no remaining blockers. Verification passed with `flutter analyze`, `flutter test` (145 tests), `flutter build apk --debug`, Android emulator install/launch on `emulator-5554`, and menu/gameplay smoke screenshots. Human physical-device playtest and subjective concept signoff are intentionally outside this automated closeout.
+
 ## Dashboard
 
 | ID | Phase | Status | Priority | Parallel | Depends on | Summary |
@@ -114,20 +116,20 @@ Phase 5.2 planning (2026-05-11): Phase 5.2 Concept Composition and Identity Pass
 | P5H-005 | 5H | todo | medium | D | [P5D-003] | Strengthen Veteran portrait accent readability. |
 | P5H-006 | 5H | todo | medium | E | [P5B-002, P5C-003] | Add a cheap far-background band for more environment depth. |
 | P5H-007 | 5H | todo | low | F | [P5D-002] | Add subtle idle/ready character micro-animation without gameplay changes. |
-| P52A-001 | 5.2A | todo | high | A | [P51I-001] | Capture Phase 5.2 baseline screenshots and create concept delta inventory. |
-| P52A-002 | 5.2A | todo | high | A | [P52A-001] | Extend visual tokens, render-layer rules, safe-area rules, and AI art prompts/export checks. |
-| P52B-001 | 5.2B | todo | high | B | [P52A-002] | Reinforce 3/4 projection and framing with screenshot and coordinate-stability gates. |
-| P52C-001 | 5.2C | todo | high | C | [P52B-001] | Add concept court zoning, apron, kitchen tint, and line contrast. |
-| P52D-001 | 5.2D | todo | high | C | [P52B-001] | Rebuild net and relocate the floating serving indicator into the scoreboard flow. |
-| P52E-001 | 5.2D | todo | high | D | [P52A-002] | Add rear fence signage band with original Dink Rivals and park sign assets. |
-| P52F-001 | 5.2E | todo | high | E | [P52A-002, P51C-001] | Upgrade character identity sprites and matching roster portraits while keeping `RacketComponent` separate. |
-| P52G-001 | 5.2F | todo | high | F | [P52A-002, P52D-001] | Restyle scoreboard with YOU/RIVAL labels, serving dot, rally counter, and last-shot readout. |
-| P52H-001 | 5.2G | todo | high | F | [P52G-001] | Replace floating rally number with a top-center shot/fault/point feedback banner. |
-| P52I-001 | 5.2H | todo | high | G | [P52A-002] | Add fixed-buffer ball trail and refreshed contact/bounce VFX. |
-| P52J-001 | 5.2I | todo | high | H | [P52A-002] | Add visual-only swing power meter and concept-style control polish without input changes. |
-| P52K-001 | 5.2J | todo | medium | D | [P52E-001] | Add lamp/planter/bench/tree-band park depth pass two. |
-| P52L-001 | 5.2I | todo | medium | H | [P52J-001, P52G-001, P52H-001] | Final HUD/control safe-area and proportion polish. |
-| P52M-001 | 5.2K | todo | high | final | [P52C-001, P52D-001, P52E-001, P52F-001, P52G-001, P52H-001, P52I-001, P52J-001, P52K-001, P52L-001] | Phase 5.2 Android visual QA, comparison doc, and Phase 5.3 residual backlog. |
+| P52A-001 | 5.2A | done | high | A | [P51I-001] | Capture Phase 5.2 baseline screenshots and create concept delta inventory. |
+| P52A-002 | 5.2A | done | high | A | [P52A-001] | Extend visual tokens, render-layer rules, safe-area rules, and AI art prompts/export checks. |
+| P52B-001 | 5.2B | done | high | B | [P52A-002] | Reinforce 3/4 projection and framing with screenshot and coordinate-stability gates. |
+| P52C-001 | 5.2C | done | high | C | [P52B-001] | Add concept court zoning, apron, kitchen tint, and line contrast. |
+| P52D-001 | 5.2D | done | high | C | [P52B-001] | Rebuild net and relocate the floating serving indicator into the scoreboard flow. |
+| P52E-001 | 5.2D | done | high | D | [P52A-002] | Add rear fence signage band with original Dink Rivals and park sign assets. |
+| P52F-001 | 5.2E | done | high | E | [P52A-002, P51C-001] | Upgrade character identity sprites and matching roster portraits while keeping `RacketComponent` separate. |
+| P52G-001 | 5.2F | done | high | F | [P52A-002, P52D-001] | Restyle scoreboard with YOU/RIVAL labels, serving dot, rally counter, and last-shot readout. |
+| P52H-001 | 5.2G | done | high | F | [P52G-001] | Replace floating rally number with a top-center shot/fault/point feedback banner. |
+| P52I-001 | 5.2H | done | high | G | [P52A-002] | Add fixed-buffer ball trail and refreshed contact/bounce VFX. |
+| P52J-001 | 5.2I | done | high | H | [P52A-002] | Add visual-only swing power meter and concept-style control polish without input changes. |
+| P52K-001 | 5.2J | done | medium | D | [P52E-001] | Add lamp/planter/bench/tree-band park depth pass two. |
+| P52L-001 | 5.2I | done | medium | H | [P52J-001, P52G-001, P52H-001] | Final HUD/control safe-area and proportion polish. |
+| P52M-001 | 5.2K | done | high | final | [P52C-001, P52D-001, P52E-001, P52F-001, P52G-001, P52H-001, P52I-001, P52J-001, P52K-001, P52L-001] | Phase 5.2 Android visual QA, comparison doc, and Phase 5.3 residual backlog. |
 
 ## Open Coordination Notes
 

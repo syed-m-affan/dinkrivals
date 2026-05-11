@@ -1,12 +1,12 @@
 ---
 id: P52H-001
 phase: 5.2G
-status: todo
+status: done
 priority: high
 parallel_group: F
 depends_on: [P52G-001]
 blocks: [P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -70,3 +70,8 @@ flutter test
 ## Planning Notes
 
 - Claude explicitly requested a safe-area rule for scoreboard + feedback + pause. P52G must land first so this ticket can position against the final top HUD.
+
+## Implementation Notes
+
+- Implemented: rally feedback now renders in a top-center banner with tested formatting and safe-area-aware placement.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

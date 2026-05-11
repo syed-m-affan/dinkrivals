@@ -41,7 +41,7 @@ class CourtLayoutSystem {
     final availableHeight = math.max(1.0, size.y - topReserve - bottomReserve);
 
     _projectedMin = Vector2(minX, minY);
-    _courtScale = (size.x * 0.90 / projectedWidth)
+    _courtScale = (size.x * 0.94 / projectedWidth)
         .clamp(0.1, availableHeight / projectedHeight)
         .toDouble();
     _courtOffset = Vector2(

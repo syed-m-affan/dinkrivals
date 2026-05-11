@@ -70,4 +70,33 @@ void main() {
 
     expect(vfx.activeEffectCountForTesting, 18);
   });
+
+  test('ball trail samples are capped and clearable', () {
+    final game = DinkRivalsGame();
+    game.courtLayoutSystem.resize(Vector2(412, 915));
+    final vfx = VfxLayerComponent(game);
+
+    for (var i = 0; i < 20; i += 1) {
+      vfx.addTrailSampleForTesting(Vector2(i.toDouble(), 10));
+    }
+
+    expect(vfx.activeTrailSampleCountForTesting, 12);
+
+    vfx.clearBallTrail();
+    expect(vfx.activeTrailSampleCountForTesting, 0);
+  });
+
+  test('contact and bounce clear the ball trail', () {
+    final game = DinkRivalsGame();
+    game.courtLayoutSystem.resize(Vector2(412, 915));
+    final vfx = VfxLayerComponent(game);
+
+    vfx.addTrailSampleForTesting(Vector2(12, 10));
+    vfx.spawnContact(courtPosition: Vector2(110, 240));
+    expect(vfx.activeTrailSampleCountForTesting, 0);
+
+    vfx.addTrailSampleForTesting(Vector2(12, 10));
+    vfx.spawnBounce(courtPosition: Vector2(110, 260));
+    expect(vfx.activeTrailSampleCountForTesting, 0);
+  });
 }

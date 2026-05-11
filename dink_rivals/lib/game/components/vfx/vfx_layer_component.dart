@@ -25,13 +25,20 @@ class VfxLayerComponent extends Component {
   }
 
   static const int _maxEffects = 18;
-  static const double _trailSpawnInterval = 0.055;
-  static const double _trailMinBallHeight = 24;
+  static const int _maxTrailSamples = 12;
+  static const double _trailSampleInterval = 0.045;
+  static const double _trailMinBallHeight = 10;
 
   final DinkRivalsGame game;
   final Map<VfxSprite, ui.Image> _sprites = {};
   final List<_ActiveVfx> _effects = [];
+  final List<_TrailSample> _trailSamples = List<_TrailSample>.generate(
+    _maxTrailSamples,
+    (_) => _TrailSample(),
+  );
   double _trailCooldown = 0;
+  int _trailWriteIndex = 0;
+  int _trailCount = 0;
 
   @override
   Future<void> onLoad() async {
@@ -45,6 +52,7 @@ class VfxLayerComponent extends Component {
   void update(double dt) {
     if (!DebugFlags.useVfx) {
       _effects.clear();
+      clearBallTrail();
       return;
     }
     for (final effect in _effects) {
@@ -59,6 +67,7 @@ class VfxLayerComponent extends Component {
     if (!DebugFlags.useVfx) {
       return;
     }
+    _renderBallTrail(canvas);
     for (final effect in _effects) {
       final image = _sprites[effect.sprite];
       if (image == null) {
@@ -101,6 +110,7 @@ class VfxLayerComponent extends Component {
     if (!DebugFlags.useVfx) {
       return;
     }
+    clearBallTrail();
     final isSmash = shotType == ShotType.smash;
     final sprite = isSmash ? VfxSprite.smashFlash : VfxSprite.hitSpark;
     final depthScale = game.depthScaleForY(courtPosition.y);
@@ -122,6 +132,7 @@ class VfxLayerComponent extends Component {
     if (!DebugFlags.useVfx) {
       return;
     }
+    clearBallTrail();
     final depthScale = game.depthScaleForY(courtPosition.y);
     _addEffect(
       _ActiveVfx(
@@ -162,8 +173,25 @@ class VfxLayerComponent extends Component {
   int get activeEffectCountForTesting => _effects.length;
 
   @visibleForTesting
+  int get activeTrailSampleCountForTesting => _trailCount;
+
+  @visibleForTesting
+  void addTrailSampleForTesting(Vector2 position) {
+    _addTrailSample(
+      position: position,
+      logicalSize: Vector2(20, 9),
+    );
+  }
+
+  @visibleForTesting
   Iterable<String> get activeSpriteNamesForTesting =>
       _effects.map((effect) => effect.sprite.name);
+
+  void clearBallTrail() {
+    _trailCount = 0;
+    _trailWriteIndex = 0;
+    _trailCooldown = 0;
+  }
 
   void _updateBallTrail(double dt) {
     if (!game.isLoaded || game.paused) {
@@ -171,25 +199,64 @@ class VfxLayerComponent extends Component {
     }
     _trailCooldown = (_trailCooldown - dt).clamp(0, 1).toDouble();
     final ball = game.ball.state;
-    if (!ball.isInPlay || ball.z < _trailMinBallHeight || _trailCooldown > 0) {
+    if (!ball.isInPlay || ball.z < _trailMinBallHeight) {
+      clearBallTrail();
+      return;
+    }
+    if (_trailCooldown > 0) {
       return;
     }
     final depthScale = game.depthScaleForY(ball.y);
-    _addEffect(
-      _ActiveVfx(
-        sprite: VfxSprite.trailSegment,
-        position: game.courtToWorld(Vector2(ball.x, ball.y), ball.z),
-        logicalSize: Vector2(
-          game.logicalToScreen(16 * depthScale),
-          game.logicalToScreen(7 * depthScale),
-        ),
-        lifetime: 0.22,
-        startScale: 0.86,
-        endScale: 0.52,
-        opacityScale: 0.48,
+    _addTrailSample(
+      position: game.courtToWorld(Vector2(ball.x, ball.y), ball.z),
+      logicalSize: Vector2(
+        game.logicalToScreen(20 * depthScale),
+        game.logicalToScreen(9 * depthScale),
       ),
     );
-    _trailCooldown = _trailSpawnInterval;
+    _trailCooldown = _trailSampleInterval;
+  }
+
+  void _addTrailSample({
+    required Vector2 position,
+    required Vector2 logicalSize,
+  }) {
+    _trailSamples[_trailWriteIndex]
+      ..position.setFrom(position)
+      ..logicalSize.setFrom(logicalSize);
+    _trailWriteIndex = (_trailWriteIndex + 1) % _maxTrailSamples;
+    _trailCount = (_trailCount + 1).clamp(0, _maxTrailSamples);
+  }
+
+  void _renderBallTrail(Canvas canvas) {
+    final image = _sprites[VfxSprite.trailSegment];
+    if (image == null || _trailCount == 0) {
+      return;
+    }
+    for (var i = 0; i < _trailCount; i += 1) {
+      final sampleIndex =
+          (_trailWriteIndex - 1 - i + _maxTrailSamples) % _maxTrailSamples;
+      final sample = _trailSamples[sampleIndex];
+      final fade = (1 - i / _maxTrailSamples).clamp(0.0, 1.0).toDouble();
+      final opacity = 0.58 * fade * fade;
+      final scale = 1.0 - i * 0.035;
+      final dst = Rect.fromCenter(
+        center: sample.position.toOffset(),
+        width: sample.logicalSize.x * scale,
+        height: sample.logicalSize.y * scale,
+      );
+      canvas.drawImageRect(
+        image,
+        Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+        dst,
+        Paint()
+          ..filterQuality = FilterQuality.none
+          ..colorFilter = ColorFilter.mode(
+            Color.fromRGBO(255, 255, 255, opacity),
+            BlendMode.modulate,
+          ),
+      );
+    }
   }
 
   void _addEffect(_ActiveVfx effect) {
@@ -199,6 +266,11 @@ class VfxLayerComponent extends Component {
     }
     _effects.removeRange(0, _effects.length - _maxEffects);
   }
+}
+
+class _TrailSample {
+  final Vector2 position = Vector2.zero();
+  final Vector2 logicalSize = Vector2.zero();
 }
 
 class _ActiveVfx {

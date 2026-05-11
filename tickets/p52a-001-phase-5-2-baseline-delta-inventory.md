@@ -1,12 +1,12 @@
 ---
 id: P52A-001
 phase: 5.2A
-status: todo
+status: done
 priority: high
 parallel_group: A
 depends_on: [P51I-001]
 blocks: [P52A-002, P52B-001, P52C-001, P52D-001, P52E-001, P52F-001, P52G-001, P52H-001, P52I-001, P52J-001, P52K-001, P52L-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -77,3 +77,8 @@ Do not edit gameplay, rendering, assets, or UI code in this ticket.
 ## Planning Notes
 
 - Claude and two Codex subagents agreed this baseline ticket must exist before implementation work. Subagent signoff is conditional on this ticket producing concrete deltas and handling open review gates.
+
+## Implementation Notes
+
+- Implemented: added `docs/art/phase-5.2-delta-inventory.md`, handled prior review gates, and mapped concept deltas/P5H overlap for implementation.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

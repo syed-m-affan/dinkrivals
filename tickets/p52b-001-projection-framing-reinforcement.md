@@ -1,12 +1,12 @@
 ---
 id: P52B-001
 phase: 5.2B
-status: todo
+status: done
 priority: high
 parallel_group: B
 depends_on: [P52A-002]
 blocks: [P52C-001, P52D-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -75,3 +75,8 @@ If an Android phone is available, install and capture a serve/rally screenshot b
 ## Planning Notes
 
 - Both subagents called this the highest-risk Phase 5.2 ticket. Keep it serial and land it before court/net placement tickets depend on final projection.
+
+## Implementation Notes
+
+- Implemented: retuned `CourtProjection` and `CourtLayoutSystem`; existing projection/layout tests pass with the reinforced 3/4 framing.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

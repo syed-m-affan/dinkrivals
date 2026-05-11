@@ -42,7 +42,8 @@ void main() {
     expect(ids, contains('tree'));
     expect(ids, contains('bench'));
     expect(ids, contains('lamp'));
-    expect(ids, contains('banner'));
+    expect(ids, contains('sign'));
+    expect(ids, contains('planter'));
     expect(ids, contains('shrub'));
     expect(ids, contains('bag'));
   });
@@ -138,7 +139,13 @@ Size _imageAspectFor(EnvironmentPropPlacement prop) {
     return const Size(96, 192);
   }
   if (prop.assetPath.endsWith('banner_sign.png')) {
-    return const Size(192, 128);
+    return const Size(192, 96);
+  }
+  if (prop.assetPath.endsWith('park_courts_sign.png')) {
+    return const Size(192, 96);
+  }
+  if (prop.assetPath.endsWith('planter_cluster.png')) {
+    return const Size(128, 128);
   }
   if (prop.assetPath.endsWith('shrub_cluster.png')) {
     return const Size(192, 128);

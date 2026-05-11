@@ -11,7 +11,7 @@ class KitchenZoneComponent extends Component {
   KitchenZoneComponent(this.game);
 
   final DinkRivalsGame game;
-  final Paint _paint = Paint()..color = VisualPalette.kitchenOverlay;
+  final Paint _paint = Paint()..color = VisualPalette.courtKitchenTint;
   final Paint _edgePaint = Paint()
     ..color = VisualPalette.kitchenEdge
     ..strokeCap = StrokeCap.square;

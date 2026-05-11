@@ -1,12 +1,12 @@
 ---
 id: P52I-001
 phase: 5.2H
-status: todo
+status: done
 priority: high
 parallel_group: G
 depends_on: [P52A-002]
 blocks: [P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -77,3 +77,8 @@ If Android is available, verify a short rally for frame drops or input lag.
 ## Planning Notes
 
 - Claude flagged naive per-frame trail allocation as a performance risk. This ticket should be parallel-safe after P52A-002.
+
+## Implementation Notes
+
+- Implemented: added capped fixed-buffer ball trail, refreshed VFX assets, and trail-clear behavior on contact/bounce/reset with tests.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

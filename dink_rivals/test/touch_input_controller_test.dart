@@ -142,4 +142,18 @@ void main() {
         ),
         isTrue);
   });
+
+  test('visual swing power is read-only and clamps input values', () {
+    final input = InputSystem();
+
+    input.racketAngularVelocity = 100;
+    expect(input.visualSwingPower, 1);
+
+    input.submitSwingCommand(
+      intent: SwingIntent.drive,
+      aimDirection: Vector2(0, -1),
+      power: 0.48,
+    );
+    expect(input.visualSwingPower, closeTo(0.48, 0.001));
+  });
 }

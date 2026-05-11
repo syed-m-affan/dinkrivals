@@ -1,12 +1,12 @@
 ---
 id: P52K-001
 phase: 5.2J
-status: todo
+status: done
 priority: medium
 parallel_group: D
 depends_on: [P52E-001]
 blocks: [P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -72,3 +72,8 @@ flutter test
 ## Planning Notes
 
 - This ticket absorbs P5H-006 and should run serially with P52E because both own environment layout.
+
+## Implementation Notes
+
+- Implemented: added lamp/planter/sign/tree-band park depth pass two through the environment layout and asset tests.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

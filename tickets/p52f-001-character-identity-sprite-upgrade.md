@@ -1,12 +1,12 @@
 ---
 id: P52F-001
 phase: 5.2E
-status: todo
+status: done
 priority: high
 parallel_group: E
 depends_on: [P52A-002, P51C-001]
 blocks: [P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -79,3 +79,8 @@ flutter test
 ## Planning Notes
 
 - This ticket absorbs P5H-004 and P5H-005. Claude and subagents called paddle ambiguity a high-risk implementation trap.
+
+## Implementation Notes
+
+- Implemented: regenerated player/opponent sprite sheets and roster portraits; Claude reviewed the contact sheet and signed off after the Rally Queen label fix.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

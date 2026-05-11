@@ -47,6 +47,10 @@ class TouchControlsComponent extends Component {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 7
     ..strokeCap = StrokeCap.round;
+  final Paint _meterEmptyPaint = Paint()..color = VisualPalette.powerMeterEmpty;
+  final Paint _meterFillPaint = Paint()..color = VisualPalette.powerMeterFill;
+  final Paint _meterHotPaint = Paint()..color = VisualPalette.powerMeterHot;
+  final Paint _meterBoltPaint = Paint()..color = VisualPalette.powerMeterBolt;
 
   final TextPainter _swingText = TextPainter(
     textAlign: TextAlign.center,
@@ -122,6 +126,41 @@ class TouchControlsComponent extends Component {
       waitingToServe ? _disabledMoveKnobPaint : _enabledMoveKnobPaint,
     );
     canvas.drawCircle(knobCenter.toOffset(), 19, _strokePaint);
+    _drawMoveChevrons(canvas, layout, waitingToServe);
+  }
+
+  void _drawMoveChevrons(
+    Canvas canvas,
+    TouchControlLayout layout,
+    bool waitingToServe,
+  ) {
+    final paint = Paint()
+      ..color = waitingToServe
+          ? VisualPalette.controlStroke.withValues(alpha: 0.36)
+          : VisualPalette.controlStroke
+      ..style = PaintingStyle.fill;
+    final center = layout.moveCenter;
+    final radius = layout.moveVisualRadius * 0.72;
+    final chevrons = <({double angle, Offset offset})>[
+      (angle: -math.pi / 2, offset: Offset(0, -radius)),
+      (angle: math.pi / 2, offset: Offset(0, radius)),
+      (angle: math.pi, offset: Offset(-radius, 0)),
+      (angle: 0, offset: Offset(radius, 0)),
+    ];
+    for (final chevron in chevrons) {
+      canvas.save();
+      canvas.translate(
+          center.x + chevron.offset.dx, center.y + chevron.offset.dy);
+      canvas.rotate(chevron.angle);
+      final path = Path()
+        ..moveTo(6, 0)
+        ..lineTo(-5, -6)
+        ..lineTo(-3, 0)
+        ..lineTo(-5, 6)
+        ..close();
+      canvas.drawPath(path, paint);
+      canvas.restore();
+    }
   }
 
   void _renderSwingControl(Canvas canvas, TouchControlLayout layout) {
@@ -177,6 +216,7 @@ class TouchControlsComponent extends Component {
     final knobRadius = pressed ? 21.0 + pulse * 1.5 : 18.0;
     canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _swingPaint);
     canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _strokePaint);
+    _drawSwingPowerMeter(canvas, layout, pressed);
 
     _swingText.text = TextSpan(
       text: game.controlMode == GameplayControlMode.assistedAimGesture
@@ -184,7 +224,7 @@ class TouchControlsComponent extends Component {
           : 'SWING',
       style: const TextStyle(
         color: VisualPalette.textPrimary,
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: FontWeight.bold,
       ),
     );
@@ -193,9 +233,58 @@ class TouchControlsComponent extends Component {
       canvas,
       Offset(
         layout.swingCenter.x - _swingText.width / 2,
-        layout.swingCenter.y - baseRadius - 20,
+        layout.swingCenter.y - baseRadius - 24,
       ),
     );
+  }
+
+  void _drawSwingPowerMeter(
+    Canvas canvas,
+    TouchControlLayout layout,
+    bool pressed,
+  ) {
+    final power = game.isServeCharging
+        ? game.serveChargeFraction
+        : game.inputSystem.visualSwingPower;
+    final meterWidth = 54.0;
+    final meterHeight = 10.0;
+    final left = layout.swingCenter.x - meterWidth / 2;
+    final top = layout.swingCenter.y - layout.swingVisualRadius - 42;
+    final rect = Rect.fromLTWH(left, top, meterWidth, meterHeight);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(2)),
+      _meterEmptyPaint,
+    );
+    const segments = 5;
+    final fillSegments = (power * segments).ceil().clamp(0, segments);
+    for (var i = 0; i < fillSegments; i += 1) {
+      final segmentRect = Rect.fromLTWH(
+        left + 4 + i * 9.5,
+        top + 2,
+        7.0,
+        meterHeight - 4,
+      );
+      canvas.drawRect(
+        segmentRect,
+        power > 0.76 ? _meterHotPaint : _meterFillPaint,
+      );
+    }
+    final bolt = Path()
+      ..moveTo(rect.right + 7, rect.top - 2)
+      ..lineTo(rect.right + 1, rect.center.dy + 1)
+      ..lineTo(rect.right + 6, rect.center.dy + 1)
+      ..lineTo(rect.right + 1, rect.bottom + 5)
+      ..lineTo(rect.right + 11, rect.center.dy - 2)
+      ..lineTo(rect.right + 6, rect.center.dy - 2)
+      ..close();
+    canvas.drawPath(bolt, _meterBoltPaint);
+    if (pressed && power <= 0.02) {
+      canvas.drawCircle(
+        Offset(rect.right + 6, rect.center.dy),
+        2.2,
+        _meterFillPaint,
+      );
+    }
   }
 
   void _renderServeButton(Canvas canvas, TouchControlLayout layout) {

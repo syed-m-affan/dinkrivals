@@ -1,12 +1,12 @@
 ---
 id: P52L-001
 phase: 5.2I
-status: todo
+status: done
 priority: medium
 parallel_group: H
 depends_on: [P52J-001, P52G-001, P52H-001]
 blocks: [P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -71,3 +71,8 @@ flutter test
 ## Planning Notes
 
 - This ticket serializes final control/HUD polish after the higher-risk HUD tickets land.
+
+## Implementation Notes
+
+- Implemented: adjusted scoreboard, feedback banner, power meter, and controls together; emulator smoke confirms top/bottom safe-area readability.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

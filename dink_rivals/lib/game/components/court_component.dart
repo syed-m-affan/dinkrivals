@@ -10,10 +10,13 @@ class CourtComponent extends Component {
 
   final DinkRivalsGame game;
   final Paint _courtPaint = Paint()..color = VisualPalette.courtSurface;
+  final Paint _courtLightPaint = Paint()
+    ..color = VisualPalette.courtPlayingLight;
+  final Paint _courtApronPaint = Paint()..color = VisualPalette.courtApronNavy;
+  final Paint _courtApronShadePaint = Paint()
+    ..color = VisualPalette.courtApronNavyShade;
   final Paint _courtShadePaint = Paint()
     ..color = VisualPalette.courtSurfaceShade;
-  final Paint _courtHighlightPaint = Paint()
-    ..color = VisualPalette.courtSurfaceHighlight;
   final Paint _linePaint = Paint()
     ..color = VisualPalette.courtLineWhite
     ..strokeCap = StrokeCap.square;
@@ -26,7 +29,8 @@ class CourtComponent extends Component {
 
   @override
   void render(Canvas canvas) {
-    _quad(canvas, Court.top, Court.bottom, _courtPaint);
+    _quad(canvas, Court.top, Court.bottom, _courtApronPaint);
+    _drawInnerPlayingSurface(canvas);
     _drawServicePanels(canvas);
     _drawEdgeShade(canvas);
     _drawPixelTexture(canvas);
@@ -63,45 +67,66 @@ class CourtComponent extends Component {
   }
 
   void _drawServicePanels(Canvas canvas) {
+    const inset = 8.0;
     _quadRect(
       canvas,
-      Court.left,
-      Court.top,
+      Court.left + inset,
+      Court.top + inset,
       Court.width / 2,
       Court.opponentKitchenTopY,
-      _courtHighlightPaint,
+      _courtLightPaint,
     );
     _quadRect(
       canvas,
       Court.width / 2,
-      Court.top,
-      Court.right,
+      Court.top + inset,
+      Court.right - inset,
       Court.opponentKitchenTopY,
       _courtPaint,
     );
     _quadRect(
       canvas,
-      Court.left,
+      Court.left + inset,
       Court.playerKitchenBottomY,
       Court.width / 2,
-      Court.bottom,
+      Court.bottom - inset,
       _courtPaint,
     );
     _quadRect(
       canvas,
       Court.width / 2,
       Court.playerKitchenBottomY,
-      Court.right,
-      Court.bottom,
-      _courtHighlightPaint,
+      Court.right - inset,
+      Court.bottom - inset,
+      _courtLightPaint,
     );
     _quadRect(
       canvas,
-      Court.left,
+      Court.left + inset,
       Court.opponentKitchenBottomY,
-      Court.right,
+      Court.right - inset,
       Court.playerKitchenTopY,
       _courtShadePaint,
+    );
+  }
+
+  void _drawInnerPlayingSurface(Canvas canvas) {
+    const inset = 7.5;
+    _quadRect(
+      canvas,
+      Court.left + inset,
+      Court.top + inset,
+      Court.right - inset,
+      Court.bottom - inset,
+      _courtPaint,
+    );
+    _quadRect(
+      canvas,
+      Court.left,
+      Court.bottom - 12,
+      Court.right,
+      Court.bottom,
+      _courtApronShadePaint,
     );
   }
 

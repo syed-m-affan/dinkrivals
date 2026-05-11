@@ -1,12 +1,12 @@
 ---
 id: P52C-001
 phase: 5.2C
-status: todo
+status: done
 priority: high
 parallel_group: C
 depends_on: [P52B-001]
 blocks: [P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -71,3 +71,8 @@ flutter test
 ## Planning Notes
 
 - This ticket should wait for P52B so line and apron placement are tuned against the final projection.
+
+## Implementation Notes
+
+- Implemented: added apron, lighter playing surface, kitchen tint, stronger line contrast, and surface zoning in court/kitchen components.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

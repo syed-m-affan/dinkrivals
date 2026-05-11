@@ -1,12 +1,12 @@
 ---
 id: P52M-001
 phase: 5.2K
-status: todo
+status: done
 priority: high
 parallel_group: final
 depends_on: [P52C-001, P52D-001, P52E-001, P52F-001, P52G-001, P52H-001, P52I-001, P52J-001, P52K-001, P52L-001]
 blocks: []
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -89,3 +89,8 @@ flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/output
 ## Planning Notes
 
 - Claude and both Codex subagents would sign off on the Phase 5.2 ticket plan once these tickets and status rows exist. This closeout ticket is the final proof gate, not a proxy for actual visual completion.
+
+## Implementation Notes
+
+- Implemented: added `docs/art/phase-5.2-comparison.md`, refreshed goldens, passed analyzer/tests/build, and captured Android emulator menu/gameplay smoke screenshots.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.

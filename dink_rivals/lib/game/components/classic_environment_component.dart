@@ -37,7 +37,7 @@ class ClassicEnvironmentComponent extends Component {
   final Paint _farShadePaint = Paint()
     ..color = VisualPalette.environmentBackWall;
   final Paint _farTreeDarkPaint = Paint()
-    ..color = VisualPalette.environmentTreeLineDark;
+    ..color = VisualPalette.environmentTreeLineBack;
   final Paint _farTreeMidPaint = Paint()
     ..color = VisualPalette.environmentTreeLineMid;
   final Paint _farTreeLightPaint = Paint()

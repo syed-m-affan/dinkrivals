@@ -10,7 +10,7 @@ class NetComponent extends Component {
     priority = Court.netY.round();
   }
 
-  static const double _netHeight = 28;
+  static const double _netHeight = 31;
 
   final DinkRivalsGame game;
   final Paint _meshFill = Paint()..color = VisualPalette.netMesh;
@@ -61,14 +61,14 @@ class NetComponent extends Component {
     final shadowNearLeft =
         game.courtToWorld(Vector2(Court.left + 12, Court.netY + 17));
 
-    _meshStroke.strokeWidth = game.logicalToScreen(0.6);
-    _meshDiagonalStroke.strokeWidth = game.logicalToScreen(0.45);
-    _dropOutline.strokeWidth = game.logicalToScreen(3.2);
-    _topCord.strokeWidth = game.logicalToScreen(2.2);
-    _topCordHighlight.strokeWidth = game.logicalToScreen(0.9);
-    _topCordShadow.strokeWidth = game.logicalToScreen(3.6);
-    _postPaint.strokeWidth = game.logicalToScreen(4.1);
-    _postHighlightPaint.strokeWidth = game.logicalToScreen(1.0);
+    _meshStroke.strokeWidth = game.logicalToScreen(0.72);
+    _meshDiagonalStroke.strokeWidth = game.logicalToScreen(0.38);
+    _dropOutline.strokeWidth = game.logicalToScreen(4.2);
+    _topCord.strokeWidth = game.logicalToScreen(3.2);
+    _topCordHighlight.strokeWidth = game.logicalToScreen(1.15);
+    _topCordShadow.strokeWidth = game.logicalToScreen(4.8);
+    _postPaint.strokeWidth = game.logicalToScreen(5.0);
+    _postHighlightPaint.strokeWidth = game.logicalToScreen(1.3);
 
     final shadowPath = Path()
       ..moveTo(shadowLeft.x, shadowLeft.y)
@@ -126,14 +126,14 @@ class NetComponent extends Component {
     Vector2 groundLeft,
     Vector2 groundRight,
   ) {
-    const segments = 8;
+    const segments = 10;
     for (var i = 1; i < segments; i++) {
       final t = i / segments;
       final top = topLeft + (topRight - topLeft) * t;
       final bottom = groundLeft + (groundRight - groundLeft) * t;
       canvas.drawLine(top.toOffset(), bottom.toOffset(), _meshStroke);
     }
-    for (final i in [1, 5]) {
+    for (final i in [1, 6]) {
       final t0 = i / segments;
       final t1 = ((i + 2) / segments).clamp(0.0, 1.0).toDouble();
       final a = topLeft + (topRight - topLeft) * t0;

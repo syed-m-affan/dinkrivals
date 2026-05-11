@@ -1,12 +1,12 @@
 ---
 id: P52D-001
 phase: 5.2D
-status: todo
+status: done
 priority: high
 parallel_group: C
 depends_on: [P52B-001]
 blocks: [P52G-001, P52M-001]
-owner: unassigned
+owner: codex
 last_updated: 2026-05-11
 ---
 
@@ -71,3 +71,8 @@ flutter test
 ## Planning Notes
 
 - Claude and subagents recommended committing the serving-indicator destination to the scoreboard to avoid P52D/P52G ambiguity.
+
+## Implementation Notes
+
+- Implemented: rebuilt net visual geometry and integrated serving state into the top scoreboard flow.
+- Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.
