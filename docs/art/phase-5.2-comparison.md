@@ -31,6 +31,7 @@ Last updated: 2026-05-11
 | Ball trail/contact VFX | Resolved | VFX layer uses fixed-size trail buffering, refreshed contact/bounce sprites, and clears trails on contact, bounce, and point reset. |
 | Controls | Resolved | Assisted controls and obsolete swing-power affordances are removed. The remaining percentage/ring feedback is tied to serve charge only, while manual move/swing touch regions are preserved. |
 | Park depth | Improved | Added a darker rear tree band treatment, lamp, planters, and signage without changing gameplay bounds. |
+| Android game framing | Improved | GameScreen now renders the Flame canvas full-bleed in immersive mode instead of padding the whole game below the cutout/status area. Tappable Flutter controls still respect top/right view padding. |
 | Menu/end-match residual composition | Improved | Generated portraits and updated goldens keep the existing menu/end-match flow intact; deeper screen redesign is deferred unless requested. |
 
 ## Android/Emulator QA
@@ -42,6 +43,8 @@ Last updated: 2026-05-11
 - Repeatable Android evidence capture is available via
   `tools/capture_android_evidence.ps1`; it launches the app, captures menu,
   enters Quick Match, captures serve, pauses, and captures pause.
+- Full-bleed Android gameplay evidence after removing the top letterbox:
+  `docs/art/visual-overhaul/evidence/full-bleed-game-screen-pass/serve.png`.
 - The simple-mid character revision was also installed and smoke-captured on
   `emulator-5554` at
   `docs/art/visual-overhaul/evidence/emulator-character-simple-mid-gameplay.png`.

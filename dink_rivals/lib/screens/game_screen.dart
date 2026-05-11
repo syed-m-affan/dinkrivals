@@ -63,10 +63,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   @override
   Widget build(BuildContext context) {
     final game = ref.watch(dinkRivalsGameProvider);
-    // viewPadding reports cutout / status-bar / nav-bar insets even when
-    // system UI is hidden via `SystemUiMode.immersiveSticky`. SafeArea uses
-    // MediaQuery.padding which is zero in immersive mode, so we apply
-    // viewPadding manually to keep the game canvas clear of the notch.
+    // Keep the game canvas full-bleed in immersive mode, but offset tappable
+    // Flutter controls away from cutouts/status areas.
     final viewPadding = MediaQuery.viewPaddingOf(context);
 
     return PopScope(
@@ -79,63 +77,55 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       },
       child: Scaffold(
         backgroundColor: VisualPalette.textInverse,
-        body: Padding(
-          padding: EdgeInsets.only(
-            top: viewPadding.top,
-            bottom: viewPadding.bottom,
-            left: viewPadding.left,
-            right: viewPadding.right,
-          ),
-          child: Stack(
-            children: [
-              GameWidget<DinkRivalsGame>(game: game),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: VisualPalette.scoreboardSurface,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: VisualPalette.scoreboardBorder),
+        body: Stack(
+          children: [
+            GameWidget<DinkRivalsGame>(game: game),
+            Positioned(
+              top: viewPadding.top + 8,
+              right: viewPadding.right + 8,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: VisualPalette.scoreboardSurface,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: VisualPalette.scoreboardBorder),
+                ),
+                child: IconButton(
+                  key: const Key('game-pause-button'),
+                  iconSize: 30,
+                  icon: const Icon(
+                    Icons.pause,
+                    color: VisualPalette.courtLineWhite,
                   ),
-                  child: IconButton(
-                    key: const Key('game-pause-button'),
-                    iconSize: 30,
-                    icon: const Icon(
-                      Icons.pause,
-                      color: VisualPalette.courtLineWhite,
-                    ),
-                    onPressed: _showPause
-                        ? null
-                        : () {
-                            ref.read(audioServiceProvider).playMenuClick();
-                            _setPaused(true);
-                          },
-                  ),
+                  onPressed: _showPause
+                      ? null
+                      : () {
+                          ref.read(audioServiceProvider).playMenuClick();
+                          _setPaused(true);
+                        },
                 ),
               ),
-              if (_showPause)
-                _PauseOverlay(
-                  onResume: () {
-                    ref.read(audioServiceProvider).playMenuClick();
-                    _setPaused(false);
-                  },
-                  onMenu: () {
-                    ref.read(audioServiceProvider).playMenuClick();
-                    _returnToMenu();
-                  },
-                ),
-              if (!_showPause)
-                _OpponentServeOverlay(
-                  phaseNotifier: _game.opponentServePhase,
-                  countdownNotifier: _game.opponentServeCountdown,
-                  onReady: () {
-                    ref.read(audioServiceProvider).playMenuClick();
-                    _game.confirmOpponentServeReady();
-                  },
-                ),
-            ],
-          ),
+            ),
+            if (_showPause)
+              _PauseOverlay(
+                onResume: () {
+                  ref.read(audioServiceProvider).playMenuClick();
+                  _setPaused(false);
+                },
+                onMenu: () {
+                  ref.read(audioServiceProvider).playMenuClick();
+                  _returnToMenu();
+                },
+              ),
+            if (!_showPause)
+              _OpponentServeOverlay(
+                phaseNotifier: _game.opponentServePhase,
+                countdownNotifier: _game.opponentServeCountdown,
+                onReady: () {
+                  ref.read(audioServiceProvider).playMenuClick();
+                  _game.confirmOpponentServeReady();
+                },
+              ),
+          ],
         ),
       ),
     );
