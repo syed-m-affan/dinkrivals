@@ -244,14 +244,20 @@ class TouchControlsComponent extends Component {
     final active = game.inputSystem.activeSwingCommand?.intent;
     final y = layout.swingCenter.y - layout.swingVisualRadius - 70;
     final centerX = layout.swingCenter.x;
+    final verticalLabel = switch (active) {
+      SwingIntent.lob => 'LOB',
+      SwingIntent.smash => 'SMASH',
+      _ => 'LOB/SMASH',
+    };
     final items = <({String label, SwingIntent? intent, double dx})>[
       (label: 'DINK', intent: null, dx: -60),
       (label: 'DRIVE', intent: SwingIntent.drive, dx: 0),
-      (label: 'LOB/SMASH', intent: SwingIntent.lob, dx: 68),
+      (label: verticalLabel, intent: SwingIntent.lob, dx: 68),
     ];
     for (final item in items) {
-      final isActive = active == item.intent ||
-          (item.intent == SwingIntent.lob && active == SwingIntent.smash);
+      final isActive = active != null &&
+          (active == item.intent ||
+              (item.intent == SwingIntent.lob && active == SwingIntent.smash));
       final painter = TextPainter(
         text: TextSpan(
           text: item.label,

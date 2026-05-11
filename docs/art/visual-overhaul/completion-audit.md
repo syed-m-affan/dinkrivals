@@ -26,10 +26,10 @@ automated evidence set.
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
 | Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart`, `court_component_test.dart`, generated court-surface texture overlay | Done for current pass |
 | Perspective should match concept art better and not feel top-down | `docs/art/visual-overhaul/perspective-fix-spec.md` documents the safe approach; `perspective-metrics.md` records the baseline and first linear tuning pass; before/after emulator screenshots are archived | Partial: improved with a guarded linear pass, but still needs human visual review |
-| Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection, asset presence, actual sheet frame counts, and horizontal facing reflection | Done for current pass |
+| Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection, asset presence, actual sheet frame counts, horizontal facing reflection, and player point-result visibility after the point ends | Done for current pass |
 | Dink/drive/lob/smash have distinct animation/VFX indicators | `VfxLayerComponent` maps shot types to generated `dinkSpark`, `driveArc`, `lobArc`, `smashBand`, and `missWhiff`; character components load generated shot-specific animation sheets; `vfx_layer_component_test.dart` and `player_component_test.dart` verify sprite/pose selection | Done for current pass |
 | Hitbox indicators match active swing zones | `RacketComponent` draws committed swing lane from `ShotSystem.committedSwingPath`; miss VFX spawns on expired swing command | Partial |
-| Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; `docs/art/phase-5.2-comparison.md` now states only serve charge has percentage/ring feedback | Done |
+| Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; shot chips no longer mark `DINK` active when no swing is committed; vertical swipe chip now resolves to `LOB` or `SMASH` while active; `docs/art/phase-5.2-comparison.md` states only serve charge has percentage/ring feedback | Done |
 | Android gameplay canvas is full-bleed | `GameScreen` renders `GameWidget` outside of view-padding while keeping the pause button inset-aware; evidence is archived at `docs/art/visual-overhaul/evidence/full-bleed-game-screen-pass/serve.png` | Done for current pass |
 | Menu and result screens share gameplay visual identity | `ParkBackdrop`, updated menu/roster/settings/end-match screens, refreshed `phase-5g-*.png` goldens | Done |
 | Asset manifests document generated sources and ownership | VFX, character, and court generated prompt/source docs exist; runtime asset README files link back to source contact sheets | Done for current pass |
@@ -41,6 +41,7 @@ automated evidence set.
 
 Latest pushed commits:
 
+- Current pass: `fix visual state indicators`
 - `469f158` `fix character sprite frame rendering`
 - `f2300a1` `make gameplay screen full bleed`
 - `f00f739` `add android evidence capture helper`
@@ -90,6 +91,11 @@ Verification performed during this thread:
   Player and opponent sprites now reflect horizontally based on movement
   direction, and the emulator gameplay screenshot is archived at
   `docs/art/visual-overhaul/evidence/character-animation-frame-fix/gameplay.png`.
+- Player point-result pose ordering was corrected so win/loss sprites can
+  remain visible after `pointInProgress` is false, with a regression in
+  `player_component_test.dart`.
+- Shot indicator chips were corrected so `DINK` is not shown as selected while
+  idle and vertical swipes identify the active `LOB` or `SMASH` state.
 - Perspective baseline screenshots and projection metrics were archived before
   the next camera tuning pass:
   `docs/art/visual-overhaul/evidence/perspective-before-menu.png`,
@@ -137,7 +143,8 @@ Subagent validation:
    The gameplay system uses committed swing lanes for drive/lob/smash contact
    and the runtime indicator is tied to that path, but the feel and readability
    of the pixel swipe lane should be judged in live play rather than expanded
-   through more screenshot automation.
+   through more screenshot automation. The idle shot-chip highlight issue has
+   been fixed, but live lane readability remains subjective.
 
 ## Next Safe Work
 

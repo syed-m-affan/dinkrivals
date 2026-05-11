@@ -167,6 +167,17 @@ void main() {
     expect(component.currentPoseNameForTesting(), 'pointWin');
   });
 
+  test('player point result remains visible after point ends', () {
+    final game = DinkRivalsGame();
+    final component = PlayerComponent(game);
+
+    expect(game.matchState.pointInProgress, isFalse);
+
+    component.showPointResult(component.state.side);
+
+    expect(component.currentPoseNameForTesting(), 'pointWin');
+  });
+
   test('sprite frame count follows actual sheet width', () async {
     final game = DinkRivalsGame();
     final player = PlayerComponent(game);

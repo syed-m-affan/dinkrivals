@@ -181,9 +181,6 @@ class PlayerComponent extends Component {
     if (_swingSeconds > 0) {
       return _swingPoseForShot(state.lastShotType);
     }
-    if (!game.matchState.pointInProgress) {
-      return _PlayerPose.idle;
-    }
     if (_hitConfirmSeconds > 0) {
       return _PlayerPose.hitConfirm;
     }
@@ -191,6 +188,9 @@ class PlayerComponent extends Component {
       return _pointResultWinner == state.side
           ? _PlayerPose.pointWin
           : _PlayerPose.pointLoss;
+    }
+    if (!game.matchState.pointInProgress) {
+      return _PlayerPose.idle;
     }
     if (state.velocity.length > _runThreshold) {
       return _PlayerPose.run;

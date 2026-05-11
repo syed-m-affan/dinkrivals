@@ -1,7 +1,7 @@
 ---
 id: P52M-001
 phase: 5.2K
-status: done
+status: review
 priority: high
 parallel_group: final
 depends_on: [P52C-001, P52D-001, P52E-001, P52F-001, P52G-001, P52H-001, P52I-001, P52J-001, P52K-001, P52L-001]
@@ -94,3 +94,4 @@ flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/output
 
 - Implemented: added `docs/art/phase-5.2-comparison.md`, refreshed goldens, passed analyzer/tests/build, and captured Android emulator menu/gameplay smoke screenshots.
 - Verification: `flutter analyze`, `flutter test`, `flutter build apk --debug`, emulator install/launch on `emulator-5554`, and `docs/art/phase-5.2-gameplay-emulator-smoke.png`.
+- Status: remains in `review` because the ticket requires physical Android gameplay smoke or explicit human/device validation before it can be marked `done`.
