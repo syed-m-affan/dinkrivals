@@ -83,11 +83,14 @@ class RacketComponent extends Component {
     _swingLaneBorderPaint.color = VisualPalette.textPrimary.withValues(
       alpha: command.intent == SwingIntent.smash ? 0.88 : 0.72,
     );
-    _swingLanePaint.strokeWidth =
+    final contactRadius =
         game.logicalToScreen(Tuning.committedSwingContactRadius * depthScale);
+    _swingLanePaint.strokeWidth = contactRadius * 2;
     _swingLaneBorderPaint.strokeWidth = game.logicalToScreen(2.2 * depthScale);
     canvas.drawLine(start.toOffset(), end.toOffset(), _swingLanePaint);
     canvas.drawLine(start.toOffset(), end.toOffset(), _swingLaneBorderPaint);
+    canvas.drawCircle(start.toOffset(), contactRadius, _swingLaneBorderPaint);
+    canvas.drawCircle(end.toOffset(), contactRadius, _swingLaneBorderPaint);
     _drawPixelSwipe(canvas, start.toOffset(), end.toOffset(), depthScale);
   }
 

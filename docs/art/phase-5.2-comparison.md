@@ -30,6 +30,7 @@ Last updated: 2026-05-11
 | Scoreboard/rally/last-shot readout | Resolved | HUD now shows YOU/RIVAL score panels, serving dot, rally count, and last-shot readout. |
 | Feedback banner | Resolved | Rally feedback renders in a top-center banner with primary/secondary text helpers and safe-area-aware placement. |
 | Ball trail/contact VFX | Resolved | VFX layer uses fixed-size trail buffering, refreshed contact/bounce sprites, and clears trails on contact, bounce, and point reset. |
+| Swing hitbox indicator | Improved | Committed swing lanes now render at the same capsule diameter used by the shot contact logic, with endpoint outlines and pixel swipe blocks showing the active path. |
 | Controls | Resolved | Assisted controls and obsolete swing-power affordances are removed. The remaining percentage/ring feedback is tied to serve charge only, while manual move/swing touch regions are preserved. Shot chips no longer highlight `DINK` while idle, and vertical swipe state resolves to `LOB` or `SMASH` while active. |
 | Park depth | Improved | Added a darker rear tree band treatment, lamp, planters, and signage without changing gameplay bounds. |
 | Android game framing | Improved | GameScreen now renders the Flame canvas full-bleed in immersive mode instead of padding the whole game below the cutout/status area. Tappable Flutter controls still respect top/right view padding. |
