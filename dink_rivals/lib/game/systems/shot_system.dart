@@ -86,7 +86,7 @@ class ShotSystem {
         : _committedSwingContactProfile(
             ball: ball,
             hitter: hitter,
-            racketPosition: racketPosition,
+            aimDirection: aimDirection,
           );
     if (!contact.didHit) {
       return false;
@@ -310,7 +310,7 @@ class ShotSystem {
   ContactProfile _committedSwingContactProfile({
     required BallState ball,
     required PlayerState hitter,
-    required Vector2 racketPosition,
+    required Vector2 aimDirection,
   }) {
     final onHitterSide = hitter.side == PlayerSide.player
         ? ball.y >= Court.netY
@@ -319,14 +319,15 @@ class ShotSystem {
       return ContactProfile(ContactQuality.miss, _heightBand(ball));
     }
 
-    final shaft = racketPosition - hitter.position;
-    final racketStart = shaft.length2 > 0.01
-        ? hitter.position + shaft.normalized() * (Tuning.racketReach * 0.55)
-        : hitter.position.clone();
+    final swingDirection = _sideCorrectedAim(aimDirection, hitter.side);
+    final racketStart =
+        hitter.position + swingDirection * Tuning.committedSwingLaneStart;
+    final racketEnd =
+        hitter.position + swingDirection * Tuning.committedSwingLaneLength;
     final racketDistance = _distanceToSegment(
       point: Vector2(ball.x, ball.y),
       start: racketStart,
-      end: racketPosition,
+      end: racketEnd,
     );
     if (racketDistance <= Tuning.committedSwingContactRadius) {
       return ContactProfile(ContactQuality.clean, _heightBand(ball));

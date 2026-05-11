@@ -19,6 +19,13 @@ class RacketComponent extends Component {
   final Paint _opponentPaint = Paint()
     ..color = VisualPalette.opponentPaddle
     ..strokeCap = StrokeCap.round;
+  final Paint _swingLanePaint = Paint()
+    ..color = VisualPalette.uiAccent.withValues(alpha: 0.30)
+    ..strokeCap = StrokeCap.round;
+  final Paint _swingLaneBorderPaint = Paint()
+    ..color = VisualPalette.textPrimary.withValues(alpha: 0.76)
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
   ui.Image? _playerPaddle;
   ui.Image? _opponentPaddle;
 
@@ -39,6 +46,7 @@ class RacketComponent extends Component {
 
   @override
   void render(Canvas canvas) {
+    _drawPlayerSwingLane(canvas);
     _drawRacket(
       canvas,
       game.player.state.position,
@@ -52,6 +60,33 @@ class RacketComponent extends Component {
       game.opponentRacketPosition(),
       _opponentPaint,
       _opponentPaddle,
+    );
+  }
+
+  void _drawPlayerSwingLane(Canvas canvas) {
+    final command = game.inputSystem.activeSwingCommand;
+    if (command == null) {
+      return;
+    }
+    final direction = command.aimDirection.length2 > 0.01
+        ? command.aimDirection.normalized()
+        : game.playerRacketDirection();
+    final courtStart =
+        game.player.state.position + direction * Tuning.committedSwingLaneStart;
+    final courtEnd = game.player.state.position +
+        direction * Tuning.committedSwingLaneLength;
+    final start = game.courtToWorld(courtStart, Tuning.racketContactZ);
+    final end = game.courtToWorld(courtEnd, Tuning.racketContactZ);
+    final depthScale = game.depthScaleForY(game.player.state.position.y);
+    _swingLanePaint.strokeWidth =
+        game.logicalToScreen(Tuning.committedSwingContactRadius * depthScale);
+    _swingLaneBorderPaint.strokeWidth = game.logicalToScreen(2.2 * depthScale);
+    canvas.drawLine(start.toOffset(), end.toOffset(), _swingLanePaint);
+    canvas.drawLine(start.toOffset(), end.toOffset(), _swingLaneBorderPaint);
+    canvas.drawCircle(
+      end.toOffset(),
+      game.logicalToScreen(3.4 * depthScale),
+      _swingLaneBorderPaint,
     );
   }
 

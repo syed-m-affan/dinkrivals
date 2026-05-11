@@ -423,7 +423,7 @@ void main() {
     );
     final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
     final swingBall = BallState(
-      x: racketPosition.x + Tuning.committedSwingContactRadius + 4,
+      x: player.position.x + Tuning.committedSwingContactRadius + 4,
       y: racketPosition.y,
       z: Tuning.racketContactZ,
       vy: 40,
@@ -436,7 +436,7 @@ void main() {
       ball: swingBall,
       hitter: player,
       racketPosition: racketPosition,
-      aimDirection: Vector2(0.4, -1),
+      aimDirection: Vector2(0, -1),
       intent: SwingIntent.drive,
       power: 0.8,
     );
@@ -444,6 +444,36 @@ void main() {
     expect(didHit, isFalse);
     expect(shotSystem.lastShotType, isNull);
     expect(swingBall.vy, 40);
+  });
+
+  test('committed swing hits along extended forward lane', () {
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
+    final ball = BallState(
+      x: player.position.x,
+      y: player.position.y - Tuning.committedSwingLaneLength + 4,
+      z: Tuning.racketContactZ,
+      vy: 40,
+      isInPlay: true,
+      lastHitBy: PlayerSide.opponent,
+    );
+    final shotSystem = ShotSystem();
+
+    final didHit = shotSystem.attemptManualContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: Vector2(0, -1),
+      intent: SwingIntent.drive,
+      power: 0.8,
+    );
+
+    expect(didHit, isTrue);
+    expect(shotSystem.lastShotType, ShotType.drive);
+    expect(ball.vy, lessThan(0));
   });
 
   test('passive contact can still dink inside forgiving hitbox', () {
