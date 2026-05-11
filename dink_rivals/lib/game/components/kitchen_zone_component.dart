@@ -4,13 +4,14 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
+import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 
 class KitchenZoneComponent extends Component {
   KitchenZoneComponent(this.game);
 
   final DinkRivalsGame game;
-  final Paint _paint = Paint()..color = const Color(0x4046B9FF);
+  final Paint _paint = Paint()..color = VisualPalette.kitchenOverlay;
 
   @override
   void render(Canvas canvas) {

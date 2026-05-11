@@ -228,3 +228,18 @@ Re-run the previous QA checklists with attention to:
 - After AI lob, drive it down — should classify as SMASH.
 - Confirm top of game canvas no longer overlaps notch / notification shade.
 - Untested in last pass — pause mid-rally freeze, resume without snapping, return-to-menu reset, hardware back → pause, settings persistence across kill+relaunch.
+
+## Phase 5 implementation pass (2026-05-11)
+- **P5-001**: Added Phase 5 asset folders, centralized `VisualPalette`, calmer pixel-style court rendering, palette-driven court/kitchen/net/debug overlay colors, and Phase 5 debug label.
+- **P5-002**: Generated placeholder pixel sprite sheets for player/opponent idle, run, and swing states. `PlayerComponent` and `OpponentComponent` now render sprites by default, keep primitive fallback through `DebugFlags.useSprites`, preserve y-priority sorting, and switch animation from `PlayerState`.
+- **P5-003**: Generated ball and player/opponent paddle sprites. `BallComponent` preserves the prior height/depth visual radius curve while rendering the sprite; `RacketComponent` renders rotated paddle sprites at racket tips. `ShadowComponent`, ball physics, and shot classification were not changed.
+- **P5-004**: Applied Phase 5 theme to Material UI, main menu logo, roster portraits, end-match winner portrait, score plate, serving indicator, and per-shot feedback colors with a short pop animation.
+- **P5-005**: Added `flame_audio`, `AudioService` / `FlameAudioService` / `FakeAudioService`, generated short placeholder WAV SFX, and wired hit, bounce, point, fault, and menu-click events to the existing `soundEnabled` flag.
+- **P5-006**: Added `HapticsService` / `FlutterHapticsService` / `FakeHapticsService`. Player racket contact fires light haptics and player point wins fire medium haptics, gated by the existing `hapticsEnabled` flag.
+- Verification passed on 2026-05-11: `flutter analyze`, `flutter test` (96/96), `flutter build apk --debug`, and `flutter install --debug -d 58011FDCQ00992`.
+
+## Manual Phase 5 QA still required (P5-007)
+- Confirm new logo, themed buttons, roster portraits, player/opponent/ball/paddle sprites, court readability, kitchen readability, net readability, serving-side indicator, and distinct DINK/DRIVE/LOB/SMASH/FAULT feedback on a physical Android device.
+- Toggle Sound off/on and confirm hit, bounce, point, fault, and menu-click SFX silence and return.
+- Toggle Haptics off/on and confirm player hit light buzz and player point-win medium buzz silence and return.
+- Play 3 full matches, confirm no frame drops, run 5+ minutes uptime, force-kill/relaunch to confirm Sound/Haptics persistence, and confirm notch/nav clearance.

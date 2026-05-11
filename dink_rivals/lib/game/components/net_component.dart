@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
+import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 
 class NetComponent extends Component {
@@ -12,15 +13,15 @@ class NetComponent extends Component {
   static const double _netHeight = 28;
 
   final DinkRivalsGame game;
-  final Paint _meshFill = Paint()..color = const Color(0x66202428);
+  final Paint _meshFill = Paint()..color = VisualPalette.netMesh;
   final Paint _meshStroke = Paint()
-    ..color = const Color(0xAA202428)
+    ..color = VisualPalette.netMeshStroke
     ..style = PaintingStyle.stroke;
   final Paint _topCord = Paint()
-    ..color = const Color(0xFFEDEDED)
+    ..color = VisualPalette.netRail
     ..style = PaintingStyle.stroke;
   final Paint _postPaint = Paint()
-    ..color = const Color(0xFF1A1A1A)
+    ..color = VisualPalette.netPost
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
 

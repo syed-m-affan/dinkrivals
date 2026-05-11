@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 import '../systems/touch_input_controller.dart';
 
@@ -11,25 +12,27 @@ class TouchControlsComponent extends Component {
 
   final DinkRivalsGame game;
   final Paint _strokePaint = Paint()
-    ..color = const Color(0xAAFFFFFF)
+    ..color = VisualPalette.controlStroke
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2;
   final Paint _disabledMoveControlPaint = Paint()
-    ..color = const Color(0x22303030);
+    ..color = VisualPalette.controlSurfaceDisabled;
   final Paint _enabledMoveControlPaint = Paint()
-    ..color = const Color(0x55303030);
-  final Paint _disabledMoveKnobPaint = Paint()..color = const Color(0x554AA3FF);
-  final Paint _enabledMoveKnobPaint = Paint()..color = const Color(0xAA4AA3FF);
-  final Paint _swingPaint = Paint()..color = const Color(0xAA4FD08B);
+    ..color = VisualPalette.controlSurface;
+  final Paint _disabledMoveKnobPaint = Paint()
+    ..color = VisualPalette.controlMoveKnobDisabled;
+  final Paint _enabledMoveKnobPaint = Paint()
+    ..color = VisualPalette.controlMoveKnob;
+  final Paint _swingPaint = Paint()..color = VisualPalette.controlSwingKnob;
   final Paint _swingTrackPaint = Paint()
-    ..color = const Color(0x55303030)
+    ..color = VisualPalette.controlSurface
     ..style = PaintingStyle.stroke;
   final Paint _serveStroke = Paint()
-    ..color = const Color(0xFFFFFFFF)
+    ..color = VisualPalette.textPrimary
     ..style = PaintingStyle.stroke
     ..strokeWidth = 3;
   final Paint _powerRing = Paint()
-    ..color = const Color(0xFFFFFFFF)
+    ..color = VisualPalette.textPrimary
     ..style = PaintingStyle.stroke
     ..strokeWidth = 7
     ..strokeCap = StrokeCap.round;
@@ -38,7 +41,7 @@ class TouchControlsComponent extends Component {
     text: const TextSpan(
       text: 'SWING',
       style: TextStyle(
-        color: Colors.white,
+        color: VisualPalette.textPrimary,
         fontSize: 11,
         fontWeight: FontWeight.bold,
       ),
@@ -50,7 +53,7 @@ class TouchControlsComponent extends Component {
     text: const TextSpan(
       text: 'SERVE',
       style: TextStyle(
-        color: Colors.black,
+        color: VisualPalette.textInverse,
         fontSize: 16,
         fontWeight: FontWeight.bold,
         letterSpacing: 1.2,
@@ -151,8 +154,8 @@ class TouchControlsComponent extends Component {
     final charge = game.serveChargeFraction;
     final serveFill = Paint()
       ..color = Color.lerp(
-        const Color(0xCCFFCB47),
-        const Color(0xFFFF8C2E),
+        VisualPalette.uiAccent.withValues(alpha: 0.8),
+        VisualPalette.servePowerEnd,
         charge,
       )!;
 
@@ -193,7 +196,7 @@ class TouchControlsComponent extends Component {
           ? '${math.max(1, (charge * 100).round())}%'
           : 'HOLD',
       style: const TextStyle(
-        color: Colors.white,
+        color: VisualPalette.textPrimary,
         fontSize: 12,
         fontWeight: FontWeight.bold,
       ),

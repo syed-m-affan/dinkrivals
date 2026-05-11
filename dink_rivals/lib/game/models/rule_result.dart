@@ -3,7 +3,9 @@ import 'player_side.dart';
 enum RuleFault {
   outOfBounds,
   doubleBounce,
+  twoBounceViolation,
   kitchenVolley,
+  illegalServe,
 }
 
 class RuleResult {

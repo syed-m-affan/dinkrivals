@@ -4,9 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:dink_rivals/app/ad_provider.dart';
+import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/screens/end_match_screen.dart';
+import 'package:dink_rivals/services/audio_service.dart';
 
 Widget _wrap(
   DinkRivalsGame game, {
@@ -31,6 +33,7 @@ Widget _wrap(
     overrides: [
       dinkRivalsGameProvider.overrideWithValue(game),
       adServiceProvider.overrideWithValue(adService ?? FakeAdService()),
+      audioServiceProvider.overrideWithValue(FakeAudioService()),
       adPlacementSystemProvider
           .overrideWithValue(adPlacement ?? AdPlacementSystem()),
     ],

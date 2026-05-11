@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/ad_provider.dart';
 import 'app/app.dart';
+import 'services/audio_service.dart';
+import 'services/haptics_service.dart';
 import 'services/save_service.dart';
 
 Future<void> main() async {
@@ -19,11 +21,29 @@ Future<void> main() async {
   final initialSaveData = await saveService.load();
   final adService = FakeAdService();
   await adService.initialize();
+  final audioService = FlameAudioService(
+    soundEnabled: () => initialSaveData.soundEnabled,
+  );
+  await audioService.initialize();
+  final hapticsService = FlutterHapticsService(
+    hapticsEnabled: () => initialSaveData.hapticsEnabled,
+  );
+  await hapticsService.initialize();
 
   runApp(
     ProviderScope(
       overrides: [
         adServiceProvider.overrideWithValue(adService),
+        audioServiceProvider.overrideWith(
+          (ref) => FlameAudioService(
+            soundEnabled: () => ref.read(saveDataProvider).soundEnabled,
+          ),
+        ),
+        hapticsServiceProvider.overrideWith(
+          (ref) => FlutterHapticsService(
+            hapticsEnabled: () => ref.read(saveDataProvider).hapticsEnabled,
+          ),
+        ),
         saveServiceProvider.overrideWithValue(saveService),
         saveDataProvider.overrideWith(
           () => SaveDataNotifier(saveService, initialSaveData),

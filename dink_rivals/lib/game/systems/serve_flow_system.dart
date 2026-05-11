@@ -135,8 +135,7 @@ class ServeFlowSystem {
   void refreshOpponentServePhase(MatchState matchState) {
     if (matchState.servingSide == PlayerSide.opponent &&
         !matchState.matchOver) {
-      final aimX = (_random.nextDouble() * 2 - 1) * 0.25;
-      _opponentServeDirection = Vector2(aimX, 1)..normalize();
+      _opponentServeDirection = _opponentLegalServeDirection(matchState);
       _opponentServeSecondsRemaining = 0;
       opponentServeCountdown.value = opponentServeCountdownSeconds.ceil();
       opponentServePhase.value = OpponentServePhase.awaitingReady;
@@ -239,5 +238,20 @@ class ServeFlowSystem {
     _opponentServeSecondsRemaining = 0;
     opponentServeCountdown.value = 0;
     opponentServePhase.value = OpponentServePhase.none;
+  }
+
+  Vector2 _opponentLegalServeDirection(MatchState matchState) {
+    final targetLeftHalf = matchState.opponentScore.isOdd;
+    final targetX = targetLeftHalf ? Court.width * 0.25 : Court.width * 0.75;
+    final targetY = (Court.playerKitchenBottomY + Court.bottom) / 2;
+    final jitterX = (_random.nextDouble() * 2 - 1) * 8;
+    final direction = Vector2(
+      targetX + jitterX - Court.opponentStartX,
+      targetY - Court.opponentStartY,
+    );
+    if (direction.length2 < 0.01) {
+      direction.setValues(targetLeftHalf ? -0.2 : 0.2, 1);
+    }
+    return direction..normalize();
   }
 }

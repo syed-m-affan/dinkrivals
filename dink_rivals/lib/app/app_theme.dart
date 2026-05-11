@@ -1,27 +1,42 @@
 import 'package:flutter/material.dart';
 
+import '../game/config/visual_palette.dart';
+
 class AppTheme {
   static ThemeData get dark {
     final base = ThemeData(brightness: Brightness.dark, useMaterial3: true);
     return base.copyWith(
-      scaffoldBackgroundColor: const Color(0xFF101218),
+      scaffoldBackgroundColor: VisualPalette.uiBackground,
       colorScheme: base.colorScheme.copyWith(
-        primary: const Color(0xFF4AA3FF),
-        secondary: const Color(0xFF4FD08B),
-        surface: const Color(0xFF1A1D26),
+        primary: VisualPalette.playerPrimary,
+        secondary: VisualPalette.feedbackDink,
+        surface: VisualPalette.uiSurface,
       ),
       textTheme: base.textTheme.apply(
-        bodyColor: Colors.white,
-        displayColor: Colors.white,
+        bodyColor: VisualPalette.textPrimary,
+        displayColor: VisualPalette.textPrimary,
+        fontFamily: 'monospace',
+      ),
+      appBarTheme: const AppBarTheme(
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF4AA3FF),
-          foregroundColor: Colors.white,
+          backgroundColor: VisualPalette.uiAccent,
+          foregroundColor: VisualPalette.textInverse,
           minimumSize: const Size(220, 56),
-          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          textStyle: const TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(6),
           ),
         ),
       ),

@@ -6,7 +6,7 @@ import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/systems/scoring_system.dart';
 
 void main() {
-  test('player point increments player score', () {
+  test('serving player rally win increments player score', () {
     final match = MatchState();
     final scoring = ScoringSystem();
 
@@ -18,30 +18,60 @@ void main() {
     expect(match.servingSide, PlayerSide.player);
   });
 
-  test('opponent point increments opponent score', () {
+  test('receiving opponent rally win causes side out without scoring', () {
     final match = MatchState();
     final scoring = ScoringSystem();
 
-    scoring.awardPoint(match, PlayerSide.opponent);
+    final changed = scoring.awardPoint(match, PlayerSide.opponent);
 
+    expect(changed, isFalse);
+    expect(match.playerScore, 0);
+    expect(match.opponentScore, 0);
+    expect(match.servingSide, PlayerSide.opponent);
+  });
+
+  test('serving opponent rally win increments opponent score', () {
+    final match = MatchState(servingSide: PlayerSide.opponent);
+    final scoring = ScoringSystem();
+
+    final changed = scoring.awardPoint(match, PlayerSide.opponent);
+
+    expect(changed, isTrue);
     expect(match.playerScore, 0);
     expect(match.opponentScore, 1);
     expect(match.servingSide, PlayerSide.opponent);
   });
 
-  test('match ends at quick match winning score', () {
-    final match = MatchState(playerScore: Tuning.quickMatchWinningScore - 1);
+  test('match does not end without win-by-two lead', () {
+    final match = MatchState(
+      playerScore: Tuning.quickMatchWinningScore - 1,
+      opponentScore: Tuning.quickMatchWinningScore - 1,
+    );
     final scoring = ScoringSystem();
 
     scoring.awardPoint(match, PlayerSide.player);
 
     expect(match.playerScore, Tuning.quickMatchWinningScore);
+    expect(match.matchOver, isFalse);
+  });
+
+  test('match ends at winning score with win-by-two lead', () {
+    final match = MatchState(
+      playerScore: Tuning.quickMatchWinningScore,
+      opponentScore: Tuning.quickMatchWinningScore - 1,
+    );
+    final scoring = ScoringSystem();
+
+    scoring.awardPoint(match, PlayerSide.player);
+
+    expect(match.playerScore, Tuning.quickMatchWinningScore + 1);
     expect(match.matchOver, isTrue);
   });
 
   test('score does not change after match over', () {
     final match = MatchState(
-      playerScore: Tuning.quickMatchWinningScore,
+      playerScore: Tuning.quickMatchWinningScore + 1,
+      opponentScore: Tuning.quickMatchWinningScore - 1,
       matchOver: true,
     );
     final scoring = ScoringSystem();
@@ -49,8 +79,8 @@ void main() {
     final changed = scoring.awardPoint(match, PlayerSide.opponent);
 
     expect(changed, isFalse);
-    expect(match.playerScore, Tuning.quickMatchWinningScore);
-    expect(match.opponentScore, 0);
+    expect(match.playerScore, Tuning.quickMatchWinningScore + 1);
+    expect(match.opponentScore, Tuning.quickMatchWinningScore - 1);
   });
 
   test('rally count and longest rally update deterministically', () {

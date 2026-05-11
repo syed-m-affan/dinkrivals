@@ -1,9 +1,6 @@
 # The Rules of Pickleball
 
-## 1. The Court and Equipment
-- **Court:** The court is 20 feet by 44 feet for both singles and doubles matches (same dimensions as a doubles badminton court).
-- **Net:** The net height is 36 inches at the sidelines and 34 inches in the middle.
-- **Equipment:** Played with a solid paddle and a perforated plastic ball (similar to a wiffle ball).
+
 
 ## 2. The Serve
 - The serve must be made underhand.

@@ -3,13 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/screens/settings_screen.dart';
+import 'package:dink_rivals/services/audio_service.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
 Widget _wrap(Widget child, SaveService service, SaveData initial) {
   return ProviderScope(
     overrides: [
+      audioServiceProvider.overrideWithValue(FakeAudioService()),
       saveServiceProvider.overrideWithValue(service),
       saveDataProvider.overrideWith(() => SaveDataNotifier(service, initial)),
     ],

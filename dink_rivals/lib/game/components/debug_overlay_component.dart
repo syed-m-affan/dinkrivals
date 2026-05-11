@@ -1,6 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import '../../app/app_config.dart';
+import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 
 class DebugOverlayComponent extends Component {
@@ -9,12 +11,13 @@ class DebugOverlayComponent extends Component {
   final DinkRivalsGame game;
   final TextPaint _textPaint = TextPaint(
     style: const TextStyle(
-      color: Colors.white,
+      color: VisualPalette.courtLineWhite,
       fontSize: 11,
       fontFamily: 'monospace',
     ),
   );
-  final Paint _background = Paint()..color = const Color(0x80000000);
+  final Paint _background = Paint()
+    ..color = VisualPalette.uiBackground.withValues(alpha: 0.5);
   double _fps = 0;
   double _accumulator = 0;
   int _frames = 0;
@@ -34,7 +37,7 @@ class DebugOverlayComponent extends Component {
   void render(Canvas canvas) {
     final ball = game.ball.state;
     final shot = game.shotSystem.lastShotType?.name ?? '-';
-    final text = 'PHASE 0  FPS ${_fps.toStringAsFixed(0)}  '
+    final text = '${AppConfig.phaseLabel}  FPS ${_fps.toStringAsFixed(0)}  '
         'Ball ${ball.x.toStringAsFixed(0)},${ball.y.toStringAsFixed(0)},${ball.z.toStringAsFixed(0)}  '
         'Rally ${game.rallyCount}  Shot $shot';
     // Below the centered score chip (which extends to ~y=38 at the top).

@@ -458,11 +458,14 @@ Requirements:
 
 ### 10.1 MVP Rules
 
-Use arcade-friendly simplified pickleball:
+Use singles pickleball rules from `docs/pickleball_rules.md`, with arcade input and presentation:
 
-* Rally scoring.
-* First to 7.
-* Win by 1 for MVP.
+* Points are scored only by the serving side.
+* A receiver rally win causes side out / loss of serve, not a point.
+* Quick Match plays to 11 and must be won by 2.
+* Only one serve attempt is allowed.
+* Serve must land in the opposite diagonal service court.
+* The two-bounce rule applies after the serve.
 * Ball must land in bounds.
 * One bounce allowed per side.
 * Volley allowed outside kitchen.
@@ -477,7 +480,6 @@ Use arcade-friendly simplified pickleball:
 Do not implement these in MVP unless everything else is complete:
 
 * Doubles.
-* Real side-out scoring.
 * Detailed serve rotation.
 * Online multiplayer.
 * Spin.
@@ -627,6 +629,32 @@ Post-MVP:
 * Rec Center Court.
 * Desert Court.
 
+### 12.4 Concept Art Target
+
+The visual north star is `docs/art/concept-sheet.png` and `docs/art/concept-screenshot.png`. These files are reference targets, not immutable requirements, until the visual direction is explicitly locked in Phase 5A or a later design-lock ticket.
+
+The game view should eventually read like a polished mobile arcade sports scene, not just a textured court:
+
+* 3/4 court remains the primary readable object.
+* Full court, kitchen, net, ball, players, ball shadow, score, pause, and controls remain visible on a phone.
+* Classic Court is surrounded by park detail: fence, trees, benches, lamps, signs, banners, pavement/grass transitions, and soft environmental shadows.
+* Court surface has pixel texture, line wear, and subtle color variation without hiding bounds or kitchen zones.
+* Players have clear silhouettes, readable paddles, idle/run/swing poses, and character-specific personality.
+* HUD uses chunky arcade panels similar to the concept scoreboard and feedback banners.
+* Feedback callouts, point banners, ball trail, hit sparks, and bounce effects add juice without obscuring gameplay.
+* Menus, roster cards, court cards, unlock panels, and settings use the same visual language as the in-match HUD.
+
+Visual upgrades must never reduce gameplay clarity. If a prop, shadow, texture, particle, or UI treatment makes the ball, court lines, kitchen, net, or controls harder to read, revise or remove it.
+
+Until the design is finalized:
+
+* Treat newer concept art in `docs/art/` as a candidate update, not an automatic replacement for the current target.
+* Keep a short concept-art changelog in `PHASE_NOTES.md` or a dedicated `docs/art/visual-direction.md` file.
+* Prefer configurable palettes, prop placement data, reusable UI widgets, and replaceable assets over one-off hardcoded art decisions.
+* When concept art changes, first update the visual gap checklist and affected phase/ticket notes, then update assets or UI.
+* Do not rewrite gameplay systems just to match a visual mockup unless a gameplay ticket explicitly approves that change.
+* Once a design-lock ticket is complete, later concept changes require new follow-up tickets rather than silent scope creep.
+
 ---
 
 ## 13. Development Phases
@@ -755,10 +783,14 @@ Make the gray-box rally feel like arcade pickleball.
 
 ## Acceptance Criteria
 
-* Full match can be played to 7.
+* Full match can be played to 11, win by 2.
 * Score updates correctly.
-* Out-of-bounds awards point.
-* Double bounce awards point.
+* Only the serving side can score.
+* Receiver rally win switches serve without adding a point.
+* Illegal serves cause loss of serve / side out.
+* Two-bounce-rule violations are faults.
+* Out-of-bounds faults resolve according to server-only scoring.
+* Double-bounce faults resolve according to server-only scoring.
 * Kitchen volley fault works.
 * Dink, drive, lob, smash are produced by racket contact and feedback.
 * No explicit shot buttons are added for dink, drive, lob, or smash.
@@ -929,7 +961,7 @@ Integrate real ad SDK using test ads only.
 
 ## Goal
 
-Replace gray-box visuals with early production-style retro art.
+Replace gray-box visuals with early production-style retro art. This phase establishes the asset pipeline, palette, sprites, themed UI, SFX, and haptics; it is not expected to reach the full concept-art richness by itself.
 
 ## Build Contents
 
@@ -972,6 +1004,302 @@ Replace gray-box visuals with early production-style retro art.
 * Toggle sound off.
 * Confirm SFX stop.
 * Watch for frame drops.
+
+---
+
+# Post-Phase-5 Visual Expansion Group
+
+## Goal
+
+Bring the game from the Phase 5 art-pass baseline toward the concept art in `docs/art/concept-sheet.png` and `docs/art/concept-screenshot.png`.
+
+These phases are intentionally visual. They may be scheduled before Phase 6 if visual quality is the priority, or alongside later gameplay phases if file ownership is clean. They must not change scoring, physics, AI, ad placement, or the locked movement + swing-stick control contract.
+
+The concept art may continue changing while this group is in progress. Each phase should build against the latest approved visual-direction note, and should leave assets/layouts replaceable enough that new concept art can be incorporated without resetting the entire visual pass.
+
+## Starting Baseline After Phase 5
+
+Phase 5 is expected to leave the project with:
+
+* A centralized `VisualPalette`.
+* A simple textured Classic Court asset, currently represented by `assets/images/court/court_classic.png`.
+* Basic player, opponent, ball, and paddle sprites under `assets/images/sprites/`.
+* Basic logo and roster portraits under `assets/images/ui/`.
+* Basic SFX under `assets/audio/sfx/`.
+* The existing 3/4 projection, court bounds, controls, rules, and match flow intact.
+
+The gap to the concept art is mostly environment richness, character animation depth, in-match VFX, final HUD/menu presentation, and visual QA across real devices.
+
+## Visual Expansion Non-Goals
+
+* No shot buttons.
+* No changes to scoring, match rules, ball physics, opponent AI, or ad frequency.
+* No real AdMob, IAP, online multiplayer, energy systems, gems, gacha, or pay-to-win.
+* No licensed or untracked third-party art.
+* No `CourtProjection` or `CourtLayoutSystem` changes unless a visual QA ticket explicitly proves framing is blocking the concept target.
+* No environment prop may cover active court lines, ball shadow, controls, score, pause, or rally feedback.
+
+---
+
+# Phase 5A — Concept Frame and Art Direction Lock
+
+## Goal
+
+Convert the current concept art into concrete in-engine visual rules before adding more assets, while leaving room for controlled concept updates until the design is finalized.
+
+## Build Contents
+
+* Screenshot comparison between current Phase 5 gameplay and `docs/art/concept-screenshot.png`.
+* Target draw-order map for court, environment, props, players, ball, shadows, VFX, HUD, and controls.
+* Pixel-density rules for world assets, sprites, UI panels, and icons.
+* Safe-area layout notes for tall Android phones.
+* Asset naming and folder conventions for environment and VFX assets.
+* A visual-direction source-of-truth note that records approved concept references, open questions, and what is not locked yet.
+* A design-lock checklist that says which parts are final, provisional, or intentionally deferred.
+
+## Implementation Tasks
+
+1. Capture a current Phase 5 Android screenshot and save it under `docs/art/`.
+2. Add a short visual gap note under `docs/art/` or `PHASE_NOTES.md`.
+3. Define target asset folders:
+   * `assets/images/environment/classic/`
+   * `assets/images/environment/shared/`
+   * `assets/images/vfx/`
+   * `assets/images/ui/hud/`
+4. Document draw order and occlusion rules for the match scene.
+5. Document the minimum readable sizes for ball, players, paddles, text, and court lines on phone.
+6. Create or update `docs/art/visual-direction.md` with:
+   * Current approved concept references.
+   * Revision date.
+   * Locked decisions.
+   * Provisional decisions.
+   * Known gaps from current in-game visuals.
+   * Rules for accepting future concept-art changes.
+
+## Acceptance Criteria
+
+* Future visual tickets can point to a concrete gap checklist.
+* Target art direction is specific enough that multiple agents can produce compatible assets.
+* Concept-art changes have a documented intake path until design lock.
+* No gameplay behavior changes.
+* Runs on local Android phone if any runtime layout code changes are made.
+
+---
+
+# Phase 5B — Courtside Environment and Depth Dressing
+
+## Goal
+
+Add the park setting around Classic Court so the match resembles the concept screenshot while preserving gameplay readability.
+
+## Build Contents
+
+* Off-court ground surface surrounding the playable court.
+* Back fence or wall behind the opponent side.
+* Trees, shrub clusters, benches, lamp posts, signs, banners, bags, and small courtside props.
+* Near/far prop scaling that reinforces the existing 3/4 depth.
+* Soft environmental shadows and edge shading.
+* A render layer that keeps active gameplay objects above decorative background where needed.
+
+## Implementation Tasks
+
+1. Add environment asset folders and placeholder pixel assets.
+2. Create an environment/background component for Classic Court.
+3. Add prop placement data in config/data instead of hardcoding scattered screen pixels.
+4. Render environment behind court lines and gameplay objects.
+5. Add front-edge or side-edge depth dressing only where it does not cover controls or court bounds.
+6. Add tests or debug assertions for environment layout bounds if practical.
+
+## Acceptance Criteria
+
+* Classic Court clearly reads as a park court, not a floating court on black.
+* Full court, kitchen, net, and ball remain more readable than the background.
+* Props do not overlap joystick, swing stick, serve button, score, pause, or feedback text.
+* Frame rate remains acceptable on Android.
+
+## Android QA Checklist
+
+* Capture screenshots during serve, rally, and point feedback.
+* Confirm player and opponent are never hidden by props.
+* Confirm ball shadow remains visible over all court regions.
+* Confirm the environment does not distract from in/out calls.
+
+---
+
+# Phase 5C — Court Material, Net, Lighting, and Shadows
+
+## Goal
+
+Polish the core match surface and depth cues so the court itself approaches the concept art quality.
+
+## Build Contents
+
+* More detailed court texture with subtle pixel noise, scuffs, and line wear.
+* Clearer kitchen zone treatment that matches the art style.
+* Net posts, net rail, mesh, and net shadow closer to the concept screenshot.
+* Directional player, ball, paddle, and prop shadows.
+* Optional time-of-day tint for Classic Court if it improves depth without reducing readability.
+
+## Implementation Tasks
+
+1. Replace the early court texture with a richer Classic Court texture.
+2. Rework net drawing/assets to include posts, rail, mesh, and cast shadow.
+3. Add shared shadow helpers or components where existing shadow code is too narrow.
+4. Tune line thickness and contrast for phone readability.
+5. Verify kitchen visibility after adding texture and shadows.
+
+## Acceptance Criteria
+
+* Court texture feels intentional and pixel-art, not flat bands.
+* Net reads as a physical object with depth.
+* Shadows help show height and position without muddying court lines.
+* Kitchen zone remains obvious in active play.
+
+---
+
+# Phase 5D — Character Personality and Animation Polish
+
+## Goal
+
+Upgrade the basic Phase 5 sprites into characters that match the concept roster and remain readable at gameplay scale.
+
+## Build Contents
+
+* Player and opponent idle, run, ready, swing, hit-confirm, point-win, and point-loss poses.
+* At least 4-frame run cycles where practical.
+* Swing anticipation and follow-through frames.
+* Character-specific colors and silhouettes for Rookie, Rally Queen, Veteran, and Showman.
+* Portraits that match gameplay sprites.
+* Paddle color/shape variants that do not imply pay-to-win.
+
+## Implementation Tasks
+
+1. Expand sprite sheets without changing movement or hit detection.
+2. Drive animation state from existing `PlayerState` and match events.
+3. Add character visual definitions in data/config rather than branching inside components.
+4. Update roster portraits to match the in-game character designs.
+5. Add screenshot or component tests where existing test patterns support sprite loading.
+
+## Acceptance Criteria
+
+* Characters are recognizable in both roster and gameplay views.
+* Swing timing feels better visually without changing racket-contact logic.
+* Player and opponent remain distinct at small sizes.
+* No animation hides the paddle or ball contact moment.
+
+---
+
+# Phase 5E — Ball Trail, Contact VFX, and Rally Juice
+
+## Goal
+
+Add arcade feedback similar to the concept screenshot without cluttering active play.
+
+## Build Contents
+
+* Ball arc/trail for lobs and high returns.
+* Small hit spark or paddle flash on clean contact.
+* Bounce dust or ring on court contact.
+* Smash impact effect.
+* Point-win burst/banner support.
+* Optional screen shake only for point-ending smashes, disabled or very subtle by default.
+
+## Implementation Tasks
+
+1. Add VFX asset folder and lightweight effect components.
+2. Trigger effects from existing shot classifications and ball bounce events.
+3. Keep VFX lifetimes short and deterministic.
+4. Respect sound/haptics settings where VFX are tied to feedback events.
+5. Add debug toggles only if needed for performance testing.
+
+## Acceptance Criteria
+
+* Dink, drive, lob, smash, fault, bounce, and point events are easier to read.
+* VFX never cover the ball for more than a brief moment.
+* VFX do not change physics, scoring, or AI.
+* No sustained frame drops on Android.
+
+---
+
+# Phase 5F — Concept HUD, Menus, and Court Cards
+
+## Goal
+
+Bring UI presentation closer to the concept sheet while keeping the first screen useful and fast.
+
+## Build Contents
+
+* Chunky blue/red scoreboard panels with serving indicator.
+* Pause button treatment matching the concept screenshot.
+* Top-center rally feedback and point banners.
+* Refined joystick, swing-stick, and serve-button skins.
+* Main menu background treatment and stronger logo presentation.
+* Roster cards matching the concept layout.
+* Court cards for Classic and Park Court, with locked-state art placeholders for later courts.
+* Settings, pause, and end-match screens restyled to match the same UI system.
+
+## Implementation Tasks
+
+1. Move HUD colors, borders, shadows, and typography into shared theme/config where practical.
+2. Replace generic buttons/cards with reusable arcade UI widgets.
+3. Add court card assets for Classic and Park Court.
+4. Confirm all text fits on small phones and large phones.
+5. Preserve quick path to gameplay: new player can still start first match in under 3 taps.
+
+## Acceptance Criteria
+
+* In-match HUD resembles the concept art while staying notch/nav safe.
+* Main menu, roster, settings, pause, and end-match screens feel like the same game.
+* Button labels, scores, roster names, and settings copy do not clip.
+* No menu, ad, or unlock work exceeds the current phase's feature scope.
+
+---
+
+# Phase 5G — Visual QA and Performance Gate
+
+## Goal
+
+Verify that the expanded visuals actually move the game toward the concept art and still run cleanly on Android.
+
+## Build Contents
+
+* Android screenshot set for menu, roster, settings, serve, rally, point banner, pause, and end match.
+* Side-by-side comparison against `docs/art/concept-screenshot.png` and the latest Phase 5 screenshot.
+* Performance check on a physical Android phone.
+* Visual bug ticket list for any remaining concept gaps.
+
+## Verification Commands
+
+Run from `dink_rivals/`:
+
+```bash
+flutter pub get
+flutter analyze
+flutter test
+flutter build apk --debug
+flutter install -d <ANDROID_DEVICE_ID> --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
+```
+
+## Android QA Checklist
+
+* Fresh install on Android phone.
+* Launch and start Quick Match in under 3 taps.
+* Play at least 3 full matches.
+* Keep the app running for at least 10 minutes.
+* Capture screenshots at serve, rally, point, pause, and post-match.
+* Confirm ball, ball shadow, court lines, kitchen, net, score, pause, and controls stay readable.
+* Confirm no UI overlaps notch, gesture nav, joystick, swing stick, or serve button.
+* Confirm SFX and haptics still respect settings.
+* Record remaining visual gaps in `PHASE_NOTES.md` and/or follow-up tickets.
+
+## Acceptance Criteria
+
+* `flutter analyze` passes.
+* `flutter test` passes.
+* Debug APK installs and launches on Android.
+* Expanded visuals are materially closer to the concept art.
+* No gameplay, scoring, controls, ads, audio toggle, or haptics regressions.
+* Known visual gaps are tracked instead of left implicit.
 
 ---
 
@@ -1121,8 +1449,10 @@ class Tuning {
   static const double perfectHitWindowRadius = 22;
   static const double smashMinBallHeight = 80;
 
-  static const int quickMatchWinningScore = 7;
-  static const int tournamentWinningScore = 7;
+  static const int quickMatchWinningScore = 11;
+  static const int quickMatchWinBy = 2;
+  static const int tournamentWinningScore = 11;
+  static const int tournamentWinBy = 2;
 
   static const int minMatchesBeforeInterstitial = 3;
   static const int minMinutesBetweenInterstitials = 4;
@@ -1136,7 +1466,10 @@ class Tuning {
 ### 15.1 Required Unit Tests
 
 * Scoring system.
+* Server-only scoring and side-out transitions.
 * Match-over detection.
+* Legal diagonal serve landing.
+* Two-bounce rule after serve.
 * Kitchen volley fault.
 * Out-of-bounds detection.
 * Double bounce rule.
@@ -1201,8 +1534,9 @@ Build in this order:
 3. App shell.
 4. Fake ads.
 5. Real test ads.
-6. Art.
-7. Tournament.
-8. MVP polish.
+6. Initial art pass.
+7. Concept-art visual expansion.
+8. Tournament.
+9. MVP polish.
 
 A fun ugly prototype is valuable. A beautiful monetized game that does not feel good is worthless.

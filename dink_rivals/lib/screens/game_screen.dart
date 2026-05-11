@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/ad_provider.dart';
+import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
+import '../game/config/visual_palette.dart';
 import '../game/dink_rivals_game.dart';
 import '../game/models/opponent_serve_phase.dart';
 import '../services/save_service.dart';
@@ -74,7 +76,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: VisualPalette.textInverse,
         body: Padding(
           padding: EdgeInsets.only(
             top: viewPadding.top,
@@ -92,20 +94,34 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   key: const Key('game-pause-button'),
                   iconSize: 36,
                   icon: const Icon(Icons.pause_circle_filled,
-                      color: Colors.white70),
-                  onPressed: _showPause ? null : () => _setPaused(true),
+                      color: VisualPalette.controlStroke),
+                  onPressed: _showPause
+                      ? null
+                      : () {
+                          ref.read(audioServiceProvider).playMenuClick();
+                          _setPaused(true);
+                        },
                 ),
               ),
               if (_showPause)
                 _PauseOverlay(
-                  onResume: () => _setPaused(false),
-                  onMenu: _returnToMenu,
+                  onResume: () {
+                    ref.read(audioServiceProvider).playMenuClick();
+                    _setPaused(false);
+                  },
+                  onMenu: () {
+                    ref.read(audioServiceProvider).playMenuClick();
+                    _returnToMenu();
+                  },
                 ),
               if (!_showPause)
                 _OpponentServeOverlay(
                   phaseNotifier: _game.opponentServePhase,
                   countdownNotifier: _game.opponentServeCountdown,
-                  onReady: _game.confirmOpponentServeReady,
+                  onReady: () {
+                    ref.read(audioServiceProvider).playMenuClick();
+                    _game.confirmOpponentServeReady();
+                  },
                 ),
             ],
           ),
@@ -134,7 +150,7 @@ class _OpponentServeOverlay extends StatelessWidget {
         if (phase == OpponentServePhase.awaitingReady) {
           return Positioned.fill(
             child: ColoredBox(
-              color: const Color(0xAA000000),
+              color: VisualPalette.overlayScrim,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -145,7 +161,7 @@ class _OpponentServeOverlay extends StatelessWidget {
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 3,
-                        color: Colors.white,
+                        color: VisualPalette.courtLineWhite,
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -176,10 +192,10 @@ class _OpponentServeOverlay extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 120,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: VisualPalette.textPrimary,
                         shadows: [
                           Shadow(
-                            color: Color(0xCC000000),
+                            color: VisualPalette.scoreboardSurface,
                             offset: Offset(0, 4),
                             blurRadius: 12,
                           ),
@@ -208,7 +224,7 @@ class _PauseOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: ColoredBox(
-        color: const Color(0xCC000000),
+        color: VisualPalette.overlayScrim,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -219,7 +235,7 @@ class _PauseOverlay extends StatelessWidget {
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 4,
-                  color: Colors.white,
+                  color: VisualPalette.courtLineWhite,
                 ),
               ),
               const SizedBox(height: 32),

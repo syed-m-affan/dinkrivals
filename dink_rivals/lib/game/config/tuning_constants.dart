@@ -1,5 +1,6 @@
 class Tuning {
-  static const int quickMatchWinningScore = 7;
+  static const int quickMatchWinningScore = 11;
+  static const int quickMatchWinBy = 2;
 
   static const double playerMaxSpeed = 240.0;
   static const double playerAcceleration = 1350.0;

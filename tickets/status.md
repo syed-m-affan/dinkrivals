@@ -20,6 +20,12 @@ Phase 3 planning (2026-05-11): Phase 3 fake ad framework tickets are now queued.
 
 Phase 3 implementation (2026-05-11): P3-001 through P3-005 are implemented and automated verification passes. P3-006 is in `review`: debug APK installs and launch command returns OK on Pixel 10 Pro XL, but the full manual fake-ad QA checklist still needs a human pass because screenshot capture showed the device lock screen.
 
+Phase 5 planning (2026-05-11): Phase 5 visual identity pass tickets are queued (P5-001..P5-007). The work is split into asset pipeline + palette + pixel court art (P5-001), player/opponent sprites (P5-002), ball/paddle sprites (P5-003), UI theme + scoreboard + feedback restyle + portraits + menu logo (P5-004), audio service + SFX wired to the existing `soundEnabled` flag (P5-005), haptics service wired to the existing `hapticsEnabled` flag (P5-006), and Android verification (P5-007). Phase 5 must not introduce real AdMob, IAP, tournament/unlocks, new shot buttons, or any change to `CourtProjection`, ball physics, scoring/rules, or AI. Phase 4 (real AdMob test ads) is deliberately not queued yet — it can be planned in parallel or deferred until after Phase 5 lands.
+
+Phase 5 implementation (2026-05-11): P5-001 through P5-006 are complete. The project now has the Phase 5 asset directories, generated placeholder retro court/logo/portrait/sprite/SFX assets, centralized `VisualPalette`, palette-driven court/kitchen/net/touch-control/game UI rendering, player/opponent idle-run-swing sprites, ball and paddle sprites, themed scoreboard with serving indicator, per-shot feedback colors, menu logo, roster portraits, audio service wired to `soundEnabled`, and haptics service wired to `hapticsEnabled`. P5-007 is in `review`: `flutter analyze`, `flutter test` (96 tests), `flutter build apk --debug`, and `flutter install --debug -d 58011FDCQ00992` pass, but the manual Android QA checklist still needs human validation.
+
+Phase 5A-5G planning (2026-05-11): Visual expansion tickets are queued as discrete work, not phase-sized wrappers. Phase 5A locks concept direction and rendering conventions; 5B adds Classic Court environment dressing; 5C polishes court/net/shadows; 5D expands character personality and animation; 5E adds short-lived VFX and rally juice; 5F restyles HUD/screens/court cards; 5G verifies screenshots, Android performance, and closeout. These tickets must preserve the locked control contract, scoring/rules, ball physics, AI, ad placement, and existing settings behavior unless a future non-visual ticket explicitly changes them.
+
 ## Dashboard
 
 | ID | Phase | Status | Priority | Parallel | Depends on | Summary |
@@ -55,9 +61,39 @@ Phase 3 implementation (2026-05-11): P3-001 through P3-005 are implemented and a
 | P3-004 | 3 | done | high | D | [P3-001, P3-002] | Show fake interstitial modal only at eligible post-match natural breaks. |
 | P3-005 | 3 | done | medium | E | [P3-001, P3-002] | Add debug visibility for ad eligibility and frequency gates. |
 | P3-006 | 3 | review | high | final | [P3-001, P3-002, P3-003, P3-004, P3-005] | Phase 3 fake ad framework verification and Android QA. |
+| P5-001 | 5 | done | high | A | [] | Visual palette, asset pipeline, and pixel-style court art (preserves 3/4 projection). |
+| P5-002 | 5 | done | high | B | [P5-001] | Player and opponent sprite components with idle/run/swing animations driven by `PlayerState`. |
+| P5-003 | 5 | done | high | C | [P5-001] | Ball and paddle sprites; shadow component unchanged; height-scale curve preserved. |
+| P5-004 | 5 | done | high | D | [P5-001] | UI theme + scoreboard restyle (serving indicator) + DINK/DRIVE/LOB/SMASH/FAULT colors + roster portraits + menu logo. |
+| P5-005 | 5 | done | high | A | [] | Audio service + hit/bounce/point/fault/menu-click SFX wired to `soundEnabled`. |
+| P5-006 | 5 | done | medium | A | [] | Haptics service for player hit (light) and player point win (medium), wired to `hapticsEnabled`. |
+| P5-007 | 5 | review | high | final | [P5-001, P5-002, P5-003, P5-004, P5-005, P5-006] | Phase 5 verification, Android QA checklist, and notes. |
+| P5A-001 | 5A | todo | high | A | [P5-007] | Capture current Phase 5 screenshot baseline and concept gap inventory. |
+| P5A-002 | 5A | todo | high | B | [P5A-001] | Create visual-direction source of truth with locked/provisional decisions and readability rules. |
+| P5A-003 | 5A | todo | high | C | [P5A-002] | Define asset folders, render-layer map, occlusion rules, and SafeArea conventions. |
+| P5B-001 | 5B | todo | high | A | [P5A-002, P5A-003] | Generate Classic Court environment placeholder assets and manifest. |
+| P5B-002 | 5B | todo | high | B | [P5B-001] | Add data-driven Classic environment component and prop placement. |
+| P5B-003 | 5B | todo | medium | final | [P5B-002] | Android environment readability QA and screenshots. |
+| P5C-001 | 5C | todo | high | A | [P5A-002] | Replace early court surface with richer Classic Court texture and kitchen treatment. |
+| P5C-002 | 5C | todo | high | B | [P5A-003] | Upgrade net art with posts, rail, mesh, and cast shadow. |
+| P5C-003 | 5C | todo | medium | C | [P5C-001, P5C-002] | Add shared directional shadows and subtle lighting pass. |
+| P5D-001 | 5D | todo | high | A | [P5A-002] | Add data-driven character visual definitions for the four MVP characters. |
+| P5D-002 | 5D | todo | high | B | [P5D-001] | Expand character sprite sheets and animation states without hitbox changes. |
+| P5D-003 | 5D | todo | medium | C | [P5D-001, P5D-002] | Update matching roster portraits and document character visual QA. |
+| P5E-001 | 5E | todo | high | A | [P5A-003] | Add VFX framework and placeholder VFX assets. |
+| P5E-002 | 5E | todo | high | B | [P5E-001] | Wire contact, bounce, dink/drive/lob/smash VFX to existing events. |
+| P5E-003 | 5E | todo | medium | C | [P5E-002] | Add ball trails, point bursts, and Android VFX performance check. |
+| P5F-001 | 5F | todo | high | A | [P5A-002] | Add reusable arcade UI primitives and theme tokens. |
+| P5F-002 | 5F | todo | high | B | [P5F-001] | Restyle concept HUD, scoreboard, feedback, pause button, and controls. |
+| P5F-003 | 5F | todo | high | C | [P5F-001] | Restyle menu, roster, settings, pause overlay, and end-match screens. |
+| P5F-004 | 5F | todo | medium | D | [P5F-001] | Add court card assets/placeholders without court-selection scope. |
+| P5G-001 | 5G | todo | high | A | [P5B-003, P5C-003, P5D-003, P5E-003, P5F-002, P5F-003, P5F-004] | Automated visual verification and screenshot comparison set. |
+| P5G-002 | 5G | todo | high | B | [P5G-001] | Android performance and readability QA for expanded visuals. |
+| P5G-003 | 5G | todo | high | final | [P5G-001, P5G-002] | Visual gap backlog and Phase 5A-5G closeout. |
 
 ## Open Coordination Notes
 
+- Phase 5A-5G is visual expansion work only. It may add assets, visual components, UI style, and QA documentation, but it must not alter scoring/rules, ball physics, AI, ad placement, the movement + swing-stick control contract, or monetization/progression scope. Phase 5A direction tickets should be completed before broad environment, court, character, VFX, or UI expansion tickets.
 - Existing worktree has local changes from prior Phase 0 tuning. Do not revert them.
 - `dink_rivals/PHASE_NOTES.md` is the authoritative playtest history.
 - Phase 1 should preserve the current visible movement joystick, swing-stick racket control, automatic racket contact, full racket-segment hitbox, and enlarged play area unless a ticket explicitly changes them.
@@ -68,3 +104,4 @@ Phase 3 implementation (2026-05-11): P3-001 through P3-005 are implemented and a
 - Phase 2 must not break the "no forced ad before first gameplay" rule; ad logic does not exist yet and should not be introduced ahead of Phase 3.
 - P0-006 through P0-008 are a gray-box perspective correction. Do not add production art assets, change scoring/rules/AI, or alter the locked movement + swing-stick control contract while completing them.
 - Phase 3 uses fake ads only. Do not add `google_mobile_ads`, real AdMob app IDs, production ad unit IDs, IAP, remove-ads purchase logic, or banners. Fake interstitials may appear only at post-match natural breaks after frequency gates pass; fake rewarded ads must be user-initiated.
+- Phase 5 is art + audio only. Do not touch `CourtProjection`, `CourtLayoutSystem`, ball physics, scoring/rules, AI logic, or the locked control contract (movement stick + swing stick + automatic racket-contact classification — no dink/drive/lob/smash buttons). No real AdMob, IAP, tournament, or unlock work in Phase 5. Reuse the existing `soundEnabled` / `hapticsEnabled` flags from `SaveService` — do not add new settings toggles. All component colors must read from `VisualPalette`; no new hardcoded color literals.

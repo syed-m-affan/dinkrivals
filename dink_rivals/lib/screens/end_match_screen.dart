@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/ad_provider.dart';
+import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
+import '../game/config/visual_palette.dart';
 import '../game/models/player_side.dart';
 
 class EndMatchScreen extends ConsumerStatefulWidget {
@@ -23,6 +25,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     if (_rewardClaimed || !_rewardAvailable) {
       return;
     }
+    ref.read(audioServiceProvider).playMenuClick();
     final didShow = await ref
         .read(adServiceProvider)
         .showRewardedAd(placement: 'post_match_double_reward');
@@ -40,6 +43,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     if (_showingInterstitial) {
       return;
     }
+    ref.read(audioServiceProvider).playMenuClick();
     final game = ref.read(dinkRivalsGameProvider);
     final placement = ref.read(adPlacementSystemProvider);
     final adService = ref.read(adServiceProvider);
@@ -91,9 +95,12 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     final playerWon = match.playerScore > match.opponentScore;
     final winnerText = playerWon ? 'YOU WIN' : 'OPPONENT WINS';
     final winnerColor =
-        playerWon ? const Color(0xFF4FD08B) : const Color(0xFFFF6A6A);
+        playerWon ? VisualPalette.feedbackDink : VisualPalette.feedbackFault;
     final rewardText =
         _rewardClaimed ? 'REWARD CLAIMED 2X' : 'MATCH REWARD 100';
+    final winnerPortrait = playerWon
+        ? 'assets/images/ui/portrait_rookie.png'
+        : 'assets/images/ui/portrait_showman.png';
 
     return PopScope(
       canPop: false,
@@ -105,90 +112,110 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),
-            child: ListView(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 24),
-              children: [
-                Text(
-                  winnerText,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 3,
-                    color: winnerColor,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        winnerPortrait,
+                        key: const Key('end-match-winner-portrait'),
+                        width: 80,
+                        height: 80,
+                        filterQuality: FilterQuality.none,
+                      ),
+                      const SizedBox(width: 16),
+                      Flexible(
+                        child: Text(
+                          winnerText,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
+                            color: winnerColor,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 32),
-                _ScoreLine(
-                  label: 'YOU',
-                  side: PlayerSide.player,
-                  score: match.playerScore,
-                  highlight: playerWon,
-                ),
-                const SizedBox(height: 8),
-                _ScoreLine(
-                  label: 'OPPONENT',
-                  side: PlayerSide.opponent,
-                  score: match.opponentScore,
-                  highlight: !playerWon,
-                ),
-                const SizedBox(height: 32),
-                _StatRow(label: 'Rally count', value: '${match.rallyCount}'),
-                _StatRow(
-                    label: 'Longest rally', value: '${match.longestRally}'),
-                const SizedBox(height: 24),
-                Text(
-                  rewardText,
-                  key: const Key('end-match-reward-label'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: _rewardClaimed
-                        ? const Color(0xFFFFCB47)
-                        : const Color(0xFFC0C8DC),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 32),
+                  _ScoreLine(
+                    label: 'YOU',
+                    side: PlayerSide.player,
+                    score: match.playerScore,
+                    highlight: playerWon,
                   ),
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  key: const Key('end-match-rewarded-ad'),
-                  onPressed:
-                      _rewardAvailable && !_rewardClaimed ? _claimReward : null,
-                  child: Text(
-                    _rewardClaimed
-                        ? 'REWARD CLAIMED'
-                        : _rewardAvailable
-                            ? 'WATCH AD: 2X REWARD'
-                            : 'REWARDED AD UNAVAILABLE',
+                  const SizedBox(height: 8),
+                  _ScoreLine(
+                    label: 'OPPONENT',
+                    side: PlayerSide.opponent,
+                    score: match.opponentScore,
+                    highlight: !playerWon,
                   ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  adPlacement.debugSummary(isNaturalBreak: true),
-                  key: const Key('end-match-ad-debug'),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF8A93AB),
-                    fontSize: 12,
-                    fontFamily: 'monospace',
+                  const SizedBox(height: 32),
+                  _StatRow(label: 'Rally count', value: '${match.rallyCount}'),
+                  _StatRow(
+                      label: 'Longest rally', value: '${match.longestRally}'),
+                  const SizedBox(height: 24),
+                  Text(
+                    rewardText,
+                    key: const Key('end-match-reward-label'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: _rewardClaimed
+                          ? VisualPalette.uiAccent
+                          : VisualPalette.courtLineWhite,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  key: const Key('end-match-rematch'),
-                  onPressed: () {
-                    game.resetMatch();
-                    context.go(AppRoutes.game);
-                  },
-                  child: const Text('REMATCH'),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  key: const Key('end-match-menu'),
-                  onPressed: _returnToMenu,
-                  child: const Text('RETURN TO MENU'),
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    key: const Key('end-match-rewarded-ad'),
+                    onPressed: _rewardAvailable && !_rewardClaimed
+                        ? _claimReward
+                        : null,
+                    child: Text(
+                      _rewardClaimed
+                          ? 'REWARD CLAIMED'
+                          : _rewardAvailable
+                              ? 'WATCH AD: 2X REWARD'
+                              : 'REWARDED AD UNAVAILABLE',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    adPlacement.debugSummary(isNaturalBreak: true),
+                    key: const Key('end-match-ad-debug'),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: VisualPalette.netRail,
+                      fontSize: 12,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  ElevatedButton(
+                    key: const Key('end-match-rematch'),
+                    onPressed: () {
+                      ref.read(audioServiceProvider).playMenuClick();
+                      game.resetMatch();
+                      context.go(AppRoutes.game);
+                    },
+                    child: const Text('REMATCH'),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    key: const Key('end-match-menu'),
+                    onPressed: _returnToMenu,
+                    child: const Text('RETURN TO MENU'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -212,7 +239,8 @@ class _ScoreLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = highlight ? Colors.white : const Color(0xFF8A93AB);
+    final color =
+        highlight ? VisualPalette.textPrimary : VisualPalette.textMuted;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -250,8 +278,8 @@ class _StatRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: Color(0xFFC0C8DC))),
-          Text(value, style: const TextStyle(color: Color(0xFFC0C8DC))),
+          Text(label, style: const TextStyle(color: VisualPalette.textSoft)),
+          Text(value, style: const TextStyle(color: VisualPalette.textSoft)),
         ],
       ),
     );

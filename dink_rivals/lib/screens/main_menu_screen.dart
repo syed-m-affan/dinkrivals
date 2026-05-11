@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../app/audio_provider.dart';
 import '../app/app_config.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
+import '../game/config/visual_palette.dart';
 
 class MainMenuScreen extends ConsumerWidget {
   const MainMenuScreen({super.key});
@@ -26,7 +28,7 @@ class MainMenuScreen extends ConsumerWidget {
                   AppConfig.phaseLabel,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(0xFF8A93AB),
+                    color: VisualPalette.textMuted,
                     fontSize: 12,
                     letterSpacing: 1.2,
                   ),
@@ -35,6 +37,7 @@ class MainMenuScreen extends ConsumerWidget {
                 ElevatedButton(
                   key: const Key('menu-quick-match'),
                   onPressed: () {
+                    ref.read(audioServiceProvider).playMenuClick();
                     ref.read(dinkRivalsGameProvider).resetMatch();
                     context.go(AppRoutes.game);
                   },
@@ -43,13 +46,19 @@ class MainMenuScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   key: const Key('menu-roster'),
-                  onPressed: () => context.go(AppRoutes.roster),
+                  onPressed: () {
+                    ref.read(audioServiceProvider).playMenuClick();
+                    context.go(AppRoutes.roster);
+                  },
                   child: const Text('ROSTER'),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   key: const Key('menu-settings'),
-                  onPressed: () => context.go(AppRoutes.settings),
+                  onPressed: () {
+                    ref.read(audioServiceProvider).playMenuClick();
+                    context.go(AppRoutes.settings);
+                  },
                   child: const Text('SETTINGS'),
                 ),
               ],
@@ -68,32 +77,19 @@ class _Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 96,
-          height: 96,
-          decoration: BoxDecoration(
-            color: const Color(0xFF4AA3FF),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white, width: 3),
-          ),
-          alignment: Alignment.center,
-          child: const Text(
-            'DR',
+        Image.asset(
+          'assets/images/ui/logo.png',
+          key: const Key('menu-logo-image'),
+          width: 256,
+          filterQuality: FilterQuality.none,
+          errorBuilder: (_, __, ___) => const Text(
+            'DINK RIVALS',
             style: TextStyle(
-              fontSize: 40,
+              color: VisualPalette.courtLineWhite,
+              fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              fontFamily: 'monospace',
             ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          'DINK RIVALS',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2.0,
-            color: Colors.white,
           ),
         ),
       ],

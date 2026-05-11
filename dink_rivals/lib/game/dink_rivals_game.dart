@@ -33,11 +33,21 @@ import 'systems/scoring_system.dart';
 import 'systems/serve_flow_system.dart';
 import 'systems/shot_system.dart';
 import 'systems/touch_input_controller.dart';
+import '../services/audio_service.dart';
+import '../services/haptics_service.dart';
 
 class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
+  DinkRivalsGame({
+    AudioService? audioService,
+    HapticsService? hapticsService,
+  })  : audioService = audioService ?? FakeAudioService(),
+        hapticsService = hapticsService ?? FakeHapticsService();
+
   late final PlayerComponent player;
   late final OpponentComponent opponent;
   late final BallComponent ball;
+  final AudioService audioService;
+  final HapticsService hapticsService;
 
   final CourtLayoutSystem courtLayoutSystem = CourtLayoutSystem();
   final InputSystem inputSystem = InputSystem();
@@ -172,13 +182,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   void resetMatch() {
-    matchState.playerScore = 0;
-    matchState.opponentScore = 0;
-    matchState.matchOver = false;
-    matchState.longestRally = 0;
-    matchState.playerDinkContactsThisMatch = 0;
-    matchState.playerSmashContactsThisMatch = 0;
-    matchState.servingSide = PlayerSide.player;
+    scoringSystem.resetMatch(matchState);
     lastRuleResult = null;
     matchOverNotifier.value = false;
     if (isLoaded) {
@@ -327,6 +331,8 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       return false;
     }
 
+    audioService.playHit();
+    hapticsService.light();
     _showFeedback(shotSystem.lastShotType?.name.toUpperCase() ?? 'HIT');
     if (!matchState.pointInProgress) {
       matchState.startPoint();
@@ -334,6 +340,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     final volleyResult = matchRulesSystem.evaluateVolley(
       hitter: player.state,
       ball: preHitBall,
+      match: matchState,
     );
     if (volleyResult.pointEnded) {
       _awardPoint(volleyResult);
@@ -354,6 +361,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
 
   bool _updatePhysicsAndRules(double dt) {
     final physics = ballPhysicsSystem.update(ball.state, dt);
+    if (physics.groundContact) {
+      audioService.playBounce();
+    }
     if (physics.crossedNet) {
       scoringSystem.recordRallyCrossing(matchState);
       rallyCount = matchState.rallyCount;
@@ -361,10 +371,14 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     final ruleResult = matchRulesSystem.evaluatePhysicsResult(
       ball: ball.state,
       physics: physics,
+      match: matchState,
     );
     if (ruleResult.pointEnded) {
       _awardPoint(ruleResult);
       return true;
+    }
+    if (physics.groundContact) {
+      matchState.recordGroundBounce(ball.state.currentSide);
     }
     if (physics.groundContact &&
         !ball.state.isInPlay &&
@@ -397,10 +411,12 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     );
     if (ball.state.lastHitBy != preAiLastHitBy &&
         ball.state.lastHitBy == opponent.state.side) {
+      audioService.playHit();
       _showFeedback(shotSystem.lastShotType?.name.toUpperCase() ?? 'HIT');
       final volleyResult = matchRulesSystem.evaluateVolley(
         hitter: opponent.state,
         ball: preAiBall,
+        match: matchState,
       );
       if (volleyResult.pointEnded) {
         _awardPoint(volleyResult);
@@ -415,7 +431,17 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     }
     lastRuleResult = result;
     _showFeedback(_feedbackForRule(result));
-    scoringSystem.awardPoint(matchState, winner);
+    final isFault = result.fault != null;
+    if (isFault) {
+      audioService.playFault();
+    }
+    final changed = scoringSystem.awardPoint(matchState, winner);
+    if (changed) {
+      audioService.playPoint();
+      if (winner == PlayerSide.player) {
+        hapticsService.medium();
+      }
+    }
     resetPoint();
     if (matchState.matchOver) {
       ball.state.isInPlay = false;
@@ -436,7 +462,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     return switch (fault) {
       RuleFault.outOfBounds => 'FAULT: OUT',
       RuleFault.doubleBounce => 'FAULT: DOUBLE BOUNCE',
+      RuleFault.twoBounceViolation => 'FAULT: TWO BOUNCE',
       RuleFault.kitchenVolley => 'FAULT: KITCHEN',
+      RuleFault.illegalServe => 'FAULT: SERVE',
     };
   }
 
