@@ -7,6 +7,7 @@ import '../app/router.dart';
 import '../game/config/character_visuals.dart';
 import '../game/config/visual_palette.dart';
 import '../widgets/arcade_panel.dart';
+import '../widgets/park_backdrop.dart';
 
 class _CharacterDef {
   const _CharacterDef({
@@ -65,66 +66,75 @@ class RosterScreen extends ConsumerWidget {
           },
         ),
       ),
-      body: SafeArea(
-        child: ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: _mvpRoster.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final char = _mvpRoster[index];
-            final visual = CharacterVisuals.byDisplayName(char.name);
-            return ArcadePanel(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    visual.portraitAsset,
-                    key: Key('roster-portrait-${char.name}'),
-                    width: 72,
-                    height: 72,
-                    filterQuality: FilterQuality.none,
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          char.name.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: VisualPalette.uiAccent,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          char.role,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: VisualPalette.courtLineWhite,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Strength: ${char.strength}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Weakness: ${char.weakness}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+      body: ParkBackdrop(
+        overlayOpacity: 0.78,
+        child: SafeArea(
+          child: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: _mvpRoster.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final char = _mvpRoster[index];
+              final visual = CharacterVisuals.byDisplayName(char.name);
+              return ArcadePanel(
+                backgroundColor: VisualPalette.uiSurface.withValues(
+                  alpha: 0.88,
+                ),
+                borderColor: VisualPalette.courtLineWhite.withValues(
+                  alpha: 0.52,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      visual.portraitAsset,
+                      key: Key('roster-portrait-${char.name}'),
+                      width: 72,
+                      height: 72,
+                      filterQuality: FilterQuality.none,
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            char.name.toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: VisualPalette.uiAccent,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            char.role,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: VisualPalette.courtLineWhite,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Strength: ${char.strength}',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Weakness: ${char.weakness}',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

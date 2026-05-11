@@ -10,6 +10,7 @@ import '../game/config/visual_palette.dart';
 import '../game/models/player_side.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
+import '../widgets/park_backdrop.dart';
 
 class EndMatchScreen extends ConsumerStatefulWidget {
   const EndMatchScreen({super.key});
@@ -111,126 +112,137 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
         _returnToMenu();
       },
       child: Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ArcadePanel(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          winnerPortrait,
-                          key: const Key('end-match-winner-portrait'),
-                          width: 64,
-                          height: 64,
-                          filterQuality: FilterQuality.none,
-                        ),
-                        const SizedBox(width: 16),
-                        Flexible(
-                          child: Text(
-                            winnerText,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              color: winnerColor,
+        body: ParkBackdrop(
+          overlayOpacity: 0.82,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ArcadePanel(
+                      backgroundColor:
+                          VisualPalette.uiSurface.withValues(alpha: 0.88),
+                      borderColor:
+                          VisualPalette.courtLineWhite.withValues(alpha: 0.52),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            winnerPortrait,
+                            key: const Key('end-match-winner-portrait'),
+                            width: 64,
+                            height: 64,
+                            filterQuality: FilterQuality.none,
+                          ),
+                          const SizedBox(width: 16),
+                          Flexible(
+                            child: Text(
+                              winnerText,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                                color: winnerColor,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  ArcadePanel(
-                    child: Column(
-                      children: [
-                        _ScoreLine(
-                          label: 'YOU',
-                          side: PlayerSide.player,
-                          score: match.playerScore,
-                          highlight: playerWon,
-                        ),
-                        const SizedBox(height: 8),
-                        _ScoreLine(
-                          label: 'OPPONENT',
-                          side: PlayerSide.opponent,
-                          score: match.opponentScore,
-                          highlight: !playerWon,
-                        ),
-                        const Divider(color: VisualPalette.netMeshStroke),
-                        _StatRow(
-                          label: 'Rally count',
-                          value: '${match.rallyCount}',
-                        ),
-                        _StatRow(
-                          label: 'Longest rally',
-                          value: '${match.longestRally}',
-                        ),
-                      ],
+                    const SizedBox(height: 32),
+                    ArcadePanel(
+                      backgroundColor:
+                          VisualPalette.uiSurface.withValues(alpha: 0.88),
+                      borderColor:
+                          VisualPalette.courtLineWhite.withValues(alpha: 0.52),
+                      child: Column(
+                        children: [
+                          _ScoreLine(
+                            label: 'YOU',
+                            side: PlayerSide.player,
+                            score: match.playerScore,
+                            highlight: playerWon,
+                          ),
+                          const SizedBox(height: 8),
+                          _ScoreLine(
+                            label: 'OPPONENT',
+                            side: PlayerSide.opponent,
+                            score: match.opponentScore,
+                            highlight: !playerWon,
+                          ),
+                          const Divider(color: VisualPalette.netMeshStroke),
+                          _StatRow(
+                            label: 'Rally count',
+                            value: '${match.rallyCount}',
+                          ),
+                          _StatRow(
+                            label: 'Longest rally',
+                            value: '${match.longestRally}',
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    rewardText,
-                    key: const Key('end-match-reward-label'),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: _rewardClaimed
-                          ? VisualPalette.uiAccent
-                          : VisualPalette.courtLineWhite,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 24),
+                    Text(
+                      rewardText,
+                      key: const Key('end-match-reward-label'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: _rewardClaimed
+                            ? VisualPalette.uiAccent
+                            : VisualPalette.courtLineWhite,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  ArcadeButton(
-                    key: const Key('end-match-rewarded-ad'),
-                    label: _rewardClaimed
-                        ? 'REWARD CLAIMED'
-                        : _rewardAvailable
-                            ? '2X REWARD AD'
-                            : 'AD UNAVAILABLE',
-                    icon: Icons.play_circle,
-                    onPressed: _rewardAvailable && !_rewardClaimed
-                        ? _claimReward
-                        : null,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    adPlacement.debugSummary(isNaturalBreak: true),
-                    key: const Key('end-match-ad-debug'),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: VisualPalette.netRail,
-                      fontSize: 12,
-                      fontFamily: 'monospace',
+                    const SizedBox(height: 12),
+                    ArcadeButton(
+                      key: const Key('end-match-rewarded-ad'),
+                      label: _rewardClaimed
+                          ? 'REWARD CLAIMED'
+                          : _rewardAvailable
+                              ? '2X REWARD AD'
+                              : 'AD UNAVAILABLE',
+                      icon: Icons.play_circle,
+                      onPressed: _rewardAvailable && !_rewardClaimed
+                          ? _claimReward
+                          : null,
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  ArcadeButton(
-                    key: const Key('end-match-rematch'),
-                    label: 'REMATCH',
-                    icon: Icons.replay,
-                    onPressed: () {
-                      ref.read(audioServiceProvider).playMenuClick();
-                      game.resetMatch();
-                      context.go(AppRoutes.game);
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  ArcadeButton(
-                    key: const Key('end-match-menu'),
-                    label: 'RETURN TO MENU',
-                    icon: Icons.home,
-                    onPressed: _returnToMenu,
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Text(
+                      adPlacement.debugSummary(isNaturalBreak: true),
+                      key: const Key('end-match-ad-debug'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: VisualPalette.netRail,
+                        fontSize: 12,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    ArcadeButton(
+                      key: const Key('end-match-rematch'),
+                      label: 'REMATCH',
+                      icon: Icons.replay,
+                      onPressed: () {
+                        ref.read(audioServiceProvider).playMenuClick();
+                        game.resetMatch();
+                        context.go(AppRoutes.game);
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    ArcadeButton(
+                      key: const Key('end-match-menu'),
+                      label: 'RETURN TO MENU',
+                      icon: Icons.home,
+                      onPressed: _returnToMenu,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -9,6 +9,7 @@ import '../app/router.dart';
 import '../game/config/visual_palette.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
+import '../widgets/park_backdrop.dart';
 
 class MainMenuScreen extends ConsumerWidget {
   const MainMenuScreen({super.key});
@@ -19,27 +20,8 @@ class MainMenuScreen extends ConsumerWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/environment/classic/park_background_overhaul.png',
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-            filterQuality: FilterQuality.none,
-          ),
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0x9910151B),
-                  Color(0x3310151B),
-                  Color(0xDD10151B),
-                ],
-                stops: [0, 0.42, 1],
-              ),
-            ),
-          ),
-          SafeArea(
+          ParkBackdrop(
+            overlayOpacity: 0.84,
             child: Center(
               child: SingleChildScrollView(
                 padding:
