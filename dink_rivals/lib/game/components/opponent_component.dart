@@ -162,12 +162,21 @@ class OpponentComponent extends Component {
       size.width,
       size.height,
     );
+    final visual = _poseVisualFor(pose);
+    canvas.save();
+    canvas.translate(dst.center.dx, dst.center.dy);
+    canvas.rotate(visual.angle);
     canvas.drawImageRect(
       sheet,
       src,
-      dst,
+      Rect.fromCenter(
+        center: Offset(0, visual.offsetY * scale),
+        width: dst.width * visual.scaleX,
+        height: dst.height * visual.scaleY,
+      ),
       Paint()..filterQuality = FilterQuality.none,
     );
+    canvas.restore();
     return true;
   }
 
@@ -204,6 +213,18 @@ class OpponentComponent extends Component {
 
   @visibleForTesting
   String currentPoseNameForTesting() => _currentPose().name;
+
+  @visibleForTesting
+  static double swingLeanForShotForTesting(ShotType? shotType) {
+    return _poseVisualFor(switch (shotType) {
+      ShotType.dink || ShotType.block => _OpponentPose.dink,
+      ShotType.drive || ShotType.serve => _OpponentPose.drive,
+      ShotType.lob => _OpponentPose.lob,
+      ShotType.smash => _OpponentPose.smash,
+      null => _OpponentPose.swing,
+    })
+        .angle;
+  }
 
   void showHitConfirm() {
     if (_swingSeconds > 0 || state.isSwinging) {
@@ -261,6 +282,46 @@ class OpponentComponent extends Component {
   static double visualScaleFor(double depthScale) {
     return depthScale * _farCourtReadabilityScale;
   }
+}
+
+_PoseVisual _poseVisualFor(_OpponentPose pose) {
+  return switch (pose) {
+    _OpponentPose.dink => const _PoseVisual(
+        scaleX: 0.96,
+        scaleY: 0.94,
+        angle: 0.04,
+        offsetY: 1.5,
+      ),
+    _OpponentPose.drive =>
+      const _PoseVisual(scaleX: 1.10, scaleY: 0.96, angle: -0.08),
+    _OpponentPose.lob => const _PoseVisual(
+        scaleX: 0.98,
+        scaleY: 1.08,
+        angle: 0.10,
+        offsetY: -2,
+      ),
+    _OpponentPose.smash => const _PoseVisual(
+        scaleX: 1.08,
+        scaleY: 1.12,
+        angle: -0.14,
+        offsetY: -3,
+      ),
+    _ => const _PoseVisual(),
+  };
+}
+
+class _PoseVisual {
+  const _PoseVisual({
+    this.scaleX = 1,
+    this.scaleY = 1,
+    this.angle = 0,
+    this.offsetY = 0,
+  });
+
+  final double scaleX;
+  final double scaleY;
+  final double angle;
+  final double offsetY;
 }
 
 enum _OpponentPose {

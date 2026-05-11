@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dink_rivals/game/components/opponent_component.dart';
 import 'package:dink_rivals/game/components/player_component.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
+import 'package:dink_rivals/game/models/shot_type.dart';
 
 void main() {
   test('player animation switches between idle run and swing', () {
@@ -56,6 +57,21 @@ void main() {
 
   test('opponent renders slightly larger for far-court readability', () {
     expect(OpponentComponent.visualScaleFor(0.7), closeTo(0.938, 0.0001));
+  });
+
+  test('shot swing poses use distinct visual leans', () {
+    expect(
+      PlayerComponent.swingLeanForShotForTesting(ShotType.dink),
+      isNot(PlayerComponent.swingLeanForShotForTesting(ShotType.drive)),
+    );
+    expect(
+      PlayerComponent.swingLeanForShotForTesting(ShotType.lob),
+      isNot(PlayerComponent.swingLeanForShotForTesting(ShotType.smash)),
+    );
+    expect(
+      OpponentComponent.swingLeanForShotForTesting(ShotType.drive),
+      isNot(OpponentComponent.swingLeanForShotForTesting(ShotType.smash)),
+    );
   });
 
   test('hit confirm keeps the same character model after swing pose expires',

@@ -26,7 +26,7 @@ bar at gameplay scale.
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
 | Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart` | Partial: readable, but court texture remains procedural rather than a generated overlay package |
 | Perspective should match concept art better and not feel top-down | `docs/art/visual-overhaul/perspective-fix-spec.md` documents the next safe approach; aggressive non-linear experiment was rejected because it clashed with art and gameplay | Missing |
-| Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss; tests exist around component behavior | Partial: states exist, but shot moves still share sprite sheets/frame offsets rather than distinct generated dink/drive/lob/smash sheets |
+| Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss; shot swings now apply distinct pose-specific lean/scale silhouettes; `player_component_test.dart` verifies different shot leans | Partial: states and shot silhouettes exist, but shot moves still share source sprite sheets rather than distinct generated dink/drive/lob/smash sheets |
 | Dink/drive/lob/smash have distinct animation/VFX indicators | `VfxLayerComponent` maps shot types to generated `dinkSpark`, `driveArc`, `lobArc`, `smashBand`, and `missWhiff`; `vfx_layer_component_test.dart` verifies sprite selection | Partial |
 | Hitbox indicators match active swing zones | `RacketComponent` draws committed swing lane from `ShotSystem.committedSwingPath`; miss VFX spawns on expired swing command | Partial |
 | Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; `docs/art/phase-5.2-comparison.md` now states only serve charge has percentage/ring feedback | Done |
@@ -53,6 +53,7 @@ Verification performed during this thread:
 - `flutter build apk --debug` passed after VFX integration.
 - `flutter install -d 58011FDCQ00992 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk` passed for the generated VFX build before the Pixel disconnected.
 - `flutter test test/court_projection_test.dart test/court_layout_system_test.dart test/environment_layout_test.dart` passed after reverting the failed perspective experiment.
+- `flutter test test/player_component_test.dart` passed after adding shot-specific character pose silhouettes.
 
 Subagent validation:
 
@@ -78,6 +79,8 @@ Subagent validation:
    not match the charm, readability, and identity requested by the concept art.
    The audit also found no complete generated-image provenance package for
    character gameplay sheets comparable to the new VFX prompt/contact sheet.
+   The latest runtime pass improves shot readability with distinct silhouettes,
+   but it is not a replacement for generated character sheets.
 
 4. Gameplay visual automation is weak.
    UI goldens cover menus/screens, but Flame gameplay screenshots are still
