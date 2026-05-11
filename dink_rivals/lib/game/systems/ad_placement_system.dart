@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 class AdPlacementSystem {
   static const int minCompletedMatchesBeforeInterstitial = 3;
@@ -76,3 +77,5 @@ class AdPlacementSystem {
 final adPlacementSystemProvider = Provider<AdPlacementSystem>((ref) {
   return AdPlacementSystem();
 });
+
+final adPlacementTickProvider = StateProvider<int>((ref) => 0);

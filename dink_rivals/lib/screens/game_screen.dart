@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,22 +20,17 @@ class GameScreen extends ConsumerStatefulWidget {
 class _GameScreenState extends ConsumerState<GameScreen> {
   bool _showPause = false;
   late final DinkRivalsGame _game;
-  Timer? _adTimer;
 
   @override
   void initState() {
     super.initState();
     _game = ref.read(dinkRivalsGameProvider);
     _game.matchOverNotifier.addListener(_handleMatchOver);
-    _adTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      ref.read(adPlacementSystemProvider).advance(const Duration(seconds: 1));
-    });
   }
 
   @override
   void dispose() {
     _game.matchOverNotifier.removeListener(_handleMatchOver);
-    _adTimer?.cancel();
     super.dispose();
   }
 

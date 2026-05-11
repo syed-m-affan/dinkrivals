@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,27 +15,9 @@ class EndMatchScreen extends ConsumerStatefulWidget {
 }
 
 class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
-  Timer? _adTimer;
   bool _rewardClaimed = false;
   bool _rewardAvailable = true;
   bool _showingInterstitial = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _adTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      ref.read(adPlacementSystemProvider).advance(const Duration(seconds: 1));
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _adTimer?.cancel();
-    super.dispose();
-  }
 
   Future<void> _claimReward() async {
     if (_rewardClaimed || !_rewardAvailable) {
@@ -105,6 +85,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
   @override
   Widget build(BuildContext context) {
     final game = ref.watch(dinkRivalsGameProvider);
+    ref.watch(adPlacementTickProvider);
     final adPlacement = ref.watch(adPlacementSystemProvider);
     final match = game.matchState;
     final playerWon = match.playerScore > match.opponentScore;
