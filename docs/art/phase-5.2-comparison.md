@@ -23,7 +23,7 @@ Last updated: 2026-05-11
 | Scoreboard/rally/last-shot readout | Resolved | HUD now shows YOU/RIVAL score panels, serving dot, rally count, and last-shot readout. |
 | Feedback banner | Resolved | Rally feedback renders in a top-center banner with primary/secondary text helpers and safe-area-aware placement. |
 | Ball trail/contact VFX | Resolved | VFX layer uses fixed-size trail buffering, refreshed contact/bounce sprites, and clears trails on contact, bounce, and point reset. |
-| Power meter/controls | Resolved | Swing control has visual-only power meter and chevrons while preserving touch regions and input semantics. |
+| Controls | Resolved | Assisted controls and obsolete swing-power affordances are removed. The remaining percentage/ring feedback is tied to serve charge only, while manual move/swing touch regions are preserved. |
 | Park depth | Improved | Added a darker rear tree band treatment, lamp, planters, and signage without changing gameplay bounds. |
 | Menu/end-match residual composition | Improved | Generated portraits and updated goldens keep the existing menu/end-match flow intact; deeper screen redesign is deferred unless requested. |
 
@@ -37,7 +37,7 @@ Claude reviewed the generated contact sheet twice. The first pass found one bloc
 - `flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`: passed.
 - App launched on `emulator-5554`.
 - Menu screenshot captured after splash.
-- Quick Match screenshot captured in serve state; court, HUD, controls, generated characters, park props, and power meter render correctly on Android emulator.
+- Quick Match screenshot captured in serve state; court, HUD, controls, generated characters, park props, and serve-charge feedback render correctly on Android emulator.
 
 ## Residual Gaps
 
