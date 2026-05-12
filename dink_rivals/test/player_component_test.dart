@@ -198,11 +198,14 @@ void main() {
     final playerDrive =
         await _loadImage('assets/images/sprites/player_drive.png');
     final playerRun = await _loadImage('assets/images/sprites/player_run.png');
+    final opponentRun =
+        await _loadImage('assets/images/sprites/opponent_run.png');
     final opponentSmash =
         await _loadImage('assets/images/sprites/opponent_smash.png');
 
     expect(player.frameCountForTesting(playerDrive), 1);
-    expect(player.frameCountForTesting(playerRun), 2);
+    expect(player.frameCountForTesting(playerRun), 4);
+    expect(opponent.frameCountForTesting(opponentRun), 4);
     expect(opponent.frameCountForTesting(opponentSmash), 1);
   });
 

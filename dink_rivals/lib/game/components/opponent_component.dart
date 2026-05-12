@@ -44,8 +44,9 @@ class OpponentComponent extends Component {
   bool _pendingHitConfirm = false;
 
   static const double _runThreshold = 12;
-  static const double _spriteWidth = 34;
-  static const double _spriteHeight = 51;
+  static const double _spriteWidth = 23;
+  static const double _spriteHeight = 34.5;
+  static const double _spriteFootPadding = _spriteHeight * (2 / 48);
 
   @override
   Future<void> onLoad() async {
@@ -157,7 +158,7 @@ class OpponentComponent extends Component {
     );
     final dst = Rect.fromLTWH(
       feet.x - size.width / 2,
-      feet.y - size.height,
+      feet.y - size.height + game.logicalToScreen(_spriteFootPadding * scale),
       size.width,
       size.height,
     );
@@ -256,15 +257,15 @@ class OpponentComponent extends Component {
     }
     final depthScale = game.depthScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
-    final width = game.logicalToScreen(16 * depthScale);
-    final height = game.logicalToScreen(5.5 * depthScale);
-    final rect = ProjectedShadow.directionalOvalRect(
-      center: feet.toOffset(),
+    final width = game.logicalToScreen(12.5 * depthScale);
+    final height = game.logicalToScreen(3.8 * depthScale);
+    final rect = Rect.fromCenter(
+      center:
+          feet.toOffset() + Offset(0, game.logicalToScreen(0.9 * depthScale)),
       width: width,
       height: height,
-      offsetScale: 0.7,
     );
-    canvas.drawOval(rect, ProjectedShadow.paint(0.20));
+    canvas.drawOval(rect, ProjectedShadow.paint(0.26));
   }
 
   void _renderPrimitive(Canvas canvas) {

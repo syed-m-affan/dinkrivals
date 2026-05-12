@@ -53,7 +53,7 @@ void main() {
     );
   });
 
-  test('net overlay rail lands on the measured painted net line', () {
+  test('gameplay net boundary lands on the measured painted net line', () {
     final layout = CourtLayoutSystem()..resize(Vector2(1080, 2400));
     final left = layout.courtToWorld(Vector2(Court.left, Court.netY));
     final right = layout.courtToWorld(Vector2(Court.right, Court.netY));

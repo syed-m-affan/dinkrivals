@@ -86,6 +86,6 @@ class BallComponent extends Component {
   @visibleForTesting
   static double visualRadiusFor(double z, double depthScale) {
     final heightScale = (z / 100).clamp(0, 1).toDouble();
-    return (4.2 + heightScale * 4.0) * depthScale;
+    return (2.2 + heightScale * 2.5) * depthScale;
   }
 }

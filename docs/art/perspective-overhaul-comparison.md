@@ -24,9 +24,13 @@ The user requested a final pivot away from a synthetic pinhole projection: paint
 - `CourtLayoutSystem.resize` now applies the same cover-fit transform that `ClassicEnvironmentComponent._drawGeneratedBackgroundBase` uses for the bg image, so gameplay positions and the painted court always agree.
 - `depthScaleForY(y)` derives from the painted width at that y (relative to the near baseline) — same source as the lateral projection, so they cannot drift.
 - `CourtComponent` and `KitchenZoneComponent` are now no-op renderers. The painted bg image already contains the court surface, kitchens, lines, fence, foliage, sky, and apron shadow.
-- `NetComponent` remains a thin projected foreground rail overlay at `Court.netY`. The painted bg provides the full mesh/net art, while the overlay restores a depth-order cue so far-side balls/opponents pass behind the rail and near-side entities render in front.
+- `NetComponent` replays a tightly aligned crop of the painted bg net strip at `Court.netY`. It uses the exact same image pixels as the background, so far-side balls/opponents can render under the net without introducing mismatched procedural net art.
 - `ClassicEnvironmentComponent` no longer draws its `_drawCourtApron`, `_drawGeneratedFenceAnchor`, `_drawGeneratedCourtShadow`, or `_drawGeneratedDepthWash` overlays when the painted bg is loaded (they were dimming the painted court). Side props (benches, lamps, planters, bags, shrubs, signs, fence segments) still render on top via `EnvironmentLayout`.
 - `OpponentComponent._farCourtReadabilityScale` removed in PERSP-003 — sprites now scale solely via `depthScaleForY`. The swing lane is drawn as a tapered polygon so its width matches the racket reach at start and end depths.
+
+- Character sprites render at a smaller world height than their source frame and compensate for the two transparent bottom pixels in the sheets, so feet sit on the projected court line instead of floating above the shadow.
+- Character sheets are palette-graded with warmer highlights, darker lower/right-side shading, and lower saturation so they sit closer to the painted environment style.
+- Ball radius is scaled down with the same depth factor as characters so it reads as a game ball inside the painted environment instead of a large UI token.
 
 ## Measurements
 
@@ -41,11 +45,11 @@ The user requested a final pivot away from a synthetic pinhole projection: paint
 - `flutter test` - 176/176 green.
 - `flutter build apk --debug` — succeeded.
 - Installed on Pixel 10 Pro XL (`58011FDCQ00992`); launched Quick Match into rally state; screenshot captured.
-- Latest net-overlay smoke after the foreground rail adjustment was installed and launched on emulator-5554; see docs/art/perspective-gameplay-net-smoke-emulator.png.
+- Latest net-occlusion smoke after the painted-strip adjustment was installed and launched on emulator-5554; see docs/art/perspective-gameplay-net-smoke-emulator.png.
 
 ## Known follow-ups
 
 - If `park_background_overhaul.png` is regenerated, re-measure the painted court corner pixel positions in `CourtProjection` and update the constants. A test could assert the projection's four corners agree with a known good set of corner image px.
-- The net overlay is visual only. If a future ticket wants ball-net collisions, implement that in gameplay/rules systems instead of coupling it to the renderer.
+- The net occluder is visual only. If a future ticket wants ball-net collisions, implement that in gameplay/rules systems instead of coupling collision to the painted-strip renderer.
 - The court surface texture asset (`court_surface_texture_generated.png`) is still in the asset bundle but no longer rendered. Safe to leave; can be removed in a cleanup ticket.
 - 5-minute physical-device rally and subjective signoff vs the concept is the human-validation gate.

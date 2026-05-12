@@ -6,10 +6,10 @@ import 'package:dink_rivals/game/config/court_constants.dart';
 import 'package:dink_rivals/game/util/court_projection.dart';
 
 void main() {
-  test('ball visual radius preserves prior height scale curve', () {
-    expect(BallComponent.visualRadiusFor(0, 1), closeTo(4.2, 0.0001));
-    expect(BallComponent.visualRadiusFor(100, 1), closeTo(8.2, 0.0001));
-    expect(BallComponent.visualRadiusFor(150, 0.5), closeTo(4.1, 0.0001));
+  test('ball visual radius stays proportional to the painted court', () {
+    expect(BallComponent.visualRadiusFor(0, 1), closeTo(2.2, 0.0001));
+    expect(BallComponent.visualRadiusFor(100, 1), closeTo(4.7, 0.0001));
+    expect(BallComponent.visualRadiusFor(150, 0.5), closeTo(2.35, 0.0001));
   });
 
   test('ball lifts more from ground near the camera than far away', () {
