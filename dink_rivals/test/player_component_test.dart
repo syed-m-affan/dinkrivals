@@ -204,8 +204,8 @@ void main() {
         await _loadImage('assets/images/sprites/opponent_smash.png');
 
     expect(player.frameCountForTesting(playerDrive), 1);
-    expect(player.frameCountForTesting(playerRun), 4);
-    expect(opponent.frameCountForTesting(opponentRun), 4);
+    expect(player.frameCountForTesting(playerRun), 8);
+    expect(opponent.frameCountForTesting(opponentRun), 8);
     expect(opponent.frameCountForTesting(opponentSmash), 1);
   });
 

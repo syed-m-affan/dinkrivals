@@ -44,8 +44,8 @@ class OpponentComponent extends Component {
   bool _pendingHitConfirm = false;
 
   static const double _runThreshold = 12;
-  static const double _spriteWidth = 23;
-  static const double _spriteHeight = 34.5;
+  static const double _spriteWidth = 18.4;
+  static const double _spriteHeight = 27.6;
   static const double _spriteFootPadding = _spriteHeight * (2 / 48);
 
   @override

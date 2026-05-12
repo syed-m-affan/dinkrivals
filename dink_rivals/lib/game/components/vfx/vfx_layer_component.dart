@@ -11,6 +11,7 @@ import '../../models/player_state.dart';
 import '../../models/shot_type.dart';
 import '../../models/swing_intent.dart';
 import '../../systems/shot_system.dart';
+import '../ball_component.dart';
 
 enum VfxSprite {
   dinkSpark('vfx/dink_spark_generated.png'),
@@ -58,6 +59,9 @@ class VfxLayerComponent extends Component {
 
   @override
   void update(double dt) {
+    if (game.isLoaded) {
+      priority = game.ball.state.y.round();
+    }
     if (!DebugFlags.useVfx) {
       _effects.clear();
       clearBallTrail();
@@ -253,6 +257,7 @@ class VfxLayerComponent extends Component {
     _addTrailSample(
       position: position,
       logicalSize: Vector2(20, 9),
+      angle: 0,
     );
   }
 
@@ -279,13 +284,27 @@ class VfxLayerComponent extends Component {
     if (_trailCooldown > 0) {
       return;
     }
-    final depthScale = game.depthScaleForY(ball.y);
-    _addTrailSample(
-      position: game.courtToWorld(Vector2(ball.x, ball.y), ball.z),
-      logicalSize: Vector2(
-        game.logicalToScreen(20 * depthScale),
-        game.logicalToScreen(9 * depthScale),
+    final current = game.courtToWorld(Vector2(ball.x, ball.y), ball.z);
+    final previous = game.courtToWorld(
+      Vector2(
+        ball.x - ball.vx * _trailSampleInterval,
+        ball.y - ball.vy * _trailSampleInterval,
       ),
+      math.max(0, ball.z - ball.vz * _trailSampleInterval),
+    );
+    final delta = current - previous;
+    final angle = delta.length2 < 0.01 ? 0.0 : math.atan2(delta.y, delta.x);
+    final depthScale = game.depthScaleForY(ball.y);
+    final radius = game.logicalToScreen(
+      BallComponent.visualRadiusFor(ball.z, depthScale),
+    );
+    _addTrailSample(
+      position: current,
+      logicalSize: Vector2(
+        (radius * 2.5).clamp(5.0, 18.0).toDouble(),
+        (radius * 1.05).clamp(3.0, 9.0).toDouble(),
+      ),
+      angle: angle,
     );
     _trailCooldown = _trailSampleInterval;
   }
@@ -293,10 +312,12 @@ class VfxLayerComponent extends Component {
   void _addTrailSample({
     required Vector2 position,
     required Vector2 logicalSize,
+    required double angle,
   }) {
     _trailSamples[_trailWriteIndex]
       ..position.setFrom(position)
-      ..logicalSize.setFrom(logicalSize);
+      ..logicalSize.setFrom(logicalSize)
+      ..angle = angle;
     _trailWriteIndex = (_trailWriteIndex + 1) % _maxTrailSamples;
     _trailCount = (_trailCount + 1).clamp(0, _maxTrailSamples);
   }
@@ -314,10 +335,13 @@ class VfxLayerComponent extends Component {
       final opacity = 0.58 * fade * fade;
       final scale = 1.0 - i * 0.035;
       final dst = Rect.fromCenter(
-        center: sample.position.toOffset(),
+        center: Offset.zero,
         width: sample.logicalSize.x * scale,
         height: sample.logicalSize.y * scale,
       );
+      canvas.save();
+      canvas.translate(sample.position.x, sample.position.y);
+      canvas.rotate(sample.angle);
       canvas.drawImageRect(
         image,
         Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
@@ -329,6 +353,7 @@ class VfxLayerComponent extends Component {
             BlendMode.modulate,
           ),
       );
+      canvas.restore();
     }
   }
 
@@ -353,6 +378,7 @@ class VfxLayerComponent extends Component {
 class _TrailSample {
   final Vector2 position = Vector2.zero();
   final Vector2 logicalSize = Vector2.zero();
+  double angle = 0;
 }
 
 class _ActiveVfx {

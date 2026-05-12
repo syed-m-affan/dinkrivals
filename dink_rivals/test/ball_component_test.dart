@@ -7,9 +7,9 @@ import 'package:dink_rivals/game/util/court_projection.dart';
 
 void main() {
   test('ball visual radius stays proportional to the painted court', () {
-    expect(BallComponent.visualRadiusFor(0, 1), closeTo(2.2, 0.0001));
-    expect(BallComponent.visualRadiusFor(100, 1), closeTo(4.7, 0.0001));
-    expect(BallComponent.visualRadiusFor(150, 0.5), closeTo(2.35, 0.0001));
+    expect(BallComponent.visualRadiusFor(0, 1), closeTo(1.45, 0.0001));
+    expect(BallComponent.visualRadiusFor(100, 1), closeTo(3.25, 0.0001));
+    expect(BallComponent.visualRadiusFor(150, 0.5), closeTo(1.625, 0.0001));
   });
 
   test('ball lifts more from ground near the camera than far away', () {
