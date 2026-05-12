@@ -274,7 +274,7 @@ Re-run the previous QA checklists with attention to:
 - Retuned the 3/4 projection and court layout for stronger near/far perspective while preserving deterministic projection tests and gameplay coordinate semantics.
 - Added Phase 5.2 palette tokens, court apron/playing-surface/kitchen zoning, stronger line contrast, rebuilt net geometry, integrated scoreboard serving indicator, rally count, and last-shot readout.
 - Generated new raster assets for player/opponent sprite sheets, roster portraits, signs, planters, and VFX. Claude reviewed the asset sheet, flagged Rally Queen label occlusion, and gave final no-blocker signoff after the portrait fix.
-- Added rear sign/lamp/planter park depth, fixed-buffer ball trail rendering, refreshed contact/bounce VFX, top-center feedback banner, and visual-only swing power meter/control polish without changing touch hit regions.
+- Added rear sign/lamp/planter park depth, fixed-buffer ball trail rendering, refreshed contact/bounce VFX, top-center feedback banner, and serve-charge/control polish without changing touch hit regions.
 - The original serve-state opponent animation bug is covered by `player_component_test.dart`: opponent velocity selects the `run` pose even while the point is not in progress.
 - Verification passed: `flutter analyze`, `flutter test` (145/145), `flutter build apk --debug`, `flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`, emulator launch, menu screenshot, and Quick Match serve-state screenshot. Physical-device human playtest and subjective concept signoff remain outside this automated closeout.
 - Follow-up visual indicator pass: fixed generated character sheet frame slicing,
@@ -285,3 +285,9 @@ Re-run the previous QA checklists with attention to:
   install, and Pixel 10 Pro XL install. Latest Pixel screenshot recapture was
   discarded because the device remained on the lockscreen bouncer while the app
   was focused behind keyguard.
+
+## Perspective overhaul (2026-05-11)
+- Implemented PERSP-000 through PERSP-010 for non-human scope. The projection now maps gameplay coordinates to the painted court in `park_background_overhaul.png` using measured image-space court corners, and `CourtLayoutSystem` uses the same cover-fit transform as the background renderer.
+- The synthetic court and kitchen overlays are disabled so they no longer clash with the painted court. The net remains a thin projected foreground rail/post overlay at `Court.netY`, restoring visual occlusion for far-side ball/opponent movement while preserving near-side draw order.
+- Player, opponent, ball, shadows, and swing lanes now derive visual scale and z lift from the painted-court projection. Gameplay constants, scoring, AI, shot classification, and physics semantics remain unchanged.
+- Verification for this pass includes `flutter analyze`, `flutter test`, `flutter build apk --debug`, Pixel 10 Pro XL install for `docs/art/perspective-after-screenshot.png`, and latest `emulator-5554` install/smoke for `docs/art/perspective-gameplay-net-smoke-emulator.png` while Pixel was not visible. PERSP-010 remains in `review` for the human 5-minute rally and subjective concept signoff gate.

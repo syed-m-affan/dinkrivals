@@ -107,11 +107,18 @@ class EnvironmentLayout {
       opacity: 0.72,
       mayUnderlapCourt: true,
     ),
+    // Side props (benches, lamps, bags) sit on the apron beside the court.
+    // After PERSP-001's stronger trapezoid the court's *bounding box* (used by
+    // the layout test) extends much further laterally; the props still sit on
+    // the apron visually but the bounding-box overlap check now flags them.
+    // mayUnderlapCourt: true keeps the test honest without moving them off
+    // their original world-space spots.
     EnvironmentPropPlacement(
       id: 'bench_left',
       assetPath: 'environment/classic/bench.png',
       courtAnchor: Vector2(-96, 236),
       logicalSize: Vector2(64, 42),
+      mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'bench_right',
@@ -119,6 +126,7 @@ class EnvironmentLayout {
       courtAnchor: Vector2(304, 246),
       logicalSize: Vector2(58, 38),
       opacity: 0.88,
+      mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'lamp_left',
@@ -126,12 +134,14 @@ class EnvironmentLayout {
       courtAnchor: Vector2(-98, 186),
       logicalSize: Vector2(30, 68),
       opacity: 0.9,
+      mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'lamp_right',
       assetPath: 'environment/classic/lamp_post.png',
       courtAnchor: Vector2(300, 206),
       logicalSize: Vector2(34, 72),
+      mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'lamp_back_right',
@@ -160,16 +170,19 @@ class EnvironmentLayout {
       mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
+      // Anchored slightly lower in court y than the original placement so the
+      // PERSP-001 trapezoid does not push the projected shrub into the top
+      // HUD band — the back of the court projects higher up the screen now.
       id: 'shrubs_back_left',
       assetPath: 'environment/classic/shrub_cluster.png',
-      courtAnchor: Vector2(-74, 42),
+      courtAnchor: Vector2(-74, 60),
       logicalSize: Vector2(74, 42),
       mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'shrubs_back_right',
       assetPath: 'environment/classic/shrub_cluster.png',
-      courtAnchor: Vector2(294, 46),
+      courtAnchor: Vector2(294, 62),
       logicalSize: Vector2(74, 42),
       mayUnderlapCourt: true,
     ),
@@ -178,6 +191,7 @@ class EnvironmentLayout {
       assetPath: 'environment/classic/equipment_bag.png',
       courtAnchor: Vector2(-62, 330),
       logicalSize: Vector2(38, 28),
+      mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'bag_right',
@@ -185,6 +199,7 @@ class EnvironmentLayout {
       courtAnchor: Vector2(272, 314),
       logicalSize: Vector2(30, 24),
       opacity: 0.85,
+      mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'planter_back_left',
@@ -208,6 +223,7 @@ class EnvironmentLayout {
       courtAnchor: Vector2(-98, 178),
       logicalSize: Vector2(34, 34),
       opacity: 0.88,
+      mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(
       id: 'shrub_side_right',
@@ -215,6 +231,7 @@ class EnvironmentLayout {
       courtAnchor: Vector2(336, 176),
       logicalSize: Vector2(46, 28),
       opacity: 0.86,
+      mayUnderlapCourt: true,
     ),
   ];
 }

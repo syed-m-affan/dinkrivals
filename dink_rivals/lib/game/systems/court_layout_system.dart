@@ -2,64 +2,59 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 
-import '../config/court_constants.dart';
 import '../util/court_projection.dart';
 
+/// Maps the painted-court-aligned `CourtProjection` (image-space) onto actual
+/// screen pixels using the same cover-fit transform applied to the bg image
+/// (`park_background_overhaul.png`). This guarantees the gameplay coords
+/// land exactly on top of the painted court at any phone resolution.
 class CourtLayoutSystem {
-  static const double minTopHudReserve = 72;
-  static const double minBottomControlReserve = 430;
+  double _imageScale = 1;
+  Vector2 _imageOffset = Vector2.zero();
 
-  double _courtScale = 1;
-  Vector2 _courtOffset = Vector2.zero();
-  Vector2 _projectedMin = Vector2.zero();
-
-  double get courtScale => _courtScale;
+  double get courtScale => _imageScale;
 
   void resize(Vector2 size) {
-    final projectedCorners = <Vector2>[
-      CourtProjection.courtToScreen(Vector2(Court.left, Court.top), 0),
-      CourtProjection.courtToScreen(Vector2(Court.right, Court.top), 0),
-      CourtProjection.courtToScreen(Vector2(Court.right, Court.bottom), 0),
-      CourtProjection.courtToScreen(Vector2(Court.left, Court.bottom), 0),
-    ];
-    final minX = projectedCorners
-        .map((corner) => corner.x)
-        .reduce((a, b) => a < b ? a : b);
-    final maxX = projectedCorners
-        .map((corner) => corner.x)
-        .reduce((a, b) => a > b ? a : b);
-    final minY = projectedCorners
-        .map((corner) => corner.y)
-        .reduce((a, b) => a < b ? a : b);
-    final maxY = projectedCorners
-        .map((corner) => corner.y)
-        .reduce((a, b) => a > b ? a : b);
-    final projectedWidth = maxX - minX;
-    final projectedHeight = maxY - minY;
-    final topReserve = math.min(size.y * 0.10, minTopHudReserve);
-    final bottomReserve = math.min(size.y * 0.24, minBottomControlReserve);
-    final availableHeight = math.max(1.0, size.y - topReserve - bottomReserve);
-
-    _projectedMin = Vector2(minX, minY);
-    _courtScale = (size.x * 0.86 / projectedWidth)
-        .clamp(0.1, availableHeight / projectedHeight)
-        .toDouble();
-    _courtOffset = Vector2(
-      (size.x - projectedWidth * _courtScale) / 2,
-      topReserve + (availableHeight - projectedHeight * _courtScale) / 2,
+    final scale = math.max(
+      size.x / CourtProjection.imageWidth,
+      size.y / CourtProjection.imageHeight,
+    );
+    _imageScale = scale;
+    _imageOffset = Vector2(
+      (size.x - CourtProjection.imageWidth * scale) / 2,
+      (size.y - CourtProjection.imageHeight * scale) / 2,
     );
   }
+
+  /// Same cover-fit transform applied by `ClassicEnvironmentComponent` so the
+  /// background image can pull it from one source of truth.
+  double get imageScale => _imageScale;
+  Vector2 get imageOffset => Vector2(_imageOffset.x, _imageOffset.y);
 
   Vector2 courtToWorld(Vector2 courtPosition, [double z = 0]) {
-    final projected = CourtProjection.courtToScreen(courtPosition, z);
+    final imagePoint = CourtProjection.courtToScreen(courtPosition, z);
     return Vector2(
-      _courtOffset.x + (projected.x - _projectedMin.x) * _courtScale,
-      _courtOffset.y + (projected.y - _projectedMin.y) * _courtScale,
+      _imageOffset.x + imagePoint.x * _imageScale,
+      _imageOffset.y + imagePoint.y * _imageScale,
     );
   }
 
-  double logicalToScreen(double logicalUnits) => logicalUnits * _courtScale;
+  /// Convert a logical court-unit length into screen pixels at the near
+  /// baseline. Used by stroke widths and sprite sizing.
+  double logicalToScreen(double logicalUnits) {
+    // 1 court-unit of width at the near baseline equals
+    //   (paintedNearRightX - paintedNearLeftX) / Court.width  image px,
+    // which is `imageScale` * that ratio screen px.
+    const nearWidthImage =
+        CourtProjection.paintedNearRightX - CourtProjection.paintedNearLeftX;
+    const unitsToImagePx = nearWidthImage / _courtWidthUnits;
+    return logicalUnits * unitsToImagePx * _imageScale;
+  }
 
   double depthScaleForY(double courtY) =>
       CourtProjection.depthScaleForY(courtY);
+
+  // Constant kept local so the import does not pull court_constants.dart in
+  // here; ensure this stays in sync with `Court.width`.
+  static const double _courtWidthUnits = 220.0;
 }

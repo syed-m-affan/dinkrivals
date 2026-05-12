@@ -7,8 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/components/opponent_component.dart';
 import 'package:dink_rivals/game/components/player_component.dart';
+import 'package:dink_rivals/game/config/court_constants.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
+import 'package:dink_rivals/game/util/court_projection.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -61,8 +63,18 @@ void main() {
     expect(component.currentPoseNameForTesting(), 'run');
   });
 
-  test('opponent renders slightly larger for far-court readability', () {
-    expect(OpponentComponent.visualScaleFor(0.7), closeTo(0.938, 0.0001));
+  test('opponent visual scale equals depth scale (no perspective hack)', () {
+    expect(OpponentComponent.visualScaleFor(0.7), 0.7);
+    expect(OpponentComponent.visualScaleFor(1.0), 1.0);
+  });
+
+  test('opponent is visibly smaller than player at start positions', () {
+    final playerScale = CourtProjection.depthScaleForY(Court.playerStartY);
+    final opponentScale = CourtProjection.depthScaleForY(Court.opponentStartY);
+
+    expect(opponentScale, lessThan(playerScale));
+    expect(opponentScale / playerScale, lessThanOrEqualTo(0.65));
+    expect(opponentScale, greaterThanOrEqualTo(0.40));
   });
 
   test('shot swing poses use distinct visual leans', () {

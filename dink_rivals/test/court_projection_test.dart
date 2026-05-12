@@ -45,10 +45,10 @@ void main() {
     final farWidth = farRight.x - farLeft.x;
     final nearWidth = nearRight.x - nearLeft.x;
 
-    expect(nearWidth / farWidth, greaterThan(1.5));
+    expect(nearWidth / farWidth, greaterThan(2.4));
   });
 
-  test('projected court aspect is portrait friendly', () {
+  test('painted court occupies portrait-friendly aspect inside bg image', () {
     final farLeft =
         CourtProjection.courtToScreen(Vector2(Court.left, Court.top), 0);
     final farRight =
@@ -58,16 +58,12 @@ void main() {
     final nearRight =
         CourtProjection.courtToScreen(Vector2(Court.right, Court.bottom), 0);
 
-    final minX = [farLeft.x, farRight.x, nearLeft.x, nearRight.x]
-        .reduce((a, b) => a < b ? a : b);
-    final maxX = [farLeft.x, farRight.x, nearLeft.x, nearRight.x]
-        .reduce((a, b) => a > b ? a : b);
-    final minY = [farLeft.y, farRight.y, nearLeft.y, nearRight.y]
-        .reduce((a, b) => a < b ? a : b);
-    final maxY = [farLeft.y, farRight.y, nearLeft.y, nearRight.y]
-        .reduce((a, b) => a > b ? a : b);
-
-    expect((maxX - minX) / (maxY - minY), lessThan(0.9));
+    final width = nearRight.x - nearLeft.x;
+    final height = nearLeft.y - farLeft.y;
+    // Painted court in the bg image is taller than wide so it fits a portrait
+    // phone after cover-fit.
+    expect(width / height, lessThan(1.4));
+    expect(farRight.x - farLeft.x, lessThan(width));
   });
 
   test('depth scale grows toward the near court', () {
@@ -75,5 +71,63 @@ void main() {
       CourtProjection.depthScaleForY(Court.bottom),
       greaterThan(CourtProjection.depthScaleForY(Court.top)),
     );
+  });
+
+  test('painted court y mapping is linear (matches the painted bg)', () {
+    const dy = 40.0;
+    final farNear = CourtProjection.courtToScreen(Vector2(110, Court.top), 0);
+    final farPlus =
+        CourtProjection.courtToScreen(Vector2(110, Court.top + dy), 0);
+    final nearMinus =
+        CourtProjection.courtToScreen(Vector2(110, Court.bottom - dy), 0);
+    final near = CourtProjection.courtToScreen(Vector2(110, Court.bottom), 0);
+
+    final farDelta = farPlus.y - farNear.y;
+    final nearDelta = near.y - nearMinus.y;
+
+    // Painted bg uses a uniform y stretch, so equal court-y steps consume
+    // equal image-y deltas. (Lateral width still tapers — that's where the
+    // perspective comes from.)
+    expect(nearDelta, closeTo(farDelta, 0.01));
+  });
+
+  test('z lift increases toward the near court', () {
+    expect(
+      CourtProjection.zLiftForY(Court.bottom),
+      greaterThan(CourtProjection.zLiftForY(Court.top)),
+    );
+
+    final lobZ = 100.0;
+    final groundFar =
+        CourtProjection.courtToScreen(Vector2(110, Court.top + 40), 0);
+    final airborneFar =
+        CourtProjection.courtToScreen(Vector2(110, Court.top + 40), lobZ);
+    final groundNear =
+        CourtProjection.courtToScreen(Vector2(110, Court.bottom - 40), 0);
+    final airborneNear =
+        CourtProjection.courtToScreen(Vector2(110, Court.bottom - 40), lobZ);
+
+    final farLift = groundFar.y - airborneFar.y;
+    final nearLift = groundNear.y - airborneNear.y;
+
+    expect(nearLift, greaterThan(farLift));
+  });
+
+  test('depth scale derives from camera distance up to readability clamp', () {
+    final depthRatio = CourtProjection.depthScaleForY(Court.top) /
+        CourtProjection.depthScaleForY(Court.bottom);
+    final distanceRatio = CourtProjection.distanceForY(Court.bottom) /
+        CourtProjection.distanceForY(Court.top);
+
+    // Floor clamp may slightly widen the depth scale at the far end relative
+    // to the pure distance ratio; allow up to 15% deviation so the clamp does
+    // not block aggressive perspective tuning.
+    expect((depthRatio - distanceRatio).abs() / distanceRatio, lessThan(0.15));
+  });
+
+  test('depth scale stays above readability floor', () {
+    for (var y = -Court.length; y <= Court.length * 2; y += Court.length / 10) {
+      expect(CourtProjection.depthScaleForY(y), greaterThanOrEqualTo(0.40));
+    }
   });
 }

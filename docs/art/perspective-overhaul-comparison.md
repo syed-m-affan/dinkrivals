@@ -1,0 +1,50 @@
+# Perspective Overhaul — Before / After
+
+This doc accompanies the `perspective-overhaul-000` through `perspective-overhaul-010` ticket track.
+
+## References
+
+| Slot | File | Source |
+| --- | --- | --- |
+| Before | `docs/art/perspective-before-screenshot.png` | Pre-overhaul, Pixel 10 Pro XL. Court drawn synthetically over the bg with a near-rectangular projection. |
+| After  | `docs/art/perspective-after-screenshot.png`  | Post-overhaul, Pixel 10 Pro XL (`58011FDCQ00992`), Quick Match rally state. Court is the painted pickleball floor in the bg image; gameplay coords land on it. |
+| Target | `docs/art/concept-screenshot.png`            | Concept art used as the 2.5D direction. |
+| Bg art | `dink_rivals/assets/images/environment/classic/park_background_overhaul.png` | The painted pickleball court used as the visual floor. |
+
+## Approach
+
+The user requested a final pivot away from a synthetic pinhole projection: paint the court directly over the bg image and fix the math so the gameplay coords land on it.
+
+- `CourtProjection` is now a **painted-court-aligned** projection. Constants in the class hold the pixel coordinates of the four painted court corners inside `park_background_overhaul.png`:
+  - `paintedFarLeftX/RightX = 340 / 639` at `paintedFarY = 605`
+  - `paintedNearLeftX/RightX = 115 / 864` at `paintedNearY = 1175`
+  - `imageWidth/Height = 979 / 1606`
+- `courtToScreen(courtPos, z)` lerps in image-pixel space: each court y → image y via linear interpolation between the painted baselines; each court x → image x via lerp inside the trapezoidal width at that y; z lifts the y by `zLiftForY * z`.
+- `CourtLayoutSystem.resize` now applies the same cover-fit transform that `ClassicEnvironmentComponent._drawGeneratedBackgroundBase` uses for the bg image, so gameplay positions and the painted court always agree.
+- `depthScaleForY(y)` derives from the painted width at that y (relative to the near baseline) — same source as the lateral projection, so they cannot drift.
+- `CourtComponent` and `KitchenZoneComponent` are now no-op renderers. The painted bg image already contains the court surface, kitchens, lines, fence, foliage, sky, and apron shadow.
+- `NetComponent` remains a thin projected foreground rail/post overlay at `Court.netY`. The painted bg provides the full mesh/net art, while the overlay restores a depth-order cue so far-side balls/opponents pass behind the rail and near-side entities render in front.
+- `ClassicEnvironmentComponent` no longer draws its `_drawCourtApron`, `_drawGeneratedFenceAnchor`, `_drawGeneratedCourtShadow`, or `_drawGeneratedDepthWash` overlays when the painted bg is loaded (they were dimming the painted court). Side props (benches, lamps, planters, bags, shrubs, signs, fence segments) still render on top via `EnvironmentLayout`.
+- `OpponentComponent._farCourtReadabilityScale` removed in PERSP-003 — sprites now scale solely via `depthScaleForY`. The swing lane is drawn as a tapered polygon so its width matches the racket reach at start and end depths.
+
+## Measurements
+
+- Near baseline width / far baseline width: **2.51×** (was ~1.59× in the prior linear projection, matches the painted-bg trapezoid).
+- Opponent visual depth scale / player visual depth scale at start positions: ≈ **0.49** (was ~0.67).
+- Z lift at near baseline / z lift at far baseline: matches the trapezoid ratio.
+- Court fills the painted court inside the bg image at any resolution; the same cover-fit math is shared between bg renderer and `CourtLayoutSystem`.
+
+## Verification
+
+- `flutter analyze` — clean.
+- `flutter test` - 176/176 green.
+- `flutter build apk --debug` — succeeded.
+- Installed on Pixel 10 Pro XL (`58011FDCQ00992`); launched Quick Match into rally state; screenshot captured.
+- Latest net-overlay smoke after the foreground rail adjustment was installed and launched on emulator-5554; see docs/art/perspective-gameplay-net-smoke-emulator.png.
+
+## Known follow-ups
+
+- If `park_background_overhaul.png` is regenerated, re-measure the painted court corner pixel positions in `CourtProjection` and update the constants. A test could assert the projection's four corners agree with a known good set of corner image px.
+- The net overlay is visual only. If a future ticket wants ball-net collisions, implement that in gameplay/rules systems instead of coupling it to the renderer.
+- The court surface texture asset (`court_surface_texture_generated.png`) is still in the asset bundle but no longer rendered. Safe to leave; can be removed in a cleanup ticket.
+- 5-minute physical-device rally and subjective signoff vs the concept is the human-validation gate.

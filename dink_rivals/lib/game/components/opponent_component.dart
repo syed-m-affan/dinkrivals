@@ -46,7 +46,6 @@ class OpponentComponent extends Component {
   static const double _runThreshold = 12;
   static const double _spriteWidth = 34;
   static const double _spriteHeight = 51;
-  static const double _farCourtReadabilityScale = 1.34;
 
   @override
   Future<void> onLoad() async {
@@ -150,7 +149,7 @@ class OpponentComponent extends Component {
     final frameWidth = sheet.width / frames;
     final src = Rect.fromLTWH(
         frameWidth * frame, 0, frameWidth, sheet.height.toDouble());
-    final scale = visualScaleFor(game.depthScaleForY(state.position.y));
+    final scale = game.depthScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final size = Size(
       game.logicalToScreen(_spriteWidth * scale),
@@ -255,7 +254,7 @@ class OpponentComponent extends Component {
     if (!DebugFlags.useProjectedShadows) {
       return;
     }
-    final depthScale = visualScaleFor(game.depthScaleForY(state.position.y));
+    final depthScale = game.depthScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final width = game.logicalToScreen(16 * depthScale);
     final height = game.logicalToScreen(5.5 * depthScale);
@@ -269,7 +268,7 @@ class OpponentComponent extends Component {
   }
 
   void _renderPrimitive(Canvas canvas) {
-    final depthScale = visualScaleFor(game.depthScaleForY(state.position.y));
+    final depthScale = game.depthScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final torso = game.courtToWorld(state.position, 16);
     final head = game.courtToWorld(state.position, 28);
@@ -289,9 +288,7 @@ class OpponentComponent extends Component {
   }
 
   @visibleForTesting
-  static double visualScaleFor(double depthScale) {
-    return depthScale * _farCourtReadabilityScale;
-  }
+  static double visualScaleFor(double depthScale) => depthScale;
 }
 
 enum _OpponentPose {

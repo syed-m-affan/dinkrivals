@@ -77,21 +77,43 @@ class RacketComponent extends Component {
     );
     final start = game.courtToWorld(path.start, Tuning.racketContactZ);
     final end = game.courtToWorld(path.end, Tuning.racketContactZ);
-    final depthScale = game.depthScaleForY(game.player.state.position.y);
+    final startDepth = game.depthScaleForY(path.start.y);
+    final endDepth = game.depthScaleForY(path.end.y);
+    final midDepth = (startDepth + endDepth) / 2;
     final laneColor = _laneColorFor(command.intent);
     _swingLanePaint.color = laneColor.withValues(alpha: 0.34);
     _swingLaneBorderPaint.color = VisualPalette.textPrimary.withValues(
       alpha: command.intent == SwingIntent.smash ? 0.88 : 0.72,
     );
-    final contactRadius =
-        game.logicalToScreen(Tuning.committedSwingContactRadius * depthScale);
-    _swingLanePaint.strokeWidth = contactRadius * 2;
-    _swingLaneBorderPaint.strokeWidth = game.logicalToScreen(2.2 * depthScale);
-    canvas.drawLine(start.toOffset(), end.toOffset(), _swingLanePaint);
+    final startRadius = game
+        .logicalToScreen(Tuning.committedSwingContactRadius * startDepth);
+    final endRadius =
+        game.logicalToScreen(Tuning.committedSwingContactRadius * endDepth);
+
+    // Draw the lane fill as a tapered quad so its half-width matches the
+    // depth scale at each end. drawLine cannot taper, so use a polygon.
+    final delta = end - start;
+    final length = delta.length;
+    if (length > 0.01) {
+      final perp = Vector2(-delta.y, delta.x).normalized();
+      final p0 = start + perp * startRadius;
+      final p1 = end + perp * endRadius;
+      final p2 = end - perp * endRadius;
+      final p3 = start - perp * startRadius;
+      final fillPath = Path()
+        ..moveTo(p0.x, p0.y)
+        ..lineTo(p1.x, p1.y)
+        ..lineTo(p2.x, p2.y)
+        ..lineTo(p3.x, p3.y)
+        ..close();
+      canvas.drawPath(fillPath, Paint()..color = _swingLanePaint.color);
+    }
+
+    _swingLaneBorderPaint.strokeWidth = game.logicalToScreen(2.2 * midDepth);
     canvas.drawLine(start.toOffset(), end.toOffset(), _swingLaneBorderPaint);
-    canvas.drawCircle(start.toOffset(), contactRadius, _swingLaneBorderPaint);
-    canvas.drawCircle(end.toOffset(), contactRadius, _swingLaneBorderPaint);
-    _drawPixelSwipe(canvas, start.toOffset(), end.toOffset(), depthScale);
+    canvas.drawCircle(start.toOffset(), startRadius, _swingLaneBorderPaint);
+    canvas.drawCircle(end.toOffset(), endRadius, _swingLaneBorderPaint);
+    _drawPixelSwipe(canvas, start.toOffset(), end.toOffset(), midDepth);
   }
 
   Color _laneColorFor(SwingIntent intent) {

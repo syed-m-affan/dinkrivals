@@ -72,12 +72,11 @@ class ClassicEnvironmentComponent extends Component {
   @override
   void render(Canvas canvas) {
     final hasGeneratedBackground = _drawGeneratedBackgroundBase(canvas);
-    if (hasGeneratedBackground) {
-      _drawCourtApron(canvas);
-      _drawGeneratedFenceAnchor(canvas);
-      _drawGeneratedCourtShadow(canvas);
-      _drawGeneratedDepthWash(canvas);
-    } else {
+    if (!hasGeneratedBackground) {
+      // Legacy fallback: only used when the painted bg fails to load. The
+      // generated background already contains apron, court, foliage, fence,
+      // sky, and contact shadow, so when it is present we skip all of the
+      // synthetic overlays that used to dim the painted court.
       _drawGround(canvas);
       _drawBackTreeLine(canvas);
       _drawBackFenceBand(canvas);
@@ -115,36 +114,6 @@ class ClassicEnvironmentComponent extends Component {
       Paint()..filterQuality = FilterQuality.none,
     );
     return true;
-  }
-
-  void _drawGeneratedDepthWash(Canvas canvas) {
-    final topBand = Rect.fromLTWH(0, 0, game.size.x, game.size.y * 0.20);
-    canvas.drawRect(
-      topBand,
-      Paint()..color = const Color(0x2210231D),
-    );
-    _drawControlQuieting(canvas);
-  }
-
-  void _drawGeneratedFenceAnchor(Canvas canvas) {
-    final left = game.courtToWorld(Vector2(Court.left - 44, Court.top - 9));
-    final right = game.courtToWorld(Vector2(Court.right + 44, Court.top - 9));
-    final railPaint = Paint()
-      ..color = const Color(0xAA0C241F)
-      ..strokeWidth = game.logicalToScreen(1.4).clamp(1.5, 2.8)
-      ..strokeCap = StrokeCap.square;
-    canvas.drawLine(left.toOffset(), right.toOffset(), railPaint);
-  }
-
-  void _drawGeneratedCourtShadow(Canvas canvas) {
-    final outer = _courtPath(margin: 8);
-    canvas.save();
-    canvas.translate(game.logicalToScreen(2.4), game.logicalToScreen(6.4));
-    canvas.drawPath(
-      outer,
-      Paint()..color = const Color(0x66203128),
-    );
-    canvas.restore();
   }
 
   void _drawGround(Canvas canvas) {
