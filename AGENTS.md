@@ -10,7 +10,7 @@ This repository contains the Flutter/Flame game prototype in `dink_rivals/`. Cor
 - `config/`: tuning, court constants, and debug flags.
 - `util/`: shared helpers such as court projection.
 
-Tests are in `dink_rivals/test/` and currently focus on deterministic game logic. Root-level `docs/` holds design/build notes, `docs/art/` contains reference art, and `tickets/` tracks implementation tasks.
+Tests are in `dink_rivals/test/` and currently focus on deterministic game logic. Root-level `docs/` holds design notes, `docs/specs/` contains specifications, `docs/art/` contains reference art, and `tickets/` tracks implementation tasks grouped by phase.
 
 ## Build, Test, and Development Commands
 

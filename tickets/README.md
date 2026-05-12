@@ -18,6 +18,18 @@ last_updated: 2026-05-10
 ---
 ```
 
+## Directory Layout
+
+Tickets are grouped by numeric phase folder. Letter suffixes belong to the numeric phase that precedes them. Examples:
+
+- `phase-0/` through `phase-5/` contain the main phase tickets.
+- `P5A-*` through `P5H-*` tickets live in `phase-5/`.
+- `P51A-*` through `P51I-*` tickets live in `phase-5.1/`.
+- `P52A-*` through `P52M-*` tickets live in `phase-5.2/`.
+- `perspective-overhaul/` contains the PERSP ticket track.
+
+Keep `README.md` and `status.md` at the root of `tickets/`.
+
 ## Status Values
 
 - `todo`: ready to pick up.
@@ -28,7 +40,7 @@ last_updated: 2026-05-10
 
 ## Agent Workflow
 
-1. Read `AGENTS.md`, `docs/build-spec.md`, `dink_rivals/PHASE_NOTES.md`, `tickets/status.md`, and the ticket file.
+1. Read `AGENTS.md`, `docs/specs/build-spec.md`, `dink_rivals/PHASE_NOTES.md`, `tickets/status.md`, and the ticket file.
 2. Before editing code, set the ticket status to `in-progress`, set `owner`, update `last_updated`, and add a short note in `tickets/status.md`.
 3. Respect `depends_on`, `parallel_group`, and `Suggested file ownership`.
 4. Keep implementation scoped to the ticket. If you need to edit outside the suggested files, record why in the ticket under `Implementation notes`.

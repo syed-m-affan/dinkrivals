@@ -7,8 +7,9 @@ Dink Rivals is a mobile-first retro arcade pickleball prototype built with Flutt
 - `dink_rivals/` - Flutter/Flame game app.
 - `dink_rivals/lib/game/` - gameplay components, systems, models, config, and utilities.
 - `dink_rivals/test/` - deterministic gameplay, UI, and visual tests.
-- `docs/` - rules, build spec, visual direction, and art references.
-- `tickets/` - implementation tasks and current ticket status.
+- `docs/` - rules, specs, visual direction, and art references.
+- `docs/specs/` - product and visual specification documents.
+- `tickets/` - implementation tasks grouped into phase folders, plus current ticket status.
 - `AGENTS.md` and `CLAUDE.md` - agent-specific development and QA guidance.
 
 ## Development
@@ -74,6 +75,6 @@ Do not add separate shot buttons unless an accepted playtest ticket explicitly c
 
 ## Rules And Specs
 
-Game rules should conform to `docs/pickleball_rules.md`. The roadmap, phase acceptance criteria, Android QA expectations, and visual direction are tracked in `docs/build-spec.md`.
+Game rules should conform to `docs/pickleball_rules.md`. The roadmap, phase acceptance criteria, Android QA expectations, and visual direction are tracked in `docs/specs/build-spec.md`.
 
 Before starting ticket work, read `tickets/README.md` and the specific ticket file. Keep known issues, verification notes, and deferred QA visible in the relevant ticket or phase notes.

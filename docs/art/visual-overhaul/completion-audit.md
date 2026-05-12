@@ -25,17 +25,17 @@ automated evidence set.
 | Preserve gameplay logic and controls while improving visuals | Guard tests passed after reverting the failed projection experiment: `flutter test test/court_projection_test.dart test/court_layout_system_test.dart test/environment_layout_test.dart`; full suite passed after the generated character integration | Partial |
 | Environment reads denser and layered | `ClassicEnvironmentComponent`, `EnvironmentLayout.classicProps`, `park_background_overhaul.png`, shared park backdrop on menu/roster/settings/end-match | Done for current pass |
 | Court/net polish without breaking geometry | `CourtComponent`, `NetComponent`, `court_projection_test.dart`, `court_layout_system_test.dart`, `court_component_test.dart`, generated court-surface texture overlay | Done for current pass |
-| Perspective should match concept art better and not feel top-down | `docs/art/visual-overhaul/perspective-fix-spec.md` documents the safe approach; `perspective-metrics.md` records the baseline and first linear tuning pass; before/after emulator screenshots are archived | Partial: improved with a guarded linear pass, but still needs human visual review |
+| Perspective should match concept art better and not feel top-down | `docs/specs/perspective-fix-spec.md` documents the safe approach; `perspective-metrics.md` records the baseline and first linear tuning pass; before/after emulator screenshots are archived | Partial: improved with a guarded linear pass, but still needs human visual review |
 | Player/opponent have distinct animation states | `PlayerComponent` and `OpponentComponent` route ready/run/swing/hit-confirm/point-win/point-loss and now load generated dink/drive/lob/smash sheets; `player_component_test.dart` verifies shot-specific pose selection, asset presence, actual sheet frame counts, horizontal facing reflection, and player point-result visibility after the point ends | Done for current pass |
 | Dink/drive/lob/smash have distinct animation/VFX indicators | `VfxLayerComponent` maps shot types to generated `dinkSpark`, `driveArc`, `lobArc`, `smashBand`, and `missWhiff`; character components load generated shot-specific animation sheets; `vfx_layer_component_test.dart` and `player_component_test.dart` verify sprite/pose selection | Done for current pass |
 | Hitbox indicators match active swing zones | `RacketComponent` draws committed swing lane from `ShotSystem.committedSwingPath` using the same contact radius as `ShotSystem`; miss VFX spawns on expired swing command | Improved; still needs live readability review |
-| Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; shot chips no longer mark `DINK` active when no swing is committed; vertical swipe chip now resolves to `LOB` or `SMASH` while active; `P52J-001` is reconciled to serve-charge feedback only; `docs/art/phase-5.2-comparison.md` states only serve charge has percentage/ring feedback | Done |
+| Remove assisted controls and obsolete swing-power affordances | `settings_screen_test.dart` verifies assisted toggle removal; shot chips no longer mark `DINK` active when no swing is committed; vertical swipe chip now resolves to `LOB` or `SMASH` while active; `P52J-001` is reconciled to serve-charge feedback only; `docs/art/phase-5.2/phase-5.2-comparison.md` states only serve charge has percentage/ring feedback | Done |
 | Android gameplay canvas is full-bleed | `GameScreen` renders `GameWidget` outside of view-padding while keeping the pause button inset-aware; evidence is archived at `docs/art/visual-overhaul/evidence/full-bleed-game-screen-pass/serve.png` | Done for current pass |
 | Menu and result screens share gameplay visual identity | `ParkBackdrop`, updated menu/roster/settings/end-match screens, refreshed `phase-5g-*.png` goldens | Done |
 | Asset manifests document generated sources and ownership | VFX, character, and court generated prompt/source docs exist; runtime asset README files link back to source contact sheets | Done for current pass |
 | Emulator and physical Pixel screenshots are captured and archived | Pixel menu screenshot exists at `docs/art/visual-overhaul/evidence/pixel-latest-menu.png`; generated character pass Pixel screenshots exist; final evidence files now exist for menu, serve, rally/countdown, feedback, pause, and end-match | Done for current pass; end-match uses UI golden rather than ADB gameplay capture |
 | Physical Android gameplay readability and performance checked | Current build installed on Pixel 10 Pro XL; latest Pixel screenshot recapture attempt reached `com.example.dink_rivals/.MainActivity` but the device stayed on the lockscreen bouncer, so those screenshots were discarded. No complete five-minute gameplay smoke is archived. Per user direction, physical Pixel evidence is no longer a blocker for continuing implementation unless the device is currently unlocked/available. | Missing for final closeout only |
-| Closeout has residual gap backlog | `docs/art/visual-overhaul/perspective-fix-spec.md` covers perspective; this audit lists remaining gaps | Partial |
+| Closeout has residual gap backlog | `docs/specs/perspective-fix-spec.md` covers perspective; this audit lists remaining gaps | Partial |
 
 ## Current Evidence
 
@@ -130,12 +130,12 @@ Verification performed during this thread:
   `docs/art/visual-overhaul/prompts/court-surface-texture-generated.md` and
   `docs/art/visual-overhaul/contact-sheets/court-surface-texture-generated.png`.
 - Required final screenshot filenames were populated:
-  `docs/art/phase-5.2-final-menu.png`,
-  `docs/art/phase-5.2-final-serve.png`,
-  `docs/art/phase-5.2-final-rally.png`,
-  `docs/art/phase-5.2-final-feedback.png`,
-  `docs/art/phase-5.2-final-pause.png`, and
-  `docs/art/phase-5.2-final-endmatch.png`.
+  `docs/art/phase-5.2/phase-5.2-final-menu.png`,
+  `docs/art/phase-5.2/phase-5.2-final-serve.png`,
+  `docs/art/phase-5.2/phase-5.2-final-rally.png`,
+  `docs/art/phase-5.2/phase-5.2-final-feedback.png`,
+  `docs/art/phase-5.2/phase-5.2-final-pause.png`, and
+  `docs/art/phase-5.2/phase-5.2-final-endmatch.png`.
 
 Subagent validation:
 

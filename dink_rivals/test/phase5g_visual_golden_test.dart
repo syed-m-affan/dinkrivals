@@ -33,7 +33,7 @@ void main() {
 
     await expectLater(
       find.byType(MaterialApp),
-      matchesGoldenFile('../../docs/art/phase-5g-menu.png'),
+      matchesGoldenFile('../../docs/art/phase-5/phase-5g-menu.png'),
     );
   });
 
@@ -44,7 +44,7 @@ void main() {
 
     await expectLater(
       find.byType(MaterialApp),
-      matchesGoldenFile('../../docs/art/phase-5g-roster.png'),
+      matchesGoldenFile('../../docs/art/phase-5/phase-5g-roster.png'),
     );
   });
 
@@ -55,7 +55,7 @@ void main() {
 
     await expectLater(
       find.byType(MaterialApp),
-      matchesGoldenFile('../../docs/art/phase-5g-settings.png'),
+      matchesGoldenFile('../../docs/art/phase-5/phase-5g-settings.png'),
     );
   });
 
@@ -72,7 +72,7 @@ void main() {
 
     await expectLater(
       find.byType(MaterialApp),
-      matchesGoldenFile('../../docs/art/phase-5g-endmatch.png'),
+      matchesGoldenFile('../../docs/art/phase-5/phase-5g-endmatch.png'),
     );
   });
 }

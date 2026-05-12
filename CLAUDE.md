@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The repo root holds the design docs; the actual app lives in a nested Flutter project. Run all Flutter commands from `dink_rivals/`, not the repo root.
 
 - `dink_rivals/` — Flutter + Flame app (the only buildable project)
-- `docs/build-spec.md` — authoritative product/architecture spec, including phase plan and non-negotiable product rules. Read this before substantive changes.
+- `docs/specs/build-spec.md` — authoritative product/architecture spec, including phase plan and non-negotiable product rules. Read this before substantive changes.
 - `tickets/` — per-phase implementation tickets. The current ticket may include constraints (e.g. locked dependency list, exact directory structure) that override generic guidance.
 
 ## Common commands
@@ -27,7 +27,7 @@ flutter build apk --debug
 flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk
 ```
 
-Phase definition-of-done (from `docs/build-spec.md` §5.4) requires the app to install on a physical Android device and run for 5 minutes without crash; known issues go in `dink_rivals/PHASE_NOTES.md`.
+Phase definition-of-done (from `docs/specs/build-spec.md` §5.4) requires the app to install on a physical Android device and run for 5 minutes without crash; known issues go in `dink_rivals/PHASE_NOTES.md`.
 
 ## Local emulator QA
 
@@ -94,6 +94,6 @@ All gameplay numbers live in `lib/game/config/tuning_constants.dart` (`Tuning` c
 
 ## Phase discipline
 
-Per `docs/build-spec.md`, this codebase is built in phases. Phase 0 (current) is gray-box rally only — no art, menus, audio, ads, IAP, persistence, or analytics. Do not introduce dependencies (Riverpod, GoRouter, google_mobile_ads, etc.) ahead of their phase. If a task seems to require a future-phase feature, surface the conflict instead of silently expanding scope.
+Per `docs/specs/build-spec.md`, this codebase is built in phases. Phase 0 (current) is gray-box rally only — no art, menus, audio, ads, IAP, persistence, or analytics. Do not introduce dependencies (Riverpod, GoRouter, google_mobile_ads, etc.) ahead of their phase. If a task seems to require a future-phase feature, surface the conflict instead of silently expanding scope.
 
 Non-negotiable product rules from spec §2 (apply to all phases): no energy timers, no premium gems, no pay-to-win, no ads during rallies, no forced ad before first gameplay, 3/4 perspective only, gameplay feel before menus/monetization, every phase must run on a physical Android device.
