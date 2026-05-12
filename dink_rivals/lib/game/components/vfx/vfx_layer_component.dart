@@ -60,7 +60,7 @@ class VfxLayerComponent extends Component {
   @override
   void update(double dt) {
     if (game.isLoaded) {
-      priority = game.ball.state.y.round();
+      priority = game.ball.state.y.round() - 1;
     }
     if (!DebugFlags.useVfx) {
       _effects.clear();

@@ -70,9 +70,9 @@ class BallComponent extends Component {
   }
 
   void _drawReadabilityRim(Canvas canvas, Vector2 center, double screenRadius) {
-    final outerRadius = screenRadius + 1.4;
+    final outerRadius = screenRadius + 1.8;
     canvas.drawCircle(center.toOffset(), outerRadius, _rimPaint);
-    canvas.drawCircle(center.toOffset(), screenRadius + 0.55, _accentRimPaint);
+    canvas.drawCircle(center.toOffset(), screenRadius + 0.75, _accentRimPaint);
   }
 
   void _drawHighlight(Canvas canvas, Vector2 center, double screenRadius) {
@@ -85,6 +85,6 @@ class BallComponent extends Component {
 
   static double visualRadiusFor(double z, double depthScale) {
     final heightScale = (z / 100).clamp(0, 1).toDouble();
-    return (1.45 + heightScale * 1.8) * depthScale;
+    return (2.05 + heightScale * 2.25) * depthScale;
   }
 }

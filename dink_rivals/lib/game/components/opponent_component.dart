@@ -44,8 +44,8 @@ class OpponentComponent extends Component {
   bool _pendingHitConfirm = false;
 
   static const double _runThreshold = 12;
-  static const double _spriteWidth = 18.4;
-  static const double _spriteHeight = 27.6;
+  static const double _spriteWidth = 22;
+  static const double _spriteHeight = 33;
   static const double _spriteFootPadding = _spriteHeight * (2 / 48);
 
   @override
@@ -72,7 +72,8 @@ class OpponentComponent extends Component {
   void update(double dt) {
     priority = state.position.y.round();
     _animationSeconds += dt;
-    if (state.velocity.x.abs() > _runThreshold * 0.35) {
+    if (state.velocity.x.abs() > _runThreshold * 0.35 &&
+        state.velocity.x.abs() > state.velocity.y.abs() * 0.65) {
       _facingX = state.velocity.x.sign;
     }
     if (state.isSwinging) {
@@ -135,7 +136,7 @@ class OpponentComponent extends Component {
     final frames = _frameCountFor(sheet);
     final fps = switch (pose) {
       _OpponentPose.idle => 2,
-      _OpponentPose.run => 8,
+      _OpponentPose.run => _runFpsForSpeed(state.velocity.length),
       _OpponentPose.swing => 18,
       _OpponentPose.dink => 14,
       _OpponentPose.drive => 18,
@@ -231,6 +232,15 @@ class OpponentComponent extends Component {
 
   @visibleForTesting
   double facingXForTesting() => _facingX;
+
+  @visibleForTesting
+  static double runFpsForSpeedForTesting(double speed) =>
+      _runFpsForSpeed(speed);
+
+  static double _runFpsForSpeed(double speed) {
+    final t = ((speed - _runThreshold) / 92).clamp(0.0, 1.0).toDouble();
+    return 5.5 + t * 8.5;
+  }
 
   int _frameCountFor(ui.Image sheet) {
     return (sheet.width / 32).round().clamp(1, 8);

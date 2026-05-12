@@ -204,8 +204,8 @@ void main() {
         await _loadImage('assets/images/sprites/opponent_smash.png');
 
     expect(player.frameCountForTesting(playerDrive), 1);
-    expect(player.frameCountForTesting(playerRun), 8);
-    expect(opponent.frameCountForTesting(opponentRun), 8);
+    expect(player.frameCountForTesting(playerRun), 4);
+    expect(opponent.frameCountForTesting(opponentRun), 4);
     expect(opponent.frameCountForTesting(opponentSmash), 1);
   });
 
@@ -221,11 +221,26 @@ void main() {
     player.state.velocity = Vector2(20, 0);
     player.update(0.016);
     expect(player.facingXForTesting(), 1);
+    player.state.velocity = Vector2(-8, -40);
+    player.update(0.016);
+    expect(player.facingXForTesting(), 1);
 
     expect(opponent.facingXForTesting(), -1);
     opponent.state.velocity = Vector2(20, 0);
     opponent.update(0.016);
     expect(opponent.facingXForTesting(), 1);
+  });
+
+  test('run animation rate scales with movement speed', () {
+    expect(PlayerComponent.runFpsForSpeedForTesting(12), closeTo(5.5, 0.001));
+    expect(
+      PlayerComponent.runFpsForSpeedForTesting(104),
+      closeTo(14.0, 0.001),
+    );
+    expect(
+      OpponentComponent.runFpsForSpeedForTesting(58),
+      greaterThan(PlayerComponent.runFpsForSpeedForTesting(20)),
+    );
   });
 }
 
