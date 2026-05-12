@@ -64,4 +64,4 @@ Manual: emulator screenshot of a serve state, confirm the net reads as a 3D obst
 
 ## Implementation notes
 
-`NetComponent` renders a thin projected foreground rail/post overlay at `Court.netY` using only `game.courtToWorld(courtPos, z)`. The painted background supplies the full mesh/net art; the component remains in the render tree with `priority = Court.netY.round()` so far-side balls/opponents can be visually occluded without drawing a second full net over the painted court.
+`NetComponent` renders a thin projected foreground rail overlay at `Court.netY` using only `game.courtToWorld(courtPos, z)`. The painted background supplies the full mesh/net art; the component remains in the render tree with `priority = Court.netY.round()` so far-side balls/opponents can be visually occluded without drawing a second full net over the painted court.

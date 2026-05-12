@@ -24,7 +24,7 @@ The user requested a final pivot away from a synthetic pinhole projection: paint
 - `CourtLayoutSystem.resize` now applies the same cover-fit transform that `ClassicEnvironmentComponent._drawGeneratedBackgroundBase` uses for the bg image, so gameplay positions and the painted court always agree.
 - `depthScaleForY(y)` derives from the painted width at that y (relative to the near baseline) — same source as the lateral projection, so they cannot drift.
 - `CourtComponent` and `KitchenZoneComponent` are now no-op renderers. The painted bg image already contains the court surface, kitchens, lines, fence, foliage, sky, and apron shadow.
-- `NetComponent` remains a thin projected foreground rail/post overlay at `Court.netY`. The painted bg provides the full mesh/net art, while the overlay restores a depth-order cue so far-side balls/opponents pass behind the rail and near-side entities render in front.
+- `NetComponent` remains a thin projected foreground rail overlay at `Court.netY`. The painted bg provides the full mesh/net art, while the overlay restores a depth-order cue so far-side balls/opponents pass behind the rail and near-side entities render in front.
 - `ClassicEnvironmentComponent` no longer draws its `_drawCourtApron`, `_drawGeneratedFenceAnchor`, `_drawGeneratedCourtShadow`, or `_drawGeneratedDepthWash` overlays when the painted bg is loaded (they were dimming the painted court). Side props (benches, lamps, planters, bags, shrubs, signs, fence segments) still render on top via `EnvironmentLayout`.
 - `OpponentComponent._farCourtReadabilityScale` removed in PERSP-003 — sprites now scale solely via `depthScaleForY`. The swing lane is drawn as a tapered polygon so its width matches the racket reach at start and end depths.
 
