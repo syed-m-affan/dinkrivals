@@ -73,22 +73,18 @@ void main() {
     );
   });
 
-  test('painted court y mapping is linear (matches the painted bg)', () {
-    const dy = 40.0;
-    final farNear = CourtProjection.courtToScreen(Vector2(110, Court.top), 0);
-    final farPlus =
-        CourtProjection.courtToScreen(Vector2(110, Court.top + dy), 0);
-    final nearMinus =
-        CourtProjection.courtToScreen(Vector2(110, Court.bottom - dy), 0);
-    final near = CourtProjection.courtToScreen(Vector2(110, Court.bottom), 0);
+  test('painted net y maps to the measured bg net line', () {
+    final net =
+        CourtProjection.courtToScreen(Vector2(Court.width / 2, Court.netY), 0);
+    final far =
+        CourtProjection.courtToScreen(Vector2(Court.width / 2, Court.top), 0);
+    final near = CourtProjection.courtToScreen(
+      Vector2(Court.width / 2, Court.bottom),
+      0,
+    );
 
-    final farDelta = farPlus.y - farNear.y;
-    final nearDelta = near.y - nearMinus.y;
-
-    // Painted bg uses a uniform y stretch, so equal court-y steps consume
-    // equal image-y deltas. (Lateral width still tapers — that's where the
-    // perspective comes from.)
-    expect(nearDelta, closeTo(farDelta, 0.01));
+    expect(net.y, closeTo(CourtProjection.paintedNetY, 0.01));
+    expect(net.y, lessThan((far.y + near.y) / 2));
   });
 
   test('z lift increases toward the near court', () {

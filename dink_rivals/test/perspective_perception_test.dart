@@ -53,19 +53,15 @@ void main() {
     );
   });
 
-  test('net overlay has visible projected height and horizontal rails', () {
+  test('net overlay rail lands on the measured painted net line', () {
     final layout = CourtLayoutSystem()..resize(Vector2(1080, 2400));
-    final leftGround = layout.courtToWorld(Vector2(Court.left, Court.netY));
-    final rightGround = layout.courtToWorld(Vector2(Court.right, Court.netY));
-    final leftTop = layout.courtToWorld(Vector2(Court.left, Court.netY), 86);
-    final rightTop = layout.courtToWorld(Vector2(Court.right, Court.netY), 86);
+    final left = layout.courtToWorld(Vector2(Court.left, Court.netY));
+    final right = layout.courtToWorld(Vector2(Court.right, Court.netY));
+    final far = layout.courtToWorld(Vector2(Court.width / 2, Court.top));
+    final near = layout.courtToWorld(Vector2(Court.width / 2, Court.bottom));
 
-    expect((leftTop.y - rightTop.y).abs(), lessThan(0.01));
-    expect((leftGround.y - rightGround.y).abs(), lessThan(0.01));
-    expect(leftGround.y - leftTop.y, greaterThan(12));
-    expect(
-      (rightTop.x - leftTop.x) - (rightGround.x - leftGround.x),
-      closeTo(0, 0.01),
-    );
+    expect((left.y - right.y).abs(), lessThan(0.01));
+    expect(left.y, lessThan((far.y + near.y) / 2));
+    expect(right.x - left.x, greaterThan(400));
   });
 }

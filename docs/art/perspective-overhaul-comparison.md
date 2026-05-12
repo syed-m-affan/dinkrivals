@@ -15,11 +15,12 @@ This doc accompanies the `perspective-overhaul-000` through `perspective-overhau
 
 The user requested a final pivot away from a synthetic pinhole projection: paint the court directly over the bg image and fix the math so the gameplay coords land on it.
 
-- `CourtProjection` is now a **painted-court-aligned** projection. Constants in the class hold the pixel coordinates of the four painted court corners inside `park_background_overhaul.png`:
+- `CourtProjection` is now a **painted-court-aligned** projection. Constants in the class hold the pixel coordinates of the painted court control points inside `park_background_overhaul.png`:
   - `paintedFarLeftX/RightX = 340 / 639` at `paintedFarY = 605`
+  - `paintedNetY = 790` for the visible net boundary
   - `paintedNearLeftX/RightX = 115 / 864` at `paintedNearY = 1175`
   - `imageWidth/Height = 979 / 1606`
-- `courtToScreen(courtPos, z)` lerps in image-pixel space: each court y → image y via linear interpolation between the painted baselines; each court x → image x via lerp inside the trapezoidal width at that y; z lifts the y by `zLiftForY * z`.
+- `courtToScreen(courtPos, z)` maps in image-pixel space: each court y maps piecewise through the far baseline, measured net line, and near baseline; each court x maps by lerp inside the trapezoidal width at that y; z lifts the y by `zLiftForY * z`.
 - `CourtLayoutSystem.resize` now applies the same cover-fit transform that `ClassicEnvironmentComponent._drawGeneratedBackgroundBase` uses for the bg image, so gameplay positions and the painted court always agree.
 - `depthScaleForY(y)` derives from the painted width at that y (relative to the near baseline) — same source as the lateral projection, so they cannot drift.
 - `CourtComponent` and `KitchenZoneComponent` are now no-op renderers. The painted bg image already contains the court surface, kitchens, lines, fence, foliage, sky, and apron shadow.

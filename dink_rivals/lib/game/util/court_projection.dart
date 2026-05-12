@@ -3,9 +3,9 @@ import 'package:flame/components.dart';
 import '../config/court_constants.dart';
 
 /// Projects logical court coordinates into the *painted* court inside the
-/// classic park background image (`park_background_overhaul.png`). All four
-/// logical court corners map to the four painted court corners, so any line,
-/// player, ball, or shadow rendered with `courtToWorld` lands exactly on the
+/// classic park background image (`park_background_overhaul.png`). The logical
+/// court corners and net line map to measured painted control points, so any
+/// line, player, ball, or shadow rendered with `courtToWorld` lands on the
 /// pre-rendered pickleball floor in the background.
 ///
 /// This file defines the projection in image-pixel space; `CourtLayoutSystem`
@@ -17,9 +17,10 @@ class CourtProjection {
   static const double imageWidth = 979.0;
   static const double imageHeight = 1606.0;
 
-  // Pixel coordinates of the four painted court corners inside the bg image.
-  // Trapezoid is symmetric around the image's horizontal center.
+  // Pixel coordinates of the painted court control points inside the bg image.
+  // The measured net y keeps the gameplay net boundary on the painted net.
   static const double paintedFarY = 605.0;
+  static const double paintedNetY = 790.0;
   static const double paintedNearY = 1175.0;
   static const double paintedFarLeftX = 340.0;
   static const double paintedFarRightX = 639.0;
@@ -37,8 +38,13 @@ class CourtProjection {
   }
 
   static double _imageYForCourtY(double courtY) {
-    final t = (courtY / Court.length).toDouble();
-    return paintedFarY + t * (paintedNearY - paintedFarY);
+    final y = courtY.toDouble();
+    if (y <= Court.netY) {
+      final t = y / Court.netY;
+      return paintedFarY + t * (paintedNetY - paintedFarY);
+    }
+    final t = (y - Court.netY) / (Court.length - Court.netY);
+    return paintedNetY + t * (paintedNearY - paintedNetY);
   }
 
   static double _imageWidthAtCourtY(double courtY) {
