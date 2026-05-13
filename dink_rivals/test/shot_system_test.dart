@@ -565,6 +565,79 @@ void main() {
     expect(ball.vz, Tuning.serveMinLift);
   });
 
+  test('served ball cannot re-hit the serving player before a bounce', () {
+    final shotSystem = ShotSystem();
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: racketPosition.x,
+      y: racketPosition.y,
+      z: 0,
+      isInPlay: false,
+    );
+
+    shotSystem.serve(
+      ball: ball,
+      hitter: player,
+      racketDirection: racketDirection,
+    );
+    shotSystem.update(Tuning.racketHitCooldown + 0.01);
+    final didHit = shotSystem.attemptRacketContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      racketDirection: racketDirection,
+      racketVelocity: Vector2(120, 0),
+    );
+
+    expect(didHit, isFalse);
+    expect(ball.lastHitBy, PlayerSide.player);
+    expect(ball.vy, closeTo(-Tuning.serveMinOutputSpeed, 0.01));
+    expect(shotSystem.lastShotType, ShotType.serve);
+  });
+
+  test('served ball cannot be caught by a committed swing before a bounce', () {
+    final shotSystem = ShotSystem();
+    final player = PlayerState(
+      position: Vector2(110, 400),
+      side: PlayerSide.player,
+    );
+    final racketDirection = Vector2(0, -1);
+    final racketPosition =
+        player.position + racketDirection * Tuning.racketReach;
+    final ball = BallState(
+      x: player.position.x,
+      y: player.position.y - Tuning.committedSwingForwardOffset,
+      z: Tuning.racketContactZ,
+      isInPlay: false,
+    );
+
+    shotSystem.serve(
+      ball: ball,
+      hitter: player,
+      racketDirection: racketDirection,
+    );
+    shotSystem.update(Tuning.racketHitCooldown + 0.01);
+    final didHit = shotSystem.attemptManualContact(
+      ball: ball,
+      hitter: player,
+      racketPosition: racketPosition,
+      aimDirection: racketDirection,
+      swipeDirection: Vector2(1, 0),
+      intent: SwingIntent.drive,
+      power: 0.8,
+    );
+
+    expect(didHit, isFalse);
+    expect(ball.lastHitBy, PlayerSide.player);
+    expect(shotSystem.lastShotType, ShotType.serve);
+  });
+
   test('serve aims along racket direction', () {
     final player = PlayerState(
       position: Vector2(110, 400),

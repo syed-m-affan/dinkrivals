@@ -85,6 +85,9 @@ class ShotSystem {
     if (_cooldownFor(hitter.side) > 0) {
       return false;
     }
+    if (_isOwnLiveBallBeforeBounce(ball, hitter)) {
+      return false;
+    }
     final contact = intent == null
         ? _contactProfile(
             ball: ball,
@@ -138,6 +141,9 @@ class ShotSystem {
     required Vector2 racketVelocity,
   }) {
     if (_cooldownFor(hitter.side) > 0) {
+      return false;
+    }
+    if (_isOwnLiveBallBeforeBounce(ball, hitter)) {
       return false;
     }
     final contact = _contactProfile(
@@ -618,12 +624,21 @@ class ShotSystem {
   }
 
   bool _isHittable(BallState ball, PlayerState hitter, Vector2? aim) {
+    if (_isOwnLiveBallBeforeBounce(ball, hitter)) {
+      return false;
+    }
     final contact = _contactProfile(
       ball: ball,
       hitter: hitter,
       racketPosition: _racketPositionFor(ball, hitter, aim),
     );
     return contact.didHit;
+  }
+
+  bool _isOwnLiveBallBeforeBounce(BallState ball, PlayerState hitter) {
+    return ball.isInPlay &&
+        ball.lastHitBy == hitter.side &&
+        !ball.hasBouncedThisSide;
   }
 
   Vector2 _racketPositionFor(BallState ball, PlayerState hitter, Vector2? aim) {
