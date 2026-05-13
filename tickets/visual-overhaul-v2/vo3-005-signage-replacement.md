@@ -1,0 +1,54 @@
+---
+id: VO3-005
+phase: visual-overhaul-v3
+status: review
+priority: high
+parallel_group: environment-art
+depends_on: [VO2-001]
+owner: Asset Generation Agent + Runtime Integration Agent + Visual QA Agent
+last_updated: 2026-05-12
+---
+
+# VO3-005 - Signage Replacement
+
+## Goal
+
+Replace failed or placeholder VO2 signage with legible, original, concept-matched signage that supports the arcade pickleball venue without distracting from gameplay.
+
+## Scope
+
+- Replace rear fence/banner signage assets that failed art QA.
+- Keep signs original and clearly in-universe.
+- Preserve current court projection and environment layer dimensions.
+- Do not alter gameplay logic, scoring, physics, AI, controls, or ad behavior.
+
+## Acceptance Criteria
+
+- Required venue signage is readable in serve and rally screenshots.
+- Signs match the concept arcade sports style and do not look like unrelated placeholder art.
+- Signage does not compete with the ball, players, score, rally strip, or feedback plaque.
+- Layer alignment remains stable with court/base/net layers.
+- Emulator evidence is archived, with physical Pixel evidence when available.
+
+## Verification
+
+Run from `dink_rivals/` after implementation:
+
+```bash
+flutter analyze
+flutter test
+flutter build apk --debug
+```
+
+## Recovery Notes
+
+- 2026-05-12: The rejected `DINK RIVALS` and `PICKLEBALL LEGENDS` text boards were removed from `assets/images/environment/classic/layer_fence_signage.png`.
+- The projected `far_fence_*`, `sign_dink_rivals_back`, `sign_park_courts_back`, and `sign_side_right` gameplay props were removed from `EnvironmentLayout.classicProps`, so fence/sign assets no longer project onto the court plane.
+- `test/environment_layout_test.dart` now asserts fence/signage belongs to the background layer, not projected court props.
+- Latest emulator evidence no longer shows the rejected chain-link text signs or court-plane sign props:
+  - `docs/art/visual-overhaul/evidence/vo2-recovery-emulator/serve_ui_latest.png`
+  - `docs/art/visual-overhaul/evidence/vo2-recovery-emulator/rally_ui_latest.png`
+- 2026-05-12 follow-up: compact `DINK RIVALS` and `PARK COURTS` board art was composited into existing background sign-board faces in `layer_fence_signage.png`, using the existing small sign assets as style anchors instead of regenerating the layer.
+- Fresh emulator evidence:
+  - `docs/art/visual-overhaul/evidence/vo2-recovery-emulator/serve_after_signage.png`
+- Remaining review item: the replacement is now present and no longer projected onto the court plane, but it still needs human art QA against the concept target.

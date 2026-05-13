@@ -24,17 +24,9 @@ class ScoreComponent extends Component {
     fontFamily: 'monospace',
     letterSpacing: 0,
   );
-  static const TextStyle _readoutStyle = TextStyle(
-    color: VisualPalette.hudReadoutText,
-    fontSize: 13,
-    fontWeight: FontWeight.bold,
-    fontFamily: 'monospace',
-    letterSpacing: 0,
-  );
   final Paint _playerPanel = Paint()..color = VisualPalette.scoreboardPlayer;
   final Paint _opponentPanel = Paint()
     ..color = VisualPalette.scoreboardOpponent;
-  final Paint _divider = Paint()..color = VisualPalette.scoreboardSurface;
   final Paint _border = Paint()
     ..color = VisualPalette.scoreboardBorder
     ..style = PaintingStyle.stroke
@@ -45,19 +37,13 @@ class ScoreComponent extends Component {
     ..strokeWidth = 3;
   final Paint _serveIndicator = Paint()..color = VisualPalette.uiAccent;
   final Paint _shadowPaint = Paint()..color = VisualPalette.scoreboardShadow;
-  final Paint _readoutChipPaint = Paint()
-    ..color = VisualPalette.scoreboardSurface.withValues(alpha: 0.84);
-  final Paint _readoutChipBorderPaint = Paint()
-    ..color = VisualPalette.scoreboardBorder.withValues(alpha: 0.72)
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 1.3;
 
   @override
   void render(Canvas canvas) {
     final match = game.matchState;
-    final panelWidth = game.size.x < 390 ? 62.0 : 66.0;
-    final panelHeight = 58.0;
-    final gap = game.size.x < 390 ? 14.0 : 18.0;
+    final panelWidth = game.size.x < 390 ? 58.0 : 62.0;
+    final panelHeight = 54.0;
+    const gap = 2.0;
     final left = math.max(10.0, game.size.x * 0.035);
     final top = 8.0;
     final playerRect = Rect.fromLTWH(left, top, panelWidth, panelHeight);
@@ -67,29 +53,15 @@ class ScoreComponent extends Component {
       panelWidth,
       panelHeight,
     );
-    final centerRect = Rect.fromLTWH(left + panelWidth, top + 15, gap, 28);
 
     _drawScorePanel(canvas, playerRect, 'YOU', match.playerScore, _playerPanel);
     _drawScorePanel(
         canvas, opponentRect, 'RIVAL', match.opponentScore, _opponentPanel);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(centerRect, const Radius.circular(4)),
-      _divider,
-    );
     final activeRect =
         match.servingSide == PlayerSide.player ? playerRect : opponentRect;
     canvas.drawRRect(
       RRect.fromRectAndRadius(activeRect, const Radius.circular(6)),
       _activeBorder,
-    );
-    final labelPainter =
-        _painter(match.matchOver ? 'OVER' : 'SERVE', _labelStyle);
-    labelPainter.paint(
-      canvas,
-      Offset(
-        centerRect.center.dx - labelPainter.width / 2,
-        centerRect.center.dy - labelPainter.height / 2,
-      ),
     );
     final indicatorX = activeRect.center.dx;
     canvas.drawCircle(
@@ -97,7 +69,6 @@ class ScoreComponent extends Component {
       game.logicalToScreen(2.4).clamp(2.2, 3.2),
       _serveIndicator,
     );
-    _drawReadouts(canvas);
   }
 
   void _drawScorePanel(
@@ -135,30 +106,6 @@ class ScoreComponent extends Component {
     );
   }
 
-  void _drawReadouts(Canvas canvas) {
-    final left = math.max(10.0, game.size.x * 0.04);
-    final top = game.size.y < 760 ? 74.0 : 84.0;
-    final rally = _painter(rallyLabelForTesting(), _readoutStyle);
-    final last = _painter(
-        lastShotLabelForTesting(),
-        _readoutStyle.copyWith(
-          color: VisualPalette.hudLastShotLabel,
-        ));
-    final chipWidth = math.max(rally.width, last.width) + 18;
-    final chipHeight = rally.height + last.height + 15;
-    final chipRect = Rect.fromLTWH(left - 8, top - 7, chipWidth, chipHeight);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(chipRect, const Radius.circular(5)),
-      _readoutChipPaint,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(chipRect, const Radius.circular(5)),
-      _readoutChipBorderPaint,
-    );
-    rally.paint(canvas, Offset(left, top));
-    last.paint(canvas, Offset(left, top + rally.height + 5));
-  }
-
   TextPainter _painter(String text, TextStyle style) {
     return TextPainter(
       text: TextSpan(text: text, style: style),
@@ -177,14 +124,5 @@ class ScoreComponent extends Component {
   @visibleForTesting
   PlayerSide servingIndicatorSideForTesting() {
     return game.matchState.servingSide;
-  }
-
-  @visibleForTesting
-  String rallyLabelForTesting() => 'RALLY: ${game.rallyCount}';
-
-  @visibleForTesting
-  String lastShotLabelForTesting() {
-    final shot = game.shotSystem.lastShotType?.name.toUpperCase() ?? '-';
-    return 'LAST SHOT: $shot';
   }
 }

@@ -20,7 +20,8 @@ class MainMenuScreen extends ConsumerWidget {
         fit: StackFit.expand,
         children: [
           ParkBackdrop(
-            overlayOpacity: 0.84,
+            overlayOpacity: 0.44,
+            showCourtImage: false,
             child: Center(
               child: SingleChildScrollView(
                 padding:
@@ -33,9 +34,9 @@ class MainMenuScreen extends ConsumerWidget {
                     const SizedBox(height: 54),
                     ArcadePanel(
                       backgroundColor:
-                          VisualPalette.uiSurface.withValues(alpha: 0.86),
-                      borderColor:
-                          VisualPalette.courtLineWhite.withValues(alpha: 0.65),
+                          VisualPalette.uiSurface.withValues(alpha: 0.82),
+                      borderColor: VisualPalette.environmentSignBorder
+                          .withValues(alpha: 0.78),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,24 +99,47 @@ class _Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Image.asset(
-          'assets/images/ui/logo.png',
-          key: const Key('menu-logo-image'),
-          width: 256,
-          filterQuality: FilterQuality.none,
-          errorBuilder: (_, __, ___) => const Text(
-            'DINK RIVALS',
-            style: TextStyle(
-              color: VisualPalette.courtLineWhite,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'monospace',
-            ),
+    return DecoratedBox(
+      key: const Key('menu-logo-image'),
+      decoration: BoxDecoration(
+        color: VisualPalette.environmentSignPanel.withValues(alpha: 0.82),
+        border: Border.all(color: VisualPalette.uiAccent, width: 3),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x77000000),
+            offset: Offset(0, 5),
+            blurRadius: 0,
           ),
+        ],
+      ),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+        child: Column(
+          children: [
+            Text(
+              'DINK',
+              style: TextStyle(
+                color: VisualPalette.courtLineWhite,
+                fontSize: 38,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'monospace',
+                height: 0.94,
+              ),
+            ),
+            Text(
+              'RIVALS',
+              style: TextStyle(
+                color: VisualPalette.uiAccent,
+                fontSize: 38,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'monospace',
+                height: 0.94,
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

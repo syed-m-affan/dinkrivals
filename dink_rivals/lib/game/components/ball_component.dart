@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
 import '../config/debug_flags.dart';
+import '../config/tuning_constants.dart';
 import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 import '../models/ball_state.dart';
@@ -85,6 +86,8 @@ class BallComponent extends Component {
 
   static double visualRadiusFor(double z, double depthScale) {
     final heightScale = (z / 100).clamp(0, 1).toDouble();
-    return (2.05 + heightScale * 2.25) * depthScale;
+    return (Tuning.ballRadiusBase +
+            heightScale * Tuning.ballRadiusAltitudeBoost) *
+        depthScale;
   }
 }

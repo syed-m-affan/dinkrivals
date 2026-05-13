@@ -1,0 +1,1182 @@
+{
+  "cell": 64,
+  "assets": [
+    {
+      "file": "player_idle.png",
+      "size": [
+        128,
+        64
+      ],
+      "frames": 2,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          12,
+          4,
+          51,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1201,
+        1194
+      ],
+      "widthRange": [
+        39,
+        40
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_ready.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          12,
+          4,
+          51,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1201,
+        1202,
+        1200,
+        1194,
+        1201,
+        1202
+      ],
+      "widthRange": [
+        39,
+        40
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_run.png",
+      "size": [
+        768,
+        64
+      ],
+      "frames": 12,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          10,
+          4,
+          52,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          11,
+          4,
+          52,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          10,
+          4,
+          52,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          11,
+          4,
+          52,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1192,
+        1216,
+        1146,
+        1060,
+        1141,
+        1125,
+        1192,
+        1216,
+        1146,
+        1060,
+        1141,
+        1125
+      ],
+      "widthRange": [
+        39,
+        43
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_dink.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          11,
+          4,
+          52,
+          59
+        ],
+        [
+          7,
+          4,
+          55,
+          59
+        ],
+        [
+          7,
+          4,
+          53,
+          59
+        ],
+        [
+          8,
+          4,
+          44,
+          59
+        ],
+        [
+          12,
+          4,
+          51,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1217,
+        1172,
+        1218,
+        1166,
+        1088,
+        1185
+      ],
+      "widthRange": [
+        37,
+        49
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_drive.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          10,
+          4,
+          52,
+          59
+        ],
+        [
+          12,
+          4,
+          51,
+          59
+        ],
+        [
+          5,
+          4,
+          57,
+          59
+        ],
+        [
+          6,
+          4,
+          56,
+          59
+        ],
+        [
+          22,
+          4,
+          56,
+          59
+        ],
+        [
+          10,
+          4,
+          53,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1203,
+        1220,
+        1222,
+        1198,
+        1002,
+        1226
+      ],
+      "widthRange": [
+        35,
+        53
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_lob.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          10,
+          4,
+          53,
+          59
+        ],
+        [
+          6,
+          4,
+          44,
+          59
+        ],
+        [
+          6,
+          4,
+          51,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ],
+        [
+          10,
+          4,
+          52,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1206,
+        1196,
+        1072,
+        1036,
+        1036,
+        1249
+      ],
+      "widthRange": [
+        36,
+        46
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_smash.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          10,
+          4,
+          52,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          12,
+          4,
+          49,
+          59
+        ],
+        [
+          12,
+          4,
+          49,
+          59
+        ],
+        [
+          13,
+          4,
+          49,
+          59
+        ],
+        [
+          10,
+          4,
+          53,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1179,
+        1142,
+        1336,
+        948,
+        1158,
+        1199
+      ],
+      "widthRange": [
+        37,
+        44
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_swing.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          10,
+          4,
+          52,
+          59
+        ],
+        [
+          12,
+          4,
+          51,
+          59
+        ],
+        [
+          5,
+          4,
+          57,
+          59
+        ],
+        [
+          6,
+          4,
+          56,
+          59
+        ],
+        [
+          22,
+          4,
+          56,
+          59
+        ],
+        [
+          10,
+          4,
+          53,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1203,
+        1220,
+        1222,
+        1198,
+        1002,
+        1226
+      ],
+      "widthRange": [
+        35,
+        53
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "player_hit_confirm.png",
+      "size": [
+        256,
+        64
+      ],
+      "frames": 4,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          5,
+          4,
+          57,
+          59
+        ],
+        [
+          6,
+          4,
+          56,
+          59
+        ],
+        [
+          22,
+          4,
+          56,
+          59
+        ],
+        [
+          10,
+          4,
+          53,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1222,
+        1198,
+        1002,
+        1226
+      ],
+      "widthRange": [
+        35,
+        53
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_idle.png",
+      "size": [
+        128,
+        64
+      ],
+      "frames": 2,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          48,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1214,
+        1203
+      ],
+      "widthRange": [
+        35,
+        35
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_ready.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ],
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1214,
+        1242,
+        1251,
+        1203,
+        1208,
+        1234
+      ],
+      "widthRange": [
+        35,
+        36
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_run.png",
+      "size": [
+        768,
+        64
+      ],
+      "frames": 12,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          15,
+          4,
+          47,
+          59
+        ],
+        [
+          15,
+          4,
+          48,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ],
+        [
+          17,
+          4,
+          45,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ],
+        [
+          15,
+          4,
+          48,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ],
+        [
+          17,
+          4,
+          45,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1116,
+        1175,
+        1120,
+        979,
+        1111,
+        1138,
+        1116,
+        1175,
+        1120,
+        979,
+        1111,
+        1138
+      ],
+      "widthRange": [
+        29,
+        34
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_dink.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ],
+        [
+          8,
+          4,
+          55,
+          59
+        ],
+        [
+          4,
+          1,
+          44,
+          56
+        ],
+        [
+          7,
+          4,
+          55,
+          59
+        ],
+        [
+          14,
+          4,
+          48,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1203,
+        1231,
+        1288,
+        1211,
+        1247,
+        1190
+      ],
+      "widthRange": [
+        35,
+        49
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_drive.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          13,
+          4,
+          50,
+          59
+        ],
+        [
+          10,
+          4,
+          53,
+          59
+        ],
+        [
+          5,
+          4,
+          37,
+          59
+        ],
+        [
+          15,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1178,
+        1125,
+        1231,
+        998,
+        974,
+        1201
+      ],
+      "widthRange": [
+        33,
+        44
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_lob.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          15,
+          4,
+          48,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          15,
+          4,
+          47,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1194,
+        1194,
+        1150,
+        940,
+        940,
+        1186
+      ],
+      "widthRange": [
+        33,
+        41
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_smash.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          12,
+          4,
+          50,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ],
+        [
+          13,
+          4,
+          48,
+          59
+        ],
+        [
+          11,
+          4,
+          51,
+          59
+        ],
+        [
+          14,
+          4,
+          48,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1105,
+        1114,
+        1180,
+        1032,
+        1268,
+        1096
+      ],
+      "widthRange": [
+        35,
+        41
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_swing.png",
+      "size": [
+        384,
+        64
+      ],
+      "frames": 6,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          14,
+          4,
+          48,
+          59
+        ],
+        [
+          13,
+          4,
+          50,
+          59
+        ],
+        [
+          10,
+          4,
+          53,
+          59
+        ],
+        [
+          5,
+          4,
+          37,
+          59
+        ],
+        [
+          15,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1178,
+        1125,
+        1231,
+        998,
+        974,
+        1201
+      ],
+      "widthRange": [
+        33,
+        44
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    },
+    {
+      "file": "opponent_hit_confirm.png",
+      "size": [
+        256,
+        64
+      ],
+      "frames": 4,
+      "partialAlpha": 0,
+      "chromaResidue": 0,
+      "edgePixels": 0,
+      "bbox": [
+        [
+          10,
+          4,
+          53,
+          59
+        ],
+        [
+          5,
+          4,
+          37,
+          59
+        ],
+        [
+          15,
+          4,
+          48,
+          59
+        ],
+        [
+          14,
+          4,
+          49,
+          59
+        ]
+      ],
+      "pixelsPerFrame": [
+        1231,
+        998,
+        974,
+        1201
+      ],
+      "widthRange": [
+        33,
+        44
+      ],
+      "heightRange": [
+        56,
+        56
+      ]
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "runtimeReusedStates": {
+    "pointWin": "ready",
+    "pointLoss": "ready"
+  },
+  "normalization": "Regenerated player drive/swing, player smash, and opponent smash with imagegen skill workflow; 56px visible height, no partial alpha, no green chroma residue, and no clipped frames."
+}

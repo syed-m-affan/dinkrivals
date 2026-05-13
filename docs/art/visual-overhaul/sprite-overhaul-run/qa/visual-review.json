@@ -1,0 +1,12 @@
+{
+  "accepted": true,
+  "reviewer_notes": "Deterministic cleanup pass: binary alpha, tiny component removal, palette snap, no interpolated frames. Human art signoff still required for subjective style.",
+  "checks": {
+    "48x72_contract": "pass",
+    "partial_alpha": "pass",
+    "frame_separation": "pass",
+    "noise_reduction": "pass",
+    "not_procedural_generation": "pass"
+  },
+  "warnings": []
+}

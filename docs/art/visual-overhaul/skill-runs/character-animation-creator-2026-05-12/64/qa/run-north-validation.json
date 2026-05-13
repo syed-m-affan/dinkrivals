@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\run-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "run-north",
+      "column": 0,
+      "nontransparent_pixels": 1192,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "run-north",
+      "column": 1,
+      "nontransparent_pixels": 1219,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "run-north",
+      "column": 2,
+      "nontransparent_pixels": 1147,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "run-north",
+      "column": 3,
+      "nontransparent_pixels": 1067,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "run-north",
+      "column": 4,
+      "nontransparent_pixels": 1143,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "run-north",
+      "column": 5,
+      "nontransparent_pixels": 1127,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "run-north",
+      "frame_diffs": [
+        0.05032,
+        0.06075,
+        0.06699,
+        0.06262,
+        0.04788
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "run-north",
+          "column": 0,
+          "nontransparent_pixels": 1192,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "run-north",
+          "column": 1,
+          "nontransparent_pixels": 1219,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "run-north",
+          "column": 2,
+          "nontransparent_pixels": 1147,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "run-north",
+          "column": 3,
+          "nontransparent_pixels": 1067,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "run-north",
+          "column": 4,
+          "nontransparent_pixels": 1143,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "run-north",
+          "column": 5,
+          "nontransparent_pixels": 1127,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

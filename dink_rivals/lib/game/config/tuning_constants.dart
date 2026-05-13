@@ -9,15 +9,17 @@ class Tuning {
   static const double hitWindowRadius = 50.0;
   static const double perfectHitWindowRadius = 22.0;
   static const double racketReach = 42.0;
-  static const double racketHitRadius = 10.0;
-  static const double cleanContactRadius = 15.0;
+  // VO2 visual footprint bump: sprites are 1.5x larger, but contact radii
+  // scale only lightly so the larger art does not make rallies play loose.
+  static const double racketHitRadius = 11.0;
+  static const double cleanContactRadius = 16.5;
   static const double committedSwingContactRadius = 18.0;
   static const double committedSwingForwardOffset = 44.0;
   static const double committedSwingHorizontalHalfLength = 56.0;
   static const double committedSwingVerticalStart = 18.0;
   static const double committedSwingVerticalLength = 84.0;
-  static const double forgivenContactRadius = 34.0;
-  static const double emergencyBodyContactRadius = 30.0;
+  static const double forgivenContactRadius = 37.0;
+  static const double emergencyBodyContactRadius = 32.0;
   static const double shotSwipeWindowSeconds = 0.28;
   static const double swingMissRecoverySeconds = 0.20;
   static const double shotSwipeDistance = 34.0;
@@ -33,7 +35,7 @@ class Tuning {
   // Vertical half-extent of the hitbox capsule around `racketContactZ`. Must
   // stay >= (smashMinBallHeight - racketContactZ) so smash-height balls
   // remain hittable.
-  static const double verticalHitRadius = 36.0;
+  static const double verticalHitRadius = 39.0;
   static const double maxRacketAngleRadians = 1.5708;
   static const double racketSwingRadiansPerPixel = 0.005;
   static const double racketHitCooldown = 0.18;
@@ -97,4 +99,7 @@ class Tuning {
   static const double opponentSmashProbability = 0.28;
   static const double opponentSmashMinBallHeight = 30.0;
   static const double opponentTargetJitter = 36.0;
+
+  static const double ballRadiusBase = 2.35;
+  static const double ballRadiusAltitudeBoost = 2.55;
 }

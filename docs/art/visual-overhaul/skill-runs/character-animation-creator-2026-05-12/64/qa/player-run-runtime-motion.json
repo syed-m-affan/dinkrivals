@@ -1,0 +1,197 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\dink_rivals\\assets\\images\\sprites\\player_run.png",
+  "width": 768,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "player-run-runtime",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 0,
+          "nontransparent_pixels": 1192,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 1,
+          "nontransparent_pixels": 1219,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 2,
+          "nontransparent_pixels": 1147,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 3,
+          "nontransparent_pixels": 1067,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 4,
+          "nontransparent_pixels": 1143,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 5,
+          "nontransparent_pixels": 1127,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 6,
+          "nontransparent_pixels": 1192,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 7,
+          "nontransparent_pixels": 1219,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 8,
+          "nontransparent_pixels": 1147,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 9,
+          "nontransparent_pixels": 1067,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 10,
+          "nontransparent_pixels": 1143,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-run-runtime",
+          "column": 11,
+          "nontransparent_pixels": 1127,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.05032,
+        0.06075,
+        0.06699,
+        0.06262,
+        0.04788,
+        0.04803,
+        0.05032,
+        0.06075,
+        0.06699,
+        0.06262,
+        0.04788
+      ]
+    }
+  ]
+}

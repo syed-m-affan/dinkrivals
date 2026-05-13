@@ -1,0 +1,26 @@
+{
+  "input": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\opponent-smash-south-regen3-imagegen.png",
+  "source_copy": null,
+  "action": "smash",
+  "direction": "south",
+  "sizes": [
+    64
+  ],
+  "columns": 6,
+  "row_bounds": [
+    [
+      0,
+      724
+    ]
+  ],
+  "outputs": [
+    {
+      "cell": 64,
+      "path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\smash-south.png",
+      "row_bounds": [
+        0,
+        724
+      ]
+    }
+  ]
+}

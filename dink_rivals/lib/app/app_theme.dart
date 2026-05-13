@@ -4,7 +4,8 @@ import '../game/config/visual_palette.dart';
 
 class ArcadeUiTokens {
   static const double radius = 6;
-  static const double borderWidth = 2;
+  static const double borderWidth = 3;
+  static const double innerHighlightWidth = 2;
   static const EdgeInsets panelPadding = EdgeInsets.all(16);
   static const EdgeInsets buttonPadding = EdgeInsets.symmetric(
     horizontal: 18,

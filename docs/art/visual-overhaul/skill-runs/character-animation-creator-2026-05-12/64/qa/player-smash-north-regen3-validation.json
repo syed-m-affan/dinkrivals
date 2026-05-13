@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-smash-north-regen3-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "player-smash-north-regen3",
+      "column": 0,
+      "nontransparent_pixels": 1179,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north-regen3",
+      "column": 1,
+      "nontransparent_pixels": 1142,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north-regen3",
+      "column": 2,
+      "nontransparent_pixels": 853,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        20,
+        4,
+        44,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north-regen3",
+      "column": 3,
+      "nontransparent_pixels": 747,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        17,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north-regen3",
+      "column": 4,
+      "nontransparent_pixels": 1158,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north-regen3",
+      "column": 5,
+      "nontransparent_pixels": 1199,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        54,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "player-smash-north-regen3",
+      "frame_diffs": [
+        0.17535,
+        0.1221,
+        0.09759,
+        0.12271,
+        0.08297
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "player-smash-north-regen3",
+          "column": 0,
+          "nontransparent_pixels": 1179,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north-regen3",
+          "column": 1,
+          "nontransparent_pixels": 1142,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north-regen3",
+          "column": 2,
+          "nontransparent_pixels": 853,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            20,
+            4,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north-regen3",
+          "column": 3,
+          "nontransparent_pixels": 747,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north-regen3",
+          "column": 4,
+          "nontransparent_pixels": 1158,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north-regen3",
+          "column": 5,
+          "nontransparent_pixels": 1199,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

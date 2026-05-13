@@ -14,6 +14,7 @@ import 'components/opponent_component.dart';
 import 'components/player_component.dart';
 import 'components/racket_component.dart';
 import 'components/rally_feedback_component.dart';
+import 'components/rally_strip_component.dart';
 import 'components/score_component.dart';
 import 'components/shadow_component.dart';
 import 'components/touch_controls_component.dart';
@@ -103,9 +104,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     add(RacketComponent(this));
     add(vfx);
     add(ScoreComponent(this));
+    add(RallyStripComponent(this));
     add(RallyFeedbackComponent(this));
     add(TouchControlsComponent(this));
-    if (DebugFlags.showOverlay) {
+    if (DebugFlags.showHud) {
       add(DebugOverlayComponent(this));
     }
   }

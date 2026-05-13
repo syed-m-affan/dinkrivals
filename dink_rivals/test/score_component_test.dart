@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/components/rally_feedback_component.dart';
+import 'package:dink_rivals/game/components/rally_strip_component.dart';
 import 'package:dink_rivals/game/components/score_component.dart';
 import 'package:dink_rivals/game/config/visual_palette.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
@@ -21,15 +22,15 @@ void main() {
     expect(score.scoreLabelForTesting(), '0 - 0');
   });
 
-  test('scoreboard exposes rally and last-shot readouts', () {
+  test('rally strip exposes rally and last-shot readouts', () {
     final game = DinkRivalsGame();
-    final score = ScoreComponent(game);
+    final strip = RallyStripComponent(game);
 
-    game.rallyCount = 6;
+    game.matchState.rallyCount = 6;
     game.shotSystem.lastShotType = ShotType.dink;
 
-    expect(score.rallyLabelForTesting(), 'RALLY: 6');
-    expect(score.lastShotLabelForTesting(), 'LAST SHOT: DINK');
+    expect(strip.rallyLabelForTesting(), 'RALLY: 6');
+    expect(strip.lastShotLabelForTesting(), 'LAST SHOT: DINK');
   });
 
   test('rally feedback maps shot labels to palette colors', () {

@@ -18,7 +18,7 @@ class ClassicEnvironmentComponent extends Component {
 
   final DinkRivalsGame game;
   final Map<String, ui.Image> _images = {};
-  ui.Image? _generatedBackground;
+  final List<ui.Image> _backgroundLayers = [];
   ui.Image? _softShadow;
 
   final Paint _groundPaint = Paint()..color = VisualPalette.environmentGround;
@@ -61,8 +61,9 @@ class ClassicEnvironmentComponent extends Component {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    _generatedBackground =
-        await game.images.load(EnvironmentLayout.generatedBackgroundAsset);
+    for (final layer in EnvironmentLayout.generatedBackgroundLayers) {
+      _backgroundLayers.add(await game.images.load(layer.assetPath));
+    }
     _softShadow = await game.images.load(EnvironmentLayout.softShadowAsset);
     for (final prop in EnvironmentLayout.classicProps) {
       _images[prop.assetPath] = await game.images.load(prop.assetPath);
@@ -90,12 +91,12 @@ class ClassicEnvironmentComponent extends Component {
   }
 
   bool _drawGeneratedBackgroundBase(Canvas canvas) {
-    final image = _generatedBackground;
-    if (image == null) {
+    if (_backgroundLayers.isEmpty) {
       return false;
     }
     final screen = Offset.zero & game.size.toSize();
-    final imageSize = Size(image.width.toDouble(), image.height.toDouble());
+    final first = _backgroundLayers.first;
+    final imageSize = Size(first.width.toDouble(), first.height.toDouble());
     final scale = math.max(
       screen.width / imageSize.width,
       screen.height / imageSize.height,
@@ -107,12 +108,14 @@ class ClassicEnvironmentComponent extends Component {
       fitted.width,
       fitted.height,
     );
-    canvas.drawImageRect(
-      image,
-      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-      dst,
-      Paint()..filterQuality = FilterQuality.none,
-    );
+    for (final image in _backgroundLayers) {
+      canvas.drawImageRect(
+        image,
+        Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+        dst,
+        Paint()..filterQuality = FilterQuality.none,
+      );
+    }
     return true;
   }
 

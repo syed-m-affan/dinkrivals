@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-lob-south-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "opponent-lob-south",
+      "column": 0,
+      "nontransparent_pixels": 1202,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        15,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-lob-south",
+      "column": 1,
+      "nontransparent_pixels": 1199,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-lob-south",
+      "column": 2,
+      "nontransparent_pixels": 1162,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-lob-south",
+      "column": 3,
+      "nontransparent_pixels": 588,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        18,
+        16,
+        40,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-lob-south",
+      "column": 4,
+      "nontransparent_pixels": 950,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-lob-south",
+      "column": 5,
+      "nontransparent_pixels": 1198,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        15,
+        4,
+        48,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "opponent-lob-south",
+      "frame_diffs": [
+        0.11426,
+        0.15344,
+        0.12688,
+        0.089,
+        0.14548
+      ],
+      "bbox_shift": 6.0,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "opponent-lob-south",
+          "column": 0,
+          "nontransparent_pixels": 1202,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-lob-south",
+          "column": 1,
+          "nontransparent_pixels": 1199,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-lob-south",
+          "column": 2,
+          "nontransparent_pixels": 1162,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-lob-south",
+          "column": 3,
+          "nontransparent_pixels": 588,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            18,
+            16,
+            40,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-lob-south",
+          "column": 4,
+          "nontransparent_pixels": 950,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-lob-south",
+          "column": 5,
+          "nontransparent_pixels": 1198,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

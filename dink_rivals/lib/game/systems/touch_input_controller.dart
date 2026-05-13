@@ -11,17 +11,17 @@ class TouchControlLayout {
 
   final Vector2 size;
 
-  Vector2 get moveCenter => Vector2(size.x * 0.24, size.y - 118);
-  double get moveRadius => 58;
-  double get moveVisualRadius => 48;
+  Vector2 get moveCenter => Vector2(size.x * 0.22, size.y - 106);
+  double get moveRadius => 54;
+  double get moveVisualRadius => 42;
 
-  Vector2 get swingCenter => Vector2(size.x * 0.78, size.y - 132);
-  double get swingRadius => 88;
-  double get swingVisualRadius => 66;
+  Vector2 get swingCenter => Vector2(size.x * 0.79, size.y - 116);
+  double get swingRadius => 82;
+  double get swingVisualRadius => 56;
 
-  Vector2 get serveCenter => Vector2(size.x * 0.5, size.y - 96);
-  double get serveRadius => 44;
-  double get serveVisualRadius => 38;
+  Vector2 get serveCenter => Vector2(size.x * 0.5, size.y - 72);
+  double get serveRadius => 40;
+  double get serveVisualRadius => 32;
 
   bool isInMoveControl(Vector2 position) {
     return position.distanceTo(moveCenter) <= moveRadius * 1.35;

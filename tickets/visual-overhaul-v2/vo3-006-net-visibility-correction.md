@@ -1,0 +1,53 @@
+---
+id: VO3-006
+phase: visual-overhaul-v3
+status: review
+priority: critical
+parallel_group: environment-art
+depends_on: [VO2-001, VO2-005]
+owner: Runtime Integration Agent + Visual QA Agent
+last_updated: 2026-05-12
+---
+
+# VO3-006 - Net and Visibility Correction
+
+## Goal
+
+Correct the VO2 net and near-net visibility issues so the net, ball, player, opponent, and court lines remain readable during serves, rallies, and net-adjacent shots.
+
+## Scope
+
+- Fix net art/layering that obscures or confuses gameplay objects.
+- Preserve deterministic court projection and logical net position.
+- Keep ball depth, shadows, and VFX readable around the net.
+- Keep player/opponent occlusion rules clear when crossing or standing near the net.
+- Do not alter scoring/rules, ball physics, AI, input, or shot classification.
+
+## Acceptance Criteria
+
+- Ball remains visible when crossing the net and during near-net contacts.
+- Player and opponent remain readable on both sides of the net.
+- Net reads as a pickleball net, not a visual wall or unrelated stripe.
+- Court lines and kitchen boundaries remain legible behind/around the net.
+- Serve, rally, dink, lob, and smash screenshots pass visual QA.
+
+## Verification
+
+Run from `dink_rivals/` after implementation:
+
+```bash
+flutter analyze
+flutter test
+flutter build apk --debug
+```
+
+Capture evidence for at least serve, rally, dink, lob, and smash states.
+
+## Recovery Notes
+
+- 2026-05-12: `NetComponent` now crops the measured net strip from `layer_net.png` instead of drawing the full source layer over the playfield.
+- `layer_net.png` was rebuilt so pixels outside the net strip are transparent and the net overlay alpha is reduced.
+- Latest emulator serve/rally evidence shows the opponent and ball remain visible around the net:
+  - `docs/art/visual-overhaul/evidence/vo2-recovery-emulator/serve_ui_latest.png`
+  - `docs/art/visual-overhaul/evidence/vo2-recovery-emulator/rally_ui_latest.png`
+- Remaining review item: serve/rally is covered, but dink/lob/smash-specific fresh captures are not yet reliable enough to claim final closeout.

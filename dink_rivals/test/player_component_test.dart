@@ -9,6 +9,7 @@ import 'package:dink_rivals/game/components/opponent_component.dart';
 import 'package:dink_rivals/game/components/player_component.dart';
 import 'package:dink_rivals/game/config/court_constants.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
+import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
 import 'package:dink_rivals/game/util/court_projection.dart';
 
@@ -146,7 +147,7 @@ void main() {
     component.update(0.016);
     expect(component.currentPoseNameForTesting(), 'swing');
 
-    component.update(0.18);
+    component.update(1.12);
     expect(component.currentPoseNameForTesting(), 'hitConfirm');
   });
 
@@ -179,6 +180,22 @@ void main() {
     expect(component.currentPoseNameForTesting(), 'pointWin');
   });
 
+  test('point result overrides an active swing immediately', () {
+    final game = DinkRivalsGame();
+    final component = PlayerComponent(game);
+    game.matchState.startPoint();
+
+    component.state
+      ..lastShotType = ShotType.drive
+      ..isSwinging = true;
+    component.update(0.016);
+    expect(component.currentPoseNameForTesting(), 'drive');
+
+    component.showPointResult(PlayerSide.opponent);
+
+    expect(component.currentPoseNameForTesting(), 'pointLoss');
+  });
+
   test('player point result remains visible after point ends', () {
     final game = DinkRivalsGame();
     final component = PlayerComponent(game);
@@ -203,10 +220,75 @@ void main() {
     final opponentSmash =
         await _loadImage('assets/images/sprites/opponent_smash.png');
 
-    expect(player.frameCountForTesting(playerDrive), 1);
-    expect(player.frameCountForTesting(playerRun), 4);
-    expect(opponent.frameCountForTesting(opponentRun), 4);
-    expect(opponent.frameCountForTesting(opponentSmash), 1);
+    expect(player.frameCountForTesting(playerDrive), 6);
+    expect(player.frameCountForTesting(playerRun), 12);
+    expect(opponent.frameCountForTesting(opponentRun), 12);
+    expect(opponent.frameCountForTesting(opponentSmash), 6);
+  });
+
+  test('character animation frames keep stable visible height', () async {
+    const files = [
+      'assets/images/sprites/player_idle.png',
+      'assets/images/sprites/player_ready.png',
+      'assets/images/sprites/player_run.png',
+      'assets/images/sprites/player_dink.png',
+      'assets/images/sprites/player_drive.png',
+      'assets/images/sprites/player_lob.png',
+      'assets/images/sprites/player_smash.png',
+      'assets/images/sprites/player_swing.png',
+      'assets/images/sprites/player_hit_confirm.png',
+      'assets/images/sprites/opponent_idle.png',
+      'assets/images/sprites/opponent_ready.png',
+      'assets/images/sprites/opponent_run.png',
+      'assets/images/sprites/opponent_dink.png',
+      'assets/images/sprites/opponent_drive.png',
+      'assets/images/sprites/opponent_lob.png',
+      'assets/images/sprites/opponent_smash.png',
+      'assets/images/sprites/opponent_swing.png',
+      'assets/images/sprites/opponent_hit_confirm.png',
+    ];
+
+    for (final file in files) {
+      final image = await _loadImage(file);
+      final byteData =
+          await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(byteData, isNotNull, reason: file);
+      final data = byteData!.buffer.asUint8List();
+      final frames = image.width ~/ 64;
+      final heights = <int>[];
+
+      for (var frame = 0; frame < frames; frame++) {
+        var minY = 64;
+        var maxY = -1;
+        for (var y = 0; y < image.height; y++) {
+          for (var x = frame * 64; x < (frame + 1) * 64; x++) {
+            final alpha = data[(y * image.width + x) * 4 + 3];
+            expect(
+              alpha == 0 || alpha == 255,
+              isTrue,
+              reason: '$file frame $frame has partial alpha',
+            );
+            if (alpha > 0) {
+              expect(x % 64, isNot(anyOf(0, 63)),
+                  reason: '$file frame $frame clips horizontally');
+              expect(y, isNot(anyOf(0, 63)),
+                  reason: '$file frame $frame clips vertically');
+              minY = minY < y ? minY : y;
+              maxY = maxY > y ? maxY : y;
+            }
+          }
+        }
+        expect(maxY, greaterThanOrEqualTo(0),
+            reason: '$file frame $frame is empty');
+        heights.add(maxY - minY + 1);
+      }
+
+      expect(
+        heights.toSet(),
+        hasLength(1),
+        reason: '$file visible frame heights should not pop: $heights',
+      );
+    }
   });
 
   test('character facing follows horizontal movement direction', () {
@@ -232,10 +314,10 @@ void main() {
   });
 
   test('run animation rate scales with movement speed', () {
-    expect(PlayerComponent.runFpsForSpeedForTesting(12), closeTo(5.5, 0.001));
+    expect(PlayerComponent.runFpsForSpeedForTesting(12), closeTo(3.6, 0.001));
     expect(
       PlayerComponent.runFpsForSpeedForTesting(104),
-      closeTo(14.0, 0.001),
+      closeTo(8.0, 0.001),
     );
     expect(
       OpponentComponent.runFpsForSpeedForTesting(58),

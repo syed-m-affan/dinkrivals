@@ -9,6 +9,17 @@ enum EnvironmentPropAnchor {
 }
 
 @immutable
+class EnvironmentBackgroundLayer {
+  const EnvironmentBackgroundLayer({
+    required this.id,
+    required this.assetPath,
+  });
+
+  final String id;
+  final String assetPath;
+}
+
+@immutable
 class EnvironmentPropPlacement {
   const EnvironmentPropPlacement({
     required this.id,
@@ -44,39 +55,27 @@ class EnvironmentPropPlacement {
 class EnvironmentLayout {
   static const String generatedBackgroundAsset =
       'environment/classic/park_background_overhaul.png';
+  static const List<EnvironmentBackgroundLayer> generatedBackgroundLayers = [
+    EnvironmentBackgroundLayer(
+      id: 'sky_trees',
+      assetPath: 'environment/classic/layer_sky_trees.png',
+    ),
+    EnvironmentBackgroundLayer(
+      id: 'fence_signage',
+      assetPath: 'environment/classic/layer_fence_signage.png',
+    ),
+    EnvironmentBackgroundLayer(
+      id: 'court_base',
+      assetPath: 'environment/classic/layer_court_base.png',
+    ),
+  ];
+  static const String netLayerAsset = 'environment/classic/layer_net.png';
   static const String groundTileAsset =
       'environment/classic/off_court_ground_tile.png';
   static const String softShadowAsset =
       'environment/shared/soft_shadow_patch.png';
 
   static final List<EnvironmentPropPlacement> classicProps = [
-    EnvironmentPropPlacement(
-      id: 'far_fence_left',
-      assetPath: 'environment/classic/far_fence_segment.png',
-      courtAnchor: Vector2(-34, 36),
-      logicalSize: Vector2(72, 56),
-      anchor: EnvironmentPropAnchor.center,
-      opacity: 0.62,
-      mayUnderlapCourt: true,
-    ),
-    EnvironmentPropPlacement(
-      id: 'far_fence_center',
-      assetPath: 'environment/classic/far_fence_segment.png',
-      courtAnchor: Vector2(110, 34),
-      logicalSize: Vector2(78, 60),
-      anchor: EnvironmentPropAnchor.center,
-      opacity: 0.62,
-      mayUnderlapCourt: true,
-    ),
-    EnvironmentPropPlacement(
-      id: 'far_fence_right',
-      assetPath: 'environment/classic/far_fence_segment.png',
-      courtAnchor: Vector2(254, 36),
-      logicalSize: Vector2(72, 56),
-      anchor: EnvironmentPropAnchor.center,
-      opacity: 0.62,
-      mayUnderlapCourt: true,
-    ),
     EnvironmentPropPlacement(
       id: 'tree_left',
       assetPath: 'environment/classic/tree_cluster.png',
@@ -149,24 +148,6 @@ class EnvironmentLayout {
       courtAnchor: Vector2(300, 58),
       logicalSize: Vector2(24, 56),
       opacity: 0.8,
-      mayUnderlapCourt: true,
-    ),
-    EnvironmentPropPlacement(
-      id: 'sign_dink_rivals_back',
-      assetPath: 'environment/classic/banner_sign.png',
-      courtAnchor: Vector2(102, 35),
-      logicalSize: Vector2(86, 42),
-      anchor: EnvironmentPropAnchor.center,
-      opacity: 0.9,
-      mayUnderlapCourt: true,
-    ),
-    EnvironmentPropPlacement(
-      id: 'sign_park_courts_back',
-      assetPath: 'environment/classic/park_courts_sign.png',
-      courtAnchor: Vector2(198, 38),
-      logicalSize: Vector2(58, 30),
-      anchor: EnvironmentPropAnchor.center,
-      opacity: 0.82,
       mayUnderlapCourt: true,
     ),
     EnvironmentPropPlacement(

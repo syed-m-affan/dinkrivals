@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-smash-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "player-smash-north",
+      "column": 0,
+      "nontransparent_pixels": 1315,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        54,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north",
+      "column": 1,
+      "nontransparent_pixels": 942,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        17,
+        4,
+        46,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north",
+      "column": 2,
+      "nontransparent_pixels": 782,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        20,
+        4,
+        44,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north",
+      "column": 3,
+      "nontransparent_pixels": 597,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        21,
+        6,
+        42,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north",
+      "column": 4,
+      "nontransparent_pixels": 1058,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-smash-north",
+      "column": 5,
+      "nontransparent_pixels": 1311,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        54,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "player-smash-north",
+      "frame_diffs": [
+        0.12533,
+        0.08399,
+        0.07879,
+        0.13427,
+        0.11494
+      ],
+      "bbox_shift": 1.0,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "player-smash-north",
+          "column": 0,
+          "nontransparent_pixels": 1315,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north",
+          "column": 1,
+          "nontransparent_pixels": 942,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north",
+          "column": 2,
+          "nontransparent_pixels": 782,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            20,
+            4,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north",
+          "column": 3,
+          "nontransparent_pixels": 597,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            21,
+            6,
+            42,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north",
+          "column": 4,
+          "nontransparent_pixels": 1058,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-smash-north",
+          "column": 5,
+          "nontransparent_pixels": 1311,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

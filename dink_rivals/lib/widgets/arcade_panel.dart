@@ -9,7 +9,7 @@ class ArcadePanel extends StatelessWidget {
     super.key,
     this.padding = ArcadeUiTokens.panelPadding,
     this.backgroundColor = VisualPalette.uiSurface,
-    this.borderColor = VisualPalette.netMeshStroke,
+    this.borderColor = VisualPalette.environmentSignBorder,
   });
 
   final Widget child;
@@ -30,7 +30,16 @@ class ArcadePanel extends StatelessWidget {
         ),
         boxShadow: ArcadeUiTokens.panelShadow,
       ),
-      child: child,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: ArcadeUiTokens.borderRadius,
+          border: Border.all(
+            color: VisualPalette.courtLineWhite.withValues(alpha: 0.22),
+            width: ArcadeUiTokens.innerHighlightWidth,
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 }

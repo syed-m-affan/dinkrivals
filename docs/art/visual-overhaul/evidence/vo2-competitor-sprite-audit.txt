@@ -1,0 +1,32 @@
+VO2 competitor sprite audit
+Generated: 2026-05-12 01:26:45
+Criteria: 48x72 frame slicing, transparent alpha is binary/clean, no enclosed transparent holes, bbox metrics available for shrink/grow review.
+
+PLAYER
+player_dink.png: 192x72, frames=4, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 38-65, feetY 70-70
+player_drive.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 55-65, feetY 70-70
+player_hit_confirm.png: 192x72, frames=4, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 55-59, feetY 70-70
+player_idle.png: 96x72, frames=2, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 28-44, bboxH 65-68, feetY 70-70
+player_lob.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 33-44, bboxH 65-68, feetY 70-70
+player_point_loss.png: 192x72, frames=4, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 29-29, bboxH 68-68, feetY 70-70
+player_point_win.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 35-38, bboxH 68-68, feetY 70-70
+player_ready.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 28-44, bboxH 65-68, feetY 70-70
+player_run.png: 576x72, frames=12, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 43-44, bboxH 55-68, feetY 65-70
+player_smash.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 33-39, bboxH 64-68, feetY 66-70
+player_swing.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 55-65, feetY 70-70
+
+OPPONENT
+opponent_dink.png: 192x72, frames=4, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 38-65, feetY 70-70
+opponent_drive.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 55-65, feetY 70-70
+opponent_hit_confirm.png: 192x72, frames=4, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 55-59, feetY 70-70
+opponent_idle.png: 96x72, frames=2, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 28-44, bboxH 65-68, feetY 70-70
+opponent_lob.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 33-44, bboxH 65-68, feetY 70-70
+opponent_point_loss.png: 192x72, frames=4, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 29-29, bboxH 68-68, feetY 70-70
+opponent_point_win.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 35-38, bboxH 68-68, feetY 70-70
+opponent_ready.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 28-44, bboxH 65-68, feetY 70-70
+opponent_run.png: 576x72, frames=12, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 43-44, bboxH 55-68, feetY 65-70
+opponent_smash.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 33-39, bboxH 64-68, feetY 66-70
+opponent_swing.png: 288x72, frames=6, dims=pass, partialAlpha=0, enclosedHoles=0, bboxW 44-44, bboxH 55-65, feetY 70-70
+
+Runtime scale note: PlayerComponent and OpponentComponent draw every selected frame into the same fixed sprite rectangle (_spriteWidth=33, _spriteHeight=49.5) before depth scaling; source-frame bbox changes only reflect pose/action silhouette, not runtime draw-size changes.
+Audit result: PASS

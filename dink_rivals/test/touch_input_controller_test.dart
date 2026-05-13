@@ -163,10 +163,10 @@ void main() {
     final size = Vector2(360, 720);
     final layout = TouchControlLayout(size);
 
-    expect(layout.swingRadius, 88);
+    expect(layout.swingRadius, 82);
     expect(layout.swingVisualRadius, lessThan(layout.swingRadius));
     expect(
-      layout.isInSwingControl(layout.swingCenter + Vector2(116, 0)),
+      layout.isInSwingControl(layout.swingCenter + Vector2(112, 0)),
       isTrue,
     );
   });

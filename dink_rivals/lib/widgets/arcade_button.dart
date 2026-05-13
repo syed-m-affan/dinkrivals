@@ -20,10 +20,10 @@ class ArcadeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foregroundColor =
-        onPressed == null ? VisualPalette.textMuted : VisualPalette.textInverse;
+        onPressed == null ? VisualPalette.textMuted : VisualPalette.textPrimary;
     final backgroundColor = onPressed == null
         ? VisualPalette.controlSurfaceDisabled
-        : VisualPalette.uiAccent;
+        : VisualPalette.environmentSignPanelAlt;
     final child = Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -47,21 +47,42 @@ class ArcadeButton extends StatelessWidget {
         minHeight: compact ? 44 : 54,
         minWidth: compact ? 96 : 180,
       ),
-      child: Material(
-        color: backgroundColor,
-        borderRadius: ArcadeUiTokens.borderRadius,
-        child: InkWell(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: backgroundColor,
           borderRadius: ArcadeUiTokens.borderRadius,
-          onTap: onPressed,
-          child: DefaultTextStyle(
-            style: ArcadeUiTokens.labelTextStyle.copyWith(
-              color: foregroundColor,
-            ),
-            child: Padding(
-              padding: compact
-                  ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
-                  : ArcadeUiTokens.buttonPadding,
-              child: Center(child: child),
+          border: Border.all(
+            color: VisualPalette.uiAccent,
+            width: ArcadeUiTokens.borderWidth,
+          ),
+          boxShadow: ArcadeUiTokens.panelShadow,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: ArcadeUiTokens.borderRadius,
+          child: InkWell(
+            borderRadius: ArcadeUiTokens.borderRadius,
+            onTap: onPressed,
+            child: DefaultTextStyle(
+              style: ArcadeUiTokens.labelTextStyle.copyWith(
+                color: foregroundColor,
+              ),
+              child: Padding(
+                padding: compact
+                    ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
+                    : ArcadeUiTokens.buttonPadding,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: ArcadeUiTokens.borderRadius,
+                    border: Border.all(
+                      color:
+                          VisualPalette.courtLineWhite.withValues(alpha: 0.18),
+                      width: ArcadeUiTokens.innerHighlightWidth,
+                    ),
+                  ),
+                  child: Center(child: child),
+                ),
+              ),
             ),
           ),
         ),

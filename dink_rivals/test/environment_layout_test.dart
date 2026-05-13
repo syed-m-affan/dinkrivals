@@ -11,9 +11,14 @@ void main() {
   test('classic environment prop placements are unique and bounded', () {
     final props = EnvironmentLayout.classicProps;
 
+    expect(EnvironmentLayout.generatedBackgroundLayers, hasLength(3));
     expect(
-      EnvironmentLayout.generatedBackgroundAsset,
-      'environment/classic/park_background_overhaul.png',
+      EnvironmentLayout.generatedBackgroundLayers.map((layer) => layer.id),
+      ['sky_trees', 'fence_signage', 'court_base'],
+    );
+    expect(
+      EnvironmentLayout.netLayerAsset,
+      'environment/classic/layer_net.png',
     );
     expect(props.map((prop) => prop.id).toSet(), hasLength(props.length));
     expect(props, isNotEmpty);
@@ -41,15 +46,18 @@ void main() {
 
   test('classic environment includes required prop categories', () {
     final ids = EnvironmentLayout.classicProps.map((prop) => prop.id).join('|');
+    final backgroundIds =
+        EnvironmentLayout.generatedBackgroundLayers.map((layer) => layer.id);
 
-    expect(ids, contains('fence'));
+    expect(backgroundIds, contains('fence_signage'));
     expect(ids, contains('tree'));
     expect(ids, contains('bench'));
     expect(ids, contains('lamp'));
-    expect(ids, contains('sign'));
     expect(ids, contains('planter'));
     expect(ids, contains('shrub'));
     expect(ids, contains('bag'));
+    expect(ids, isNot(contains('fence')));
+    expect(ids, isNot(contains('sign')));
   });
 
   test('projected prop rectangles avoid court and control-critical bands', () {
@@ -95,19 +103,19 @@ void main() {
   });
 
   test('classic environment preserves raster prop aspect ratios', () {
-    final fence = EnvironmentLayout.classicProps
-        .firstWhere((prop) => prop.id == 'far_fence_center');
+    final tree = EnvironmentLayout.classicProps
+        .firstWhere((prop) => prop.id == 'tree_left');
     final requested = ClassicEnvironmentGeometry.propSize(
       imageWidth: 192,
-      imageHeight: 160,
+      imageHeight: 192,
       width: 100,
       height: 54,
-      preserveAspect: fence.preserveAspect,
+      preserveAspect: tree.preserveAspect,
     );
 
-    expect(fence.preserveAspect, isTrue);
-    expect(requested.width / requested.height, closeTo(192 / 160, 0.001));
-    expect(requested.width, lessThan(100));
+    expect(tree.preserveAspect, isTrue);
+    expect(requested.width / requested.height, closeTo(1, 0.001));
+    expect(requested.width, 54);
     expect(requested.height, 54);
   });
 }

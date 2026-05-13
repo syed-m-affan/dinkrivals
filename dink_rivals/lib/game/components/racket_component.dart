@@ -85,8 +85,8 @@ class RacketComponent extends Component {
     _swingLaneBorderPaint.color = VisualPalette.textPrimary.withValues(
       alpha: command.intent == SwingIntent.smash ? 0.88 : 0.72,
     );
-    final startRadius = game
-        .logicalToScreen(Tuning.committedSwingContactRadius * startDepth);
+    final startRadius =
+        game.logicalToScreen(Tuning.committedSwingContactRadius * startDepth);
     final endRadius =
         game.logicalToScreen(Tuning.committedSwingContactRadius * endDepth);
 
@@ -168,8 +168,8 @@ class RacketComponent extends Component {
     }
     final depthScale = game.depthScaleForY(courtStart.y);
     if (DebugFlags.useSprites && sprite != null) {
-      final width = game.logicalToScreen(10 * depthScale);
-      final height = game.logicalToScreen(18 * depthScale);
+      final width = game.logicalToScreen(14 * depthScale);
+      final height = game.logicalToScreen(25 * depthScale);
       final angle = math.atan2(direction.y, direction.x) + math.pi / 2;
       canvas.save();
       canvas.translate(end.x, end.y);

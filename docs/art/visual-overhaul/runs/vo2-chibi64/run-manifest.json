@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-05-12T10:11:48",
+  "workflow": "native 64x64 chibi replacement sprites",
+  "scope": {
+    "cell": [
+      64,
+      64
+    ],
+    "states": {
+      "idle": 2,
+      "ready": 6,
+      "run": 12,
+      "dink": 4,
+      "drive": 6,
+      "lob": 6,
+      "smash": 6,
+      "swing": 6,
+      "hit_confirm": 4,
+      "point_win": 6,
+      "point_loss": 4
+    },
+    "sides": [
+      "player",
+      "opponent"
+    ]
+  },
+  "generation": {
+    "method": "deterministic_code_drawn_chibi_pixel_art",
+    "reason": "User requested chibi direction matching the concept and rejected the tall generated sprites."
+  },
+  "outputs": {
+    "audit": "docs/art/visual-overhaul/evidence/vo2-competitor-sprite-audit.json",
+    "player_contact_sheet": "docs/art/visual-overhaul/contact-sheets/vo2-player-competitor-runtime-sheets.png",
+    "opponent_contact_sheet": "docs/art/visual-overhaul/contact-sheets/vo2-opponent-competitor-runtime-sheets.png",
+    "previews": "docs/art/visual-overhaul/runs/vo2-chibi64/qa/previews"
+  }
+}

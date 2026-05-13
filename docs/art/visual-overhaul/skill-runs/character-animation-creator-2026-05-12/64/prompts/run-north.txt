@@ -1,0 +1,6 @@
+﻿Use case: sprite animation strip for a mobile arcade sports game.
+Reference images: Dink Rivals concept sheet and concept gameplay screenshot visible in conversation.
+Asset: one horizontal row of exactly 6 separate 64x64 pixel-art frames on #00ff00 chroma-key.
+Character: near-side player, blue cap, white shirt, navy shorts, white shoes, dark paddle, back-facing/north.
+Action: run cycle, contact/down/passing/up/contact/passing.
+Strict constraints: no text, no labels, no frame borders, no shadows/floor, pure #00ff00 background, consistent character identity.

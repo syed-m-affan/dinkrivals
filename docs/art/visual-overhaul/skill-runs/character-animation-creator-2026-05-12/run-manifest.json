@@ -1,0 +1,252 @@
+{
+  "created_at": "2026-05-12T10:44:37",
+  "skill_source": "https://github.com/tachikomared/character-animation-creator-skill/blob/main/SKILL.md",
+  "local_skill_checkout": ".codex_tmp/character-animation-creator-skill",
+  "reference": {
+    "source_type": "workspace_reference_images_visible_in_thread",
+    "sources": [
+      "docs/art/concepts/concept-sheet.png",
+      "docs/art/concepts/concept-screenshot.png"
+    ],
+    "used_for_generation": true,
+    "identity_notes": [
+      "near-side player: blue cap, white shirt, navy shorts, white shoes, dark paddle, back-facing/up-court",
+      "far-side opponent: white cap, red shirt, dark shorts, white shoes, dark paddle, front-facing/down-court",
+      "hard-edge chibi arcade sports pixel art matching the painted park court style"
+    ]
+  },
+  "scope": {
+    "cell": [
+      64,
+      64
+    ],
+    "actions": [
+      "idle",
+      "ready",
+      "run",
+      "drive",
+      "swing",
+      "dink",
+      "lob",
+      "smash",
+      "hit_confirm"
+    ],
+    "directions": [
+      "north player",
+      "south opponent"
+    ],
+    "runtime_integrated_states": [
+      "idle",
+      "ready",
+      "run",
+      "drive",
+      "swing",
+      "dink",
+      "lob",
+      "smash",
+      "hit_confirm"
+    ],
+    "runtime_reused_states": {
+      "point_win": "uses generated ready sheet in PlayerComponent/OpponentComponent",
+      "point_loss": "uses generated ready sheet in PlayerComponent/OpponentComponent"
+    }
+  },
+  "generation": {
+    "method": "imagegen",
+    "procedural": false,
+    "text_only": false,
+    "imported_contact_sheet": false
+  },
+  "strips": [
+    {
+      "side": "player",
+      "action": "run",
+      "direction": "north",
+      "cell": 64,
+      "frames": 12,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\player-run-north-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\run-north.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\run-north-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\run-north-validation.json"
+    },
+    {
+      "side": "opponent",
+      "action": "run",
+      "direction": "south",
+      "cell": 64,
+      "frames": 12,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\opponent-run-south-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\run-south.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-run-south-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\opponent-run-south-validation.json"
+    },
+    {
+      "side": "player",
+      "action": "ready",
+      "direction": "north",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\player-ready-north-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\player-ready-north.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-ready-north-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\player-ready-north-validation.json"
+    },
+    {
+      "side": "opponent",
+      "action": "ready",
+      "direction": "south",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\opponent-ready-south-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\opponent-ready-south.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-ready-south-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\opponent-ready-south-validation.json"
+    },
+    {
+      "side": "player",
+      "action": "drive",
+      "direction": "north",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\player-drive-north-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\drive-north.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-drive-north-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\player-drive-north-validation.json"
+    },
+    {
+      "side": "player",
+      "action": "dink",
+      "direction": "north",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\player-dink-north-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\dink-north.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-dink-north-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\player-dink-north-validation.json"
+    },
+    {
+      "side": "player",
+      "action": "lob",
+      "direction": "north",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\player-lob-north-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\lob-north.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-lob-north-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\player-lob-north-validation.json"
+    },
+    {
+      "side": "player",
+      "action": "smash",
+      "direction": "north",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\player-smash-north-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\smash-north.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-smash-north-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\player-smash-north-validation.json"
+    },
+    {
+      "side": "opponent",
+      "action": "drive",
+      "direction": "south",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\opponent-drive-south-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\drive-south.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-drive-south-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\opponent-drive-south-validation.json"
+    },
+    {
+      "side": "opponent",
+      "action": "dink",
+      "direction": "south",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\opponent-dink-south-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\dink-south.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-dink-south-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\opponent-dink-south-validation.json"
+    },
+    {
+      "side": "opponent",
+      "action": "lob",
+      "direction": "south",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\opponent-lob-south-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\lob-south.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-lob-south-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\opponent-lob-south-validation.json"
+    },
+    {
+      "side": "opponent",
+      "action": "smash",
+      "direction": "south",
+      "cell": 64,
+      "frames": 6,
+      "imagegen_output_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\source\\opponent-smash-south-imagegen.png",
+      "source_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\generated\\smash-south.png",
+      "final_path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-smash-south-sheet-clean.png",
+      "validation": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\qa\\opponent-smash-south-validation.json"
+    }
+  ],
+  "integrated_runtime_assets": [
+    "dink_rivals/assets/images/sprites/player_idle.png",
+    "dink_rivals/assets/images/sprites/player_ready.png",
+    "dink_rivals/assets/images/sprites/player_run.png",
+    "dink_rivals/assets/images/sprites/player_drive.png",
+    "dink_rivals/assets/images/sprites/player_swing.png",
+    "dink_rivals/assets/images/sprites/player_dink.png",
+    "dink_rivals/assets/images/sprites/player_lob.png",
+    "dink_rivals/assets/images/sprites/player_smash.png",
+    "dink_rivals/assets/images/sprites/player_hit_confirm.png",
+    "dink_rivals/assets/images/sprites/opponent_idle.png",
+    "dink_rivals/assets/images/sprites/opponent_ready.png",
+    "dink_rivals/assets/images/sprites/opponent_run.png",
+    "dink_rivals/assets/images/sprites/opponent_drive.png",
+    "dink_rivals/assets/images/sprites/opponent_swing.png",
+    "dink_rivals/assets/images/sprites/opponent_dink.png",
+    "dink_rivals/assets/images/sprites/opponent_lob.png",
+    "dink_rivals/assets/images/sprites/opponent_smash.png",
+    "dink_rivals/assets/images/sprites/opponent_hit_confirm.png"
+  ],
+  "visual_review": {
+    "accepted": true,
+    "notes": "Runtime no longer contains the rejected old/manual character model for swing, serve/drive, dink, lob, smash, hit-confirm, or point result states. New action strips were imagegen-backed, chroma-key cleaned, detached artifact-cleaned, and validated. Point win/loss are generated-model ready placeholders pending a dedicated expressive result pass."
+  },
+  "updated_at": "2026-05-12T22:35:00",
+  "derived_runtime_assets": {
+    "player_swing.png": "copied from player-drive-north generated strip to avoid old-model swing fallback",
+    "opponent_swing.png": "copied from opponent-drive-south generated strip to avoid old-model swing fallback",
+    "player_hit_confirm.png": "frames 2-5 from player-drive-north generated strip",
+    "opponent_hit_confirm.png": "frames 2-5 from opponent-drive-south generated strip"
+  },
+  "removed_runtime_assets": {
+    "player_point_win.png": "unused; pointWin renders player_ready.png at runtime",
+    "player_point_loss.png": "unused; pointLoss renders player_ready.png at runtime",
+    "opponent_point_win.png": "unused; pointWin renders opponent_ready.png at runtime",
+    "opponent_point_loss.png": "unused; pointLoss renders opponent_ready.png at runtime"
+  },
+  "latest_regeneration": {
+    "reason": "User accepted most current sprites but rejected player drive/swing readability and player/opponent smash sizing/artifacts.",
+    "source_images": [
+      "source/player-drive-north-regen2-imagegen.png",
+      "source/player-smash-north-regen3-imagegen.png",
+      "source/opponent-smash-south-regen3-imagegen.png"
+    ],
+    "final_strips": [
+      "64/final/player-drive-north-regen2-sheet-clean.png",
+      "64/final/player-smash-north-regen3-sheet-clean.png",
+      "64/final/opponent-smash-south-regen3-sheet-clean.png"
+    ],
+    "runtime_assets_replaced": [
+      "dink_rivals/assets/images/sprites/player_drive.png",
+      "dink_rivals/assets/images/sprites/player_swing.png",
+      "dink_rivals/assets/images/sprites/player_hit_confirm.png",
+      "dink_rivals/assets/images/sprites/player_smash.png",
+      "dink_rivals/assets/images/sprites/opponent_smash.png"
+    ],
+    "qa": "vo3-skill-sprite-audit.json reports no errors or warnings after regeneration and residue cleanup."
+  }
+}

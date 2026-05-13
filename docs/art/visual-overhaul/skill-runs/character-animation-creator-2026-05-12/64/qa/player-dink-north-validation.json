@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-dink-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "player-dink-north",
+      "column": 0,
+      "nontransparent_pixels": 1217,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-dink-north",
+      "column": 1,
+      "nontransparent_pixels": 1172,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-dink-north",
+      "column": 2,
+      "nontransparent_pixels": 1218,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        7,
+        4,
+        56,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-dink-north",
+      "column": 3,
+      "nontransparent_pixels": 1166,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        7,
+        4,
+        54,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-dink-north",
+      "column": 4,
+      "nontransparent_pixels": 1088,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        8,
+        4,
+        45,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-dink-north",
+      "column": 5,
+      "nontransparent_pixels": 1185,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        52,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "player-dink-north",
+      "frame_diffs": [
+        0.05582,
+        0.09839,
+        0.03751,
+        0.05007,
+        0.11396
+      ],
+      "bbox_shift": 5.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "player-dink-north",
+          "column": 0,
+          "nontransparent_pixels": 1217,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-dink-north",
+          "column": 1,
+          "nontransparent_pixels": 1172,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-dink-north",
+          "column": 2,
+          "nontransparent_pixels": 1218,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            56,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-dink-north",
+          "column": 3,
+          "nontransparent_pixels": 1166,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-dink-north",
+          "column": 4,
+          "nontransparent_pixels": 1088,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-dink-north",
+          "column": 5,
+          "nontransparent_pixels": 1185,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            52,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

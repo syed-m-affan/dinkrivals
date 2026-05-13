@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-05-12T10:14:32",
+  "workflow": "native 64x64 chibi replacement sprites",
+  "scope": {
+    "cell": [
+      64,
+      64
+    ],
+    "states": {
+      "idle": 2,
+      "ready": 6,
+      "run": 12,
+      "dink": 4,
+      "drive": 6,
+      "lob": 6,
+      "smash": 6,
+      "swing": 6,
+      "hit_confirm": 4,
+      "point_win": 6,
+      "point_loss": 4
+    },
+    "sides": [
+      "player",
+      "opponent"
+    ]
+  },
+  "generation": {
+    "method": "concept_guided_hand_authored_64px_chibi_pixel_art",
+    "reason": "User rejected the first procedural chibi pass as uglier than the concept; this pass redraws the runtime sheets around the concept screenshot's large-head competitor proportions, front/back court roles, darker paddle treatment, and binary-alpha cleanup."
+  },
+  "outputs": {
+    "audit": "docs/art/visual-overhaul/evidence/vo2-competitor-sprite-audit.json",
+    "player_contact_sheet": "docs/art/visual-overhaul/contact-sheets/vo2-player-competitor-runtime-sheets.png",
+    "opponent_contact_sheet": "docs/art/visual-overhaul/contact-sheets/vo2-opponent-competitor-runtime-sheets.png",
+    "previews": "docs/art/visual-overhaul/sprite-overhaul-run/qa/previews"
+  }
+}

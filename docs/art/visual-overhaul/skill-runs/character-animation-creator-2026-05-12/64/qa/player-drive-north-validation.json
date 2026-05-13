@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\player-drive-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "player-drive-north",
+      "column": 0,
+      "nontransparent_pixels": 1229,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-drive-north",
+      "column": 1,
+      "nontransparent_pixels": 1203,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-drive-north",
+      "column": 2,
+      "nontransparent_pixels": 1197,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        4,
+        4,
+        60,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-drive-north",
+      "column": 3,
+      "nontransparent_pixels": 945,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-drive-north",
+      "column": 4,
+      "nontransparent_pixels": 795,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        27,
+        9,
+        55,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "player-drive-north",
+      "column": 5,
+      "nontransparent_pixels": 1208,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        53,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "player-drive-north",
+      "frame_diffs": [
+        0.16534,
+        0.19267,
+        0.10084,
+        0.19852,
+        0.15756
+      ],
+      "bbox_shift": 12.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "player-drive-north",
+          "column": 0,
+          "nontransparent_pixels": 1229,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-drive-north",
+          "column": 1,
+          "nontransparent_pixels": 1203,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-drive-north",
+          "column": 2,
+          "nontransparent_pixels": 1197,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            4,
+            4,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-drive-north",
+          "column": 3,
+          "nontransparent_pixels": 945,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-drive-north",
+          "column": 4,
+          "nontransparent_pixels": 795,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            27,
+            9,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "player-drive-north",
+          "column": 5,
+          "nontransparent_pixels": 1208,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

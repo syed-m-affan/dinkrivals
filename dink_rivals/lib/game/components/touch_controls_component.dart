@@ -56,10 +56,6 @@ class TouchControlsComponent extends Component {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1.4;
 
-  final TextPainter _swingText = TextPainter(
-    textAlign: TextAlign.center,
-    textDirection: TextDirection.ltr,
-  );
   final TextPainter _serveText = TextPainter(
     text: const TextSpan(
       text: 'SERVE',
@@ -221,23 +217,6 @@ class TouchControlsComponent extends Component {
     final knobRadius = pressed ? 21.0 + pulse * 1.5 : 18.0;
     canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _swingPaint);
     canvas.drawCircle(swingKnobCenter.toOffset(), knobRadius, _strokePaint);
-
-    _swingText.text = const TextSpan(
-      text: 'AIM',
-      style: TextStyle(
-        color: VisualPalette.textPrimary,
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-    _swingText.layout(maxWidth: layout.swingRadius * 2);
-    _swingText.paint(
-      canvas,
-      Offset(
-        layout.swingCenter.x - _swingText.width / 2,
-        layout.swingCenter.y - baseRadius - 24,
-      ),
-    );
   }
 
   void _renderShotIndicators(Canvas canvas, TouchControlLayout layout) {

@@ -69,3 +69,9 @@ Git history currently has only `initial commit`, so use concise imperative commi
 ## Agent-Specific Instructions
 
 Keep edits scoped to the requested task. Do not overwrite unrelated local changes. When changing gameplay behavior, update nearby tests or add a ticket note if coverage is intentionally deferred.
+
+## Character Sprite Generation
+
+For player/opponent sprite work, follow `docs/art/visual-overhaul/sprite-generator-skill-workflow.md`. The current accepted art uses the external `character-animation-creator-skill` workflow with imagegen source strips, chroma-key cleanup, validation JSON, and runtime contact sheets.
+
+Do not regenerate production character sheets with `dink_rivals/tool/generate_chibi_64_sprites.py` unless the user explicitly asks for the legacy procedural fallback. That script was part of the rejected manual pass and can reintroduce the old model during swing, serve, or point-result animations.

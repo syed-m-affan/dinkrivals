@@ -33,8 +33,6 @@ class OpponentComponent extends Component {
   ui.Image? _smashSheet;
   ui.Image? _readySheet;
   ui.Image? _hitConfirmSheet;
-  ui.Image? _pointWinSheet;
-  ui.Image? _pointLossSheet;
   double _animationSeconds = 0;
   double _swingSeconds = 0;
   double _hitConfirmSeconds = 0;
@@ -44,9 +42,13 @@ class OpponentComponent extends Component {
   bool _pendingHitConfirm = false;
 
   static const double _runThreshold = 12;
-  static const double _spriteWidth = 22;
-  static const double _spriteHeight = 33;
-  static const double _spriteFootPadding = _spriteHeight * (2 / 48);
+  static const int _maxSpriteFrames = 12;
+  static const int _spriteFrameWidth = 64;
+  static const int _spriteFrameHeight = 64;
+  static const double _spriteWidth = 37;
+  static const double _spriteHeight = 37;
+  static const double _spriteFootPadding =
+      _spriteHeight * (6 / _spriteFrameHeight);
 
   @override
   Future<void> onLoad() async {
@@ -64,8 +66,6 @@ class OpponentComponent extends Component {
     _readySheet = await game.images.load('sprites/opponent_ready.png');
     _hitConfirmSheet =
         await game.images.load('sprites/opponent_hit_confirm.png');
-    _pointWinSheet = await game.images.load('sprites/opponent_point_win.png');
-    _pointLossSheet = await game.images.load('sprites/opponent_point_loss.png');
   }
 
   @override
@@ -77,11 +77,12 @@ class OpponentComponent extends Component {
       _facingX = state.velocity.x.sign;
     }
     if (state.isSwinging) {
+      _animationSeconds = 0;
       _swingSeconds = switch (state.lastShotType) {
-        ShotType.dink => 2 / 14,
-        ShotType.lob => 3 / 12,
-        ShotType.smash => 3 / 22,
-        ShotType.drive || ShotType.serve || ShotType.block || null => 3 / 18,
+        ShotType.dink => 6 / 5,
+        ShotType.lob => 6 / 5,
+        ShotType.smash => 6 / 6,
+        ShotType.drive || ShotType.serve || ShotType.block || null => 6 / 5.5,
       };
       state.isSwinging = false;
     }
@@ -89,12 +90,12 @@ class OpponentComponent extends Component {
     if (_swingSeconds > 0) {
       _swingSeconds = (_swingSeconds - dt).clamp(0, 1).toDouble();
       if (_swingSeconds == 0 && _pendingHitConfirm) {
-        _hitConfirmSeconds = 0.16;
+        _hitConfirmSeconds = 0.28;
         _pendingHitConfirm = false;
         startedHitConfirm = true;
       }
     } else if (_pendingHitConfirm) {
-      _hitConfirmSeconds = 0.16;
+      _hitConfirmSeconds = 0.28;
       _pendingHitConfirm = false;
       startedHitConfirm = true;
     }
@@ -127,8 +128,8 @@ class OpponentComponent extends Component {
       _OpponentPose.smash => _smashSheet,
       _OpponentPose.ready => _readySheet,
       _OpponentPose.hitConfirm => _hitConfirmSheet,
-      _OpponentPose.pointWin => _pointWinSheet,
-      _OpponentPose.pointLoss => _pointLossSheet,
+      _OpponentPose.pointWin => _readySheet,
+      _OpponentPose.pointLoss => _readySheet,
     };
     if (sheet == null) {
       return false;
@@ -137,20 +138,24 @@ class OpponentComponent extends Component {
     final fps = switch (pose) {
       _OpponentPose.idle => 2,
       _OpponentPose.run => _runFpsForSpeed(state.velocity.length),
-      _OpponentPose.swing => 18,
-      _OpponentPose.dink => 14,
-      _OpponentPose.drive => 18,
-      _OpponentPose.lob => 12,
-      _OpponentPose.smash => 22,
+      _OpponentPose.swing => 5.5,
+      _OpponentPose.dink => 5,
+      _OpponentPose.drive => 5.5,
+      _OpponentPose.lob => 5,
+      _OpponentPose.smash => 6,
       _OpponentPose.ready => 3,
-      _OpponentPose.hitConfirm => 12,
+      _OpponentPose.hitConfirm => 5,
       _OpponentPose.pointWin => 4,
       _OpponentPose.pointLoss => 3,
     };
     final frame = ((_animationSeconds * fps).floor() % frames).toInt();
-    final frameWidth = sheet.width / frames;
+    final frameWidth = sheet.width ~/ frames;
     final src = Rect.fromLTWH(
-        frameWidth * frame, 0, frameWidth, sheet.height.toDouble());
+      (frameWidth * frame).toDouble(),
+      0,
+      frameWidth.toDouble(),
+      sheet.height.toDouble(),
+    );
     final scale = game.depthScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final size = Size(
@@ -181,16 +186,16 @@ class OpponentComponent extends Component {
   }
 
   _OpponentPose _currentPose() {
+    if (_pointResultSeconds > 0) {
+      return _pointResultWinner == state.side
+          ? _OpponentPose.pointWin
+          : _OpponentPose.pointLoss;
+    }
     if (_swingSeconds > 0) {
       return _swingPoseForShot(state.lastShotType);
     }
     if (_hitConfirmSeconds > 0) {
       return _OpponentPose.hitConfirm;
-    }
-    if (_pointResultSeconds > 0) {
-      return _pointResultWinner == state.side
-          ? _OpponentPose.pointWin
-          : _OpponentPose.pointLoss;
     }
     if (state.velocity.length > _runThreshold) {
       return _OpponentPose.run;
@@ -239,11 +244,11 @@ class OpponentComponent extends Component {
 
   static double _runFpsForSpeed(double speed) {
     final t = ((speed - _runThreshold) / 92).clamp(0.0, 1.0).toDouble();
-    return 5.5 + t * 8.5;
+    return 3.6 + t * 4.4;
   }
 
   int _frameCountFor(ui.Image sheet) {
-    return (sheet.width / 32).round().clamp(1, 8);
+    return (sheet.width ~/ _spriteFrameWidth).clamp(1, _maxSpriteFrames);
   }
 
   void showHitConfirm() {
@@ -251,12 +256,15 @@ class OpponentComponent extends Component {
       _pendingHitConfirm = true;
       return;
     }
-    _hitConfirmSeconds = 0.16;
+    _animationSeconds = 0;
+    _hitConfirmSeconds = 0.28;
   }
 
   void showPointResult(PlayerSide winner) {
     _pendingHitConfirm = false;
+    _swingSeconds = 0;
     _hitConfirmSeconds = 0;
+    _animationSeconds = 0;
     _pointResultSeconds = 0.72;
     _pointResultWinner = winner;
   }
@@ -267,11 +275,11 @@ class OpponentComponent extends Component {
     }
     final depthScale = game.depthScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
-    final width = game.logicalToScreen(12.5 * depthScale);
-    final height = game.logicalToScreen(3.8 * depthScale);
+    final width = game.logicalToScreen(21 * depthScale);
+    final height = game.logicalToScreen(6.2 * depthScale);
     final rect = Rect.fromCenter(
       center:
-          feet.toOffset() + Offset(0, game.logicalToScreen(0.9 * depthScale)),
+          feet.toOffset() + Offset(0, game.logicalToScreen(1.4 * depthScale)),
       width: width,
       height: height,
     );

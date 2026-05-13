@@ -1,0 +1,4 @@
+{
+  "accepted": false,
+  "notes": "Ready/idle/run now use the linked skill/imagegen pipeline. Shot/result rows are still from the rejected manual pass and must be regenerated before character-art closeout."
+}

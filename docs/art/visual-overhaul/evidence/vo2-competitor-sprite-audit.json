@@ -1,0 +1,1658 @@
+{
+  "cell": [
+    64,
+    64
+  ],
+  "sheets": [
+    {
+      "file": "player_idle.png",
+      "frames": 2,
+      "size": [
+        128,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1479
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            3,
+            57,
+            60
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_ready.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1824,
+        0.1814,
+        0.0852,
+        0.2305,
+        0.1824
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            3,
+            57,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            3,
+            57,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            57,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_run.png",
+      "frames": 12,
+      "size": [
+        768,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.2195,
+        0.2031,
+        0.0278,
+        0.0278,
+        0.2031,
+        0.2195,
+        0.2483,
+        0.1887,
+        0.0146,
+        0.0146,
+        0.1887
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            1,
+            56,
+            58
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            2,
+            58,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            3,
+            60,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            4,
+            3,
+            61,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            3,
+            60,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            2,
+            58,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            1,
+            56,
+            58
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            2,
+            54,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            3,
+            53,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            3,
+            53,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            3,
+            53,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            2,
+            54,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_dink.png",
+      "frames": 4,
+      "size": [
+        256,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.0676,
+        0.061,
+        0.0698
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            3,
+            54,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            3,
+            57,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            3,
+            59,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            3,
+            62,
+            60
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_drive.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.144,
+        0.051,
+        0.1233,
+        0.0571,
+        0.1401
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            53,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_lob.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.0618,
+        0.0605,
+        0.0632,
+        0.0608,
+        0.064
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            51,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            52,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            56,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            58,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_smash.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1287,
+        0.2964,
+        0.0386,
+        0.1311,
+        0.1287
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            2,
+            50,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            51,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            2,
+            52,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            2,
+            54,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            2,
+            56,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            2,
+            58,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_swing.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.144,
+        0.051,
+        0.1233,
+        0.0571,
+        0.1401
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            53,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_hit_confirm.png",
+      "frames": 4,
+      "size": [
+        256,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1631,
+        0.1399,
+        0.1636
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            53,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_point_win.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.2764,
+        0.2764,
+        0.2764,
+        0.2764,
+        0.2764
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            2,
+            55,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            2,
+            55,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            2,
+            55,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "file": "player_point_loss.png",
+      "frames": 4,
+      "size": [
+        256,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1858,
+        0.1807,
+        0.1848
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            3,
+            54,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            2,
+            53,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            4,
+            1,
+            52,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            2,
+            53,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_idle.png",
+      "frames": 2,
+      "size": [
+        128,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1509
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            5,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            57,
+            60
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_ready.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1907,
+        0.188,
+        0.0789,
+        0.2339,
+        0.1907
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            5,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            5,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            57,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_run.png",
+      "frames": 12,
+      "size": [
+        768,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.2268,
+        0.2073,
+        0.0276,
+        0.0276,
+        0.2073,
+        0.2268,
+        0.2549,
+        0.1921,
+        0.0159,
+        0.0159,
+        0.1921
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            2,
+            56,
+            58
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            3,
+            58,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            4,
+            60,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            4,
+            4,
+            61,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            4,
+            60,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            3,
+            58,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            2,
+            56,
+            58
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            3,
+            54,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            3,
+            54,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_dink.png",
+      "frames": 4,
+      "size": [
+        256,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.0674,
+        0.063,
+        0.0691
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            59,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            62,
+            60
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_drive.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1438,
+        0.0481,
+        0.1257,
+        0.0576,
+        0.1399
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            5,
+            53,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            5,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            5,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            5,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            5,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            12,
+            5,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_lob.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.064,
+        0.0625,
+        0.063,
+        0.0593,
+        0.063
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            51,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            52,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            56,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            58,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_smash.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1282,
+        0.2988,
+        0.04,
+        0.1294,
+        0.1277
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            2,
+            50,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            5,
+            51,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            3,
+            52,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            3,
+            54,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            3,
+            56,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            3,
+            58,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_swing.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1438,
+        0.0481,
+        0.1257,
+        0.0576,
+        0.1399
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            5,
+            53,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            5,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            5,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            5,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            5,
+            57,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            12,
+            5,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_hit_confirm.png",
+      "frames": 4,
+      "size": [
+        256,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1624,
+        0.1416,
+        0.1626
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            9,
+            5,
+            53,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            10,
+            5,
+            54,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            11,
+            5,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            12,
+            5,
+            60,
+            61
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_point_win.png",
+      "frames": 6,
+      "size": [
+        384,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.28,
+        0.28,
+        0.28,
+        0.28,
+        0.28
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            5,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            3,
+            55,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            5,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            3,
+            55,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            5,
+            55,
+            61
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            8,
+            3,
+            55,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "file": "opponent_point_loss.png",
+      "frames": 4,
+      "size": [
+        256,
+        64
+      ],
+      "errors": [],
+      "warnings": [],
+      "frame_diffs": [
+        0.1946,
+        0.1887,
+        0.1938
+      ],
+      "frame_metrics": [
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            3,
+            53,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            5,
+            2,
+            52,
+            59
+          ]
+        },
+        {
+          "partial_alpha": 0,
+          "edge_pixels": 0,
+          "bbox": [
+            6,
+            3,
+            53,
+            59
+          ]
+        }
+      ]
+    }
+  ]
+}

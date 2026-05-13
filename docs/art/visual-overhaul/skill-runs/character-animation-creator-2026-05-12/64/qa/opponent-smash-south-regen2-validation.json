@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\character-animation-creator-2026-05-12\\64\\final\\opponent-smash-south-regen2-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "opponent-smash-south-regen2",
+      "column": 0,
+      "nontransparent_pixels": 1270,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-smash-south-regen2",
+      "column": 1,
+      "nontransparent_pixels": 1142,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-smash-south-regen2",
+      "column": 2,
+      "nontransparent_pixels": 874,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        19,
+        4,
+        44,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-smash-south-regen2",
+      "column": 3,
+      "nontransparent_pixels": 591,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        21,
+        4,
+        42,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-smash-south-regen2",
+      "column": 4,
+      "nontransparent_pixels": 1265,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "opponent-smash-south-regen2",
+      "column": 5,
+      "nontransparent_pixels": 1262,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        51,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "opponent-smash-south-regen2",
+      "frame_diffs": [
+        0.10006,
+        0.11002,
+        0.06975,
+        0.13854,
+        0.10192
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "opponent-smash-south-regen2",
+          "column": 0,
+          "nontransparent_pixels": 1270,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-smash-south-regen2",
+          "column": 1,
+          "nontransparent_pixels": 1142,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-smash-south-regen2",
+          "column": 2,
+          "nontransparent_pixels": 874,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            19,
+            4,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-smash-south-regen2",
+          "column": 3,
+          "nontransparent_pixels": 591,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            21,
+            4,
+            42,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-smash-south-regen2",
+          "column": 4,
+          "nontransparent_pixels": 1265,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "opponent-smash-south-regen2",
+          "column": 5,
+          "nontransparent_pixels": 1262,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            51,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}
