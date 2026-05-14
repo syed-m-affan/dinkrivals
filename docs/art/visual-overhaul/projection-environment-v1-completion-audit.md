@@ -37,7 +37,7 @@ environment assets that:
 | QA launch hooks are guarded | `DINK_RIVALS_INITIAL_ROUTE`, `DINK_RIVALS_QA_END_MATCH`, and `DINK_RIVALS_QA_END_MATCH_WINNER` are build-time Dart defines; normal no-define build was rebuilt and reinstalled after QA captures | Covered |
 | Physical Pixel validation | `flutter devices` shows only `emulator-5554`, Windows, Chrome, and Edge | Not covered |
 | Physical and human signoff checklist | `docs/art/visual-overhaul/projection-environment-v1-signoff-checklist.md` | Ready to run |
-| Physical capture helper | `tools/capture_projection_environment_v1_evidence.ps1` | Ready to run |
+| Physical capture helper | `tools/capture_projection_environment_v1_evidence.ps1` writes capture notes, captures automatable physical states, and restores a normal no-define APK | Ready to run |
 | Human art-direction signoff | Requires subjective review against concept screenshot/sheet | Not covered |
 | Organic full-match end screen | Seeded live app evidence exists; a naturally reached full-match end screen was not captured | Not covered if required |
 

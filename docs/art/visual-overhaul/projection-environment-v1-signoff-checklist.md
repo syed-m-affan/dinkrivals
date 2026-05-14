@@ -18,7 +18,7 @@ flutter install -d <PHYSICAL_PIXEL_ID> --use-application-binary=build/app/output
 
 Record the device ID, Android version, and commit hash in the QA notes.
 
-For repeatable screenshot capture, use:
+For repeatable screenshot capture of the automatable states, use:
 
 ```powershell
 .\tools\capture_projection_environment_v1_evidence.ps1 `
@@ -29,7 +29,10 @@ For repeatable screenshot capture, use:
 
 The script builds route-specific debug APKs for settings, roster, debug rally,
 shot states, and seeded end-match evidence, then rebuilds/reinstalls the normal
-no-define debug APK at the end and captures `normal-menu-after-qa.png`.
+no-define debug APK at the end and captures `normal-menu-after-qa.png`. It also
+writes `capture-notes.txt` with the device, Android version, commit hash, and
+smoke duration. Manual point or organic full-match captures are still separate
+if required by closeout.
 
 ## Physical Pixel Evidence
 
@@ -44,6 +47,10 @@ Required normal-build screenshots:
 - `pause.png`
 - `point.png`
 
+The helper captures `menu.png`, `serve.png`, and `pause.png`. Capture
+`point.png` manually during play unless the organic full-match/end-state
+requirement is explicitly waived.
+
 Required QA-route screenshots:
 
 - `settings.png` from `--dart-define=DINK_RIVALS_INITIAL_ROUTE=/settings`
@@ -54,6 +61,8 @@ Required QA-route screenshots:
 - `end-match-live.png` from
   `--dart-define=DINK_RIVALS_INITIAL_ROUTE=/end-match`
   `--dart-define=DINK_RIVALS_QA_END_MATCH=true`
+
+The helper captures these QA-route screenshots automatically.
 
 After QA-route captures, reinstall the normal no-define debug APK and confirm
 the app launches to the menu. If using the script, confirm

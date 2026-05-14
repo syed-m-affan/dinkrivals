@@ -16,7 +16,11 @@ if (-not (Test-Path $adb)) {
   $adb = "adb"
 }
 
-$resolvedOutputDir = Join-Path $repoRoot $OutputDir
+if ([System.IO.Path]::IsPathRooted($OutputDir)) {
+  $resolvedOutputDir = $OutputDir
+} else {
+  $resolvedOutputDir = Join-Path $repoRoot $OutputDir
+}
 New-Item -ItemType Directory -Force -Path $resolvedOutputDir | Out-Null
 
 function Invoke-Adb {
@@ -103,8 +107,31 @@ function Build-Install-Launch([string[]]$DartDefines, [int]$WaitSeconds = 3) {
   Start-App $WaitSeconds
 }
 
+function Write-CaptureNotes {
+  $commit = (& git -C $repoRoot rev-parse --short HEAD).Trim()
+  $androidRelease = (Invoke-Adb shell getprop ro.build.version.release).Trim()
+  $androidSdk = (Invoke-Adb shell getprop ro.build.version.sdk).Trim()
+  $wmSize = (Invoke-Adb shell wm size | Out-String).Trim()
+  $timestamp = Get-Date -Format o
+  $notes = @(
+    "Projection Environment V1 Capture Notes",
+    "timestamp=$timestamp",
+    "commit=$commit",
+    "deviceId=$DeviceId",
+    "androidRelease=$androidRelease",
+    "androidSdk=$androidSdk",
+    "wmSize=$wmSize",
+    "packageName=$PackageName",
+    "smokeSeconds=$SmokeSeconds"
+  )
+  $notesPath = Join-Path $resolvedOutputDir "capture-notes.txt"
+  $notes | Set-Content -Path $notesPath
+  Write-Host "Wrote $notesPath"
+}
+
 Write-Host "Capturing projection environment V1 evidence on $DeviceId"
 Write-Host "Output: $resolvedOutputDir"
+Write-CaptureNotes
 
 Build-Install-Launch @() 3
 Capture "menu"
