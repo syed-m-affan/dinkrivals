@@ -62,6 +62,10 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
   `docs/art/visual-overhaul/evidence/projection-environment-v1/` for menu,
   settings, roster, game/serve, pause, debug rally, debug dink/drive/lob/smash
   gesture or passive-contact states, point aftermath, and shot feedback.
+- Five-minute emulator smoke evidence exists at
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/debug-rally-5min.png`;
+  the app process remained alive through ten 30-second checkpoints on
+  `emulator-5554`.
 - End-match widget evidence exists at
   `docs/art/visual-overhaul/evidence/projection-environment-v1/end-match-widget.png`
   from the refreshed Phase 5G golden path; it was not reached through a live
@@ -84,6 +88,8 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
   human visual signoff, and any required organic full-match end screen capture
   are not complete. The debug dink/drive/lob/smash captures are evidence of
   gesture/animation rendering, not final human shot-acceptance signoff.
+- Completion audit:
+  `docs/art/visual-overhaul/projection-environment-v1-completion-audit.md`.
 
 2026-05-13 current-state update:
 

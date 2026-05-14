@@ -32,6 +32,8 @@ Captured on Android emulator `emulator-5554` after installing
 - Serve: `docs/art/visual-overhaul/evidence/projection-environment-v1/serve.png`
 - Debug rally:
   `docs/art/visual-overhaul/evidence/projection-environment-v1/debug-rally.png`
+- Five-minute debug rally smoke:
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/debug-rally-5min.png`
 - Debug dink/passive contact:
   `docs/art/visual-overhaul/evidence/projection-environment-v1/dink.png`
 - Debug drive gesture:
@@ -69,6 +71,10 @@ Captured on Android emulator `emulator-5554` after installing
   `flutter build apk --debug --dart-define=DINK_RIVALS_INITIAL_ROUTE=/debug-rally`
   followed by emulator install, launch, wait for passive contact, and screenshot
   capture.
+- Five-minute emulator smoke: pass. The same app process on `emulator-5554`
+  remained alive through checkpoints at 00:30, 01:00, 01:30, 02:00, 02:30,
+  03:00, 03:30, 04:00, 04:30, and 05:00, followed by
+  `debug-rally-5min.png`.
 
 ## Notes
 
