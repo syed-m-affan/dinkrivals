@@ -77,8 +77,8 @@ class RacketComponent extends Component {
     );
     final start = game.courtToWorld(path.start, Tuning.racketContactZ);
     final end = game.courtToWorld(path.end, Tuning.racketContactZ);
-    final startDepth = game.depthScaleForY(path.start.y);
-    final endDepth = game.depthScaleForY(path.end.y);
+    final startDepth = game.visualScaleForY(path.start.y);
+    final endDepth = game.visualScaleForY(path.end.y);
     final midDepth = (startDepth + endDepth) / 2;
     final laneColor = _laneColorFor(command.intent);
     _swingLanePaint.color = laneColor.withValues(alpha: 0.34);
@@ -166,7 +166,7 @@ class RacketComponent extends Component {
     if (direction.length < 1) {
       return;
     }
-    final depthScale = game.depthScaleForY(courtStart.y);
+    final depthScale = game.visualScaleForY(courtStart.y);
     if (DebugFlags.useSprites && sprite != null) {
       final width = game.logicalToScreen(14 * depthScale);
       final height = game.logicalToScreen(25 * depthScale);

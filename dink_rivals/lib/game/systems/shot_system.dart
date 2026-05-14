@@ -584,14 +584,96 @@ class ShotSystem {
     };
     final gravity = Tuning.gravity * gravityScale;
     final solvedVz = (0 - ball.z + 0.5 * gravity * time * time) / time;
+    final netClearanceVz = _shouldAssistNetClearance(
+      shotType: shotType,
+      start: start,
+      target: target,
+    )
+        ? _minimumVzForNetClearance(
+            start: start,
+            target: target,
+            startZ: ball.z,
+            time: time,
+            gravity: gravity,
+          )
+        : 0.0;
 
     ball.vx = delta.x / time;
     ball.vy = delta.y / time;
-    ball.vz = math.max(minVz, solvedVz);
+    final launchVz = math.max(math.max(minVz, solvedVz), netClearanceVz);
+    ball.vz = _capTechniqueLimitedLift(
+      shotType: shotType,
+      start: start,
+      launchVz: launchVz,
+    );
     ball.arcGravityScale = gravityScale;
     ball.lastHitBy = hitterSide;
     ball.hasBouncedThisSide = false;
     ball.isInPlay = true;
+  }
+
+  bool _shouldAssistNetClearance({
+    required ShotType shotType,
+    required Vector2 start,
+    required Vector2 target,
+  }) {
+    if ((target.y - start.y).abs() < 0.001) {
+      return false;
+    }
+    final crossesNet = (start.y - Court.netY) * (target.y - Court.netY) < 0;
+    if (!crossesNet) {
+      return false;
+    }
+    final distanceToNet = (start.y - Court.netY).abs();
+    return switch (shotType) {
+      ShotType.dink ||
+      ShotType.block =>
+        distanceToNet <= Tuning.reliableDinkNetDistance,
+      ShotType.drive || ShotType.serve => true,
+      ShotType.lob || ShotType.smash => false,
+    };
+  }
+
+  double _capTechniqueLimitedLift({
+    required ShotType shotType,
+    required Vector2 start,
+    required double launchVz,
+  }) {
+    final distanceToNet = (start.y - Court.netY).abs();
+    if ((shotType == ShotType.dink || shotType == ShotType.block) &&
+        distanceToNet > Tuning.reliableDinkNetDistance) {
+      return math.min(launchVz, Tuning.farDinkMaxLift);
+    }
+    return launchVz;
+  }
+
+  double _minimumVzForNetClearance({
+    required Vector2 start,
+    required Vector2 target,
+    required double startZ,
+    required double time,
+    required double gravity,
+  }) {
+    final deltaY = target.y - start.y;
+    if (deltaY.abs() < 0.001) {
+      return 0;
+    }
+
+    final crossingT = (Court.netY - start.y) / deltaY;
+    if (crossingT <= 0 || crossingT >= 1) {
+      return 0;
+    }
+
+    final crossingX = start.x + (target.x - start.x) * crossingT;
+    if (crossingX < Court.left || crossingX > Court.right) {
+      return 0;
+    }
+
+    final timeAtNet = time * crossingT;
+    final clearance =
+        Court.netHeight + Tuning.ballRadiusBase + Tuning.shotNetClearanceMargin;
+    return (clearance - startZ + 0.5 * gravity * timeAtNet * timeAtNet) /
+        timeAtNet;
   }
 
   double _speedForProfile(ShotType shotType, double power) {

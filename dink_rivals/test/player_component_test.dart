@@ -64,18 +64,23 @@ void main() {
     expect(component.currentPoseNameForTesting(), 'run');
   });
 
-  test('opponent visual scale equals depth scale (no perspective hack)', () {
-    expect(OpponentComponent.visualScaleFor(0.7), 0.7);
-    expect(OpponentComponent.visualScaleFor(1.0), 1.0);
+  test('opponent visual scale boosts near court without flattening depth', () {
+    expect(OpponentComponent.visualScaleFor(0.7, Court.top),
+        closeTo(0.756, 0.001));
+    expect(
+      OpponentComponent.visualScaleFor(1.0, Court.bottom),
+      closeTo(1.30, 0.001),
+    );
   });
 
   test('opponent is visibly smaller than player at start positions', () {
-    final playerScale = CourtProjection.depthScaleForY(Court.playerStartY);
-    final opponentScale = CourtProjection.depthScaleForY(Court.opponentStartY);
+    final playerScale = CourtProjection.visualScaleForY(Court.playerStartY);
+    final opponentScale = CourtProjection.visualScaleForY(Court.opponentStartY);
 
     expect(opponentScale, lessThan(playerScale));
-    expect(opponentScale / playerScale, lessThanOrEqualTo(0.65));
-    expect(opponentScale, greaterThanOrEqualTo(0.40));
+    expect(opponentScale / playerScale, lessThanOrEqualTo(0.72));
+    expect(playerScale, greaterThan(1.10));
+    expect(opponentScale, greaterThanOrEqualTo(0.70));
   });
 
   test('shot swing poses use distinct visual leans', () {

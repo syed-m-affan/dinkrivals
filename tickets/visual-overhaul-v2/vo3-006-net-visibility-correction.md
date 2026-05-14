@@ -6,7 +6,7 @@ priority: critical
 parallel_group: environment-art
 depends_on: [VO2-001, VO2-005]
 owner: Runtime Integration Agent + Visual QA Agent
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # VO3-006 - Net and Visibility Correction
@@ -45,6 +45,11 @@ Capture evidence for at least serve, rally, dink, lob, and smash states.
 
 ## Recovery Notes
 
+- 2026-05-13: Current-state update. The current runtime uses a procedural
+  graybox net instead of the previous painted `layer_net.png` path. Net
+  visibility should be judged with projection and boundary readability during
+  the graybox pass first; final net art belongs to the later fresh environment
+  rebuild.
 - 2026-05-12: `NetComponent` now crops the measured net strip from `layer_net.png` instead of drawing the full source layer over the playfield.
 - `layer_net.png` was rebuilt so pixels outside the net strip are transparent and the net overlay alpha is reduced.
 - Latest emulator serve/rally evidence shows the opponent and ball remain visible around the net:

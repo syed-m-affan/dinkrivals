@@ -2,6 +2,23 @@
 
 Date: 2026-05-12
 
+## Current-State Supersession
+
+As of 2026-05-13, this report is historical QA for the VO2 recovery pass. The
+current visual-overhaul runtime has intentionally reset the environment to a
+flat gray background with projected gameplay boundaries so perspective,
+projection, boundary readability, and actor scale can be finalized before new
+environment graphics are created.
+
+Current state is tracked in
+`docs/art/visual-overhaul/current-visual-overhaul-state.md`.
+
+Player/opponent sprites and gameplay animations are complete for the current
+pass via the documented sprite-generation workflow. Ball and VFX are mostly
+done for now. Environment signage, painted court layers, and net-layer
+closeout from this report should not be treated as active runtime gates until a
+new environment pass starts.
+
 ## Verdict
 
 VO2 recovery is improved but not complete. The latest pass resolves several concrete runtime and asset defects, but final closeout remains blocked by incomplete shot-state evidence, unapproved replacement signage, invalid physical Pixel screenshots, and human art-direction signoff.
@@ -56,11 +73,15 @@ The Pixel 10 Pro XL was visible to Flutter and the APK installed successfully. A
 
 ## Open Gates
 
-- Human-review the compact replacement venue signs against the concept target; the failed large chain-link signs are gone, but the new board-mounted signs still need art signoff.
-- Capture accepted shot-state evidence for dink, drive, lob, and smash, plus point and end-match.
-- Capture valid physical Pixel screenshots and run the 5-minute Pixel smoke.
-- Obtain human concept-quality signoff for sprites, UI, net visibility, and overall match-to-concept quality.
+- Finalize projection/perspective in the current graybox render path.
+- Finalize the gameplay-boundary visual language before environment art.
+- Rebuild environment graphics from scratch around the locked projection and boundaries.
+- Capture accepted shot-state evidence for dink, drive, lob, and smash, plus point and end-match, after the projection/boundary pass is stable.
+- Capture valid physical Pixel screenshots and run the 5-minute Pixel smoke for the new visual pass.
+- Obtain human concept-quality signoff for the rebuilt environment and overall match-to-concept quality.
 
 ## Closeout Decision
 
-VO3-007 should move to review, not done. VO2-008 remains review. The active goal remains open until the open gates above are handled or explicitly descoped by the user.
+VO3-007 should remain in review, not done. VO2-008 remains review as historical
+VO2 closeout. The active visual work is now the graybox projection/boundary
+pass followed by a fresh environment pass.

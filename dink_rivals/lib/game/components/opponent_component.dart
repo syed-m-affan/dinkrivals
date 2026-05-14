@@ -156,7 +156,7 @@ class OpponentComponent extends Component {
       frameWidth.toDouble(),
       sheet.height.toDouble(),
     );
-    final scale = game.depthScaleForY(state.position.y);
+    final scale = game.visualScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final size = Size(
       game.logicalToScreen(_spriteWidth * scale),
@@ -273,7 +273,7 @@ class OpponentComponent extends Component {
     if (!DebugFlags.useProjectedShadows) {
       return;
     }
-    final depthScale = game.depthScaleForY(state.position.y);
+    final depthScale = game.visualScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final width = game.logicalToScreen(21 * depthScale);
     final height = game.logicalToScreen(6.2 * depthScale);
@@ -287,7 +287,7 @@ class OpponentComponent extends Component {
   }
 
   void _renderPrimitive(Canvas canvas) {
-    final depthScale = game.depthScaleForY(state.position.y);
+    final depthScale = game.visualScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final torso = game.courtToWorld(state.position, 16);
     final head = game.courtToWorld(state.position, 28);
@@ -307,7 +307,10 @@ class OpponentComponent extends Component {
   }
 
   @visibleForTesting
-  static double visualScaleFor(double depthScale) => depthScale;
+  static double visualScaleFor(double depthScale, double courtY) {
+    final nearT = (courtY / Court.length).clamp(0.0, 1.0).toDouble();
+    return depthScale * (1.08 + nearT * 0.22);
+  }
 }
 
 enum _OpponentPose {

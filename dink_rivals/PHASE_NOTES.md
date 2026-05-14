@@ -307,3 +307,10 @@ Re-run the previous QA checklists with attention to:
 - Recovery pass: main menu no longer uses the gameplay court background; shared panels/buttons, scoreboard, controls, and feedback banner colors were retuned toward the painted park palette.
 - Verification passed after recovery: `flutter analyze`, `flutter test` (177/177), sprite alpha/hole validation, `flutter build apk --debug`, `flutter install -d emulator-5554 --use-application-binary=build/app/outputs/flutter-apk/app-debug.apk`, and fresh emulator menu/serve/rally captures under `docs/art/visual-overhaul/evidence/vo2-recovery-emulator/`.
 - VO2 remains in `review`, not final closeout. Open gates: concept-matched replacement signage, shot-specific fresh captures, physical Pixel validation, and human concept-quality signoff.
+
+## Current visual-overhaul reset (2026-05-13)
+- Player/opponent sprites and gameplay animations are done for the current visual pass. Accepted character work uses the documented sprite generation workflow in `docs/art/visual-overhaul/sprite-generator-skill-workflow.md` with the run under `docs/art/visual-overhaul/skill-runs/character-animation-creator-2026-05-12/`.
+- Ball rendering and VFX are mostly done for now; revisit them only if projection or future environment art creates a readability regression.
+- Runtime environment graphics are intentionally reset to a flat gray background. `ClassicEnvironmentComponent` draws the gray backdrop, `CourtComponent` draws projected gameplay boundaries, and `NetComponent` draws a procedural graybox net.
+- The painted court/environment/signage path from earlier VO2 notes is historical, not the current closeout target. Current source of truth: `docs/art/visual-overhaul/current-visual-overhaul-state.md`.
+- Next sequence: finalize perspective/projection; finalize how gameplay boundaries read visually; then rebuild the environment graphics from scratch around the locked projection and boundary guide.

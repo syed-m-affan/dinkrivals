@@ -8,6 +8,7 @@ import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/models/player_state.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
 import 'package:dink_rivals/game/models/swing_intent.dart';
+import 'package:dink_rivals/game/systems/ball_physics_system.dart';
 import 'package:dink_rivals/game/systems/shot_system.dart';
 
 void main() {
@@ -729,6 +730,152 @@ void main() {
     expect(ball.vx, lessThan(0));
     expect(ball.vy, lessThan(0));
   });
+
+  test('reasonable player shots clear the taller net', () {
+    for (final shotType in [
+      ShotType.dink,
+      ShotType.drive,
+      ShotType.lob,
+      ShotType.smash,
+      ShotType.block,
+    ]) {
+      final player = PlayerState(
+        position: Vector2(Court.width / 2, Court.playerKitchenBottomY + 18),
+        side: PlayerSide.player,
+      );
+      final opponent = PlayerState(
+        position: Vector2(Court.width / 2, Court.opponentKitchenTopY - 18),
+        side: PlayerSide.opponent,
+      );
+      final ball = BallState(
+        x: player.position.x,
+        y: player.position.y - Tuning.racketReach * 0.65,
+        z: shotType == ShotType.smash
+            ? Tuning.smashableBallMinZ + 8
+            : Tuning.racketContactZ,
+        isInPlay: true,
+        lastHitBy: PlayerSide.opponent,
+      );
+
+      final didHit = ShotSystem().attemptShot(
+        ball: ball,
+        hitter: player,
+        opponent: opponent,
+        shotType: shotType,
+      );
+
+      expect(didHit, isTrue, reason: '$shotType should be hittable');
+      expect(
+        _crossesNetWithoutContact(ball),
+        isTrue,
+        reason: '$shotType should clear the net',
+      );
+    }
+  });
+
+  test('dink from too far back does not get guaranteed net clearance', () {
+    final player = PlayerState(
+      position: Vector2(Court.width / 2, Court.playerStartY),
+      side: PlayerSide.player,
+    );
+    final opponent = PlayerState(
+      position: Vector2(Court.width / 2, Court.opponentKitchenTopY - 18),
+      side: PlayerSide.opponent,
+    );
+    final ball = BallState(
+      x: player.position.x,
+      y: player.position.y - Tuning.racketReach * 0.65,
+      z: Tuning.racketContactZ,
+      isInPlay: true,
+      lastHitBy: PlayerSide.opponent,
+    );
+
+    final didHit = ShotSystem().attemptShot(
+      ball: ball,
+      hitter: player,
+      opponent: opponent,
+      shotType: ShotType.dink,
+    );
+
+    expect(didHit, isTrue);
+    expect(ball.vz, greaterThan(Tuning.contactLiftBase));
+    expect(_crossesNetWithoutContact(ball), isFalse);
+  });
+
+  test('midcourt dink still has enough lift to clear the net', () {
+    final player = PlayerState(
+      position: Vector2(Court.width / 2, 340),
+      side: PlayerSide.player,
+    );
+    final opponent = PlayerState(
+      position: Vector2(Court.width / 2, Court.opponentKitchenTopY - 18),
+      side: PlayerSide.opponent,
+    );
+    final ball = BallState(
+      x: player.position.x,
+      y: player.position.y - Tuning.racketReach * 0.65,
+      z: Tuning.racketContactZ,
+      isInPlay: true,
+      lastHitBy: PlayerSide.opponent,
+    );
+
+    final didHit = ShotSystem().attemptShot(
+      ball: ball,
+      hitter: player,
+      opponent: opponent,
+      shotType: ShotType.dink,
+    );
+
+    expect(didHit, isTrue);
+    expect(ball.vz, greaterThan(Tuning.farDinkMaxLift));
+    expect(_crossesNetWithoutContact(ball), isTrue);
+  });
+
+  test('lob trajectory is not lifted by the explicit net clearance helper', () {
+    final player = PlayerState(
+      position: Vector2(Court.width / 2, Court.playerKitchenBottomY + 18),
+      side: PlayerSide.player,
+    );
+    final opponent = PlayerState(
+      position: Vector2(Court.width / 2, Court.opponentKitchenTopY - 18),
+      side: PlayerSide.opponent,
+    );
+    final ball = BallState(
+      x: player.position.x,
+      y: player.position.y - Tuning.racketReach * 0.65,
+      z: 0,
+      isInPlay: true,
+      lastHitBy: PlayerSide.opponent,
+    );
+
+    final didHit = ShotSystem().attemptShot(
+      ball: ball,
+      hitter: player,
+      opponent: opponent,
+      shotType: ShotType.lob,
+    );
+
+    expect(didHit, isTrue);
+    expect(ball.vz, greaterThanOrEqualTo(Tuning.lobInitialZ));
+    expect(_crossesNetWithoutContact(ball), isTrue);
+  });
+}
+
+bool _crossesNetWithoutContact(BallState ball) {
+  final physics = BallPhysicsSystem();
+  for (var i = 0; i < 180; i += 1) {
+    final result = physics.update(ball, 1 / 60);
+    if (result.netContact) {
+      return false;
+    }
+    if (result.crossedNet) {
+      return true;
+    }
+    if (result.groundContact || !ball.isInPlay) {
+      return false;
+    }
+  }
+  return false;
 }
 
 BallState _hitWithSwingSpeed(double swingSpeed) {

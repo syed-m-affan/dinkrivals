@@ -48,6 +48,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     AudioService? audioService,
     HapticsService? hapticsService,
     this.controlMode = GameplayControlMode.classicRacketStick,
+    this.freeRallyDebugMode = false,
   })  : audioService = audioService ?? FakeAudioService(),
         hapticsService = hapticsService ?? FakeHapticsService();
 
@@ -58,6 +59,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   final AudioService audioService;
   final HapticsService hapticsService;
   final GameplayControlMode controlMode;
+  final bool freeRallyDebugMode;
 
   final CourtLayoutSystem courtLayoutSystem = CourtLayoutSystem();
   final InputSystem inputSystem = InputSystem();
@@ -110,6 +112,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     if (DebugFlags.showHud) {
       add(DebugOverlayComponent(this));
     }
+    if (freeRallyDebugMode) {
+      resetDebugBallPosition();
+    }
   }
 
   @override
@@ -157,7 +162,14 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     return courtLayoutSystem.depthScaleForY(courtY);
   }
 
+  double visualScaleForY(double courtY) {
+    return courtLayoutSystem.visualScaleForY(courtY);
+  }
+
   bool get isWaitingToServe {
+    if (freeRallyDebugMode) {
+      return false;
+    }
     return serveFlowSystem.isWaitingForPlayerServe(
       ball: ball.state,
       matchState: matchState,
@@ -210,6 +222,32 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     matchOverNotifier.value = false;
     if (isLoaded) {
       resetPoint();
+    }
+  }
+
+  void resetDebugBallPosition() {
+    ball.state
+      ..x = Court.width / 2
+      ..y = Court.playerStartY - 42
+      ..z = Tuning.racketContactZ
+      ..vx = 0
+      ..vy = 70
+      ..vz = 0
+      ..lastHitBy = PlayerSide.opponent
+      ..hasBouncedThisSide = false
+      ..isInPlay = true
+      ..arcGravityScale = 1;
+    matchState
+      ..matchOver = false
+      ..pointInProgress = true
+      ..playerCourtBouncedThisPoint = true
+      ..opponentCourtBouncedThisPoint = true;
+    shotSystem.lastShotType = null;
+    feedbackText = 'DEBUG RALLY';
+    feedbackSeconds = 0.9;
+    serveFlowSystem.clearPlayerServeCharge();
+    if (isLoaded) {
+      vfx.clearBallTrail();
     }
   }
 
@@ -297,6 +335,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   bool _updateOpponentServeGate(double dt) {
+    if (freeRallyDebugMode) {
+      return false;
+    }
     return serveFlowSystem.updateOpponentServeGate(
       dt: dt,
       ball: ball.state,
@@ -309,7 +350,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   void _updatePlayerMovementAndServe(double dt) {
-    if (isWaitingToServe) {
+    if (!freeRallyDebugMode && isWaitingToServe) {
       player.state.velocity.setZero();
       serveFlowSystem.updatePlayerServeCharge(dt);
       serveFlowSystem.glueBallToPlayerServeRacket(
@@ -370,6 +411,12 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     );
     if (!matchState.pointInProgress) {
       matchState.startPoint();
+    }
+    if (freeRallyDebugMode) {
+      matchState
+        ..playerCourtBouncedThisPoint = true
+        ..opponentCourtBouncedThisPoint = true;
+      return false;
     }
     final volleyResult = matchRulesSystem.evaluateVolley(
       hitter: player.state,
@@ -432,6 +479,12 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       scoringSystem.recordRallyCrossing(matchState);
       rallyCount = matchState.rallyCount;
     }
+    if (freeRallyDebugMode) {
+      if (physics.groundContact) {
+        matchState.recordGroundBounce(ball.state.currentSide);
+      }
+      return false;
+    }
     final ruleResult = matchRulesSystem.evaluatePhysicsResult(
       ball: ball.state,
       physics: physics,
@@ -485,6 +538,12 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
         shotType: shotSystem.lastShotType,
         shotVelocity: Vector2(ball.state.vx, ball.state.vy),
       );
+      if (freeRallyDebugMode) {
+        matchState
+          ..playerCourtBouncedThisPoint = true
+          ..opponentCourtBouncedThisPoint = true;
+        return;
+      }
       final volleyResult = matchRulesSystem.evaluateVolley(
         hitter: opponent.state,
         ball: preAiBall,
@@ -547,12 +606,14 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       RuleFault.twoBounceViolation => 'FAULT: TWO BOUNCE',
       RuleFault.kitchenVolley => 'FAULT: KITCHEN',
       RuleFault.illegalServe => 'FAULT: SERVE',
+      RuleFault.netCollision => 'FAULT: NET',
     };
   }
 
   void _handlePointerStart(int pointerId, Vector2 position) {
     final layout = TouchControlLayout(size);
-    if (layout.isInServeButton(position) &&
+    if (!freeRallyDebugMode &&
+        layout.isInServeButton(position) &&
         serveFlowSystem.beginPlayerServeCharge(
           pointerId: pointerId,
           isWaitingToServe: isWaitingToServe,
@@ -570,17 +631,18 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   void _handlePointerEnd(int pointerId) {
-    if (serveFlowSystem.releasePlayerServe(
-      pointerId: pointerId,
-      ball: ball.state,
-      player: player.state,
-      matchState: matchState,
-      shotSystem: shotSystem,
-      racketPosition: playerRacketPosition(),
-      racketDirection: playerRacketDirection(),
-      paused: paused,
-      showFeedback: _showFeedback,
-    )) {
+    if (!freeRallyDebugMode &&
+        serveFlowSystem.releasePlayerServe(
+          pointerId: pointerId,
+          ball: ball.state,
+          player: player.state,
+          matchState: matchState,
+          shotSystem: shotSystem,
+          racketPosition: playerRacketPosition(),
+          racketDirection: playerRacketDirection(),
+          paused: paused,
+          showFeedback: _showFeedback,
+        )) {
       return;
     }
     touchInputController.handlePointerEnd(

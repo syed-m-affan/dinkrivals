@@ -6,7 +6,7 @@ priority: high
 parallel_group: environment-art
 depends_on: [VO2-001]
 owner: Asset Generation Agent + Runtime Integration Agent + Visual QA Agent
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # VO3-005 - Signage Replacement
@@ -42,6 +42,12 @@ flutter build apk --debug
 
 ## Recovery Notes
 
+- 2026-05-13: Current-state update. This ticket is no longer the immediate
+  environment path. The runtime has reset to a flat gray background with
+  projected gameplay boundaries so perspective and boundary readability can be
+  finalized before any new environment/signage graphics are created. Signage
+  should be designed as part of the fresh environment pass, not as a patch to
+  the previous painted/fence layer.
 - 2026-05-12: The rejected `DINK RIVALS` and `PICKLEBALL LEGENDS` text boards were removed from `assets/images/environment/classic/layer_fence_signage.png`.
 - The projected `far_fence_*`, `sign_dink_rivals_back`, `sign_park_courts_back`, and `sign_side_right` gameplay props were removed from `EnvironmentLayout.classicProps`, so fence/sign assets no longer project onto the court plane.
 - `test/environment_layout_test.dart` now asserts fence/signage belongs to the background layer, not projected court props.

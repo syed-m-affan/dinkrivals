@@ -7,6 +7,7 @@ import 'package:dink_rivals/game/models/match_state.dart';
 import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/models/player_state.dart';
 import 'package:dink_rivals/game/models/rule_result.dart';
+import 'package:dink_rivals/game/systems/ball_physics_system.dart';
 import 'package:dink_rivals/game/systems/match_rules_system.dart';
 
 void main() {
@@ -196,5 +197,24 @@ void main() {
     expect(result.pointEnded, isTrue);
     expect(result.winner, PlayerSide.player);
     expect(result.fault, RuleFault.kitchenVolley);
+  });
+
+  test('net contact awards point to non-hitting side', () {
+    final rules = MatchRulesSystem();
+    final ball = BallState(
+      x: Court.width / 2,
+      y: Court.netY,
+      z: Court.netHeight * 0.5,
+      lastHitBy: PlayerSide.player,
+    );
+
+    final result = rules.evaluatePhysicsResult(
+      ball: ball,
+      physics: const BallPhysicsResult(netContact: true),
+    );
+
+    expect(result.pointEnded, isTrue);
+    expect(result.winner, PlayerSide.opponent);
+    expect(result.fault, RuleFault.netCollision);
   });
 }

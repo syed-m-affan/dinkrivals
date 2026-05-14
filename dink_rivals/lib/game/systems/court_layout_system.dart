@@ -4,10 +4,9 @@ import 'package:flame/components.dart';
 
 import '../util/court_projection.dart';
 
-/// Maps the painted-court-aligned `CourtProjection` (image-space) onto actual
-/// screen pixels using the same cover-fit transform applied to the bg image
-/// (`park_background_overhaul.png`). This guarantees the gameplay coords
-/// land exactly on top of the painted court at any phone resolution.
+/// Maps the graybox `CourtProjection` image-space guide onto actual screen
+/// pixels using a cover-fit transform. Future environment art should use this
+/// same transform once the projection and gameplay boundaries are locked.
 class CourtLayoutSystem {
   double _imageScale = 1;
   Vector2 _imageOffset = Vector2.zero();
@@ -26,8 +25,8 @@ class CourtLayoutSystem {
     );
   }
 
-  /// Same cover-fit transform applied by `ClassicEnvironmentComponent` so the
-  /// background image can pull it from one source of truth.
+  /// Cover-fit transform exposed so future environment renderers can pull it
+  /// from one source of truth.
   double get imageScale => _imageScale;
   Vector2 get imageOffset => Vector2(_imageOffset.x, _imageOffset.y);
 
@@ -53,6 +52,9 @@ class CourtLayoutSystem {
 
   double depthScaleForY(double courtY) =>
       CourtProjection.depthScaleForY(courtY);
+
+  double visualScaleForY(double courtY) =>
+      CourtProjection.visualScaleForY(courtY);
 
   // Constant kept local so the import does not pull court_constants.dart in
   // here; ensure this stays in sync with `Court.width`.

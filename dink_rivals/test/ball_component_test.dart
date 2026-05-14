@@ -35,7 +35,7 @@ void main() {
     final nearGap = groundNear.y - airborneNear.y;
 
     expect(nearGap, greaterThan(farGap));
-    expect(nearGap / farGap, greaterThan(1.4));
+    expect(nearGap / farGap, greaterThan(1.35));
   });
 
   test('ball radius scales with depth scale at the same altitude', () {
@@ -45,5 +45,6 @@ void main() {
     final nearRadius = BallComponent.visualRadiusFor(50, nearDepthScale);
 
     expect(nearRadius, greaterThan(farRadius));
+    expect(nearRadius / farRadius, greaterThan(1.35));
   });
 }

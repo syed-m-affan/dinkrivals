@@ -10,9 +10,9 @@ class KitchenZoneComponent extends Component {
 
   @override
   void render(Canvas canvas) {
-    // Kitchen zones are now part of the painted bg (`park_background_overhaul.png`)
-    // and align with `Court.*KitchenY` via `CourtProjection`. Synthetic tint
-    // and edge are skipped so the painted court reads cleanly.
+    // The current visual pass uses a graybox court guide. Kitchen boundaries
+    // are drawn by CourtComponent so projection and line readability can be
+    // tuned before final environment art exists.
   }
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/config/court_constants.dart';
+import 'package:dink_rivals/game/config/tuning_constants.dart';
 import 'package:dink_rivals/game/models/ball_state.dart';
 import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/systems/ball_physics_system.dart';
@@ -30,6 +31,7 @@ void main() {
     expect(ball.z, 0);
     expect(ball.vz, greaterThan(0));
     expect(ball.vz, lessThan(100));
+    expect(ball.vz, closeTo(85, 0.001));
     expect(ball.hasBouncedThisSide, isTrue);
   });
 
@@ -97,5 +99,76 @@ void main() {
     expect(ball.vx, 100);
     expect(ball.vy, -100);
     expect(ball.vz, 80);
+  });
+
+  test('low ball crossing the net contacts the net', () {
+    final ball = BallState(
+      x: Court.width / 2,
+      y: Court.netY + 20,
+      z: Court.netHeight * 0.5,
+      vy: -60,
+      isInPlay: true,
+      arcGravityScale: 0,
+    );
+    final physics = BallPhysicsSystem();
+
+    final result = physics.update(ball, 0.5);
+
+    expect(result.netContact, isTrue);
+    expect(result.crossedNet, isFalse);
+    expect(ball.y, Court.netY);
+    expect(ball.vy, 0);
+  });
+
+  test('high ball crossing the net clears normally', () {
+    final ball = BallState(
+      x: Court.width / 2,
+      y: Court.netY + 20,
+      z: Court.netHeight + Tuning.ballRadiusBase + 12,
+      vy: -60,
+      isInPlay: true,
+      arcGravityScale: 0,
+    );
+    final physics = BallPhysicsSystem();
+
+    final result = physics.update(ball, 0.5);
+
+    expect(result.netContact, isFalse);
+    expect(result.crossedNet, isTrue);
+    expect(ball.y, lessThan(Court.netY));
+  });
+
+  test('ball crossing outside the posts does not contact the net', () {
+    final ball = BallState(
+      x: Court.right + 12,
+      y: Court.netY + 20,
+      z: Court.netHeight * 0.5,
+      vy: -60,
+      isInPlay: true,
+      arcGravityScale: 0,
+    );
+    final physics = BallPhysicsSystem();
+
+    final result = physics.update(ball, 0.5);
+
+    expect(result.netContact, isFalse);
+    expect(result.crossedNet, isTrue);
+  });
+
+  test('ball near the net without crossing does not contact the net', () {
+    final ball = BallState(
+      x: Court.width / 2,
+      y: Court.netY + 20,
+      z: Court.netHeight * 0.5,
+      vy: 10,
+      isInPlay: true,
+      arcGravityScale: 0,
+    );
+    final physics = BallPhysicsSystem();
+
+    final result = physics.update(ball, 0.5);
+
+    expect(result.netContact, isFalse);
+    expect(result.crossedNet, isFalse);
   });
 }

@@ -2,6 +2,13 @@
 
 Date: 2026-05-11
 
+Current-state note, 2026-05-13: this audit is historical. The active visual
+overhaul has reset the runtime environment to a graybox projection sandbox.
+Use `docs/art/visual-overhaul/current-visual-overhaul-state.md` as the current
+source of truth. Character sprites/animations are done for the current pass;
+ball/VFX are mostly done; next work is projection, gameplay boundaries, then a
+fresh environment rebuild.
+
 Objective audited: implement the visual overhaul plan as fully as possible
 without human intervention, using generated bitmap assets where practical and
 subagent validation for human-review-style checks.

@@ -58,6 +58,19 @@ class MainMenuScreen extends ConsumerWidget {
                           SizedBox(
                             width: double.infinity,
                             child: ArcadeButton(
+                              key: const Key('menu-debug-rally'),
+                              label: 'DEBUG RALLY',
+                              icon: Icons.science,
+                              onPressed: () {
+                                ref.read(audioServiceProvider).playMenuClick();
+                                context.go(AppRoutes.debugRally);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ArcadeButton(
                               key: const Key('menu-roster'),
                               label: 'ROSTER',
                               icon: Icons.groups,

@@ -129,7 +129,7 @@ class VfxLayerComponent extends Component {
     final isSmash = shotType == ShotType.smash;
     final isLob = shotType == ShotType.lob;
     final isDrive = shotType == ShotType.drive || shotType == ShotType.serve;
-    final depthScale = game.depthScaleForY(courtPosition.y);
+    final depthScale = game.visualScaleForY(courtPosition.y);
     final shotAngle = shotVelocity == null || shotVelocity.length2 < 0.01
         ? 0.0
         : math.atan2(shotVelocity.y, shotVelocity.x);
@@ -186,7 +186,7 @@ class VfxLayerComponent extends Component {
     );
     final center = (path.start + path.end) * 0.5;
     final delta = path.end - path.start;
-    final depthScale = game.depthScaleForY(hitter.position.y);
+    final depthScale = game.visualScaleForY(hitter.position.y);
     final isVertical = intent == SwingIntent.lob || intent == SwingIntent.smash;
     _addEffect(
       _ActiveVfx(
@@ -210,7 +210,7 @@ class VfxLayerComponent extends Component {
       return;
     }
     clearBallTrail();
-    final depthScale = game.depthScaleForY(courtPosition.y);
+    final depthScale = game.visualScaleForY(courtPosition.y);
     _addEffect(
       _ActiveVfx(
         sprite: VfxSprite.bounceRing,
@@ -294,7 +294,7 @@ class VfxLayerComponent extends Component {
     );
     final delta = current - previous;
     final angle = delta.length2 < 0.01 ? 0.0 : math.atan2(delta.y, delta.x);
-    final depthScale = game.depthScaleForY(ball.y);
+    final depthScale = game.visualScaleForY(ball.y);
     final radius = game.logicalToScreen(
       BallComponent.visualRadiusFor(ball.z, depthScale),
     );

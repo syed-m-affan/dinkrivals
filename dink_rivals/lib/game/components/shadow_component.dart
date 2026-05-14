@@ -23,7 +23,7 @@ class ShadowComponent extends Component {
     final ball = game.ball.state;
     final center = game.courtToWorld(Vector2(ball.x, ball.y));
     final heightScale = (ball.z / 120).clamp(0, 1).toDouble();
-    final depthScale = game.depthScaleForY(ball.y);
+    final depthScale = game.visualScaleForY(ball.y);
     final width = (13 + heightScale * 11) * depthScale;
     final height = (6 + heightScale * 5) * depthScale;
     final opacity = (0.58 - heightScale * 0.28).clamp(0.26, 0.58).toDouble();

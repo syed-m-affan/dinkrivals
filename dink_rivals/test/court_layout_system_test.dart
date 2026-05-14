@@ -51,7 +51,8 @@ void main() {
     final farWidth = farRight.x - farLeft.x;
     final nearWidth = nearRight.x - nearLeft.x;
 
-    expect(nearWidth / farWidth, greaterThan(2.4));
+    expect(nearWidth / farWidth, greaterThan(1.35));
+    expect(nearWidth / farWidth, lessThan(1.60));
   });
 
   test('logicalToScreen of court length is finite and positive', () {

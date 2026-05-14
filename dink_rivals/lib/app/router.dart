@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../screens/debug_rally_screen.dart';
 import '../screens/end_match_screen.dart';
 import '../screens/game_screen.dart';
 import '../screens/main_menu_screen.dart';
@@ -9,6 +10,7 @@ import '../screens/settings_screen.dart';
 class AppRoutes {
   static const menu = '/';
   static const game = '/game';
+  static const debugRally = '/debug-rally';
   static const settings = '/settings';
   static const roster = '/roster';
   static const endMatch = '/end-match';
@@ -24,6 +26,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.game,
       builder: (context, state) => const GameScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.debugRally,
+      builder: (context, state) => const DebugRallyScreen(),
     ),
     GoRoute(
       path: AppRoutes.settings,

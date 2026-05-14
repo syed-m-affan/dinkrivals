@@ -6,7 +6,7 @@ priority: critical
 parallel_group: final
 depends_on: [VO3-001, VO3-002, VO3-003, VO3-004, VO3-005, VO3-006]
 owner: Visual QA Agent + Closeout Agent
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # VO3-007 - Final Art QA and Closeout
@@ -45,6 +45,20 @@ flutter build apk --debug
 Then perform emulator and physical-device visual QA according to `VO2-008`.
 
 ## Recovery QA Notes
+
+2026-05-13 current-state update:
+
+- Player/opponent sprites and gameplay animations are done for this visual pass
+  through the documented sprite-generation workflow.
+- Ball and VFX are mostly done for now.
+- The painted court/environment/signage closeout path is superseded. Runtime now
+  uses a flat gray background, projected gameplay boundaries, and a procedural
+  graybox net to finalize perspective and boundary readability before new
+  environment art is created.
+- Final art closeout should not be attempted until projection/perspective,
+  gameplay-boundary visuals, and the fresh environment rebuild are complete.
+- Current source of truth:
+  `docs/art/visual-overhaul/current-visual-overhaul-state.md`.
 
 2026-05-12 recovery QA was rerun and documented in `docs/art/visual-overhaul/evidence/vo2-recovery-art-qa-report.md`.
 

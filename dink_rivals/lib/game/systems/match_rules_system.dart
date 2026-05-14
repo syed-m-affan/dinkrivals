@@ -37,6 +37,13 @@ class MatchRulesSystem {
     required BallPhysicsResult physics,
     MatchState? match,
   }) {
+    if (physics.netContact) {
+      return RuleResult.point(
+        winner: (ball.lastHitBy ?? ball.currentSide).opponent,
+        fault: RuleFault.netCollision,
+      );
+    }
+
     if (!physics.groundContact) {
       return const RuleResult.continuePlay();
     }

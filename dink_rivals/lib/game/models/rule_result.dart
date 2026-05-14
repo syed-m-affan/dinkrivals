@@ -6,6 +6,7 @@ enum RuleFault {
   twoBounceViolation,
   kitchenVolley,
   illegalServe,
+  netCollision,
 }
 
 class RuleResult {

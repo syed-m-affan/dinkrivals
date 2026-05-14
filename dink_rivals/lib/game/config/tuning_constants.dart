@@ -59,22 +59,25 @@ class Tuning {
   static const double backwardClampDot = -0.15;
   static const double contactLiftBase = 48.0;
   static const double contactLiftScale = 0.30;
-  static const double serveMinOutputSpeed = 210.0;
-  static const double serveMaxOutputSpeed = 235.0;
-  static const double serveMinLift = 130.0;
-  static const double serveMaxLift = 150.0;
+  static const double serveMinOutputSpeed = 220.0;
+  static const double serveMaxOutputSpeed = 240.0;
+  static const double serveMinLift = 170.0;
+  static const double serveMaxLift = 175.0;
   static const double serveChargeDuration = 1.15;
   static const double serveArcGravityScale = 0.65;
   // Dedicated opponent-serve profile. Calibrated so the ball lands roughly
   // around the player's kitchen line (court y ≈ 270-290) instead of the
   // back baseline — opponent serves should be returnable for a beginner.
-  static const double opponentServeSpeed = 205.0;
-  static const double opponentServeLift = 145.0;
+  static const double opponentServeSpeed = 220.0;
+  static const double opponentServeLift = 190.0;
 
   static const double gravity = 500.0;
-  static const double bounceDamping = 0.62;
+  static const double bounceDamping = 0.68;
   static const double minBounceVelocity = 11.0;
   static const double airDrag = 0.03;
+  static const double shotNetClearanceMargin = 5.0;
+  static const double reliableDinkNetDistance = 105.0;
+  static const double farDinkMaxLift = 62.0;
 
   static const double dinkSpeedXY = 82.0;
   static const double dinkInitialZ = 34.0;

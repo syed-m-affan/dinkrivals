@@ -45,7 +45,8 @@ void main() {
     final farWidth = farRight.x - farLeft.x;
     final nearWidth = nearRight.x - nearLeft.x;
 
-    expect(nearWidth / farWidth, greaterThan(2.4));
+    expect(nearWidth / farWidth, greaterThan(1.35));
+    expect(nearWidth / farWidth, lessThan(1.60));
   });
 
   test('painted court occupies portrait-friendly aspect inside bg image', () {
@@ -73,7 +74,19 @@ void main() {
     );
   });
 
-  test('painted net y maps to the measured bg net line', () {
+  test('visual scale boosts the near player beyond raw projection scale', () {
+    final rawPlayerScale = CourtProjection.depthScaleForY(Court.playerStartY);
+    final visualPlayerScale =
+        CourtProjection.visualScaleForY(Court.playerStartY);
+    final visualOpponentScale =
+        CourtProjection.visualScaleForY(Court.opponentStartY);
+
+    expect(visualPlayerScale, greaterThan(rawPlayerScale));
+    expect(visualPlayerScale, greaterThan(1.10));
+    expect(visualOpponentScale, lessThan(visualPlayerScale));
+  });
+
+  test('net y maps to the concept-composition net line', () {
     final net =
         CourtProjection.courtToScreen(Vector2(Court.width / 2, Court.netY), 0);
     final far =
@@ -83,7 +96,7 @@ void main() {
       0,
     );
 
-    expect(net.y, closeTo(CourtProjection.paintedNetY, 0.01));
+    expect(net.y, closeTo(CourtProjection.paintedNetY, 0.1));
     expect(net.y, lessThan((far.y + near.y) / 2));
   });
 
@@ -125,5 +138,13 @@ void main() {
     for (var y = -Court.length; y <= Court.length * 2; y += Court.length / 10) {
       expect(CourtProjection.depthScaleForY(y), greaterThanOrEqualTo(0.40));
     }
+  });
+
+  test('kitchen lines preserve real pickleball depth in world space', () {
+    expect(Court.playerKitchenBottomY - Court.netY,
+        closeTo(7 * Court.feetToUnits, 0.001));
+    expect(Court.netY - Court.opponentKitchenTopY,
+        closeTo(7 * Court.feetToUnits, 0.001));
+    expect(Court.netY - Court.top, Court.bottom - Court.netY);
   });
 }

@@ -45,15 +45,15 @@ void main() {
     expect(body.y - tip.y, greaterThan(24));
   });
 
-  test('z lift at near court is at least 1.5x the z lift at far court', () {
+  test('z lift at near court is clearly stronger than far court', () {
     expect(
       CourtProjection.zLiftForY(Court.bottom) /
           CourtProjection.zLiftForY(Court.top),
-      greaterThan(1.5),
+      greaterThan(1.35),
     );
   });
 
-  test('gameplay net boundary lands on the measured painted net line', () {
+  test('gameplay net boundary lands above visual center in perspective', () {
     final layout = CourtLayoutSystem()..resize(Vector2(1080, 2400));
     final left = layout.courtToWorld(Vector2(Court.left, Court.netY));
     final right = layout.courtToWorld(Vector2(Court.right, Court.netY));

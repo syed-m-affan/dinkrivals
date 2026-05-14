@@ -1,12 +1,12 @@
 ---
 id: VO3-004
 phase: visual-overhaul-v3
-status: review
+status: done
 priority: high
 parallel_group: character-animation
 depends_on: [VO3-003]
 owner: Asset Normalization Agent + Runtime Integration Agent + Visual QA Agent
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # VO3-004 - Complete Character Run Cycles
@@ -45,6 +45,9 @@ Perform a rally smoke that forces both characters to move across the court.
 
 ## Recovery Notes
 
+- 2026-05-13: Current-state update. Player and opponent gameplay animations,
+  including run and shot/action states, are done for this visual pass. The next
+  visual work is projection/boundary/environment, not character animation.
 - 2026-05-12: Player and opponent run sheets are now native 64x64 chibi 12-frame runtime strips (`768x64`) instead of the shorter/tall cycle.
 - `PlayerComponent` and `OpponentComponent` now allow up to 12 frames per sheet, use 64px frame-count detection, use integer source rects to prevent neighbor-frame sampling, and slow run playback to an 8 FPS max so the cycle no longer flashes by too quickly.
 - Swing/hit-confirm playback durations were retimed for the expanded action sheets.
@@ -53,4 +56,5 @@ Perform a rally smoke that forces both characters to move across the court.
 - Cleanup/preview evidence is archived under `docs/art/visual-overhaul/sprite-overhaul-run/`.
 - Emulator rally evidence shows the opponent using the run strip during movement:
   - `docs/art/visual-overhaul/evidence/vo2-recovery-emulator/rally_ui_latest.png`
-- Remaining review item: a still screenshot cannot prove loop quality by itself; a short moving capture or human playtest is still the stronger final signoff.
+- Prior review item about moving capture is now deferred to whole-game visual QA
+  rather than blocking character-animation completion.

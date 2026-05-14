@@ -1,12 +1,12 @@
 ---
 id: VO3-003
 phase: visual-overhaul-v3
-status: review
+status: done
 priority: critical
 parallel_group: character-art
 depends_on: [VO2-003, VO2-004]
 owner: Asset Generation Agent + Asset Normalization Agent + Visual QA Agent
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # VO3-003 - Character Art Replacement
@@ -46,6 +46,11 @@ Capture serve/rally screenshots on emulator at minimum, and physical Pixel scree
 
 ## Recovery Notes
 
+- 2026-05-13: Current-state update. Player and opponent gameplay sprites are
+  accepted as done for this visual pass. The active source of truth is
+  `docs/art/visual-overhaul/current-visual-overhaul-state.md`; future sprite
+  revisions should continue through
+  `docs/art/visual-overhaul/sprite-generator-skill-workflow.md`.
 - 2026-05-12: User accepted the revised sprite direction but reported sprite artifacting.
 - Runtime player/opponent sheets remain on the stronger generated-athlete source, normalized to the VO2 48x72 frame footprint.
 - 2026-05-12: Player sheets were retuned into a blue version of the concept competitor, and opponent sheets were retuned toward the original red competitor rival while preserving the existing frame geometry.
