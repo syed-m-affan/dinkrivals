@@ -51,10 +51,9 @@ Capture evidence for at least serve, rally, dink, lob, and smash states.
   Emulator game/debug-rally evidence under
   `docs/art/visual-overhaul/evidence/projection-environment-v1/` shows the net,
   ball, player, opponent, court lines, and kitchen highlight remain readable.
-  Additional debug drive/lob/smash gesture captures and point/shot-feedback
-  captures exist in the same folder. Review remains open for physical-device
-  evidence, human visual signoff, and any missing live-flow shot states such as
-  dink if final QA requires the full shot matrix.
+  Additional debug dink/drive/lob/smash gesture or passive-contact captures and
+  point/shot-feedback captures exist in the same folder. Review remains open for
+  physical-device evidence and human visual signoff.
 - 2026-05-13: Current-state update. The current runtime uses a procedural
   graybox net instead of the previous painted `layer_net.png` path. Net
   visibility should be judged with projection and boundary readability during

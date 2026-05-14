@@ -137,13 +137,13 @@ The first rebuilt environment asset is active:
 
 Emulator evidence under
 `docs/art/visual-overhaul/evidence/projection-environment-v1/` now includes
-menu, settings, roster, game/serve, pause, debug rally, debug drive/lob/smash
-gesture captures, point aftermath, shot feedback, and a widget-rendered
-end-match capture with the new environment active. `end-match-live.png` is also
-captured from the running emulator through the QA launch seed. Remaining
-closeout evidence still needs physical-device evidence and human visual signoff.
-If the final QA requires end-match evidence reached through an organic full
-match, that remains separate from the seeded live-app capture.
+menu, settings, roster, game/serve, pause, debug rally, debug dink/drive/lob/
+smash captures, point aftermath, shot feedback, and a widget-rendered end-match
+capture with the new environment active. `end-match-live.png` is also captured
+from the running emulator through the QA launch seed. Remaining closeout
+evidence still needs physical-device evidence and human visual signoff. If the
+final QA requires end-match evidence reached through an organic full match, that
+remains separate from the seeded live-app capture.
 
 ## Documentation Status
 

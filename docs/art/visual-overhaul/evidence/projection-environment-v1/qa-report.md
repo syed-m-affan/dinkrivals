@@ -32,6 +32,8 @@ Captured on Android emulator `emulator-5554` after installing
 - Serve: `docs/art/visual-overhaul/evidence/projection-environment-v1/serve.png`
 - Debug rally:
   `docs/art/visual-overhaul/evidence/projection-environment-v1/debug-rally.png`
+- Debug dink/passive contact:
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/dink.png`
 - Debug drive gesture:
   `docs/art/visual-overhaul/evidence/projection-environment-v1/drive.png`
 - Debug lob gesture:
@@ -63,6 +65,10 @@ Captured on Android emulator `emulator-5554` after installing
 - QA end-match evidence build:
   `flutter build apk --debug --dart-define=DINK_RIVALS_INITIAL_ROUTE=/end-match --dart-define=DINK_RIVALS_QA_END_MATCH=true --dart-define=DINK_RIVALS_QA_END_MATCH_WINNER=player`
   followed by emulator install, launch, and screenshot capture.
+- QA debug-rally launch build for dink evidence:
+  `flutter build apk --debug --dart-define=DINK_RIVALS_INITIAL_ROUTE=/debug-rally`
+  followed by emulator install, launch, wait for passive contact, and screenshot
+  capture.
 
 ## Notes
 
@@ -77,9 +83,9 @@ settings, roster, and end-match widget surfaces no longer reference the retired
 The refreshed game capture also verifies the bottom shot chips fit inside the
 portrait canvas after the `LOB/SMASH` clipping fix.
 
-The drive/lob/smash images are debug-rally gesture and animation captures. They
-are useful visual evidence for the new environment during shot inputs, but they
-do not replace final shot-acceptance signoff.
+The dink/drive/lob/smash images are debug-rally gesture or passive-contact
+captures. They are useful visual evidence for the new environment during shot
+inputs, but they do not replace final human shot-acceptance signoff.
 
 `end-match-widget.png` is widget-rendered evidence from the refreshed Phase 5G
 golden. `end-match-live.png` is a running emulator capture using the QA launch

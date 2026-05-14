@@ -60,8 +60,8 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
   `park_background_overhaul.png`.
 - Emulator evidence exists under
   `docs/art/visual-overhaul/evidence/projection-environment-v1/` for menu,
-  settings, roster, game/serve, pause, debug rally, debug drive/lob/smash
-  gesture states, point aftermath, and shot feedback.
+  settings, roster, game/serve, pause, debug rally, debug dink/drive/lob/smash
+  gesture or passive-contact states, point aftermath, and shot feedback.
 - End-match widget evidence exists at
   `docs/art/visual-overhaul/evidence/projection-environment-v1/end-match-widget.png`
   from the refreshed Phase 5G golden path; it was not reached through a live
@@ -78,10 +78,11 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
   focused QA launch tests, `flutter test --update-goldens
   test\phase5g_visual_golden_test.dart`, full `flutter test` (`206` tests),
   `flutter build apk --debug`, QA end-match evidence build, and emulator
-  install passed.
+  install passed. A separate QA debug-rally launch build captured the current
+  projection environment in a DINK passive-contact state.
 - Final closeout remains `review` because physical Pixel evidence,
   human visual signoff, and any required organic full-match end screen capture
-  are not complete. The debug drive/lob/smash captures are evidence of
+  are not complete. The debug dink/drive/lob/smash captures are evidence of
   gesture/animation rendering, not final human shot-acceptance signoff.
 
 2026-05-13 current-state update:
