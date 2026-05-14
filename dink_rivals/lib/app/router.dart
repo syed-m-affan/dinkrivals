@@ -16,32 +16,54 @@ class AppRoutes {
   static const endMatch = '/end-match';
 }
 
-final appRouter = GoRouter(
-  initialLocation: AppRoutes.menu,
-  routes: [
-    GoRoute(
-      path: AppRoutes.menu,
-      builder: (context, state) => const MainMenuScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.game,
-      builder: (context, state) => const GameScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.debugRally,
-      builder: (context, state) => const DebugRallyScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.settings,
-      builder: (context, state) => const SettingsScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.roster,
-      builder: (context, state) => const RosterScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.endMatch,
-      builder: (context, state) => const EndMatchScreen(),
-    ),
-  ],
+const String _qaInitialRoute = String.fromEnvironment(
+  'DINK_RIVALS_INITIAL_ROUTE',
+  defaultValue: AppRoutes.menu,
 );
+
+final appRouter = createAppRouter(initialLocation: _qaInitialRoute);
+
+GoRouter createAppRouter({String initialLocation = AppRoutes.menu}) {
+  return GoRouter(
+    initialLocation: _normalizedInitialLocation(initialLocation),
+    routes: [
+      GoRoute(
+        path: AppRoutes.menu,
+        builder: (context, state) => const MainMenuScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.game,
+        builder: (context, state) => const GameScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.debugRally,
+        builder: (context, state) => const DebugRallyScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.roster,
+        builder: (context, state) => const RosterScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.endMatch,
+        builder: (context, state) => const EndMatchScreen(),
+      ),
+    ],
+  );
+}
+
+String _normalizedInitialLocation(String initialLocation) {
+  return switch (initialLocation) {
+    AppRoutes.menu ||
+    AppRoutes.game ||
+    AppRoutes.debugRally ||
+    AppRoutes.settings ||
+    AppRoutes.roster ||
+    AppRoutes.endMatch =>
+      initialLocation,
+    _ => AppRoutes.menu,
+  };
+}

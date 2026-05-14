@@ -66,14 +66,21 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
   `docs/art/visual-overhaul/evidence/projection-environment-v1/end-match-widget.png`
   from the refreshed Phase 5G golden path; it was not reached through a live
   emulator full-match flow.
+- End-match live-app evidence exists at
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/end-match-live.png`
+  from a QA build launched with `DINK_RIVALS_INITIAL_ROUTE=/end-match` and
+  `DINK_RIVALS_QA_END_MATCH=true`; this proves the running app renders the
+  end-match surface over the projection environment, but it is not an organic
+  full-match playthrough.
 - The bottom shot-chip layout was corrected so `LOB/SMASH` stays inside the
   portrait canvas.
 - `flutter analyze`, focused projection/backdrop/control tests,
-  `flutter test --update-goldens test\phase5g_visual_golden_test.dart`,
-  full `flutter test` (`202` tests), `flutter build apk --debug`, and emulator
+  focused QA launch tests, `flutter test --update-goldens
+  test\phase5g_visual_golden_test.dart`, full `flutter test` (`206` tests),
+  `flutter build apk --debug`, QA end-match evidence build, and emulator
   install passed.
 - Final closeout remains `review` because physical Pixel evidence,
-  human visual signoff, and any required live emulator end-match flow evidence
+  human visual signoff, and any required organic full-match end screen capture
   are not complete. The debug drive/lob/smash captures are evidence of
   gesture/animation rendering, not final human shot-acceptance signoff.
 

@@ -51,6 +51,10 @@ The game screen intentionally does not use the old painted court environment.
   and VFX remain live on top of the projection-locked environment.
 - `TouchControlsComponent` keeps the shot-indicator chips inside the portrait
   canvas so `LOB/SMASH` no longer clips at the right edge.
+- Build-time QA launch defines can open a seeded end-match state for visual
+  evidence without changing normal app startup:
+  `DINK_RIVALS_INITIAL_ROUTE`, `DINK_RIVALS_QA_END_MATCH`, and
+  `DINK_RIVALS_QA_END_MATCH_WINNER`.
 
 The older environment layer assets may still exist in the repo as historical
 art/evidence, but they are not the current environment target. Do not treat
@@ -135,10 +139,11 @@ Emulator evidence under
 `docs/art/visual-overhaul/evidence/projection-environment-v1/` now includes
 menu, settings, roster, game/serve, pause, debug rally, debug drive/lob/smash
 gesture captures, point aftermath, shot feedback, and a widget-rendered
-end-match capture with the new environment active. Remaining closeout evidence
-still needs physical-device evidence and human visual signoff. If the final QA
-requires end-match evidence reached through a live emulator match, that remains
-separate from the widget-rendered end-match capture.
+end-match capture with the new environment active. `end-match-live.png` is also
+captured from the running emulator through the QA launch seed. Remaining
+closeout evidence still needs physical-device evidence and human visual signoff.
+If the final QA requires end-match evidence reached through an organic full
+match, that remains separate from the seeded live-app capture.
 
 ## Documentation Status
 

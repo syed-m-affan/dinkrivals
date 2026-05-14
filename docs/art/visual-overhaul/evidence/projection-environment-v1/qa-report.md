@@ -46,17 +46,23 @@ Captured on Android emulator `emulator-5554` after installing
   `docs/art/visual-overhaul/evidence/projection-environment-v1/pause.png`
 - End-match widget:
   `docs/art/visual-overhaul/evidence/projection-environment-v1/end-match-widget.png`
+- End-match live app capture:
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/end-match-live.png`
 
 ## Verification
 
 - `flutter analyze`: pass
 - Focused projection/backdrop/control tests: pass (`16` tests)
+- Focused QA launch tests: pass (`4` tests)
 - `flutter test --update-goldens test\phase5g_visual_golden_test.dart`: pass;
   refreshed the Phase 5G menu/settings/end-match golden evidence against the
   projection environment.
-- `flutter test`: pass (`202` tests)
+- `flutter test`: pass (`206` tests)
 - `flutter build apk --debug`: pass
 - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: pass
+- QA end-match evidence build:
+  `flutter build apk --debug --dart-define=DINK_RIVALS_INITIAL_ROUTE=/end-match --dart-define=DINK_RIVALS_QA_END_MATCH=true --dart-define=DINK_RIVALS_QA_END_MATCH_WINNER=player`
+  followed by emulator install, launch, and screenshot capture.
 
 ## Notes
 
@@ -76,5 +82,8 @@ are useful visual evidence for the new environment during shot inputs, but they
 do not replace final shot-acceptance signoff.
 
 `end-match-widget.png` is widget-rendered evidence from the refreshed Phase 5G
-golden, not an emulator capture reached by completing a full match. Physical
-device capture and human visual signoff remain final closeout gates.
+golden. `end-match-live.png` is a running emulator capture using the QA launch
+seed guarded by `DINK_RIVALS_INITIAL_ROUTE` and `DINK_RIVALS_QA_END_MATCH`; it
+proves the live app renders the end-match surface over the projection
+environment, but it is not an organic full-match playthrough. Physical-device
+capture and human visual signoff remain final closeout gates.
