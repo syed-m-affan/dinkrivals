@@ -92,6 +92,8 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
   `docs/art/visual-overhaul/projection-environment-v1-completion-audit.md`.
 - Physical-device and human signoff checklist:
   `docs/art/visual-overhaul/projection-environment-v1-signoff-checklist.md`.
+- Physical-device capture helper:
+  `tools/capture_projection_environment_v1_evidence.ps1`.
 
 2026-05-13 current-state update:
 

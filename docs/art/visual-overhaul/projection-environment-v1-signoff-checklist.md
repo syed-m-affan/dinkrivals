@@ -18,6 +18,19 @@ flutter install -d <PHYSICAL_PIXEL_ID> --use-application-binary=build/app/output
 
 Record the device ID, Android version, and commit hash in the QA notes.
 
+For repeatable screenshot capture, use:
+
+```powershell
+.\tools\capture_projection_environment_v1_evidence.ps1 `
+  -DeviceId <PHYSICAL_PIXEL_ID> `
+  -OutputDir docs/art/visual-overhaul/evidence/projection-environment-v1-physical `
+  -SmokeSeconds 300
+```
+
+The script builds route-specific debug APKs for settings, roster, debug rally,
+shot states, and seeded end-match evidence, then rebuilds/reinstalls the normal
+no-define debug APK at the end and captures `normal-menu-after-qa.png`.
+
 ## Physical Pixel Evidence
 
 Capture into:
@@ -27,15 +40,14 @@ Capture into:
 Required normal-build screenshots:
 
 - `menu.png`
-- `settings.png`
-- `roster.png`
 - `serve.png`
-- `rally.png`
 - `pause.png`
 - `point.png`
 
 Required QA-route screenshots:
 
+- `settings.png` from `--dart-define=DINK_RIVALS_INITIAL_ROUTE=/settings`
+- `roster.png` from `--dart-define=DINK_RIVALS_INITIAL_ROUTE=/roster`
 - `debug-rally.png` from
   `--dart-define=DINK_RIVALS_INITIAL_ROUTE=/debug-rally`
 - `dink.png`, `drive.png`, `lob.png`, and `smash.png` from debug rally
@@ -44,7 +56,8 @@ Required QA-route screenshots:
   `--dart-define=DINK_RIVALS_QA_END_MATCH=true`
 
 After QA-route captures, reinstall the normal no-define debug APK and confirm
-the app launches to the menu.
+the app launches to the menu. If using the script, confirm
+`normal-menu-after-qa.png` was captured.
 
 ## Five-Minute Smoke
 
