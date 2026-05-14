@@ -221,6 +221,31 @@ class TouchControlsComponent extends Component {
 
   void _renderShotIndicators(Canvas canvas, TouchControlLayout layout) {
     final active = game.inputSystem.activeSwingCommand?.intent;
+    for (final item in _shotIndicatorLayout(layout, active)) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(item.rect, const Radius.circular(4)),
+        item.isActive ? _shotChipActivePaint : _shotChipPaint,
+      );
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(item.rect, const Radius.circular(4)),
+        _shotChipBorderPaint,
+      );
+      item.painter.paint(
+        canvas,
+        Offset(
+          item.rect.center.dx - item.painter.width / 2,
+          item.rect.center.dy - item.painter.height / 2,
+        ),
+      );
+    }
+  }
+
+  static List<({TextPainter painter, Rect rect, bool isActive})>
+      _shotIndicatorLayout(
+    TouchControlLayout layout,
+    SwingIntent? active,
+  ) {
+    const horizontalMargin = 8.0;
     final y = layout.swingCenter.y - layout.swingVisualRadius - 70;
     final centerX = layout.swingCenter.x;
     final verticalLabel = switch (active) {
@@ -233,7 +258,7 @@ class TouchControlsComponent extends Component {
       (label: 'DRIVE', intent: SwingIntent.drive, dx: 0),
       (label: verticalLabel, intent: SwingIntent.lob, dx: 68),
     ];
-    for (final item in items) {
+    final chips = items.map((item) {
       final isActive = active != null &&
           (active == item.intent ||
               (item.intent == SwingIntent.lob && active == SwingIntent.smash));
@@ -251,25 +276,48 @@ class TouchControlsComponent extends Component {
         ),
         textDirection: TextDirection.ltr,
       )..layout();
-      final rect = Rect.fromCenter(
-        center: Offset(centerX + item.dx, y),
-        width: painter.width + 14,
-        height: 22,
+      return (
+        painter: painter,
+        rect: Rect.fromCenter(
+          center: Offset(centerX + item.dx, y),
+          width: painter.width + 14,
+          height: 22,
+        ),
+        isActive: isActive,
       );
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(4)),
-        isActive ? _shotChipActivePaint : _shotChipPaint,
-      );
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(4)),
-        _shotChipBorderPaint,
-      );
-      painter.paint(
-        canvas,
-        Offset(rect.center.dx - painter.width / 2,
-            rect.center.dy - painter.height / 2),
-      );
+    }).toList();
+
+    final minLeft =
+        chips.map((chip) => chip.rect.left).reduce(math.min).toDouble();
+    final maxRight =
+        chips.map((chip) => chip.rect.right).reduce(math.max).toDouble();
+    final rightLimit = layout.size.x - horizontalMargin;
+    final shiftRight = math.max(0, horizontalMargin - minLeft).toDouble();
+    final shiftLeft =
+        math.min(0, rightLimit - (maxRight + shiftRight)).toDouble();
+    final shift = shiftRight + shiftLeft;
+    if (shift == 0) {
+      return chips;
     }
+    return chips
+        .map(
+          (chip) => (
+            painter: chip.painter,
+            rect: chip.rect.shift(Offset(shift, 0)),
+            isActive: chip.isActive,
+          ),
+        )
+        .toList();
+  }
+
+  @visibleForTesting
+  static List<Rect> shotIndicatorRectsForTesting({
+    required Vector2 size,
+    SwingIntent? active,
+  }) {
+    return _shotIndicatorLayout(TouchControlLayout(size), active)
+        .map((chip) => chip.rect)
+        .toList();
   }
 
   void _renderServeButton(Canvas canvas, TouchControlLayout layout) {

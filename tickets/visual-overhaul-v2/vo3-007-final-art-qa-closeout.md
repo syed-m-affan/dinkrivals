@@ -6,7 +6,7 @@ priority: critical
 parallel_group: final
 depends_on: [VO3-001, VO3-002, VO3-003, VO3-004, VO3-005, VO3-006]
 owner: Visual QA Agent + Closeout Agent
-last_updated: 2026-05-13
+last_updated: 2026-05-14
 ---
 
 # VO3-007 - Final Art QA and Closeout
@@ -45,6 +45,37 @@ flutter build apk --debug
 Then perform emulator and physical-device visual QA according to `VO2-008`.
 
 ## Recovery QA Notes
+
+2026-05-14 projection-environment update:
+
+- Fresh court/environment graphics are active via
+  `dink_rivals/assets/images/environment/classic/projection_environment_v1.png`.
+- The asset was generated from `dink_rivals/tool/generate_projection_environment.py`
+  using the same 979x1606 control points as `CourtProjection`.
+- `ClassicEnvironmentComponent` renders that asset with the `CourtLayoutSystem`
+  cover-fit transform; `CourtComponent` keeps gameplay boundaries procedural;
+  `NetComponent` now uses the current palette.
+- `ParkBackdrop` now uses the same projection environment asset for menu,
+  settings, roster, and end-match widget surfaces instead of the retired
+  `park_background_overhaul.png`.
+- Emulator evidence exists under
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/` for menu,
+  settings, roster, game/serve, pause, debug rally, debug drive/lob/smash
+  gesture states, point aftermath, and shot feedback.
+- End-match widget evidence exists at
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/end-match-widget.png`
+  from the refreshed Phase 5G golden path; it was not reached through a live
+  emulator full-match flow.
+- The bottom shot-chip layout was corrected so `LOB/SMASH` stays inside the
+  portrait canvas.
+- `flutter analyze`, focused projection/backdrop/control tests,
+  `flutter test --update-goldens test\phase5g_visual_golden_test.dart`,
+  full `flutter test` (`202` tests), `flutter build apk --debug`, and emulator
+  install passed.
+- Final closeout remains `review` because physical Pixel evidence,
+  human visual signoff, and any required live emulator end-match flow evidence
+  are not complete. The debug drive/lob/smash captures are evidence of
+  gesture/animation rendering, not final human shot-acceptance signoff.
 
 2026-05-13 current-state update:
 

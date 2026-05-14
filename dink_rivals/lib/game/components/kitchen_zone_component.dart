@@ -10,9 +10,7 @@ class KitchenZoneComponent extends Component {
 
   @override
   void render(Canvas canvas) {
-    // The current visual pass uses a graybox court guide. Kitchen boundaries
-    // are drawn by CourtComponent so projection and line readability can be
-    // tuned before final environment art exists.
+    // Kitchen boundaries are drawn by CourtComponent so their screen position
+    // stays tied to the gameplay projection rather than the background art.
   }
-
 }

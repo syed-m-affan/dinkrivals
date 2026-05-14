@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:dink_rivals/game/components/touch_controls_component.dart';
 import 'package:dink_rivals/game/models/swing_intent.dart';
 import 'package:dink_rivals/game/systems/input_system.dart';
 import 'package:dink_rivals/game/systems/touch_input_controller.dart';
@@ -182,6 +183,17 @@ void main() {
           layout.serveCenter + Vector2(layout.serveRadius - 1, 0),
         ),
         isTrue);
+  });
+
+  test('shot indicator chips stay inside narrow portrait canvas', () {
+    final rects = TouchControlsComponent.shotIndicatorRectsForTesting(
+      size: Vector2(448, 997),
+    );
+
+    for (final rect in rects) {
+      expect(rect.left, greaterThanOrEqualTo(8));
+      expect(rect.right, lessThanOrEqualTo(440));
+    }
   });
 
   test('expired swing command creates miss recovery window', () {

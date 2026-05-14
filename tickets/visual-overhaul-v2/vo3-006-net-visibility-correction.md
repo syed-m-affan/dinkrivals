@@ -6,7 +6,7 @@ priority: critical
 parallel_group: environment-art
 depends_on: [VO2-001, VO2-005]
 owner: Runtime Integration Agent + Visual QA Agent
-last_updated: 2026-05-13
+last_updated: 2026-05-14
 ---
 
 # VO3-006 - Net and Visibility Correction
@@ -45,6 +45,16 @@ Capture evidence for at least serve, rally, dink, lob, and smash states.
 
 ## Recovery Notes
 
+- 2026-05-14: Net treatment has moved out of graybox styling. `NetComponent`
+  remains procedural and sorted at `Court.netY`, but now uses the current
+  palette rail/mesh/post colors over the projection-locked environment asset.
+  Emulator game/debug-rally evidence under
+  `docs/art/visual-overhaul/evidence/projection-environment-v1/` shows the net,
+  ball, player, opponent, court lines, and kitchen highlight remain readable.
+  Additional debug drive/lob/smash gesture captures and point/shot-feedback
+  captures exist in the same folder. Review remains open for physical-device
+  evidence, human visual signoff, and any missing live-flow shot states such as
+  dink if final QA requires the full shot matrix.
 - 2026-05-13: Current-state update. The current runtime uses a procedural
   graybox net instead of the previous painted `layer_net.png` path. Net
   visibility should be judged with projection and boundary readability during

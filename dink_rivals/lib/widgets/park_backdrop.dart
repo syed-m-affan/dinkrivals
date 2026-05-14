@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../game/config/environment_layout.dart';
+
 class ParkBackdrop extends StatelessWidget {
   const ParkBackdrop({
     required this.child,
@@ -24,7 +26,7 @@ class ParkBackdrop extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: const AssetImage(
-                  'assets/images/environment/classic/park_background_overhaul.png',
+                  'assets/images/${EnvironmentLayout.projectionEnvironmentAsset}',
                 ),
                 fit: BoxFit.cover,
                 alignment: alignment,

@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,11 +10,16 @@ import 'package:dink_rivals/game/components/classic_environment_component.dart';
 import 'package:dink_rivals/game/config/court_constants.dart';
 import 'package:dink_rivals/game/config/environment_layout.dart';
 import 'package:dink_rivals/game/systems/court_layout_system.dart';
+import 'package:dink_rivals/game/util/court_projection.dart';
 
 void main() {
   test('classic environment prop placements are unique and bounded', () {
     final props = EnvironmentLayout.classicProps;
 
+    expect(
+      EnvironmentLayout.projectionEnvironmentAsset,
+      'environment/classic/projection_environment_v1.png',
+    );
     expect(EnvironmentLayout.generatedBackgroundLayers, hasLength(3));
     expect(
       EnvironmentLayout.generatedBackgroundLayers.map((layer) => layer.id),
@@ -42,6 +51,44 @@ void main() {
       props.map((prop) => prop.assetPath),
       everyElement(startsWith('environment/classic/')),
     );
+  });
+
+  test('projection environment asset is checked in at projection size',
+      () async {
+    final file = File(
+      'assets/images/${EnvironmentLayout.projectionEnvironmentAsset}',
+    );
+
+    expect(file.existsSync(), isTrue);
+
+    final codec = await ui.instantiateImageCodec(await file.readAsBytes());
+    final frame = await codec.getNextFrame();
+    addTearDown(frame.image.dispose);
+
+    expect(frame.image.width, CourtProjection.imageWidth.toInt());
+    expect(frame.image.height, CourtProjection.imageHeight.toInt());
+  });
+
+  test('projection environment manifest mirrors CourtProjection constants', () {
+    final file = File(
+      '../docs/art/visual-overhaul/projection-environment-v1-manifest.json',
+    );
+
+    expect(file.existsSync(), isTrue);
+
+    final manifest =
+        jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+    final projection = manifest['projection'] as Map<String, dynamic>;
+
+    expect(manifest['asset'],
+        'assets/images/environment/classic/projection_environment_v1.png');
+    expect(projection['paintedFarY'], CourtProjection.paintedFarY);
+    expect(projection['paintedNetY'], CourtProjection.paintedNetY);
+    expect(projection['paintedNearY'], CourtProjection.paintedNearY);
+    expect(projection['paintedFarLeftX'], CourtProjection.paintedFarLeftX);
+    expect(projection['paintedFarRightX'], CourtProjection.paintedFarRightX);
+    expect(projection['paintedNearLeftX'], CourtProjection.paintedNearLeftX);
+    expect(projection['paintedNearRightX'], CourtProjection.paintedNearRightX);
   });
 
   test('classic environment includes required prop categories', () {

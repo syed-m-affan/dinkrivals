@@ -1,0 +1,24 @@
+{
+  "asset": "assets/images/environment/classic/projection_environment_v1.png",
+  "size": [
+    979,
+    1606
+  ],
+  "projection": {
+    "paintedFarY": 430.0,
+    "paintedNetY": 638.0,
+    "paintedNearY": 1180.0,
+    "paintedFarLeftX": 228.0,
+    "paintedFarRightX": 751.0,
+    "paintedNearLeftX": 112.0,
+    "paintedNearRightX": 867.0,
+    "perspectiveExponent": 1.85
+  },
+  "inspiration": [
+    "docs/art/concepts/concept-screenshot.png",
+    "docs/art/concepts/concept-sheet.png",
+    "docs/art/visual-overhaul/contact-sheets/vo3-player-skill-runtime-sheets.png",
+    "docs/art/visual-overhaul/contact-sheets/vo3-opponent-skill-runtime-sheets.png"
+  ],
+  "style": "chunky arcade pixel-art court, blue surface, green park apron, dark fence and signage band"
+}

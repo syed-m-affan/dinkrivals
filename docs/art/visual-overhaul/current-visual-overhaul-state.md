@@ -1,11 +1,12 @@
 # Current Visual Overhaul State
 
-Last updated: 2026-05-13
+Last updated: 2026-05-14
 
 ## Summary
 
-The current runtime visual direction is a graybox projection sandbox, not the
-painted park-court environment described by earlier VO2 closeout notes.
+The current runtime visual direction is a projection-locked park court built
+from the graybox control points, not the retired painted park-court environment
+described by earlier VO2 closeout notes.
 
 Player and opponent sprite production is complete for the current pass. The
 accepted runtime sheets and gameplay animations were created with the sprite
@@ -21,26 +22,35 @@ Ball rendering and VFX are mostly acceptable for now. They are not the active
 blocker unless a projection, boundary, or environment change exposes a new
 readability problem.
 
-The active blocker is visual space and camera clarity:
+The active visual-overhaul sequence has advanced from graybox into the first
+runtime environment rebuild:
 
-1. Finalize perspective/projection.
-2. Finalize the gameplay boundaries and how they are drawn.
-3. Rebuild the environment graphics from scratch around the locked projection
-   and boundary read.
+1. Projection/perspective uses the locked `CourtProjection` control points.
+2. Gameplay boundaries remain procedural in `CourtComponent` so line placement
+   cannot drift from gameplay.
+3. The environment art is generated from those control points by
+   `dink_rivals/tool/generate_projection_environment.py` into
+   `dink_rivals/assets/images/environment/classic/projection_environment_v1.png`.
 
 ## Current Runtime Render Path
 
 The game screen intentionally does not use the old painted court environment.
 
-- `ClassicEnvironmentComponent` fills the full game canvas with a flat gray
-  background.
-- `CourtComponent` draws only projected court guide lines: the outer gameplay
-  boundary, kitchen/service guide lines, center service lines, and a small net
-  center mark.
-- `NetComponent` draws a procedural projected net in the same graybox language.
+- `ClassicEnvironmentComponent` draws `projection_environment_v1.png` with the
+  same cover-fit transform used by `CourtLayoutSystem`.
+- `ParkBackdrop` now uses the same projection environment asset for menu,
+  settings, roster, and end-match widget surfaces, replacing the retired
+  `park_background_overhaul.png` backdrop on those screens.
+- `CourtComponent` draws projected gameplay boundaries above the bitmap: the
+  outer boundary, kitchen/service guide lines, center service lines, and a small
+  net center mark. The debug rally screen also highlights both kitchen zones.
+- `NetComponent` draws a procedural projected net with the current palette so
+  balls and players still sort correctly around the net plane.
 - `KitchenZoneComponent` does not draw a separate filled kitchen tint.
 - Player, opponent, ball, shadows, paddles, controls, scoreboard, rally strip,
-  and VFX remain live on top of the gray projection sandbox.
+  and VFX remain live on top of the projection-locked environment.
+- `TouchControlsComponent` keeps the shot-indicator chips inside the portrait
+  canvas so `LOB/SMASH` no longer clips at the right edge.
 
 The older environment layer assets may still exist in the repo as historical
 art/evidence, but they are not the current environment target. Do not treat
@@ -51,14 +61,15 @@ closeout evidence for the current visual pass.
 ## Why The Environment Was Reset
 
 The previous generated/painted environment work did not give a consistent
-enough theme and made projection problems harder to see. The gray background is
-intentional: it removes art noise so the court trapezoid, scale, z lift,
-boundary placement, net read, and actor depth can be finalized before any new
-environment assets are built.
+enough theme and made projection problems harder to see. The gray background
+was intentional while the court trapezoid, scale, z lift, boundary placement,
+net read, and actor depth were being finalized.
 
-Environment art should be generated or painted only after the projection and
-boundary language are stable. New art must be fitted to the locked guide, not
-used to hide unresolved projection issues.
+The new environment art is fitted to the locked guide instead of used to hide
+projection issues. It uses the concept screenshot and concept sheet for
+composition cues: blue court, green park apron, dark fence/signage band, side
+benches, planters, lamps, and chunky arcade pixel styling compatible with the
+accepted player/opponent sprites.
 
 ## Character State
 
@@ -87,8 +98,8 @@ Ball/VFX are mostly done for now:
 
 ### 1. Projection And Perspective
 
-Finalize `CourtProjection` and `CourtLayoutSystem` while the gray background is
-active. Acceptance should focus on:
+Current runtime uses the locked `CourtProjection` and `CourtLayoutSystem`.
+Regression acceptance should focus on:
 
 - Court trapezoid reads as 3/4, not flat top-down or side-view.
 - Near/far player scale feels coherent.
@@ -98,7 +109,7 @@ active. Acceptance should focus on:
 
 ### 2. Gameplay Boundaries
 
-Finalize the graybox guide before environment art:
+Gameplay boundaries are now a procedural overlay above the environment asset:
 
 - Decide exactly which lines must be visible during play: outer boundary,
   baselines, sidelines, kitchens, service center lines, and net plane.
@@ -111,15 +122,23 @@ Finalize the graybox guide before environment art:
 
 ### 3. Environment Rebuild
 
-After projection and boundaries are stable, create the environment from scratch:
+The first rebuilt environment asset is active:
 
-- Use a consistent theme and palette across court, ground, fence, props, and
-  UI-adjacent visual elements.
-- Build assets to the finalized projection guide.
-- Avoid reintroducing the previous painted-court mismatch or incompatible
-  signage/net assumptions.
-- Capture serve, rally, shot, point, pause, menu, roster, settings, and
-  end-match evidence after the new environment lands.
+- Runtime asset:
+  `dink_rivals/assets/images/environment/classic/projection_environment_v1.png`
+- Generator:
+  `dink_rivals/tool/generate_projection_environment.py`
+- Manifest:
+  `docs/art/visual-overhaul/projection-environment-v1-manifest.json`
+
+Emulator evidence under
+`docs/art/visual-overhaul/evidence/projection-environment-v1/` now includes
+menu, settings, roster, game/serve, pause, debug rally, debug drive/lob/smash
+gesture captures, point aftermath, shot feedback, and a widget-rendered
+end-match capture with the new environment active. Remaining closeout evidence
+still needs physical-device evidence and human visual signoff. If the final QA
+requires end-match evidence reached through a live emulator match, that remains
+separate from the widget-rendered end-match capture.
 
 ## Documentation Status
 

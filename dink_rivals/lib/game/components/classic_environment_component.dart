@@ -1,7 +1,10 @@
+import 'dart:ui' as ui;
+
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/environment_layout.dart';
+import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 
 class ClassicEnvironmentComponent extends Component {
@@ -10,11 +13,44 @@ class ClassicEnvironmentComponent extends Component {
   }
 
   final DinkRivalsGame game;
-  final Paint _backgroundPaint = Paint()..color = const Color(0xFF777777);
+  final Paint _fallbackPaint = Paint()..color = VisualPalette.environmentGround;
+  ui.Image? _background;
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    _background = await game.images.load(
+      EnvironmentLayout.projectionEnvironmentAsset,
+    );
+  }
 
   @override
   void render(Canvas canvas) {
-    canvas.drawRect(Offset.zero & game.size.toSize(), _backgroundPaint);
+    final background = _background;
+    if (background == null) {
+      canvas.drawRect(Offset.zero & game.size.toSize(), _fallbackPaint);
+      return;
+    }
+
+    final imageOffset = game.courtLayoutSystem.imageOffset;
+    final imageScale = game.courtLayoutSystem.imageScale;
+    final dst = Rect.fromLTWH(
+      imageOffset.x,
+      imageOffset.y,
+      background.width * imageScale,
+      background.height * imageScale,
+    );
+    canvas.drawImageRect(
+      background,
+      Rect.fromLTWH(
+        0,
+        0,
+        background.width.toDouble(),
+        background.height.toDouble(),
+      ),
+      dst,
+      Paint()..filterQuality = FilterQuality.none,
+    );
   }
 }
 

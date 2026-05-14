@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
+import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 
 /// Projected net sorted at the net plane.
@@ -12,18 +13,22 @@ class NetComponent extends Component {
 
   final DinkRivalsGame game;
   final Paint _meshFillPaint = Paint()
-    ..color = const Color(0x33202020)
+    ..color = VisualPalette.netMesh.withValues(alpha: 0.26)
     ..style = PaintingStyle.fill;
   final Paint _meshPaint = Paint()
-    ..color = const Color(0x66202020)
+    ..color = VisualPalette.netMeshStroke.withValues(alpha: 0.72)
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
   final Paint _tapePaint = Paint()
-    ..color = const Color(0xDD202020)
+    ..color = VisualPalette.netRail
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
   final Paint _postPaint = Paint()
-    ..color = const Color(0xCC202020)
+    ..color = VisualPalette.netPost
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+  final Paint _railShadowPaint = Paint()
+    ..color = VisualPalette.netRailShadow.withValues(alpha: 0.66)
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
 
@@ -32,6 +37,7 @@ class NetComponent extends Component {
     _meshPaint.strokeWidth = game.logicalToScreen(0.45).clamp(0.7, 1.3);
     _tapePaint.strokeWidth = game.logicalToScreen(1.25).clamp(2.0, 3.4);
     _postPaint.strokeWidth = game.logicalToScreen(1.0).clamp(1.4, 2.6);
+    _railShadowPaint.strokeWidth = _tapePaint.strokeWidth;
 
     final bottomLeft = game.courtToWorld(Vector2(Court.left, Court.netY));
     final bottomRight = game.courtToWorld(Vector2(Court.right, Court.netY));
@@ -78,6 +84,12 @@ class NetComponent extends Component {
       canvas.drawLine(left.toOffset(), right.toOffset(), _meshPaint);
     }
 
+    final railShadowOffset = Offset(0, game.logicalToScreen(0.7));
+    canvas.drawLine(
+      topLeft.toOffset() + railShadowOffset,
+      topRight.toOffset() + railShadowOffset,
+      _railShadowPaint,
+    );
     canvas.drawLine(topLeft.toOffset(), topRight.toOffset(), _tapePaint);
   }
 }

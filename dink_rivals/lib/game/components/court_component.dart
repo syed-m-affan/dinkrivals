@@ -2,11 +2,12 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
+import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 
-/// Minimal graybox court guide. Gameplay coordinates still use the same
-/// projection as the painted environment, but rendering is reduced to boundary
-/// lines so perspective and play-space issues are visible without art noise.
+/// Projection-locked court line pass. The court fill and environment live in
+/// the background asset while gameplay boundaries stay procedural so they
+/// cannot drift from `CourtProjection`.
 class CourtComponent extends Component {
   CourtComponent(this.game);
 
@@ -15,22 +16,22 @@ class CourtComponent extends Component {
 
   final DinkRivalsGame game;
   final Paint _outerLinePaint = Paint()
-    ..color = const Color(0xFFE3E3E3)
+    ..color = VisualPalette.courtLineWhite
     ..style = PaintingStyle.stroke
     ..strokeJoin = StrokeJoin.round;
   final Paint _innerLinePaint = Paint()
-    ..color = const Color(0xB8E3E3E3)
+    ..color = VisualPalette.courtLineWhite.withValues(alpha: 0.74)
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
   final Paint _debugKitchenFillPaint = Paint()
-    ..color = const Color(0x336BD8E9)
+    ..color = VisualPalette.kitchenOverlay
     ..style = PaintingStyle.fill;
   final Paint _debugKitchenEdgePaint = Paint()
-    ..color = const Color(0x6687F2FF)
+    ..color = VisualPalette.kitchenEdge
     ..style = PaintingStyle.stroke
     ..strokeJoin = StrokeJoin.round;
   final Paint _centerMarkPaint = Paint()
-    ..color = const Color(0x80FFFFFF)
+    ..color = VisualPalette.courtLineWhite.withValues(alpha: 0.82)
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
 
