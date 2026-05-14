@@ -36,6 +36,7 @@ environment assets that:
 | Automated verification passes | `flutter analyze`, `flutter test` (`206` tests), normal `flutter build apk --debug`, normal emulator install | Covered |
 | QA launch hooks are guarded | `DINK_RIVALS_INITIAL_ROUTE`, `DINK_RIVALS_QA_END_MATCH`, and `DINK_RIVALS_QA_END_MATCH_WINNER` are build-time Dart defines; normal no-define build was rebuilt and reinstalled after QA captures | Covered |
 | Physical Pixel validation | `flutter devices` shows only `emulator-5554`, Windows, Chrome, and Edge | Not covered |
+| Physical and human signoff checklist | `docs/art/visual-overhaul/projection-environment-v1-signoff-checklist.md` | Ready to run |
 | Human art-direction signoff | Requires subjective review against concept screenshot/sheet | Not covered |
 | Organic full-match end screen | Seeded live app evidence exists; a naturally reached full-match end screen was not captured | Not covered if required |
 
@@ -49,6 +50,10 @@ are not asset-generation or code tasks in the current environment:
 - Human visual signoff against the concept screenshot/sheet is external.
 - If final QA requires a naturally completed match rather than seeded live-app
   end-match evidence, that organic end screen capture is still separate.
+
+The remaining gates are prepared in
+`docs/art/visual-overhaul/projection-environment-v1-signoff-checklist.md` for a
+reviewer with a physical Pixel device.
 
 Because those gates remain open, VO3 final closeout should stay in `review`
 instead of `done`.

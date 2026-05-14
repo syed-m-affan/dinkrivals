@@ -143,6 +143,8 @@ and a widget-rendered end-match capture with the new environment active.
 `end-match-live.png` is also captured from the running emulator through the QA
 launch seed. The completion audit is
 `docs/art/visual-overhaul/projection-environment-v1-completion-audit.md`.
+The physical-device and human review checklist is
+`docs/art/visual-overhaul/projection-environment-v1-signoff-checklist.md`.
 Remaining closeout evidence still needs physical-device evidence and human
 visual signoff. If the final QA requires end-match evidence reached through an
 organic full match, that remains separate from the seeded live-app capture.

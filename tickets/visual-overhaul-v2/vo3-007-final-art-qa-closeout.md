@@ -90,6 +90,8 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
   gesture/animation rendering, not final human shot-acceptance signoff.
 - Completion audit:
   `docs/art/visual-overhaul/projection-environment-v1-completion-audit.md`.
+- Physical-device and human signoff checklist:
+  `docs/art/visual-overhaul/projection-environment-v1-signoff-checklist.md`.
 
 2026-05-13 current-state update:
 
