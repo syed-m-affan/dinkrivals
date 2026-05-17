@@ -1757,7 +1757,9 @@ debug rally, court select, tournament match flow, or end-match/reward screens;
 route-level widget tests now guard the exact allowed and blocked surfaces. A
 first-match flow test also asserts Quick Match reaches the tutorial/game path
 without any banner, interstitial, or rewarded ad call before gameplay. The
-`google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
+product-rules guard test scans app source/config for forbidden energy, stamina,
+gems, gacha, loot box, premium-currency, heart-gate, and pay-to-win mechanics.
+The `google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
 opt-in `AdMobAdService` uses Google's Android test app ID plus test
 banner/rewarded/interstitial ad unit IDs by default and preserves
 `FakeAdService` as the default non-AdMob path. Production AdMob release

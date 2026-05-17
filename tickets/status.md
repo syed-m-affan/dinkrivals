@@ -62,6 +62,11 @@ Release offline QA update (2026-05-17): The current release APK completed
 without crash or ANR signatures on `emulator-5554`; physical Pixel QA remains
 blocked by device availability.
 
+Product-rules guard update (2026-05-17): `product_rules_guard_test.dart` now
+scans app source/config for forbidden energy, stamina, gems, gacha, loot box,
+premium-currency, heart-gate, and pay-to-win mechanics so the MVP
+non-negotiables fail in CI if accidentally introduced.
+
 ## Dashboard
 
 | ID | Phase | Status | Priority | Parallel | Depends on | Summary |
