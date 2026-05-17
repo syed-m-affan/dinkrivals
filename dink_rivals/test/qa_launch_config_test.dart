@@ -97,13 +97,17 @@ void main() {
     );
   });
 
-  test('Android package id stays pending until Play package is confirmed', () {
+  test('Android application id defaults to QA id and can be overridden', () {
     final gradle = File('android/app/build.gradle.kts').readAsStringSync();
 
-    expect(gradle, contains('applicationId = "com.example.dink_rivals"'));
+    expect(gradle,
+        contains('val defaultApplicationId = "com.example.dink_rivals"'));
+    expect(gradle, contains('DINK_RIVALS_APPLICATION_ID'));
+    expect(gradle, contains('applicationId = androidApplicationId'));
+    expect(gradle, contains('namespace = "com.example.dink_rivals"'));
     expect(
       gradle,
-      contains('final Play package name is confirmed'),
+      contains('applicationId is the install/Play identity'),
     );
   });
 }

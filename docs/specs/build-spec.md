@@ -1764,9 +1764,10 @@ Android release-signing scaffolding reads a gitignored
 `android/key.properties` file or
 `DINK_RIVALS_UPLOAD_*` environment variables and falls back to debug signing
 when credentials are absent; setup notes live in `docs/release-signing.md`. The
-Android launcher label is `Dink Rivals`; the package id/namespace remain
-`com.example.dink_rivals` until the final Play Console package name is
-confirmed. A repeatable Android QA harness now lives at
+Android launcher label is `Dink Rivals`; the default package id/namespace
+remain `com.example.dink_rivals` for QA installs, and release builds can
+override `applicationId` with `DINK_RIVALS_APPLICATION_ID` once the final Play
+Console package name is confirmed. A repeatable Android QA harness now lives at
 `dink_rivals/tool/android_qa.ps1`; it can install/launch the debug APK, force
 best-effort offline mode, and monitor logcat for crash/ANR signatures during
 the 15-minute stability window. The harness completed a 900-second offline

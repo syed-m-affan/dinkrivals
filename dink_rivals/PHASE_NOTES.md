@@ -412,9 +412,10 @@ Re-run the previous QA checklists with attention to:
   regular defeated-rival path. Existing saves that already unlocked Rally Queen
   continue to keep that unlock.
 - Updated the Android launcher label from `dink_rivals` to `Dink Rivals` for
-  device QA and release-candidate polish. The Android package id/namespace
-  intentionally remain `com.example.dink_rivals` until the final Play Console
-  package name is confirmed.
+  device QA and release-candidate polish. The default Android package
+  id/namespace remain `com.example.dink_rivals` for stable QA installs, but
+  release builds can now override `applicationId` with
+  `DINK_RIVALS_APPLICATION_ID` while keeping the source namespace fixed.
 - Added release-candidate guard coverage for the Android launcher label, Google
   AdMob test app ID, release-signing fallback, and temporary package ID. The
   default debug APK rebuilt, installed, and launched on `emulator-5554`.
@@ -433,4 +434,4 @@ Re-run the previous QA checklists with attention to:
   `docs/admob-release.md`.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
-  credentials/final application id validation, and physical Pixel QA.
+  credentials/final application id value validation, and physical Pixel QA.

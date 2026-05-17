@@ -35,6 +35,14 @@ val adMobApplicationIdOverride = (
 val adMobApplicationId = adMobApplicationIdOverride.ifEmpty {
     googleTestAdMobAppId
 }
+val defaultApplicationId = "com.example.dink_rivals"
+val applicationIdOverride = (
+    (project.findProperty("DINK_RIVALS_APPLICATION_ID") as String?)
+        ?: System.getenv("DINK_RIVALS_APPLICATION_ID")
+).orEmpty().trim()
+val androidApplicationId = applicationIdOverride.ifEmpty {
+    defaultApplicationId
+}
 
 android {
     namespace = "com.example.dink_rivals"
@@ -51,8 +59,8 @@ android {
     }
 
     defaultConfig {
-        // Keep the QA install identity stable until the final Play package name is confirmed.
-        applicationId = "com.example.dink_rivals"
+        // The source namespace/R class stays fixed; applicationId is the install/Play identity.
+        applicationId = androidApplicationId
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
