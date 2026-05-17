@@ -1749,7 +1749,9 @@ handling, per-character runtime sprites, release signing, and physical Pixel
 closeout remain open. A repeatable Android QA harness now lives at
 `dink_rivals/tool/android_qa.ps1`; it can install/launch the debug APK, force
 best-effort offline mode, and monitor logcat for crash/ANR signatures during
-the 15-minute stability window.
+the 15-minute stability window. The harness completed a 900-second offline
+emulator run on `emulator-5554` against the default debug APK without crash or
+ANR signatures; physical Pixel closeout remains open.
 
 ## Android QA Checklist
 

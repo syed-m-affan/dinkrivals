@@ -389,7 +389,9 @@ Re-run the previous QA checklists with attention to:
   signatures, and restore networking after the run. Use
   `.\tool\android_qa.ps1 -DeviceId <id> -Offline -DurationSeconds 900` from
   `dink_rivals/` for the spec's 15-minute offline/stability pass.
+- Ran the 15-minute offline/stability harness on `emulator-5554` against the
+  default debug APK. Result: completed the 900-second logcat monitoring window
+  without crash or ANR signatures, then restored device network transports.
 - Remaining Phase 7 release-candidate gaps include Rally Queen-specific
   challenge handling, per-character runtime sprite sheets, production AdMob
-  unit IDs/consent flow, production signing, full offline/15-minute
-  stability execution, and physical Pixel QA.
+  unit IDs/consent flow, production signing, and physical Pixel QA.
