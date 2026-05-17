@@ -1738,10 +1738,13 @@ approved. A guarded fake banner placeholder is mounted only on the main menu,
 settings, roster, and trophy room screens, stays hidden before the first
 completed match, and is feature-flagged off with
 `DINK_RIVALS_SHOW_AD_PLACEHOLDERS=false`; no banner is mounted on gameplay,
-debug rally, tournament match flow, or end-match/reward screens. Real AdMob
-SDK/test ad integration, Rally Queen-specific challenge handling,
-per-character runtime sprites, release signing, offline checks, 15-minute
-stability QA, and physical Pixel closeout remain open.
+debug rally, tournament match flow, or end-match/reward screens. The
+`google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
+opt-in `AdMobAdService` uses Google's Android test app ID plus test
+rewarded/interstitial ad unit IDs and preserves `FakeAdService` as the default.
+Production AdMob IDs/consent/banner widgets, Rally Queen-specific challenge
+handling, per-character runtime sprites, release signing, offline checks,
+15-minute stability QA, and physical Pixel closeout remain open.
 
 ## Android QA Checklist
 

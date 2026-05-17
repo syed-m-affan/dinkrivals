@@ -64,28 +64,31 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     if (eligible && ready) {
       setState(() => _showingInterstitial = true);
       placement.recordInterstitialShown();
-      await adService.maybeShowInterstitial(placement: 'return_to_menu');
+      final didShowInterstitial =
+          await adService.maybeShowInterstitial(placement: 'return_to_menu');
       if (!mounted) {
         return;
       }
-      await showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          key: const Key('fake-interstitial-dialog'),
-          title: const Text('FAKE INTERSTITIAL'),
-          content: const Text('Test ad break after match.'),
-          actions: [
-            TextButton(
-              key: const Key('fake-interstitial-close'),
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('CLOSE'),
-            ),
-          ],
-        ),
-      );
-      if (!mounted) {
-        return;
+      if (didShowInterstitial && !adService.usesNativeInterstitialUi) {
+        await showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            key: const Key('fake-interstitial-dialog'),
+            title: const Text('FAKE INTERSTITIAL'),
+            content: const Text('Test ad break after match.'),
+            actions: [
+              TextButton(
+                key: const Key('fake-interstitial-close'),
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('CLOSE'),
+              ),
+            ],
+          ),
+        );
+        if (!mounted) {
+          return;
+        }
       }
       setState(() => _showingInterstitial = false);
     }

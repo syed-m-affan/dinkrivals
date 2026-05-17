@@ -52,6 +52,11 @@ Future<Widget> _wrap(
   );
 }
 
+class _NativeInterstitialFakeService extends FakeAdService {
+  @override
+  bool get usesNativeInterstitialUi => true;
+}
+
 class _StubScreen extends StatelessWidget {
   const _StubScreen(this.label);
   final String label;
@@ -194,6 +199,32 @@ void main() {
 
     expect(find.text('stub-menu'), findsOneWidget);
     expect(adPlacement.matchesSinceInterstitial, 0);
+  });
+
+  testWidgets('native interstitial service skips fake dialog', (tester) async {
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 7;
+    game.matchState.opponentScore = 3;
+    final adService = _NativeInterstitialFakeService();
+    final adPlacement = AdPlacementSystem()
+      ..advance(AdPlacementSystem.minTimeBetweenInterstitials);
+    for (var i = 0; i < 3; i++) {
+      adPlacement.recordMatchCompleted();
+    }
+
+    await tester.pumpWidget(
+      await _wrap(game, adService: adService, adPlacement: adPlacement),
+    );
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('end-match-menu')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('end-match-menu')));
+    await tester.pumpAndSettle();
+
+    expect(adService.interstitialShows, 1);
+    expect(find.byKey(const Key('fake-interstitial-dialog')), findsNothing);
+    expect(find.text('stub-menu'), findsOneWidget);
   });
 
   testWidgets('rematch does not trigger interstitial', (tester) async {

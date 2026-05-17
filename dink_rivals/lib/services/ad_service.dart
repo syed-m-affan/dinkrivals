@@ -7,6 +7,7 @@ abstract class AdService {
   Future<bool> isInterstitialReady();
   Future<bool> maybeShowInterstitial({required String placement});
   bool get adsRemoved;
+  bool get usesNativeInterstitialUi;
 }
 
 class FakeAdService implements AdService {
@@ -32,6 +33,9 @@ class FakeAdService implements AdService {
 
   @override
   bool get adsRemoved => false;
+
+  @override
+  bool get usesNativeInterstitialUi => false;
 
   @override
   Future<void> initialize() async {

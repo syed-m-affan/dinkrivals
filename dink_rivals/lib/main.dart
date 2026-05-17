@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/ad_provider.dart';
 import 'app/app.dart';
+import 'app/app_config.dart';
+import 'services/admob_ad_service.dart';
 import 'services/audio_service.dart';
 import 'services/haptics_service.dart';
 import 'services/save_service.dart';
@@ -19,7 +21,7 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final saveService = SaveService(prefs);
   final initialSaveData = await saveService.load();
-  final adService = FakeAdService();
+  final adService = AppConfig.useAdMob ? AdMobAdService() : FakeAdService();
   await adService.initialize();
   final audioService = FlameAudioService(
     soundEnabled: () => initialSaveData.soundEnabled,

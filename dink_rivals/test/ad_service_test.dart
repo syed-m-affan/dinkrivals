@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/app/ad_provider.dart';
+import 'package:dink_rivals/services/admob_ad_service.dart';
 
 void main() {
   test('fake service initializes without side effects', () async {
@@ -13,6 +14,7 @@ void main() {
     expect(service.rewardedShows, 0);
     expect(service.interstitialShows, 0);
     expect(service.adsRemoved, isFalse);
+    expect(service.usesNativeInterstitialUi, isFalse);
   });
 
   test('fake rewarded readiness and show are deterministic', () async {
@@ -51,5 +53,20 @@ void main() {
 
     expect(read, same(service));
     expect((read as FakeAdService).initialized, isTrue);
+  });
+
+  test('AdMob service exposes Google test ad IDs', () {
+    expect(
+      AdMobAdService.androidTestAppId,
+      'ca-app-pub-3940256099942544~3347511713',
+    );
+    expect(
+      AdMobAdService.androidTestRewardedAdUnitId,
+      'ca-app-pub-3940256099942544/5224354917',
+    );
+    expect(
+      AdMobAdService.androidTestInterstitialAdUnitId,
+      'ca-app-pub-3940256099942544/1033173712',
+    );
   });
 }
