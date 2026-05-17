@@ -1,10 +1,8 @@
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
-import '../config/debug_flags.dart';
 import '../config/tuning_constants.dart';
 import '../dink_rivals_game.dart';
 import '../config/visual_palette.dart';
@@ -15,12 +13,6 @@ class RacketComponent extends Component {
   RacketComponent(this.game);
 
   final DinkRivalsGame game;
-  final Paint _playerPaint = Paint()
-    ..color = VisualPalette.playerPaddle
-    ..strokeCap = StrokeCap.round;
-  final Paint _opponentPaint = Paint()
-    ..color = VisualPalette.opponentPaddle
-    ..strokeCap = StrokeCap.round;
   final Paint _swingLanePaint = Paint()
     ..color = VisualPalette.uiAccent.withValues(alpha: 0.30)
     ..strokeCap = StrokeCap.round;
@@ -28,18 +20,19 @@ class RacketComponent extends Component {
     ..color = VisualPalette.textPrimary.withValues(alpha: 0.76)
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
-  ui.Image? _playerPaddle;
-  ui.Image? _opponentPaddle;
-
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    if (!DebugFlags.useSprites) {
-      return;
-    }
-    _playerPaddle = await game.images.load('sprites/paddle_player.png');
-    _opponentPaddle = await game.images.load('sprites/paddle_opponent.png');
-  }
+  final Paint _aimArrowFillPaint = Paint()
+    ..color = VisualPalette.feedbackFault
+    ..style = PaintingStyle.fill;
+  final Paint _aimArrowHighlightPaint = Paint()
+    ..color = VisualPalette.textPrimary.withValues(alpha: 0.86)
+    ..style = PaintingStyle.fill;
+  final Paint _aimArrowOutlinePaint = Paint()
+    ..color = VisualPalette.textInverse.withValues(alpha: 0.92)
+    ..style = PaintingStyle.stroke
+    ..strokeJoin = StrokeJoin.miter;
+  final Paint _aimArrowShadowPaint = Paint()
+    ..color = VisualPalette.projectedShadow.withValues(alpha: 0.36)
+    ..style = PaintingStyle.fill;
 
   @override
   void update(double dt) {
@@ -49,20 +42,7 @@ class RacketComponent extends Component {
   @override
   void render(Canvas canvas) {
     _drawPlayerSwingLane(canvas);
-    _drawRacket(
-      canvas,
-      game.player.state.position,
-      game.playerRacketPosition(),
-      _playerPaint,
-      _playerPaddle,
-    );
-    _drawRacket(
-      canvas,
-      game.opponent.state.position,
-      game.opponentRacketPosition(),
-      _opponentPaint,
-      _opponentPaddle,
-    );
+    _drawAimIndicator(canvas);
   }
 
   void _drawPlayerSwingLane(Canvas canvas) {
@@ -153,46 +133,42 @@ class RacketComponent extends Component {
     }
   }
 
-  void _drawRacket(
-    Canvas canvas,
-    Vector2 courtStart,
-    Vector2 courtEnd,
-    Paint paint,
-    ui.Image? sprite,
-  ) {
-    final start = game.courtToWorld(courtStart, Tuning.racketContactZ);
-    final end = game.courtToWorld(courtEnd, Tuning.racketContactZ);
-    final direction = end - start;
-    if (direction.length < 1) {
+  void _drawAimIndicator(Canvas canvas) {
+    final player = game.player.state.position;
+    final markerCourtPosition = game.playerRacketPosition();
+    final start = game.courtToWorld(player, Tuning.racketContactZ);
+    final marker =
+        game.courtToWorld(markerCourtPosition, Tuning.racketContactZ);
+    final screenDirection = marker - start;
+    if (screenDirection.length < 1) {
       return;
     }
-    final depthScale = game.visualScaleForY(courtStart.y);
-    if (DebugFlags.useSprites && sprite != null) {
-      final width = game.logicalToScreen(14 * depthScale);
-      final height = game.logicalToScreen(25 * depthScale);
-      final angle = math.atan2(direction.y, direction.x) + math.pi / 2;
-      canvas.save();
-      canvas.translate(end.x, end.y);
-      canvas.rotate(angle);
-      canvas.drawImageRect(
-        sprite,
-        Rect.fromLTWH(0, 0, sprite.width.toDouble(), sprite.height.toDouble()),
-        Rect.fromCenter(
-          center: Offset.zero,
-          width: width,
-          height: height,
-        ),
-        Paint()..filterQuality = FilterQuality.none,
-      );
-      canvas.restore();
-      return;
-    }
-    paint.strokeWidth = game.logicalToScreen(2.6 * depthScale);
-    canvas.drawLine(start.toOffset(), end.toOffset(), paint);
-    canvas.drawCircle(
-      end.toOffset(),
-      game.logicalToScreen(4.6 * depthScale),
-      paint,
+    final depthScale = game.visualScaleForY(player.y);
+    final size = game.logicalToScreen(8.5 * depthScale).clamp(7.0, 14.0);
+    final angle =
+        math.atan2(screenDirection.y, screenDirection.x) + math.pi / 2;
+    _aimArrowOutlinePaint.strokeWidth = (size * 0.16).clamp(1.0, 2.0);
+
+    canvas.save();
+    canvas.translate(marker.x, marker.y);
+    canvas.rotate(angle);
+    final arrow = Path()
+      ..moveTo(0, -size)
+      ..lineTo(size * 0.74, -size * 0.18)
+      ..lineTo(size * 0.30, -size * 0.18)
+      ..lineTo(size * 0.30, size * 0.82)
+      ..lineTo(-size * 0.30, size * 0.82)
+      ..lineTo(-size * 0.30, -size * 0.18)
+      ..lineTo(-size * 0.74, -size * 0.18)
+      ..close();
+    canvas.drawPath(
+        arrow.shift(Offset(size * 0.12, size * 0.16)), _aimArrowShadowPaint);
+    canvas.drawPath(arrow, _aimArrowFillPaint);
+    canvas.drawPath(arrow, _aimArrowOutlinePaint);
+    canvas.drawRect(
+      Rect.fromLTWH(-size * 0.14, -size * 0.58, size * 0.28, size * 0.62),
+      _aimArrowHighlightPaint,
     );
+    canvas.restore();
   }
 }

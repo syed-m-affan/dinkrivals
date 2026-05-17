@@ -4,9 +4,8 @@ import 'package:flame/components.dart';
 
 import '../util/court_projection.dart';
 
-/// Maps the graybox `CourtProjection` image-space guide onto actual screen
-/// pixels using a cover-fit transform. Future environment art should use this
-/// same transform once the projection and gameplay boundaries are locked.
+/// Maps the painted `CourtProjection` image-space guide onto actual screen
+/// pixels using the same transform as the environment background.
 class CourtLayoutSystem {
   double _imageScale = 1;
   Vector2 _imageOffset = Vector2.zero();

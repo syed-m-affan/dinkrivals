@@ -45,8 +45,8 @@ void main() {
     final farWidth = farRight.x - farLeft.x;
     final nearWidth = nearRight.x - nearLeft.x;
 
-    expect(nearWidth / farWidth, greaterThan(1.35));
-    expect(nearWidth / farWidth, lessThan(1.60));
+    expect(nearWidth / farWidth, greaterThan(2.0));
+    expect(nearWidth / farWidth, lessThan(2.25));
   });
 
   test('painted court occupies portrait-friendly aspect inside bg image', () {
@@ -98,6 +98,20 @@ void main() {
 
     expect(net.y, closeTo(CourtProjection.paintedNetY, 0.1));
     expect(net.y, lessThan((far.y + near.y) / 2));
+  });
+
+  test('kitchen lines align to projection environment v2 paint', () {
+    final opponentKitchen = CourtProjection.courtToScreen(
+      Vector2(Court.width / 2, Court.opponentKitchenTopY),
+      0,
+    );
+    final playerKitchen = CourtProjection.courtToScreen(
+      Vector2(Court.width / 2, Court.playerKitchenBottomY),
+      0,
+    );
+
+    expect(opponentKitchen.y, closeTo(564, 1));
+    expect(playerKitchen.y, closeTo(722, 1));
   });
 
   test('z lift increases toward the near court', () {

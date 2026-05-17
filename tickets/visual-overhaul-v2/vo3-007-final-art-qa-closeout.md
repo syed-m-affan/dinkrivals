@@ -48,7 +48,21 @@ Then perform emulator and physical-device visual QA according to `VO2-008`.
 
 2026-05-14 projection-environment update:
 
-- Fresh court/environment graphics are active via
+- `projection_environment_v1.png` failed human visual QA as too
+  flat/procedural.
+- The active replacement candidate is
+  `dink_rivals/assets/images/environment/classic/projection_environment_v2.png`,
+  archived at
+  `docs/art/visual-overhaul/projection-environment-v2-candidate.png`.
+- `CourtProjection` is retuned to the v2 painting's far-baseline, net-plane,
+  and near-baseline anchors so gameplay boundaries use the candidate's
+  perspective.
+- `NetComponent` renders a taller projected net to match the v2 painting.
+- New v2 Pixel install and human visual QA are pending.
+
+2026-05-14 projection-environment v1 notes:
+
+- Fresh court/environment graphics were active via
   `dink_rivals/assets/images/environment/classic/projection_environment_v1.png`.
 - The asset was generated from `dink_rivals/tool/generate_projection_environment.py`
   using the same 979x1606 control points as `CourtProjection`.

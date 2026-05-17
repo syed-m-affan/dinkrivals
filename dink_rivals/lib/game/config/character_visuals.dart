@@ -28,50 +28,60 @@ class CharacterVisualDefinition {
 }
 
 class CharacterVisuals {
+  static const rookie = CharacterVisualDefinition(
+    id: 'rookie',
+    displayName: 'Rookie',
+    portraitAsset: 'assets/images/ui/portrait_rookie.png',
+    primaryColor: VisualPalette.rookiePrimary,
+    secondaryColor: VisualPalette.rookieSecondary,
+    paddleAsset: 'assets/images/sprites/paddle_player.png',
+    paddleColor: VisualPalette.playerPaddle,
+    silhouetteNotes: 'Balanced compact stance with a simple cap-like top read.',
+  );
+
+  static const rallyQueen = CharacterVisualDefinition(
+    id: 'rally_queen',
+    displayName: 'Rally Queen',
+    portraitAsset: 'assets/images/ui/portrait_rally_queen.png',
+    primaryColor: VisualPalette.rallyQueenPrimary,
+    secondaryColor: VisualPalette.rallyQueenSecondary,
+    paddleAsset: 'assets/images/sprites/paddle_player.png',
+    paddleColor: VisualPalette.rallyQueenPrimary,
+    silhouetteNotes:
+        'Upright control-player posture with a brighter headband read.',
+  );
+
+  static const veteran = CharacterVisualDefinition(
+    id: 'veteran',
+    displayName: 'Veteran',
+    portraitAsset: 'assets/images/ui/portrait_veteran.png',
+    primaryColor: VisualPalette.veteranPrimary,
+    secondaryColor: VisualPalette.veteranSecondary,
+    paddleAsset: 'assets/images/sprites/paddle_player.png',
+    paddleColor: VisualPalette.veteranPrimary,
+    silhouetteNotes:
+        'Steady defensive stance with broader shoulders and muted kit.',
+  );
+
+  static const showman = CharacterVisualDefinition(
+    id: 'showman',
+    displayName: 'Showman',
+    portraitAsset: 'assets/images/ui/portrait_showman.png',
+    primaryColor: VisualPalette.showmanPrimary,
+    secondaryColor: VisualPalette.showmanSecondary,
+    paddleAsset: 'assets/images/sprites/paddle_opponent.png',
+    paddleColor: VisualPalette.showmanPrimary,
+    silhouetteNotes: 'Louder attacking pose with high-contrast accents.',
+  );
+
+  static const gameplayPlayer = rallyQueen;
+  static const gameplayOpponent = rookie;
+
   static const List<CharacterVisualDefinition> mvpRoster = [
-    CharacterVisualDefinition(
-      id: 'rookie',
-      displayName: 'Rookie',
-      portraitAsset: 'assets/images/ui/portrait_rookie.png',
-      primaryColor: VisualPalette.rookiePrimary,
-      secondaryColor: VisualPalette.rookieSecondary,
-      paddleAsset: 'assets/images/sprites/paddle_player.png',
-      paddleColor: VisualPalette.playerPaddle,
-      silhouetteNotes:
-          'Balanced compact stance with a simple cap-like top read.',
-    ),
-    CharacterVisualDefinition(
-      id: 'rally_queen',
-      displayName: 'Rally Queen',
-      portraitAsset: 'assets/images/ui/portrait_rally_queen.png',
-      primaryColor: VisualPalette.rallyQueenPrimary,
-      secondaryColor: VisualPalette.rallyQueenSecondary,
-      paddleAsset: 'assets/images/sprites/paddle_player.png',
-      paddleColor: VisualPalette.rallyQueenPrimary,
-      silhouetteNotes:
-          'Upright control-player posture with a brighter headband read.',
-    ),
-    CharacterVisualDefinition(
-      id: 'veteran',
-      displayName: 'Veteran',
-      portraitAsset: 'assets/images/ui/portrait_veteran.png',
-      primaryColor: VisualPalette.veteranPrimary,
-      secondaryColor: VisualPalette.veteranSecondary,
-      paddleAsset: 'assets/images/sprites/paddle_player.png',
-      paddleColor: VisualPalette.veteranPrimary,
-      silhouetteNotes:
-          'Steady defensive stance with broader shoulders and muted kit.',
-    ),
-    CharacterVisualDefinition(
-      id: 'showman',
-      displayName: 'Showman',
-      portraitAsset: 'assets/images/ui/portrait_showman.png',
-      primaryColor: VisualPalette.showmanPrimary,
-      secondaryColor: VisualPalette.showmanSecondary,
-      paddleAsset: 'assets/images/sprites/paddle_opponent.png',
-      paddleColor: VisualPalette.showmanPrimary,
-      silhouetteNotes: 'Louder attacking pose with high-contrast accents.',
-    ),
+    rookie,
+    rallyQueen,
+    veteran,
+    showman,
   ];
 
   static CharacterVisualDefinition byDisplayName(String displayName) {

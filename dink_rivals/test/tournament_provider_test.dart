@@ -1,0 +1,63 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:dink_rivals/app/tournament_provider.dart';
+import 'package:dink_rivals/game/models/save_data.dart';
+import 'package:dink_rivals/game/models/tournament_state.dart';
+import 'package:dink_rivals/services/save_service.dart';
+
+void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
+  test('championship records a persisted Classic Cup trophy', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final saveService = SaveService(prefs);
+    final container = ProviderContainer(
+      overrides: [
+        saveServiceProvider.overrideWithValue(saveService),
+        saveDataProvider.overrideWith(
+          () => SaveDataNotifier(saveService, const SaveData()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final tournament = container.read(tournamentProvider.notifier);
+    tournament.startClassicCup();
+    await tournament.recordCompletedMatch(playerScore: 11, opponentScore: 7);
+    await tournament.recordCompletedMatch(playerScore: 11, opponentScore: 9);
+
+    expect(
+        container.read(tournamentProvider).status, TournamentStatus.champion);
+    expect(container.read(saveDataProvider).classicCupWins, 1);
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.classicCupTrophyUnlocked, isTrue);
+  });
+
+  test('semifinal loss does not unlock trophy', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final saveService = SaveService(prefs);
+    final container = ProviderContainer(
+      overrides: [
+        saveServiceProvider.overrideWithValue(saveService),
+        saveDataProvider.overrideWith(
+          () => SaveDataNotifier(saveService, const SaveData()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final tournament = container.read(tournamentProvider.notifier);
+    tournament.startClassicCup();
+    await tournament.recordCompletedMatch(playerScore: 8, opponentScore: 11);
+
+    expect(
+      container.read(tournamentProvider).status,
+      TournamentStatus.eliminated,
+    );
+    expect(container.read(saveDataProvider).classicCupWins, 0);
+  });
+}

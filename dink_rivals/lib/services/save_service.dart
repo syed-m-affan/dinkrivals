@@ -12,6 +12,7 @@ class SaveService {
   static const _hapticsKey = 'haptics_enabled';
   static const _controlModeKey = 'gameplay_control_mode';
   static const _matchesKey = 'matches_completed';
+  static const _classicCupWinsKey = 'classic_cup_wins';
   static const _currentVersion = 1;
 
   final SharedPreferences _prefs;
@@ -23,6 +24,7 @@ class SaveService {
       gameplayControlMode: gameplayControlModeFromStorageValue(
           _prefs.getString(_controlModeKey)),
       matchesCompleted: _prefs.getInt(_matchesKey) ?? 0,
+      classicCupWins: _prefs.getInt(_classicCupWinsKey) ?? 0,
     );
   }
 
@@ -35,6 +37,7 @@ class SaveService {
       data.gameplayControlMode.storageValue,
     );
     await _prefs.setInt(_matchesKey, data.matchesCompleted);
+    await _prefs.setInt(_classicCupWinsKey, data.classicCupWins);
   }
 }
 
@@ -69,6 +72,11 @@ class SaveDataNotifier extends Notifier<SaveData> {
 
   Future<void> recordMatchCompleted() async {
     state = state.copyWith(matchesCompleted: state.matchesCompleted + 1);
+    await _service.save(state);
+  }
+
+  Future<void> recordClassicCupWin() async {
+    state = state.copyWith(classicCupWins: state.classicCupWins + 1);
     await _service.save(state);
   }
 }

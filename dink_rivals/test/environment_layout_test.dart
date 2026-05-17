@@ -18,7 +18,7 @@ void main() {
 
     expect(
       EnvironmentLayout.projectionEnvironmentAsset,
-      'environment/classic/projection_environment_v1.png',
+      'environment/classic/projection_environment_v2.png',
     );
     expect(EnvironmentLayout.generatedBackgroundLayers, hasLength(3));
     expect(
@@ -71,7 +71,7 @@ void main() {
 
   test('projection environment manifest mirrors CourtProjection constants', () {
     final file = File(
-      '../docs/art/visual-overhaul/projection-environment-v1-manifest.json',
+      '../docs/art/visual-overhaul/projection-environment-v2-manifest.json',
     );
 
     expect(file.existsSync(), isTrue);
@@ -81,12 +81,14 @@ void main() {
     final projection = manifest['projection'] as Map<String, dynamic>;
 
     expect(manifest['asset'],
-        'assets/images/environment/classic/projection_environment_v1.png');
+        'assets/images/environment/classic/projection_environment_v2.png');
     expect(projection['paintedFarY'], CourtProjection.paintedFarY);
     expect(projection['paintedNetY'], CourtProjection.paintedNetY);
     expect(projection['paintedNearY'], CourtProjection.paintedNearY);
     expect(projection['paintedFarLeftX'], CourtProjection.paintedFarLeftX);
     expect(projection['paintedFarRightX'], CourtProjection.paintedFarRightX);
+    expect(projection['paintedNetLeftX'], CourtProjection.paintedNetLeftX);
+    expect(projection['paintedNetRightX'], CourtProjection.paintedNetRightX);
     expect(projection['paintedNearLeftX'], CourtProjection.paintedNearLeftX);
     expect(projection['paintedNearRightX'], CourtProjection.paintedNearRightX);
   });

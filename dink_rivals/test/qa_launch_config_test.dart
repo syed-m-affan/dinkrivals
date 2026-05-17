@@ -14,6 +14,16 @@ void main() {
     );
   });
 
+  test('QA launch router accepts the tournament route', () {
+    final router = createAppRouter(initialLocation: AppRoutes.tournament);
+    addTearDown(router.dispose);
+
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      AppRoutes.tournament,
+    );
+  });
+
   test('QA launch router falls back to menu for unknown routes', () {
     final router = createAppRouter(initialLocation: '/not-a-real-route');
     addTearDown(router.dispose);

@@ -81,6 +81,7 @@ class ShotSystem {
     Vector2? swipeDirection,
     SwingIntent? intent,
     double power = 0,
+    double swingSpeed = 0,
   }) {
     if (_cooldownFor(hitter.side) > 0) {
       return false;
@@ -88,12 +89,9 @@ class ShotSystem {
     if (_isOwnLiveBallBeforeBounce(ball, hitter)) {
       return false;
     }
-    final contact = intent == null
-        ? _contactProfile(
-            ball: ball,
-            hitter: hitter,
-            racketPosition: racketPosition,
-          )
+    final shotIntent = intent ?? SwingIntent.dink;
+    final contact = shotIntent == SwingIntent.dink
+        ? _dinkBodyContactProfile(ball: ball, hitter: hitter)
         : _committedSwingContactProfile(
             ball: ball,
             hitter: hitter,
@@ -103,19 +101,17 @@ class ShotSystem {
     if (!contact.didHit) {
       return false;
     }
-    if (intent == SwingIntent.smash &&
-        contact.heightBand != BallHeightBand.smashable) {
-      return false;
-    }
 
-    final shotIntent = intent ?? SwingIntent.dink;
-    final shotPower = intent == null ? 0.16 : power;
+    final swingPower = _powerFromSwing(swingSpeed);
+    final shotPower = intent == null
+        ? math.max(0.16, swingPower * 0.6)
+        : math.max(power, swingPower);
     final shotType = _shotTypeForIntent(shotIntent, contact);
     _applyProfiledShot(
       ball: ball,
       hitterSide: hitter.side,
       shotType: shotType,
-      aimDirection: intent == null
+      aimDirection: shotIntent == SwingIntent.dink
           ? aimDirection
           : _committedSwingAim(
               ball: ball,
@@ -249,7 +245,7 @@ class ShotSystem {
     required ShotType shotType,
     Vector2? aim,
   }) {
-    if (!_isHittable(ball, hitter, aim)) {
+    if (!_isHittable(ball, hitter, shotType, aim)) {
       hitter.isSwinging = true;
       return false;
     }
@@ -325,6 +321,24 @@ class ShotSystem {
     if (canEmergencyBlock &&
         bodyDistance <= Tuning.emergencyBodyContactRadius) {
       return ContactProfile(ContactQuality.emergency, _heightBand(ball));
+    }
+    return ContactProfile(ContactQuality.miss, _heightBand(ball));
+  }
+
+  ContactProfile _dinkBodyContactProfile({
+    required BallState ball,
+    required PlayerState hitter,
+  }) {
+    final onHitterSide = hitter.side == PlayerSide.player
+        ? ball.y >= Court.netY
+        : ball.y <= Court.netY;
+    if (!onHitterSide || ball.z < 0 || ball.z > Tuning.playableBallMaxZ) {
+      return ContactProfile(ContactQuality.miss, _heightBand(ball));
+    }
+
+    final bodyDistance = Vector2(ball.x, ball.y).distanceTo(hitter.position);
+    if (bodyDistance <= Tuning.dinkBodyContactRadius) {
+      return ContactProfile(ContactQuality.clean, _heightBand(ball));
     }
     return ContactProfile(ContactQuality.miss, _heightBand(ball));
   }
@@ -508,40 +522,57 @@ class ShotSystem {
     required ContactQuality quality,
   }) {
     final aim = _sideCorrectedAim(aimDirection, side);
-    final lateralRange = switch (quality) {
-      ContactQuality.clean => Court.width * 0.42,
-      ContactQuality.forgiven => Court.width * 0.28,
-      ContactQuality.emergency => Court.width * 0.14,
+    final lateralScale = switch (quality) {
+      ContactQuality.clean => 1.0,
+      ContactQuality.forgiven => 0.62,
+      ContactQuality.emergency => 0.32,
       ContactQuality.miss => 0.0,
     };
     final jitter = quality == ContactQuality.clean
-        ? (_random.nextDouble() * 2 - 1) * 5
+        ? (_random.nextDouble() * 2 - 1) * 3
         : 0.0;
-    final x = (Court.width / 2 + aim.x * lateralRange + jitter)
+    final x = (Court.width / 2 +
+            aim.x * Tuning.aimLateralReach * lateralScale +
+            jitter)
         .clamp(Court.left + 12, Court.right - 12)
         .toDouble();
-    final depth = (-aim.y * side.sign).clamp(0.0, 1.0).toDouble();
+    final aimDepth = (-aim.y * side.sign).clamp(0.0, 1.0).toDouble();
+    // Power scales how far into the shot's depth band the ball reaches. A soft
+    // dink lands shallow even if aimed forward; a hard drive reaches the
+    // baseline. Aim still chooses the direction.
+    final depth = (aimDepth * (0.6 + power * 0.4)).clamp(0.0, 1.0).toDouble();
 
-    if (side == PlayerSide.player) {
-      return Vector2(
-        x,
-        switch (shotType) {
-          ShotType.dink || ShotType.block => _lerp(228, 204, power),
-          ShotType.drive || ShotType.serve => _lerp(148, 58, depth),
-          ShotType.lob => 132,
-          ShotType.smash => 36,
-        },
-      );
+    final isPlayer = side == PlayerSide.player;
+    // Y bands are anchored to court geometry so changing court size doesn't
+    // detune the targets. Sign-flipped for the two sides.
+    final dirSign = isPlayer ? -1.0 : 1.0;
+    final nearOverNet = Court.netY + dirSign * 4; // just past the net
+    final farKitchen = isPlayer
+        ? Court.opponentKitchenTopY + 6
+        : Court.playerKitchenBottomY - 6;
+    final midDeep = Court.netY + dirSign * 130.0;
+    final baseline = isPlayer ? Court.top + 30 : Court.bottom - 30;
+
+    final y = switch (shotType) {
+      ShotType.dink || ShotType.block => _lerp(nearOverNet, farKitchen, depth),
+      ShotType.drive || ShotType.serve => _lerp(farKitchen, baseline, depth),
+      // Lob lands behind the kitchen line but not at the baseline — "high
+      // but not far" — so the natural arc reaches the net at clearing height.
+      ShotType.lob => _lerp(farKitchen, midDeep, depth),
+      ShotType.smash =>
+        _lerp(nearOverNet, farKitchen, math.min(depth, 0.6) / 0.6 * 0.7),
+    };
+    return Vector2(x, y);
+  }
+
+  double _powerFromSwing(double swingSpeed) {
+    if (swingSpeed <= Tuning.minRacketContactSpeed) {
+      return 0;
     }
-    return Vector2(
-      x,
-      switch (shotType) {
-        ShotType.dink || ShotType.block => _lerp(252, 276, power),
-        ShotType.drive || ShotType.serve => _lerp(332, 422, depth),
-        ShotType.lob => 348,
-        ShotType.smash => 444,
-      },
-    );
+    return ((swingSpeed - Tuning.minRacketContactSpeed) /
+            (Tuning.firmContactSpeed - Tuning.minRacketContactSpeed))
+        .clamp(0.0, 1.0)
+        .toDouble();
   }
 
   Vector2 _sideCorrectedAim(Vector2 aimDirection, PlayerSide side) {
@@ -575,36 +606,30 @@ class ShotSystem {
       ShotType.smash => Tuning.smashInitialZ,
       ShotType.drive || ShotType.serve => Tuning.driveInitialZ,
     };
-    final rawTime = math.max(delta.length / speed, 0.2);
+    final rawTime = math.max(delta.length / speed, Tuning.minShotFlightTime);
     final time = switch (shotType) {
-      ShotType.dink || ShotType.block => rawTime.clamp(0.70, 1.02).toDouble(),
-      ShotType.lob => rawTime.clamp(0.92, 1.26).toDouble(),
-      ShotType.smash => rawTime.clamp(0.46, 0.70).toDouble(),
-      ShotType.drive || ShotType.serve => rawTime.clamp(0.58, 0.88).toDouble(),
+      ShotType.dink || ShotType.block => math.min(rawTime, 1.02),
+      ShotType.lob => math.min(rawTime, 1.26),
+      ShotType.smash => math.min(rawTime, 0.70),
+      ShotType.drive || ShotType.serve => math.min(rawTime, 1.00),
     };
     final gravity = Tuning.gravity * gravityScale;
     final solvedVz = (0 - ball.z + 0.5 * gravity * time * time) / time;
-    final netClearanceVz = _shouldAssistNetClearance(
-      shotType: shotType,
+    final naturalVz = math.max(minVz, solvedVz);
+    final requiredClearanceVz = _minimumVzForNetClearance(
       start: start,
       target: target,
-    )
-        ? _minimumVzForNetClearance(
-            start: start,
-            target: target,
-            startZ: ball.z,
-            time: time,
-            gravity: gravity,
-          )
-        : 0.0;
+      startZ: ball.z,
+      time: time,
+      gravity: gravity,
+    );
 
     ball.vx = delta.x / time;
     ball.vy = delta.y / time;
-    final launchVz = math.max(math.max(minVz, solvedVz), netClearanceVz);
-    ball.vz = _capTechniqueLimitedLift(
+    ball.vz = _resolveLaunchVz(
       shotType: shotType,
-      start: start,
-      launchVz: launchVz,
+      naturalVz: naturalVz,
+      requiredClearanceVz: requiredClearanceVz,
     );
     ball.arcGravityScale = gravityScale;
     ball.lastHitBy = hitterSide;
@@ -612,39 +637,32 @@ class ShotSystem {
     ball.isInPlay = true;
   }
 
-  bool _shouldAssistNetClearance({
+  double _resolveLaunchVz({
     required ShotType shotType,
-    required Vector2 start,
-    required Vector2 target,
+    required double naturalVz,
+    required double requiredClearanceVz,
   }) {
-    if ((target.y - start.y).abs() < 0.001) {
-      return false;
+    if (requiredClearanceVz <= 0) {
+      // Shot does not cross the net plane (e.g. wide target outside posts, or
+      // same-side mishit); skip clearance logic.
+      return naturalVz;
     }
-    final crossesNet = (start.y - Court.netY) * (target.y - Court.netY) < 0;
-    if (!crossesNet) {
-      return false;
+    if (shotType == ShotType.serve) {
+      // Serves always clear — deterministic launch experience.
+      return math.max(naturalVz, requiredClearanceVz);
     }
-    final distanceToNet = (start.y - Court.netY).abs();
-    return switch (shotType) {
-      ShotType.dink ||
-      ShotType.block =>
-        distanceToNet <= Tuning.reliableDinkNetDistance,
-      ShotType.drive || ShotType.serve => true,
-      ShotType.lob || ShotType.smash => false,
-    };
-  }
-
-  double _capTechniqueLimitedLift({
-    required ShotType shotType,
-    required Vector2 start,
-    required double launchVz,
-  }) {
-    final distanceToNet = (start.y - Court.netY).abs();
-    if ((shotType == ShotType.dink || shotType == ShotType.block) &&
-        distanceToNet > Tuning.reliableDinkNetDistance) {
-      return math.min(launchVz, Tuning.farDinkMaxLift);
+    if (shotType == ShotType.lob || shotType == ShotType.smash) {
+      // Lobs naturally arc high; smashes start above the net. No assist.
+      return naturalVz;
     }
-    return launchVz;
+    final shortfall = requiredClearanceVz - naturalVz;
+    if (shortfall <= 0) {
+      return naturalVz;
+    }
+    // Boost the launch by up to skillForgivenessMargin. If the shortfall
+    // exceeds that, the boost only partially closes it — the ball still hits
+    // the net. That preserves the skill check while letting tuned shots clear.
+    return naturalVz + math.min(shortfall, Tuning.skillForgivenessMargin);
   }
 
   double _minimumVzForNetClearance({
@@ -705,9 +723,17 @@ class ShotSystem {
     }
   }
 
-  bool _isHittable(BallState ball, PlayerState hitter, Vector2? aim) {
+  bool _isHittable(
+    BallState ball,
+    PlayerState hitter,
+    ShotType shotType,
+    Vector2? aim,
+  ) {
     if (_isOwnLiveBallBeforeBounce(ball, hitter)) {
       return false;
+    }
+    if (shotType == ShotType.dink) {
+      return _dinkBodyContactProfile(ball: ball, hitter: hitter).didHit;
     }
     final contact = _contactProfile(
       ball: ball,
@@ -724,27 +750,25 @@ class ShotSystem {
   }
 
   Vector2 _racketPositionFor(BallState ball, PlayerState hitter, Vector2? aim) {
-    final direction = _aimDirectionFor(ball, hitter, aim);
-    return hitter.position + direction * Tuning.racketReach;
+    // The racket sits between the hitter and where the ball actually is, so
+    // hittability matches what the player/AI is reaching for — independent of
+    // the strategic aim direction used for shot targeting.
+    final toBall = Vector2(ball.x, ball.y) - hitter.position;
+    final defaultY = hitter.side == PlayerSide.player ? -1.0 : 1.0;
+    final reachDir = toBall.length2 > 0.01
+        ? toBall.normalized()
+        : (aim != null && aim.length2 > 0.01
+            ? aim.normalized()
+            : Vector2(0, defaultY));
+    return hitter.position + reachDir * Tuning.racketReach;
   }
 
   Vector2 _aimDirectionFor(BallState ball, PlayerState hitter, Vector2? aim) {
     final defaultY = hitter.side == PlayerSide.player ? -1.0 : 1.0;
-    final direction = Vector2(aim?.x ?? 0, aim?.y ?? defaultY);
-    if (direction.length2 < 0.01) {
-      direction.setValues(0, defaultY);
+    if (aim != null && aim.length2 > 0.01) {
+      return aim.normalized();
     }
-    if (hitter.side == PlayerSide.opponent) {
-      direction.setValues(
-        ball.x - hitter.position.x,
-        ball.y - hitter.position.y,
-      );
-      if (direction.length2 < 0.01) {
-        direction.setValues(0, defaultY);
-      }
-    }
-    direction.normalize();
-    return direction;
+    return Vector2(0, defaultY);
   }
 
   double _distanceToSegment({

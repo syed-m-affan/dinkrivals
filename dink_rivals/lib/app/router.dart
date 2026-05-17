@@ -6,6 +6,7 @@ import '../screens/game_screen.dart';
 import '../screens/main_menu_screen.dart';
 import '../screens/roster_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/tournament_screen.dart';
 
 class AppRoutes {
   static const menu = '/';
@@ -14,6 +15,7 @@ class AppRoutes {
   static const settings = '/settings';
   static const roster = '/roster';
   static const endMatch = '/end-match';
+  static const tournament = '/tournament';
 }
 
 const String _qaInitialRoute = String.fromEnvironment(
@@ -48,6 +50,10 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.menu}) {
         builder: (context, state) => const RosterScreen(),
       ),
       GoRoute(
+        path: AppRoutes.tournament,
+        builder: (context, state) => const TournamentScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.endMatch,
         builder: (context, state) => const EndMatchScreen(),
       ),
@@ -62,6 +68,7 @@ String _normalizedInitialLocation(String initialLocation) {
     AppRoutes.debugRally ||
     AppRoutes.settings ||
     AppRoutes.roster ||
+    AppRoutes.tournament ||
     AppRoutes.endMatch =>
       initialLocation,
     _ => AppRoutes.menu,

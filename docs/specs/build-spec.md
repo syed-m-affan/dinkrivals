@@ -36,15 +36,16 @@ A fast retro arcade pickleball game where players move around a 3/4 court, dink 
 The player should understand the game in 30 seconds:
 
 * Move with left thumb.
-* Swing the racket with right thumb.
-* Racket contact, not shot buttons, creates returns.
-* Soft, angled contact creates dinks/blocks.
-* Fast, clean contact creates drives/smashes.
+* Aim with right thumb.
+* The right stick moves a small red aim indicator through the old paddle arc.
+* The aim indicator is visual-only and has no hitbox.
+* Dinks use the player body hitbox plus current aim direction.
+* Drive, lob, and smash use committed swing hitboxes.
 * Win rallies.
 * Win matches.
 * Unlock rivals/courts through achievements.
 
-Current control direction is locked around physical racket contact. Do not add separate dink, drive, lob, or smash buttons unless a future ticket explicitly reverses this decision after playtest evidence.
+Current control direction is locked around aim-assisted contact, not a visible gameplay paddle. Do not restore player/opponent paddle rendering or add separate dink, drive, lob, or smash buttons unless a future ticket explicitly reverses this decision after playtest evidence.
 
 ---
 
@@ -408,16 +409,16 @@ enum ShotType {
 
 | Shot  | Contact condition                         |      Arc |     Speed |   Risk | Purpose            |
 | ----- | ----------------------------------------- | -------: | --------: | -----: | ------------------ |
-| Dink  | Soft racket contact with open/short angle | Low/soft |      Slow |    Low | Drop into kitchen  |
+| Dink  | Player body contact + aim indicator       | Low/soft |      Slow |    Low | Drop into kitchen  |
 | Drive | Fast racket contact through the ball      |   Medium |      Fast | Medium | Push opponent deep |
 | Lob   | Upward/high-angle racket contact          |     High |      Slow | Medium | Beat net pressure  |
 | Smash | High ball + fast downward contact         | Downward | Very fast |   High | Finish point       |
 | Block | Low-swing-speed defensive contact         |      Low |      Slow |    Low | Emergency reset    |
 | Serve | First racket contact of point             |   Medium |    Medium |    Low | Begin rally        |
 
-### 8.3 Racket Contact Window
+### 8.3 Aim and Contact Window
 
-Use generous early contact windows. Mobile users should not feel robbed. The player racket is represented as a capsule from the player body to the racket tip, not as a tiny endpoint. A hit occurs automatically when the ball intersects this capsule at a hittable height and the racket or incoming ball has enough relative speed.
+Use generous early contact windows. Mobile users should not feel robbed. The right stick moves a visual aim indicator through the old paddle arc; it does not collide with the ball. Dinks occur when the ball intersects the player body contact radius at a hittable height. Drive, lob, smash, block, and legacy racket-contact paths continue to use the committed swing or racket capsule hitboxes.
 
 Initial tuning values:
 
@@ -427,16 +428,17 @@ perfectHitWindowRadius = 22.0
 maxAimAssistDegrees = 12.0
 racketReach = 42.0
 racketHitRadius = 13.0
+dinkBodyContactRadius = 34.0
 ```
 
 ### 8.4 Targeting
 
-Start with physical contact rather than explicit target buttons:
+Start with aim-assisted contact rather than explicit target buttons:
 
-* Racket angle changes the outgoing left/center/right direction.
-* Swing speed changes soft vs firm contact.
+* The right-stick aim indicator changes the outgoing dink direction.
+* Swipe intent and swing speed determine drive, lob, smash, and block behavior.
 * Incoming ball speed and angle affect the return.
-* Shot names are classifications of the contact result, not player-selected commands.
+* Shot names are classifications of the contact result, not separate shot buttons.
 
 Do not add separate shot buttons. If future playtesting rejects swing-contact controls, create a new ticket that explicitly changes this control contract before changing implementation.
 
@@ -447,10 +449,10 @@ Do not add separate shot buttons. If future playtesting rejects swing-contact co
 ### 9.1 Phase 0 Controls
 
 * Left virtual stick: move player.
-* Right virtual stick: swing racket left/right through the front 180-degree arc.
-* The right stick controls racket angle and swing velocity only; it does not select shot type.
-* Racket-ball contact automatically hits the ball.
-* Soft contact is classified as dink/block; firm contact is classified as drive.
+* Right virtual stick: move the red aim indicator through the front 180-degree arc.
+* The aim indicator has no hitbox.
+* Dink contact uses the player body hitbox.
+* Drive, lob, and smash use committed swing hitboxes.
 * Debug reset button: reset point.
 * No separate dink or drive buttons.
 
@@ -459,8 +461,9 @@ Do not add separate shot buttons. If future playtesting rejects swing-contact co
 Default:
 
 * Left thumb stick = movement.
-* Right thumb stick = racket swing.
-* Racket angle and swing speed determine dink, drive, lob, block, or smash.
+* Right thumb stick = aim indicator.
+* Dink uses body contact and current aim direction.
+* Swipe intent and swing speed determine drive, lob, block, or smash.
 * Smash happens when the ball is high and the player makes fast downward/forward contact.
 * UI must preserve screen space around the swing stick so touch input does not conflict with the reset button, score display, or feedback text.
 
@@ -471,10 +474,10 @@ Controls must feel good within the first 30 seconds.
 Requirements:
 
 * Movement responsive but not twitchy.
-* Racket contact forgiving.
-* Soft and firm contacts clearly different.
-* The hitbox feels like the full racket, not the player body or a confusing endpoint marker.
-* First/reset contact uses the same racket segment hitbox as rally contact.
+* Dink body contact is forgiving without feeling like a whole-court magnet.
+* The aim indicator is readable as direction feedback, not as a collision object.
+* Drive, lob, and smash contact remains distinct from passive dink contact.
+* First/reset dink contact uses the body hitbox; harder shots keep their committed swing hitboxes.
 * Player understands why they won/lost point.
 * Misses should feel fair, not random.
 
@@ -707,9 +710,9 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 * Ball as circle.
 * Ball shadow.
 * Basic movement.
-* Right-stick racket swing.
-* Automatic racket contact hits.
-* Soft/firm contact classification for debug dink/drive labels.
+* Right-stick aim indicator.
+* Automatic dink contact from the player body hitbox.
+* Committed swing contact for drive/lob/smash labels.
 * Simple bot that moves toward the ball.
 * Basic rally reset.
 * Debug overlay: FPS, phase label, ball x/y/z, rally count.
@@ -738,8 +741,8 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 9. Create ball component.
 10. Create shadow component.
 11. Implement left-stick movement.
-12. Implement right-stick racket swing through a front 180-degree arc.
-13. Implement automatic racket-contact hits.
+12. Implement right-stick aim indicator through a front 180-degree arc.
+13. Implement automatic dink body contact and committed swing hits.
 14. Implement basic ball pseudo-3D physics.
 15. Implement simple bot return logic.
 16. Add debug overlay.
@@ -749,12 +752,12 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 
 * Runs on local Android phone.
 * Player can move on bottom side of court.
-* Player hits by swinging the racket, without separate dink or drive buttons.
+* Player aims and returns the ball without separate dink or drive buttons.
 * Ball can cross net.
 * Opponent can return some shots.
 * Rally can last at least 10 seconds.
-* Soft and firm racket contacts feel different.
-* First/reset hit uses the racket hitbox, not the player body.
+* Dink and committed swing contacts feel different.
+* First/reset dink hit uses the player body hitbox, not the aim marker.
 * Ball height is visually readable.
 * Kitchen zones are visible.
 * No crash after 5 minutes.
@@ -765,9 +768,9 @@ Prove the core rally loop before art, menus, ads, progression, or monetization.
 * Launch app.
 * Confirm Phase 0 label appears.
 * Move player.
-* Swing racket with right stick.
+* Move the aim indicator with right stick.
 * Confirm no dink/drive shot buttons appear.
-* Confirm soft and firm contacts are understandable.
+* Confirm dink body contact and committed swing contacts are understandable.
 * Confirm ball shadow appears.
 * Confirm ball crosses net.
 * Confirm opponent moves.
@@ -792,7 +795,7 @@ Make the gray-box rally feel like arcade pickleball.
 * Scorekeeping.
 * First-to-7 match flow.
 * Serve/start point flow.
-* Racket-contact classification for dink, drive, lob, smash.
+* Aim/contact classification for dink, drive, lob, smash.
 * Feedback text: DINK, DRIVE, LOB, SMASH, FAULT.
 * Centralized tuning constants.
 
@@ -802,7 +805,7 @@ Make the gray-box rally feel like arcade pickleball.
 2. Add `ScoringSystem`.
 3. Add `MatchRulesSystem`.
 4. Add `ShotType` enum.
-5. Add racket-contact shot classification.
+5. Add aim/contact shot classification.
 6. Add contact window logic.
 7. Add kitchen volley rule.
 8. Add serve sequence.
@@ -820,7 +823,7 @@ Make the gray-box rally feel like arcade pickleball.
 * Out-of-bounds faults resolve according to server-only scoring.
 * Double-bounce faults resolve according to server-only scoring.
 * Kitchen volley fault works.
-* Dink, drive, lob, smash are produced by racket contact and feedback.
+* Dink, drive, lob, smash are produced by the aim/contact system and feedback.
 * No explicit shot buttons are added for dink, drive, lob, or smash.
 * Opponent can sustain beginner rallies.
 * Runs on local Android phone.
@@ -1211,9 +1214,9 @@ Upgrade the basic Phase 5 sprites into characters that match the concept roster 
 ## Acceptance Criteria
 
 * Characters are recognizable in both roster and gameplay views.
-* Swing timing feels better visually without changing racket-contact logic.
+* Swing timing feels better visually without changing committed swing contact logic.
 * Player and opponent remain distinct at small sizes.
-* No animation hides the paddle or ball contact moment.
+* No animation hides the aim indicator or ball contact moment.
 
 ---
 
@@ -1395,7 +1398,7 @@ Phase 5.1 is a correction pass, not a new feature phase. It targets the visible 
 
 ## Scope Exclusions
 
-* No scoring, match rules, ball physics, AI, serve mechanics, racket hitboxes, shot classification, ad behavior, monetization, unlocks, tournament work, real AdMob, IAP, energy systems, gems, gacha, or pay-to-win.
+* No scoring, match rules, ball physics, AI, serve mechanics, contact hitboxes, shot classification, ad behavior, monetization, unlocks, tournament work, real AdMob, IAP, energy systems, gems, gacha, or pay-to-win.
 * No new shot buttons.
 * No animated crowd, weather, day/night system, seasonal courts, or dynamic billboard system.
 * No menu/roster/settings redesign unless Phase 5.1A identifies a regression caused by gameplay-HUD changes.
@@ -1492,7 +1495,7 @@ Phase 5.2 inherits the following concrete gaps from Phase 5.1 closeout:
 * Court surface zoning: dark navy outer apron framing the court rectangle, light blue main playing surface, and a slightly muted kitchen tint that distinguishes the non-volley zone without dimming court lines.
 * Net upgrade: angled net rail aligned with the court perspective, vertical mesh strands, posts at each sideline end, and a coherent cast shadow that does not float across the kitchen. The stray rally-state indicator coin currently rendered over the net is relocated into the scoreboard serving indicator.
 * Backdrop signage band: rear-fence component that hosts a "DINK RIVALS" banner and an original secondary park sign such as "PARK COURTS" or "PICKLEBALL LEAGUE", sized so it does not crowd the opponent silhouette or scoreboard.
-* Character identity upgrade: visible head, cap, torso outfit, shorts/legs, shoes, and a hand/paddle cue readable from gameplay distance, with Rookie/Rally Queen/Veteran/Showman color identity matching the roster cards. The actual swinging paddle remains the existing `RacketComponent`; do not bake the gameplay paddle into character sprites.
+* Character identity upgrade: visible head, cap, torso outfit, shorts/legs, shoes, and a hand/paddle cue readable from gameplay distance, with Rookie/Rally Queen/Veteran/Showman color identity matching the roster cards. The actual gameplay indicator is the visual-only aim marker in `RacketComponent`; do not bake a colliding gameplay paddle into character sprites.
 * Scoreboard restyle: "YOU" / "RIVAL" vertical label panels with score numerals and a serving-side indicator dot, plus a top-left rally counter and last-shot readout ("RALLY: N" / "LAST SHOT: DINK").
 * Rally feedback callout: top-center banner that displays shot classification ("DINK!", "DRIVE!", "LOB!", "SMASH!", "FAULT!", "NICE SHOT") for a short interval after the event, replacing the floating mid-court rally number.
 * Ball trail and contact juice: short arcing trail behind the ball during flight, backed by a fixed-size sample buffer with no per-frame allocations, with refreshed hit spark on racket contact and bounce dust on ground contact, reusing or extending Phase 5E VFX components.
@@ -1505,7 +1508,7 @@ Phase 5.2 inherits the following concrete gaps from Phase 5.1 closeout:
 
 * The final Phase 5.2 rally screenshot must read at a glance as the same composition as `concept-screenshot.png`: a tilted court framed by park detail, with clear color zoning, visible backdrop signage, recognizable characters, a feedback callout, and a ball trail.
 * Kitchen, sidelines, baselines, and center line must remain brighter than the surrounding court fill and brighter than every environmental element.
-* Ball, ball shadow, and paddles must remain the highest-contrast small objects on screen.
+* Ball, ball shadow, and aim indicator must remain the highest-contrast small objects on screen.
 * No new element may obstruct the joystick, swing stick, serve button, score panels, pause button, or feedback banner hit regions.
 * Scoreboard, pause, and top-center feedback banner must share the safe-area band without overlap. The feedback banner sits below the scoreboard/pause row on notched and tall Android devices.
 * The 3/4 perspective must remain a true 3/4 read: the kitchen on each side must remain visible and meaningful, and the camera must not slip toward pure side-view or pure top-down.
@@ -1532,7 +1535,7 @@ Phase 5.2 is explicitly allowed to use AI-assisted visual generation, but ticket
 4. Introduce a court-zoning render pass that draws a dark apron frame, light playing surface, kitchen tint, and refreshed line treatment without changing logical court bounds.
 5. Rebuild the net component to draw posts, an angled top rail, vertical mesh strands, and a single cohesive shadow under the rail; relocate the stray serve/indicator coin to the scoreboard.
 6. Add a back-wall/signage component anchored behind the opponent baseline, with placement data in `config/` or `data/` rather than hardcoded pixels, and content for the "DINK RIVALS" banner plus an original secondary park sign.
-7. Expand character sprite sheets so each roster member ships visible head/cap/outfit/hand cue at gameplay scale; update visual config and roster portraits where needed while keeping the gameplay paddle in `RacketComponent`.
+7. Expand character sprite sheets so each roster member ships visible head/cap/outfit/hand cue at gameplay scale; update visual config and roster portraits where needed while keeping the visual-only aim indicator in `RacketComponent`.
 8. Restyle the scoreboard into "YOU" / "RIVAL" panels with a serving indicator, and add a rally counter and last-shot label fed by existing match/shot state without modifying scoring or rules.
 9. Move rally feedback into a top-center banner component that displays shot classification and fault/point callouts from existing events, and remove the floating mid-court rally number.
 10. Add or extend a ball-trail component that samples ball positions into a fixed-size buffer for a short window, and refresh hit-spark and bounce-dust VFX hookups from Phase 5E without obscuring the ball.
@@ -1561,13 +1564,13 @@ Phase 5.2 is explicitly allowed to use AI-assisted visual generation, but ticket
 
 ## Scope Exclusions
 
-* No scoring, match rules, ball physics, AI, serve mechanics, racket hitboxes, shot classification, ad behavior, monetization, unlocks, tournament work, real AdMob, IAP, energy systems, gems, gacha, or pay-to-win.
+* No scoring, match rules, ball physics, AI, serve mechanics, committed swing hitboxes, shot classification, ad behavior, monetization, unlocks, tournament work, real AdMob, IAP, energy systems, gems, gacha, or pay-to-win.
 * The power meter is a visual readout only. It must not gate, charge, cost, or boost shots in a way that changes scoring or physics outcomes.
-* No new shot buttons; the locked left-stick movement + right-stick swing + automatic racket contact contract remains.
+* No new shot buttons; the locked left-stick movement + right-stick aim indicator + automatic contact contract remains.
 * No animated crowd, weather, day/night system, seasonal courts, or dynamic billboards.
 * No menu/roster/settings redesign beyond what is needed to reflect the new HUD theme. New courts, characters, or unlocks remain out of scope.
 * No untracked third-party art, licensed assets, trademarked sign text, copied logos, or production assets derived from image search. New backdrop signage must use original or already-tracked art.
-* Do not bake the gameplay paddle into player/opponent sprites. Character sheets may include a hand/paddle cue for identity, but the swinging paddle and hit visualization remain `RacketComponent`.
+* Do not bake a gameplay paddle hitbox into player/opponent sprites. Character sheets may include a hand/paddle cue for identity, but the active directional visualization is the non-colliding aim indicator in `RacketComponent`.
 * `CourtProjection` and `CourtLayoutSystem` changes are allowed in Phase 5.2B only when accompanied by before/after screenshot evidence and a readability check on a real Android phone.
 
 ## Verification Commands
@@ -1830,7 +1833,7 @@ The first coding agent should only build **Phase 0**.
 
 Task:
 
-> Create a Flutter + Flame project that launches directly into a gray-box 3/4 pickleball court with a movable player, simple AI opponent, ball/shadow, left-stick movement, right-stick racket swing, automatic racket-contact hits, and debug overlay. It must run on a local Android device.
+> Create a Flutter + Flame project that launches directly into a gray-box 3/4 pickleball court with a movable player, simple AI opponent, ball/shadow, left-stick movement, right-stick aim indicator, automatic dink body contact, committed swing hits, and debug overlay. It must run on a local Android device.
 
 Do not build menus, ads, art, unlocks, or tournament mode yet.
 

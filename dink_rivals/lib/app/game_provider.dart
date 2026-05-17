@@ -16,7 +16,7 @@ const String _qaEndMatchWinner = String.fromEnvironment(
 );
 
 final dinkRivalsGameProvider = Provider<DinkRivalsGame>((ref) {
-  final saveData = ref.watch(saveDataProvider);
+  final saveData = ref.read(saveDataProvider);
   final game = DinkRivalsGame(
     audioService: ref.watch(audioServiceProvider),
     hapticsService: ref.watch(hapticsServiceProvider),

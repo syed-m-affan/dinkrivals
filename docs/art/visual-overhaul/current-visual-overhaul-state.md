@@ -1,6 +1,6 @@
 # Current Visual Overhaul State
 
-Last updated: 2026-05-14
+Last updated: 2026-05-17
 
 ## Summary
 
@@ -22,33 +22,44 @@ Ball rendering and VFX are mostly acceptable for now. They are not the active
 blocker unless a projection, boundary, or environment change exposes a new
 readability problem.
 
-The active visual-overhaul sequence has advanced from graybox into the first
-runtime environment rebuild:
+The active visual-overhaul sequence has advanced from graybox into a second
+runtime environment candidate:
 
 1. Projection/perspective uses the locked `CourtProjection` control points.
 2. Gameplay boundaries remain procedural in `CourtComponent` so line placement
    cannot drift from gameplay.
-3. The environment art is generated from those control points by
-   `dink_rivals/tool/generate_projection_environment.py` into
-   `dink_rivals/assets/images/environment/classic/projection_environment_v1.png`.
+3. The first generated environment,
+   `dink_rivals/assets/images/environment/classic/projection_environment_v1.png`,
+   failed human visual QA as too flat/procedural.
+4. The active candidate is now
+   `dink_rivals/assets/images/environment/classic/projection_environment_v2.png`.
+   `CourtProjection` has been retuned to the v2 painting's far-baseline,
+   net-plane, and near-baseline anchors so gameplay boundaries, actors, ball,
+   shadows, and the runtime net use the same court perspective.
 
 ## Current Runtime Render Path
 
 The game screen intentionally does not use the old painted court environment.
 
-- `ClassicEnvironmentComponent` draws `projection_environment_v1.png` with the
+- `ClassicEnvironmentComponent` draws `projection_environment_v2.png` with the
   same cover-fit transform used by `CourtLayoutSystem`.
 - `ParkBackdrop` now uses the same projection environment asset for menu,
   settings, roster, and end-match widget surfaces, replacing the retired
   `park_background_overhaul.png` backdrop on those screens.
 - `CourtComponent` draws projected gameplay boundaries above the bitmap: the
   outer boundary, kitchen/service guide lines, center service lines, and a small
-  net center mark. The debug rally screen also highlights both kitchen zones.
+  net center mark. Filled kitchen-zone highlighting is debug-only and appears
+  in the debug rally/overlay views, not normal gameplay.
 - `NetComponent` draws a procedural projected net with the current palette so
   balls and players still sort correctly around the net plane.
 - `KitchenZoneComponent` does not draw a separate filled kitchen tint.
-- Player, opponent, ball, shadows, paddles, controls, scoreboard, rally strip,
-  and VFX remain live on top of the projection-locked environment.
+- Player, opponent, ball, shadows, the visual-only aim indicator, controls,
+  scoreboard, rally strip, and VFX remain live on top of the projection-locked
+  environment.
+- The old visible player/opponent gameplay paddles are retired. The right stick
+  moves a small red pixel-art aim arrow through the former paddle arc; it has no
+  hitbox. Dinks use the player body hitbox plus the current aim direction, while
+  drive/lob/smash contact keeps the committed swing hitboxes.
 - `TouchControlsComponent` keeps the shot-indicator chips inside the portrait
   canvas so `LOB/SMASH` no longer clips at the right edge.
 - Build-time QA launch defines can open a seeded end-match state for visual
@@ -108,7 +119,8 @@ Regression acceptance should focus on:
 - Court trapezoid reads as 3/4, not flat top-down or side-view.
 - Near/far player scale feels coherent.
 - Ball z lift and shadow separation are understandable.
-- Racket and swing lane stay aligned with the same court-space math.
+- Aim indicator and committed swing lane stay aligned with the same court-space
+  math.
 - Controls and HUD do not hide important play-space edges on tall phones.
 
 ### 2. Gameplay Boundaries
@@ -126,14 +138,21 @@ Gameplay boundaries are now a procedural overlay above the environment asset:
 
 ### 3. Environment Rebuild
 
-The first rebuilt environment asset is active:
+The first rebuilt environment asset failed visual QA. The active replacement
+candidate is:
 
 - Runtime asset:
-  `dink_rivals/assets/images/environment/classic/projection_environment_v1.png`
-- Generator:
-  `dink_rivals/tool/generate_projection_environment.py`
+  `dink_rivals/assets/images/environment/classic/projection_environment_v2.png`
 - Manifest:
-  `docs/art/visual-overhaul/projection-environment-v1-manifest.json`
+  `docs/art/visual-overhaul/projection-environment-v2-manifest.json`
+- Candidate archive:
+  `docs/art/visual-overhaul/projection-environment-v2-candidate.png`
+
+The v2 candidate is based on the concept screenshot/sheet direction: painted
+pixel-art park court, blue playing surface, green foreground, dark fence and
+signage band, benches, planters, lamps, and sprite-compatible arcade texture.
+Runtime projection now follows the v2 painting instead of trying to force the
+painting onto the rejected v1 control points.
 
 Emulator evidence under
 `docs/art/visual-overhaul/evidence/projection-environment-v1/` now includes
@@ -143,11 +162,10 @@ and a widget-rendered end-match capture with the new environment active.
 `end-match-live.png` is also captured from the running emulator through the QA
 launch seed. The completion audit is
 `docs/art/visual-overhaul/projection-environment-v1-completion-audit.md`.
-The physical-device and human review checklist is
-`docs/art/visual-overhaul/projection-environment-v1-signoff-checklist.md`.
-Remaining closeout evidence still needs physical-device evidence and human
-visual signoff. If the final QA requires end-match evidence reached through an
-organic full match, that remains separate from the seeded live-app capture.
+That evidence is historical for v1 and no longer closes the environment art
+gate. New v2 evidence still needs physical-device capture and human visual
+signoff. If final QA requires end-match evidence reached through an organic
+full match, that remains separate from seeded live-app capture.
 
 ## Documentation Status
 

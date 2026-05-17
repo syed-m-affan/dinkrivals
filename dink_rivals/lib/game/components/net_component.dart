@@ -11,6 +11,9 @@ class NetComponent extends Component {
     priority = Court.netY.round();
   }
 
+  static const double _paintedNetHeightScale = 1.85;
+  static const double _paintedPostHeightScale = 1.9;
+
   final DinkRivalsGame game;
   final Paint _meshFillPaint = Paint()
     ..color = VisualPalette.netMesh.withValues(alpha: 0.26)
@@ -41,15 +44,21 @@ class NetComponent extends Component {
 
     final bottomLeft = game.courtToWorld(Vector2(Court.left, Court.netY));
     final bottomRight = game.courtToWorld(Vector2(Court.right, Court.netY));
-    final topLeft =
-        game.courtToWorld(Vector2(Court.left, Court.netY), Court.netHeight);
-    final topRight =
-        game.courtToWorld(Vector2(Court.right, Court.netY), Court.netHeight);
-    final postTopLeft =
-        game.courtToWorld(Vector2(Court.left, Court.netY), Court.netPostHeight);
+    final topLeft = game.courtToWorld(
+      Vector2(Court.left, Court.netY),
+      Court.netHeight * _paintedNetHeightScale,
+    );
+    final topRight = game.courtToWorld(
+      Vector2(Court.right, Court.netY),
+      Court.netHeight * _paintedNetHeightScale,
+    );
+    final postTopLeft = game.courtToWorld(
+      Vector2(Court.left, Court.netY),
+      Court.netPostHeight * _paintedPostHeightScale,
+    );
     final postTopRight = game.courtToWorld(
       Vector2(Court.right, Court.netY),
-      Court.netPostHeight,
+      Court.netPostHeight * _paintedPostHeightScale,
     );
 
     canvas.drawLine(

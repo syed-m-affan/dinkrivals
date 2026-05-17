@@ -2,8 +2,10 @@
 
 Date: 2026-05-14
 
-Use this checklist to close the remaining physical-device and human visual
-signoff gates for `projection_environment_v1.png`.
+`projection_environment_v1.png` failed human visual QA and is superseded by
+`projection_environment_v2.png`. Keep this checklist as historical reference
+for the v1 capture workflow only; do not use it to close the current
+environment gate.
 
 ## Build
 
@@ -27,12 +29,12 @@ For repeatable screenshot capture of the automatable states, use:
   -SmokeSeconds 300
 ```
 
-The script builds route-specific debug APKs for settings, roster, debug rally,
-shot states, and seeded end-match evidence, then rebuilds/reinstalls the normal
-no-define debug APK at the end and captures `normal-menu-after-qa.png`. It also
-writes `capture-notes.txt` with the device, Android version, commit hash, and
-smoke duration. Manual point or organic full-match captures are still separate
-if required by closeout.
+The script builds route-specific debug APKs for the game screen, settings,
+roster, debug rally, shot states, and seeded end-match evidence, then
+rebuilds/reinstalls the normal no-define debug APK at the end and captures
+`normal-menu-after-qa.png`. It also writes `capture-notes.txt` with the device,
+Android version, commit hash, and smoke duration. Manual point or organic
+full-match captures are still separate if required by closeout.
 
 ## Physical Pixel Evidence
 
@@ -47,9 +49,11 @@ Required normal-build screenshots:
 - `pause.png`
 - `point.png`
 
-The helper captures `menu.png`, `serve.png`, and `pause.png`. Capture
-`point.png` manually during play unless the organic full-match/end-state
-requirement is explicitly waived.
+The helper captures `menu.png` from the normal no-define build, then captures
+`serve.png` and `pause.png` from
+`--dart-define=DINK_RIVALS_INITIAL_ROUTE=/game`. Capture `point.png` manually
+during play unless the organic full-match/end-state requirement is explicitly
+waived.
 
 Required QA-route screenshots:
 

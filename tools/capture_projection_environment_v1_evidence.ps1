@@ -136,8 +136,7 @@ Write-CaptureNotes
 Build-Install-Launch @() 3
 Capture "menu"
 
-Tap-Relative 0.50 0.51
-Start-Sleep -Seconds 3
+Build-Install-Launch @("DINK_RIVALS_INITIAL_ROUTE=/game") 3
 Capture "serve"
 Tap-Relative 0.93 0.08
 Start-Sleep -Seconds 1

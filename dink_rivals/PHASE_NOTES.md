@@ -314,3 +314,20 @@ Re-run the previous QA checklists with attention to:
 - Runtime environment graphics are intentionally reset to a flat gray background. `ClassicEnvironmentComponent` draws the gray backdrop, `CourtComponent` draws projected gameplay boundaries, and `NetComponent` draws a procedural graybox net.
 - The painted court/environment/signage path from earlier VO2 notes is historical, not the current closeout target. Current source of truth: `docs/art/visual-overhaul/current-visual-overhaul-state.md`.
 - Next sequence: finalize perspective/projection; finalize how gameplay boundaries read visually; then rebuild the environment graphics from scratch around the locked projection and boundary guide.
+
+## Phase 6 tournament MVP implementation start (2026-05-17)
+- Added a minimal Classic Cup loop: main menu entry, tournament route/screen,
+  4-player single-elimination bracket, semifinal/final progression, and return
+  from completed tournament matches back to the bracket screen.
+- Added `TournamentState`, `TournamentSystem`, and a Riverpod tournament
+  provider. The bracket uses Rookie as the semifinal rival and Showman as the
+  final rival, with Veteran represented in the simulated opposite semifinal.
+- Added simple tournament rival AI profile differences for speed, whiff rate,
+  lob probability, and smash probability without changing quick-match defaults.
+- Added persisted `classicCupWins` save data. Winning the final unlocks the
+  Classic Cup trophy and survives reload through `SaveService`.
+- Automated verification added for tournament progression, provider/trophy
+  persistence, tournament screen behavior, save migration/defaults, and
+  `GameScreen` tournament-match advancement. Physical Android tournament QA,
+  richer results presentation, optional tournament retry ads, and broader
+  unlock/court-selection surfaces remain follow-up work.

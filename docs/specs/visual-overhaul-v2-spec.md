@@ -74,7 +74,7 @@ Gameplay readability still wins over art density (see §4).
 Inherited from v1 and the build spec, restated here so v2 tickets can quote them directly:
 
 - 3/4 mobile portrait perspective is fixed. No camera angle changes.
-- Gameplay readability wins over art density. Ball, player feet, paddle state, service status, and score must remain clear on a Pixel-class device at all times.
+- Gameplay readability wins over art density. Ball, player feet, aim indicator, service status, and score must remain clear on a Pixel-class device at all times.
 - Court geometry and hitbox math stay deterministic. Visual changes do not alter rally outcomes.
 - New visual assets default to generated bitmap images. Hand-drawn placeholders only for debug overlays, masks, hitbox guides, and tiny code-native UI primitives.
 - Store visual decisions in `lib/game/config/` (visual palette, tuning, environment layout, character visuals). No magic numbers in components.
@@ -200,13 +200,13 @@ Source frames bump to 48×72 px (from 32×48). Logical sprite size bumps to 33×
 
 Feet pivot at y=70 (2-px foot padding). Frame-to-frame foot stability is required except during `run`.
 
-### 8.5 Paddles and Hitboxes
+### 8.5 Aim Indicator and Hitboxes
 
-Paddle sprite (`racket_component.dart:171-172`) bumps from 10×18 to 14×25 court-units to stay proportional. Hitbox radii in `tuning_constants.dart` (`racketHitRadius`, `cleanContactRadius`, `forgivenContactRadius`, `emergencyBodyContactRadius`, `verticalHitRadius`) scale by ~1.0–1.15× — characters are 1.5× larger but hit feel should slightly favor player reach rather than scale strictly. Document final values in a comment block.
+Visible gameplay paddles are retired for the current control scheme. `RacketComponent` draws the committed swing lane and a small red pixel-art aim indicator that moves through the former paddle arc. The aim indicator is visual-only and has no hitbox. Dinks use `Tuning.dinkBodyContactRadius` around the player body plus the current aim direction; drive/lob/smash keep the committed swing hitboxes. Legacy racket-contact constants remain only for paths that still call the racket-capsule contact API.
 
 ### 8.6 Ball
 
-Ball radius formula in `ball_component.dart:86-89` re-tunes and promotes its constants to `tuning_constants.dart` as `Tuning.ballRadiusBase` and `Tuning.ballRadiusAltitudeBoost`. Target: ball reads ~14 px on a 1920-tall canvas at near-baseline, larger than the racket contact point but never obscures the paddle.
+Ball radius formula in `ball_component.dart:86-89` re-tunes and promotes its constants to `tuning_constants.dart` as `Tuning.ballRadiusBase` and `Tuning.ballRadiusAltitudeBoost`. Target: ball reads ~14 px on a 1920-tall canvas at near-baseline, readable against the aim indicator and character sprites without obscuring contact.
 
 `court_projection.dart:71-75` `depthScale` range (currently 0.40 far → 1.15 near) is re-verified with the new character size. If the near player reads too large at depthScale=1.15, clamp the near edge to ~1.05 or raise the far edge to ~0.50 to compress the dynamic range. Tune empirically; record final values.
 
@@ -278,11 +278,11 @@ Flutter widgets stay (they share `VisualPalette`). `ArcadeButton` and `ArcadePan
 - `lib/game/components/player_component.dart:47-49`: `_spriteWidth = 33`, `_spriteHeight = 49.5`, recompute `_spriteFootPadding = _spriteHeight * (2 / 72)`.
 - `lib/game/components/player_component.dart:245`: change `_frameCountFor` divisor from `/32` to `/48`.
 - `lib/game/components/opponent_component.dart`: mirror the same edits on lines 47–49 and 246.
-- `lib/game/config/tuning_constants.dart`: review `racketHitRadius`, `cleanContactRadius`, `forgivenContactRadius`, `emergencyBodyContactRadius`, `verticalHitRadius`. Scale by ~1.0–1.15×. Document final values in a comment block.
-- `lib/game/components/racket_component.dart:171-172`: bump paddle from 10×18 to 14×25 court-units.
+- `lib/game/config/tuning_constants.dart`: review `dinkBodyContactRadius`, `committedSwingContactRadius`, `racketHitRadius`, `cleanContactRadius`, `forgivenContactRadius`, `emergencyBodyContactRadius`, and `verticalHitRadius`. Document final values in a comment block.
+- `lib/game/components/racket_component.dart`: replace visible paddle rendering with a visual-only aim indicator and preserve committed swing-lane rendering.
 - Author 22 placeholder 48×72 sprite sheets (solid-color silhouettes — 11 player + 11 opponent) so the game runs through this ticket before real art lands. Name them clearly so future deletion is trivial.
 - Run `flutter analyze` (zero warnings) and `flutter test` (green).
-- Capture emulator screenshot: player+opponent at new logical size with placeholder silhouettes; confirm feet stick to court and racket sprite endpoint meets `game.playerRacketPosition()`.
+- Capture emulator screenshot: player+opponent at new logical size with placeholder silhouettes; confirm feet stick to court and the aim indicator sits on the former paddle arc at `game.playerRacketPosition()`.
 
 **Acceptance:**
 - `flutter analyze` zero warnings; `flutter test` green.
@@ -330,7 +330,7 @@ Flutter widgets stay (they share `VisualPalette`). `ArcadeButton` and `ArcadePan
 **Goal:** Re-tune ball size, trail, and perspective so the arc reads as 3D motion against the new larger characters.
 
 **Tasks:**
-- `lib/game/components/ball_component.dart:86-89`: re-tune the radius formula. Concept ball reads ~14 px on a 1920-tall canvas (~0.7%). Promote constants to `tuning_constants.dart` as `Tuning.ballRadiusBase` and `Tuning.ballRadiusAltitudeBoost`. Ball must remain larger than the racket contact point but never obscure the paddle.
+- `lib/game/components/ball_component.dart:86-89`: re-tune the radius formula. Concept ball reads ~14 px on a 1920-tall canvas (~0.7%). Promote constants to `tuning_constants.dart` as `Tuning.ballRadiusBase` and `Tuning.ballRadiusAltitudeBoost`. Ball must remain readable next to the aim indicator and character sprites without obscuring contact.
 - Re-verify `court_projection.dart:71-75` `depthScale` range (0.40 far → 1.15 near). Sweep near/mid/far baseline positions. If near reads too large, clamp near edge to ~1.05 or raise far edge to ~0.50. Record final values.
 - `lib/game/components/vfx/vfx_layer_component.dart`: confirm trail/bounce-ring/contact-burst sizes still feel proportional. Bump emit sizes ~1.2× if needed, configurable from `tuning_constants.dart`.
 - Verify court ball shadow contrast at arc apex. Bump if needed.
@@ -418,13 +418,12 @@ Owned paths:
 
 - `dink_rivals/assets/images/sprites/player_*.png` × 11
 - `dink_rivals/assets/images/sprites/opponent_*.png` × 11
-- `dink_rivals/assets/images/sprites/paddle_player.png`, `paddle_opponent.png`
 - `dink_rivals/lib/game/config/character_visuals.dart`
 - `dink_rivals/lib/game/components/player_component.dart`
 - `dink_rivals/lib/game/components/opponent_component.dart`
 - `dink_rivals/lib/game/components/racket_component.dart`
 
-Assets per side: 11 state sheets at 48×72 per frame + paddle at 14×25 court-units.
+Assets per side: 11 state sheets at 48×72 per frame. The runtime aim indicator is drawn in code and does not use a colliding paddle sprite.
 
 Acceptance: 11 stable-pivot frames per state; silhouette-distinct player vs opponent; style-rules gate pass; hitbox alignment retained.
 
@@ -540,7 +539,7 @@ Run on emulator and physical Pixel before closing v2:
 v2 is done when:
 
 - A side-by-side capture of `concept-screenshot.png` and `vo2-final-rally.png` reads as the same game.
-- Player and opponent are clearly drawn athletes with visible caps, paddles, and shot poses at gameplay scale on Pixel.
+- Player and opponent are clearly drawn athletes with visible caps, hand/paddle cues, and shot poses at gameplay scale on Pixel.
 - Ball + character + court scale chain is coherent across the full depthScale range.
 - Backdrop reads as an arcade pickleball venue (banner, sign, fence, trees).
 - HUD plaques, rally strip, and feedback plaque match concept proportions.

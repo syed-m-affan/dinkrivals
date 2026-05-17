@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:dink_rivals/app/ad_provider.dart';
 import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
+import 'package:dink_rivals/game/config/character_visuals.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/screens/end_match_screen.dart';
 import 'package:dink_rivals/services/audio_service.dart';
@@ -62,6 +63,10 @@ void main() {
     await tester.pump();
 
     expect(find.text('YOU WIN'), findsOneWidget);
+    final portrait = tester
+        .widget<Image>(find.byKey(const Key('end-match-winner-portrait')));
+    final image = portrait.image as AssetImage;
+    expect(image.assetName, CharacterVisuals.gameplayPlayer.portraitAsset);
     expect(find.text('7'), findsOneWidget);
     expect(find.text('4'), findsOneWidget);
     expect(find.text('12'), findsOneWidget);
@@ -77,6 +82,22 @@ void main() {
     await tester.pump();
 
     expect(find.text('OPPONENT WINS'), findsOneWidget);
+    final portrait = tester
+        .widget<Image>(find.byKey(const Key('end-match-winner-portrait')));
+    final image = portrait.image as AssetImage;
+    expect(image.assetName, CharacterVisuals.gameplayOpponent.portraitAsset);
+  });
+
+  testWidgets('tied fallback does not declare an opponent win', (tester) async {
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 0;
+    game.matchState.opponentScore = 0;
+
+    await tester.pumpWidget(_wrap(game));
+    await tester.pump();
+
+    expect(find.text('MATCH COMPLETE'), findsOneWidget);
+    expect(find.text('OPPONENT WINS'), findsNothing);
   });
 
   testWidgets('rematch and menu buttons are present', (tester) async {

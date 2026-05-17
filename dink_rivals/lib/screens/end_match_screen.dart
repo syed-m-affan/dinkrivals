@@ -6,6 +6,7 @@ import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
+import '../game/config/character_visuals.dart';
 import '../game/config/visual_palette.dart';
 import '../game/models/player_side.dart';
 import '../widgets/arcade_button.dart';
@@ -95,15 +96,26 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     ref.watch(adPlacementTickProvider);
     final adPlacement = ref.watch(adPlacementSystemProvider);
     final match = game.matchState;
-    final playerWon = match.playerScore > match.opponentScore;
-    final winnerText = playerWon ? 'YOU WIN' : 'OPPONENT WINS';
-    final winnerColor =
-        playerWon ? VisualPalette.feedbackDink : VisualPalette.feedbackFault;
+    final winnerSide = _winnerSideFor(match.playerScore, match.opponentScore);
+    final playerWon = winnerSide == PlayerSide.player;
+    final opponentWon = winnerSide == PlayerSide.opponent;
+    final winnerText = switch (winnerSide) {
+      PlayerSide.player => 'YOU WIN',
+      PlayerSide.opponent => 'OPPONENT WINS',
+      null => 'MATCH COMPLETE',
+    };
+    final winnerColor = switch (winnerSide) {
+      PlayerSide.player => VisualPalette.feedbackDink,
+      PlayerSide.opponent => VisualPalette.feedbackFault,
+      null => VisualPalette.uiAccent,
+    };
     final rewardText =
         _rewardClaimed ? 'REWARD CLAIMED 2X' : 'MATCH REWARD 100';
-    final winnerPortrait = playerWon
-        ? 'assets/images/ui/portrait_rookie.png'
-        : 'assets/images/ui/portrait_showman.png';
+    final winnerPortrait = switch (winnerSide) {
+      PlayerSide.player => CharacterVisuals.gameplayPlayer.portraitAsset,
+      PlayerSide.opponent => CharacterVisuals.gameplayOpponent.portraitAsset,
+      null => CharacterVisuals.gameplayPlayer.portraitAsset,
+    };
 
     return PopScope(
       canPop: false,
@@ -172,7 +184,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
                             label: 'OPPONENT',
                             side: PlayerSide.opponent,
                             score: match.opponentScore,
-                            highlight: !playerWon,
+                            highlight: opponentWon,
                           ),
                           const Divider(color: VisualPalette.netMeshStroke),
                           _StatRow(
@@ -249,6 +261,15 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
         ),
       ),
     );
+  }
+
+  PlayerSide? _winnerSideFor(int playerScore, int opponentScore) {
+    if (playerScore == opponentScore) {
+      return null;
+    }
+    return playerScore > opponentScore
+        ? PlayerSide.player
+        : PlayerSide.opponent;
   }
 }
 

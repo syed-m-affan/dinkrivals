@@ -12,11 +12,11 @@ import 'package:dink_rivals/game/systems/ball_physics_system.dart';
 import 'package:dink_rivals/game/systems/shot_system.dart';
 
 void main() {
-  test('first hit cannot use player body instead of racket', () {
+  test('dink first hit uses player body instead of aim marker', () {
     final ball = BallState(
       x: Court.playerStartX,
       y: Court.playerStartY,
-      z: 0,
+      z: Tuning.racketContactZ,
       isInPlay: false,
     );
     final player = PlayerState(
@@ -32,6 +32,34 @@ void main() {
         side: PlayerSide.opponent,
       ),
       shotType: ShotType.dink,
+    );
+
+    expect(didHit, isTrue);
+    expect(ball.isInPlay, isTrue);
+    expect(ball.lastHitBy, PlayerSide.player);
+    expect(ball.vy, lessThan(0));
+  });
+
+  test('drive first hit still cannot use player body', () {
+    final ball = BallState(
+      x: Court.playerStartX,
+      y: Court.playerStartY,
+      z: Tuning.racketContactZ,
+      isInPlay: false,
+    );
+    final player = PlayerState(
+      position: Vector2(Court.playerStartX, Court.playerStartY),
+      side: PlayerSide.player,
+    );
+
+    final didHit = ShotSystem().attemptShot(
+      ball: ball,
+      hitter: player,
+      opponent: PlayerState(
+        position: Vector2(Court.opponentStartX, Court.opponentStartY),
+        side: PlayerSide.opponent,
+      ),
+      shotType: ShotType.drive,
     );
 
     expect(didHit, isFalse);
@@ -206,7 +234,6 @@ void main() {
 
     expect(ball.vx, greaterThan(0));
     expect(ball.vy, lessThan(0));
-    expect(ball.vx, greaterThan(-ball.vy * 0.3));
   });
 
   test('incoming ball reflects off angled face', () {
@@ -352,8 +379,8 @@ void main() {
     );
     final racketPosition = player.position + Vector2(0, -Tuning.racketReach);
     final ball = BallState(
-      x: racketPosition.x,
-      y: racketPosition.y,
+      x: player.position.x,
+      y: player.position.y - Tuning.dinkBodyContactRadius * 0.5,
       z: Tuning.lowBallMaxZ,
       vy: 40,
       isInPlay: true,
@@ -372,7 +399,7 @@ void main() {
     expect(ball.vy, lessThan(0));
   });
 
-  test('manual smash intent misses below smashable ball height', () {
+  test('manual smash intent on low ball downgrades to drive', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -412,8 +439,8 @@ void main() {
       power: 1,
     );
 
-    expect(lowHit, isFalse);
-    expect(lowShotSystem.lastShotType, isNull);
+    expect(lowHit, isTrue);
+    expect(lowShotSystem.lastShotType, ShotType.drive);
     expect(highShotSystem.lastShotType, ShotType.smash);
   });
 
@@ -513,7 +540,7 @@ void main() {
     expect(ball.vy, lessThan(0));
   });
 
-  test('passive contact can still dink inside forgiving hitbox', () {
+  test('passive dink ignores old aim indicator hitbox', () {
     final player = PlayerState(
       position: Vector2(110, 400),
       side: PlayerSide.player,
@@ -536,9 +563,9 @@ void main() {
       aimDirection: Vector2(0.4, -1),
     );
 
-    expect(didHit, isTrue);
-    expect(shotSystem.lastShotType, ShotType.dink);
-    expect(ball.vy, lessThan(0));
+    expect(didHit, isFalse);
+    expect(shotSystem.lastShotType, isNull);
+    expect(ball.vy, 40);
   });
 
   test('serve launches ball forward at minimum serve speed and lift', () {
@@ -773,7 +800,9 @@ void main() {
     }
   });
 
-  test('dink from too far back does not get guaranteed net clearance', () {
+  test('shallow-aimed dink from baseline fails to clear the net', () {
+    // A dink aimed nearly-sideways (minimal depth) from the baseline cannot
+    // arc over the net in time — the player has to commit forward.
     final player = PlayerState(
       position: Vector2(Court.width / 2, Court.playerStartY),
       side: PlayerSide.player,
@@ -795,10 +824,10 @@ void main() {
       hitter: player,
       opponent: opponent,
       shotType: ShotType.dink,
+      aim: Vector2(0.97, -0.12)..normalize(),
     );
 
     expect(didHit, isTrue);
-    expect(ball.vz, greaterThan(Tuning.contactLiftBase));
     expect(_crossesNetWithoutContact(ball), isFalse);
   });
 
@@ -827,7 +856,7 @@ void main() {
     );
 
     expect(didHit, isTrue);
-    expect(ball.vz, greaterThan(Tuning.farDinkMaxLift));
+    expect(ball.vz, greaterThan(Tuning.dinkInitialZ));
     expect(_crossesNetWithoutContact(ball), isTrue);
   });
 

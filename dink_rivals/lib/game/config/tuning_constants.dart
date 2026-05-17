@@ -13,6 +13,9 @@ class Tuning {
   // scale only lightly so the larger art does not make rallies play loose.
   static const double racketHitRadius = 11.0;
   static const double cleanContactRadius = 16.5;
+  // Dinks now use player-body contact. The right-stick aim marker is visual
+  // only, so this radius owns the passive dink catch instead of the marker.
+  static const double dinkBodyContactRadius = 34.0;
   static const double committedSwingContactRadius = 18.0;
   static const double committedSwingForwardOffset = 44.0;
   static const double committedSwingHorizontalHalfLength = 56.0;
@@ -76,8 +79,17 @@ class Tuning {
   static const double minBounceVelocity = 11.0;
   static const double airDrag = 0.03;
   static const double shotNetClearanceMargin = 5.0;
-  static const double reliableDinkNetDistance = 105.0;
-  static const double farDinkMaxLift = 62.0;
+  // Half-court width is 110; this reach lets the player aim from middle to a
+  // sideline without saturating well before the corner.
+  static const double aimLateralReach = 96.0;
+  // Max vz boost (court units/sec) the engine adds to a shot that fails to
+  // clear the net naturally. Drives and dinks routinely need a small lift to
+  // top the net; shots whose shortfall exceeds this cap fail and hit the net.
+  // Tune this to balance "ball goes over" vs "skill check at the net."
+  static const double skillForgivenessMargin = 22.0;
+  // Numeric floor for flight-time division (prevents NaN on near-zero
+  // distance); not a gameplay tuning value.
+  static const double minShotFlightTime = 0.12;
 
   static const double dinkSpeedXY = 82.0;
   static const double dinkInitialZ = 34.0;
@@ -104,5 +116,5 @@ class Tuning {
   static const double opponentTargetJitter = 36.0;
 
   static const double ballRadiusBase = 2.35;
-  static const double ballRadiusAltitudeBoost = 2.55;
+  static const double ballRadiusAltitudeBoost = 0.6;
 }

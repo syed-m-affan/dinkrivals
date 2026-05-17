@@ -20,6 +20,8 @@ void main() {
     expect(data.hapticsEnabled, isTrue);
     expect(data.gameplayControlMode, GameplayControlMode.classicRacketStick);
     expect(data.matchesCompleted, 0);
+    expect(data.classicCupWins, 0);
+    expect(data.classicCupTrophyUnlocked, isFalse);
   });
 
   test('save then load round-trips all fields', () async {
@@ -31,6 +33,7 @@ void main() {
       hapticsEnabled: false,
       gameplayControlMode: GameplayControlMode.classicRacketStick,
       matchesCompleted: 7,
+      classicCupWins: 2,
     );
     await service.save(target);
 
@@ -63,6 +66,7 @@ void main() {
     expect(data.hapticsEnabled, isTrue);
     expect(data.gameplayControlMode, GameplayControlMode.classicRacketStick);
     expect(data.matchesCompleted, 0);
+    expect(data.classicCupWins, 0);
   });
 
   test('SaveData copyWith leaves untouched fields alone', () {
@@ -73,5 +77,6 @@ void main() {
     expect(updated.soundEnabled, original.soundEnabled);
     expect(updated.hapticsEnabled, original.hapticsEnabled);
     expect(updated.gameplayControlMode, original.gameplayControlMode);
+    expect(updated.classicCupWins, original.classicCupWins);
   });
 }

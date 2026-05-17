@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
+import '../config/debug_flags.dart';
 import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
 
@@ -56,7 +57,7 @@ class CourtComponent extends Component {
       ..close();
     canvas.drawPath(boundary, _outerLinePaint);
 
-    if (game.freeRallyDebugMode) {
+    if (_shouldShowKitchenHighlight) {
       _drawKitchenHighlight(
         canvas,
         topY: Court.opponentKitchenTopY,
@@ -107,6 +108,9 @@ class CourtComponent extends Component {
     final end = game.courtToWorld(b);
     canvas.drawLine(start.toOffset(), end.toOffset(), paint);
   }
+
+  bool get _shouldShowKitchenHighlight =>
+      game.freeRallyDebugMode || DebugFlags.showOverlay;
 
   void _drawKitchenHighlight(
     Canvas canvas, {

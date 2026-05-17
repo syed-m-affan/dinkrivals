@@ -32,7 +32,7 @@ void main() {
     expect(near.y - far.y, greaterThan(400));
   });
 
-  test('racket reach is visible at the projected scale of the player baseline',
+  test('aim indicator arc is visible at the projected player-baseline scale',
       () {
     final layout = CourtLayoutSystem()..resize(Vector2(1080, 2400));
     final body = layout.courtToWorld(

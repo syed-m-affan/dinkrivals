@@ -24,6 +24,10 @@ class BallComponent extends Component {
   final Paint _rimPaint = Paint()..color = VisualPalette.ballRim;
   final Paint _accentRimPaint = Paint()..color = VisualPalette.ballAccentRim;
   final Paint _highlightPaint = Paint()..color = VisualPalette.ballHighlight;
+  final Paint _dropLinePaint = Paint()
+    ..color = VisualPalette.ballPrimary.withValues(alpha: 0.32)
+    ..strokeWidth = 1.4
+    ..strokeCap = StrokeCap.round;
   ui.Image? _ballSprite;
 
   @override
@@ -46,6 +50,12 @@ class BallComponent extends Component {
     final depthScale = game.depthScaleForY(state.y);
     final radius = visualRadiusFor(state.z, depthScale);
     final screenRadius = game.logicalToScreen(radius);
+    if (state.z > 8) {
+      // Vertical "drop line" from the ball down to its ground point makes ball
+      // altitude readable at a glance — line length encodes z directly.
+      final ground = game.courtToWorld(Vector2(state.x, state.y), 0);
+      canvas.drawLine(ground.toOffset(), center.toOffset(), _dropLinePaint);
+    }
     _drawReadabilityRim(canvas, center, screenRadius);
     if (DebugFlags.useSprites && _ballSprite != null) {
       final dst = Rect.fromCircle(

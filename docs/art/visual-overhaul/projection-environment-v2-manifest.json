@@ -1,0 +1,29 @@
+{
+  "asset": "assets/images/environment/classic/projection_environment_v2.png",
+  "sourceCandidate": "docs/art/visual-overhaul/projection-environment-v2-candidate.png",
+  "size": [
+    979,
+    1606
+  ],
+  "projection": {
+    "paintedFarY": 386.0,
+    "paintedNetY": 638.0,
+    "paintedNearY": 1140.0,
+    "paintedFarLeftX": 295.0,
+    "paintedFarRightX": 677.0,
+    "paintedNetLeftX": 200.0,
+    "paintedNetRightX": 777.0,
+    "paintedNearLeftX": 78.0,
+    "paintedNearRightX": 901.0,
+    "upperSegmentPerspectiveExponent": 0.91,
+    "lowerSegmentPerspectiveExponent": 1.56
+  },
+  "inspiration": [
+    "docs/art/concepts/concept-screenshot.png",
+    "docs/art/concepts/concept-sheet.png",
+    "docs/art/visual-overhaul/contact-sheets/vo3-player-skill-runtime-sheets.png",
+    "docs/art/visual-overhaul/contact-sheets/vo3-opponent-skill-runtime-sheets.png"
+  ],
+  "style": "polished painterly pixel-art park court with blue court, green foreground, dark fence/signage band, benches, planters, lamps, and sprite-compatible arcade texture",
+  "qaState": "candidate accepted by user for runtime projection retune; pending installed Pixel visual QA"
+}

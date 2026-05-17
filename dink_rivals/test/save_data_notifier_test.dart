@@ -78,4 +78,18 @@ void main() {
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.matchesCompleted, 4);
   });
+
+  test('recordClassicCupWin unlocks and persists trophy count', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData());
+    addTearDown(container.dispose);
+
+    await container.read(saveDataProvider.notifier).recordClassicCupWin();
+
+    expect(container.read(saveDataProvider).classicCupWins, 1);
+    expect(container.read(saveDataProvider).classicCupTrophyUnlocked, isTrue);
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.classicCupWins, 1);
+  });
 }

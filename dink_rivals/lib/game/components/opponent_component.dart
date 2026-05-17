@@ -309,7 +309,8 @@ class OpponentComponent extends Component {
   @visibleForTesting
   static double visualScaleFor(double depthScale, double courtY) {
     final nearT = (courtY / Court.length).clamp(0.0, 1.0).toDouble();
-    return depthScale * (1.08 + nearT * 0.22);
+    final scaled = depthScale * (1.10 + nearT * 0.24);
+    return scaled < 0.70 ? 0.70 : scaled;
   }
 }
 

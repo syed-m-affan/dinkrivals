@@ -54,7 +54,7 @@ class EnvironmentPropPlacement {
 
 class EnvironmentLayout {
   static const String projectionEnvironmentAsset =
-      'environment/classic/projection_environment_v1.png';
+      'environment/classic/projection_environment_v2.png';
   static const String generatedBackgroundAsset =
       'environment/classic/park_background_overhaul.png';
   static const List<EnvironmentBackgroundLayer> generatedBackgroundLayers = [

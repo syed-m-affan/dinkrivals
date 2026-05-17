@@ -25,6 +25,7 @@ import 'config/tuning_constants.dart';
 import 'models/ball_state.dart';
 import 'models/gameplay_control_mode.dart';
 import 'models/match_state.dart';
+import 'models/opponent_ai_profile.dart';
 import 'models/opponent_serve_phase.dart';
 import 'models/player_side.dart';
 import 'models/rule_result.dart';
@@ -255,6 +256,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     serveFlowSystem.confirmOpponentServeReady();
   }
 
+  void setOpponentAiProfile(OpponentAiProfile profile) {
+    opponentAiSystem.setProfile(profile);
+  }
+
   Vector2 playerRacketDirection() {
     return Vector2(
       math.sin(inputSystem.racketAngle),
@@ -385,6 +390,8 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     if (command == null && inputSystem.isRecoveringFromSwingMiss) {
       return false;
     }
+    final racketSwingSpeed =
+        inputSystem.racketAngularVelocity.abs() * Tuning.racketReach;
     final didHit = shotSystem.attemptManualContact(
       ball: ball.state,
       hitter: player.state,
@@ -393,6 +400,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       swipeDirection: command?.swipeDirection,
       intent: command?.intent,
       power: command?.power ?? 0,
+      swingSpeed: racketSwingSpeed,
     );
     if (!didHit) {
       return false;

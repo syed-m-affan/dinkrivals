@@ -65,11 +65,11 @@ void main() {
   });
 
   test('opponent visual scale boosts near court without flattening depth', () {
-    expect(OpponentComponent.visualScaleFor(0.7, Court.top),
-        closeTo(0.756, 0.001));
+    expect(
+        OpponentComponent.visualScaleFor(0.7, Court.top), closeTo(0.77, 0.001));
     expect(
       OpponentComponent.visualScaleFor(1.0, Court.bottom),
-      closeTo(1.30, 0.001),
+      closeTo(1.34, 0.001),
     );
   });
 

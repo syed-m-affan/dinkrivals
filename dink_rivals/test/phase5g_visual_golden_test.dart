@@ -29,7 +29,7 @@ void main() {
   testWidgets('phase 5g menu screenshot', (tester) async {
     await _setScreenshotSurface(tester, surfaceSize);
     await tester.pumpWidget(await _wrap(const MainMenuScreen()));
-    await tester.pumpAndSettle();
+    await _pumpAndSettleImages(tester);
 
     await expectLater(
       find.byType(MaterialApp),
@@ -40,7 +40,7 @@ void main() {
   testWidgets('phase 5g roster screenshot', (tester) async {
     await _setScreenshotSurface(tester, surfaceSize);
     await tester.pumpWidget(await _wrap(const RosterScreen()));
-    await tester.pumpAndSettle();
+    await _pumpAndSettleImages(tester);
 
     await expectLater(
       find.byType(MaterialApp),
@@ -51,7 +51,7 @@ void main() {
   testWidgets('phase 5g settings screenshot', (tester) async {
     await _setScreenshotSurface(tester, surfaceSize);
     await tester.pumpWidget(await _wrap(const SettingsScreen()));
-    await tester.pumpAndSettle();
+    await _pumpAndSettleImages(tester);
 
     await expectLater(
       find.byType(MaterialApp),
@@ -68,13 +68,21 @@ void main() {
       ..matchState.longestRally = 19;
 
     await tester.pumpWidget(await _wrap(const EndMatchScreen(), game: game));
-    await tester.pumpAndSettle();
+    await _pumpAndSettleImages(tester);
 
     await expectLater(
       find.byType(MaterialApp),
       matchesGoldenFile('../../docs/art/phase-5/phase-5g-endmatch.png'),
     );
   });
+}
+
+Future<void> _pumpAndSettleImages(WidgetTester tester) async {
+  await tester.pumpAndSettle();
+  await tester.runAsync(() async {
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+  });
+  await tester.pumpAndSettle();
 }
 
 Future<void> _setScreenshotSurface(

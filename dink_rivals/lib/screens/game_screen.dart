@@ -7,9 +7,11 @@ import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
+import '../app/tournament_provider.dart';
 import '../game/config/visual_palette.dart';
 import '../game/dink_rivals_game.dart';
 import '../game/models/opponent_serve_phase.dart';
+import '../game/systems/opponent_ai_system.dart';
 import '../services/save_service.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
@@ -23,6 +25,7 @@ class GameScreen extends ConsumerStatefulWidget {
 
 class _GameScreenState extends ConsumerState<GameScreen> {
   bool _showPause = false;
+  bool _handlingMatchOver = false;
   late final DinkRivalsGame _game;
 
   @override
@@ -41,9 +44,28 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   void _handleMatchOver() {
     if (!_game.matchOverNotifier.value) return;
     if (!mounted) return;
+    if (_handlingMatchOver) return;
+    _handlingMatchOver = true;
+    _finishCompletedMatch();
+  }
+
+  Future<void> _finishCompletedMatch() async {
     ref.read(adPlacementSystemProvider).recordMatchCompleted();
-    ref.read(saveDataProvider.notifier).recordMatchCompleted();
-    context.go(AppRoutes.endMatch);
+    await ref.read(saveDataProvider.notifier).recordMatchCompleted();
+    final tournament = ref.read(tournamentProvider);
+    if (tournament.isActive) {
+      await ref.read(tournamentProvider.notifier).recordCompletedMatch(
+            playerScore: _game.matchState.playerScore,
+            opponentScore: _game.matchState.opponentScore,
+          );
+      if (mounted) {
+        context.go(AppRoutes.tournament);
+      }
+      return;
+    }
+    if (mounted) {
+      context.go(AppRoutes.endMatch);
+    }
   }
 
   void _setPaused(bool value) {
@@ -55,6 +77,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   void _returnToMenu() {
+    _game.setOpponentAiProfile(OpponentAISystem.defaultProfile);
     _game.resetMatch();
     _game.paused = false;
     context.go(AppRoutes.menu);

@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
+import '../app/tournament_provider.dart';
 import '../game/config/visual_palette.dart';
+import '../game/systems/opponent_ai_system.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
 import '../widgets/park_backdrop.dart';
@@ -49,6 +51,12 @@ class MainMenuScreen extends ConsumerWidget {
                               icon: Icons.sports_tennis,
                               onPressed: () {
                                 ref.read(audioServiceProvider).playMenuClick();
+                                ref.read(tournamentProvider.notifier).reset();
+                                ref
+                                    .read(dinkRivalsGameProvider)
+                                    .setOpponentAiProfile(
+                                      OpponentAISystem.defaultProfile,
+                                    );
                                 ref.read(dinkRivalsGameProvider).resetMatch();
                                 context.go(AppRoutes.game);
                               },
@@ -77,6 +85,19 @@ class MainMenuScreen extends ConsumerWidget {
                               onPressed: () {
                                 ref.read(audioServiceProvider).playMenuClick();
                                 context.go(AppRoutes.roster);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ArcadeButton(
+                              key: const Key('menu-tournament'),
+                              label: 'TOURNAMENT',
+                              icon: Icons.emoji_events,
+                              onPressed: () {
+                                ref.read(audioServiceProvider).playMenuClick();
+                                context.go(AppRoutes.tournament);
                               },
                             ),
                           ),
