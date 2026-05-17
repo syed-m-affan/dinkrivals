@@ -39,6 +39,22 @@ class TournamentDefinitions {
     ),
   );
 
+  static const rallyQueen = TournamentRival(
+    id: 'rally_queen',
+    displayName: 'Rally Queen',
+    seedLabel: 'Challenge',
+    visual: CharacterVisuals.rallyQueen,
+    aiProfile: OpponentAiProfile(
+      id: 'rally_queen',
+      displayName: 'Rally Queen',
+      maxSpeed: Tuning.opponentMaxSpeed * 1.02,
+      whiffChance: Tuning.opponentWhiffChance * 0.68,
+      dinkProbability: Tuning.opponentDinkProbability * 1.28,
+      lobProbability: Tuning.opponentLobProbability * 0.78,
+      smashProbability: Tuning.opponentSmashProbability * 0.62,
+    ),
+  );
+
   static const veteran = TournamentRival(
     id: 'veteran',
     displayName: 'Veteran',
@@ -71,7 +87,7 @@ class TournamentDefinitions {
     ),
   );
 
-  static const rivals = [rookie, veteran, showman];
+  static const rivals = [rookie, rallyQueen, veteran, showman];
   static const semifinalRival = rookie;
   static const otherSemifinalRival = veteran;
   static const finalRival = showman;

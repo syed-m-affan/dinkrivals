@@ -158,4 +158,30 @@ void main() {
         isTrue);
     expect(container.read(rivalChallengeProvider), isNull);
   });
+
+  testWidgets('winning Rally Queen challenge unlocks Rally Queen',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+    container
+        .read(rivalChallengeProvider.notifier)
+        .start(CharacterUnlockIds.rallyQueen);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 11
+      ..opponentScore = 8;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(
+        container.read(saveDataProvider).isCharacterUnlocked(
+              CharacterUnlockIds.rallyQueen,
+            ),
+        isTrue);
+    expect(container.read(rivalChallengeProvider), isNull);
+  });
 }

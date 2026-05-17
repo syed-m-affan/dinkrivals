@@ -256,6 +256,9 @@ class RosterScreen extends ConsumerWidget {
 }
 
 TournamentRival? _challengeRivalFor(String characterId) {
+  if (characterId == TournamentDefinitions.rallyQueen.id) {
+    return TournamentDefinitions.rallyQueen;
+  }
   if (characterId == TournamentDefinitions.veteran.id) {
     return TournamentDefinitions.veteran;
   }

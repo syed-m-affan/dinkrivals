@@ -397,7 +397,10 @@ Re-run the previous QA checklists with attention to:
   `android/key.properties` file or `DINK_RIVALS_UPLOAD_*` environment
   variables when credentials exist, otherwise they fall back to debug signing
   for local QA. Setup notes live in `docs/release-signing.md`.
-- Remaining Phase 7 release-candidate gaps include Rally Queen-specific
-  challenge handling, per-character runtime sprite sheets, production AdMob
-  unit IDs/consent flow, real signing credentials/application id validation,
-  and physical Pixel QA.
+- New saves now start with Rookie unlocked and selected. Rally Queen is a
+  locked direct challenge rival with a soft-game AI profile; beating her through
+  the existing rival challenge flow unlocks `rally_queen`. Existing saves that
+  already unlocked Rally Queen continue to keep that unlock.
+- Remaining Phase 7 release-candidate gaps include per-character runtime sprite
+  sheets, production AdMob unit IDs/consent flow, real signing
+  credentials/application id validation, and physical Pixel QA.

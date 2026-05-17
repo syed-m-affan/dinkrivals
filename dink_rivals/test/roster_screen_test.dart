@@ -60,6 +60,12 @@ void main() {
       find.byKey(const Key('roster-select-${CharacterUnlockIds.rookie}')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(
+        const Key('roster-challenge-${CharacterUnlockIds.rallyQueen}'),
+      ),
+      findsOneWidget,
+    );
 
     await tester.tap(
       find.byKey(const Key('roster-select-${CharacterUnlockIds.rookie}')),
@@ -86,5 +92,49 @@ void main() {
 
     expect(find.text('game'), findsOneWidget);
     expect(game.opponentAiSystem.profile.id, TournamentDefinitions.showman.id);
+  });
+
+  testWidgets('locked Rally Queen can start a direct challenge',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final service = SaveService(await SharedPreferences.getInstance());
+    final game = DinkRivalsGame();
+    final router = GoRouter(
+      initialLocation: '/roster',
+      routes: [
+        GoRoute(
+          path: '/roster',
+          builder: (context, state) => const RosterScreen(),
+        ),
+        GoRoute(path: '/game', builder: (context, state) => const Text('game')),
+        GoRoute(path: '/', builder: (context, state) => const SizedBox()),
+      ],
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          dinkRivalsGameProvider.overrideWithValue(game),
+          audioServiceProvider.overrideWithValue(FakeAudioService()),
+          saveServiceProvider.overrideWithValue(service),
+          saveDataProvider.overrideWith(
+            () => SaveDataNotifier(service, const SaveData()),
+          ),
+        ],
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(
+      find.byKey(
+          const Key('roster-challenge-${CharacterUnlockIds.rallyQueen}')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('game'), findsOneWidget);
+    expect(
+      game.opponentAiSystem.profile.id,
+      TournamentDefinitions.rallyQueen.id,
+    );
   });
 }

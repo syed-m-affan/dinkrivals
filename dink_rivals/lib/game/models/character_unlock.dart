@@ -5,7 +5,7 @@ class CharacterUnlockIds {
   static const rallyQueen = 'rally_queen';
   static const veteran = 'veteran';
   static const showman = 'showman';
-  static const defaultSelected = rallyQueen;
+  static const defaultSelected = rookie;
 
   static const all = <String>[
     rookie,
@@ -16,7 +16,6 @@ class CharacterUnlockIds {
 
   static const defaultUnlocked = <String>[
     rookie,
-    rallyQueen,
   ];
 
   static bool isKnown(String id) => all.contains(id);

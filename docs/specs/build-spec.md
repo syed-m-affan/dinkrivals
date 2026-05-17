@@ -1744,10 +1744,12 @@ opt-in `AdMobAdService` uses Google's Android test app ID plus test
 banner/rewarded/interstitial ad unit IDs and preserves `FakeAdService` as the
 default. The guarded non-gameplay `AdBannerSlot` placements render opt-in
 native test banners when AdMob is enabled and fall back to fake placeholders on
-load failure. Production AdMob IDs/consent flow, Rally Queen-specific challenge
-handling, per-character runtime sprites, real signing credentials/application
-id validation, and physical Pixel closeout remain open. Android release-signing
-scaffolding reads a gitignored `android/key.properties` file or
+load failure. New saves start with Rookie unlocked and selected; Rally Queen is
+now a locked direct challenge rival with a soft-game AI profile, and beating her
+unlocks `rally_queen`. Production AdMob IDs/consent flow, per-character runtime
+sprites, real signing credentials/application id validation, and physical Pixel
+closeout remain open. Android release-signing scaffolding reads a gitignored
+`android/key.properties` file or
 `DINK_RIVALS_UPLOAD_*` environment variables and falls back to debug signing
 when credentials are absent; setup notes live in `docs/release-signing.md`. A
 repeatable Android QA harness now lives at

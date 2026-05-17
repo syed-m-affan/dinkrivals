@@ -9,6 +9,7 @@ import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/game/config/character_visuals.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
+import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/screens/end_match_screen.dart';
 import 'package:dink_rivals/services/audio_service.dart';
@@ -81,7 +82,10 @@ void main() {
     final portrait = tester
         .widget<Image>(find.byKey(const Key('end-match-winner-portrait')));
     final image = portrait.image as AssetImage;
-    expect(image.assetName, CharacterVisuals.gameplayPlayer.portraitAsset);
+    expect(
+      image.assetName,
+      CharacterVisuals.byId(CharacterUnlockIds.defaultSelected).portraitAsset,
+    );
     expect(find.text('7'), findsOneWidget);
     expect(find.text('4'), findsOneWidget);
     expect(find.text('12'), findsOneWidget);
