@@ -1734,9 +1734,14 @@ tournament runs can use a fake rewarded retry ad to restore the failed match.
 The current player-character selection is cosmetic/persistent and updates
 roster state, game state, and player-win end-match portrait; gameplay still
 uses the accepted player runtime sprite sheets until per-character sheets are
-approved. Real AdMob, optional banners, Rally Queen-specific challenge
-handling, per-character runtime sprites, release signing, offline checks,
-15-minute stability QA, and physical Pixel closeout remain open.
+approved. A guarded fake banner placeholder is mounted only on the main menu,
+settings, roster, and trophy room screens, stays hidden before the first
+completed match, and is feature-flagged off with
+`DINK_RIVALS_SHOW_AD_PLACEHOLDERS=false`; no banner is mounted on gameplay,
+debug rally, tournament match flow, or end-match/reward screens. Real AdMob
+SDK/test ad integration, Rally Queen-specific challenge handling,
+per-character runtime sprites, release signing, offline checks, 15-minute
+stability QA, and physical Pixel closeout remain open.
 
 ## Android QA Checklist
 

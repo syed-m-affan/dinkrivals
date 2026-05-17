@@ -369,7 +369,12 @@ Re-run the previous QA checklists with attention to:
   the tournament screen offers a user-initiated `RETRY AD` button. A successful
   fake rewarded ad restores the failed bracket match by removing only the loss
   record; no real AdMob SDK or in-gameplay ad placement was added.
+- Added a guarded fake banner placeholder slot for non-gameplay surfaces. It is
+  mounted only on the main menu, settings, roster, and trophy room screens,
+  stays hidden before the first completed match, respects `adsRemoved`, and can
+  be disabled with `DINK_RIVALS_SHOW_AD_PLACEHOLDERS=false`. No banner is shown
+  in gameplay, debug rally, tournament match flow, or end-match/reward screens.
 - Remaining Phase 7 release-candidate gaps include Rally Queen-specific
-  challenge handling, per-character runtime sprite sheets, optional banners/real
-  AdMob planning, production signing, offline and 15-minute stability checks,
+  challenge handling, per-character runtime sprite sheets, real AdMob SDK/test
+  ad integration, production signing, offline and 15-minute stability checks,
   and physical Pixel QA.

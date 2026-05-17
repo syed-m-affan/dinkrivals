@@ -7,6 +7,7 @@ import '../app/router.dart';
 import '../game/config/tournament_definitions.dart';
 import '../game/config/visual_palette.dart';
 import '../services/save_service.dart';
+import '../widgets/ad_banner_slot.dart';
 import '../widgets/arcade_panel.dart';
 import '../widgets/park_backdrop.dart';
 
@@ -30,70 +31,77 @@ class TrophyRoomScreen extends ConsumerWidget {
       body: ParkBackdrop(
         overlayOpacity: 0.80,
         child: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.all(18),
+          child: Column(
             children: [
-              ArcadePanel(
-                backgroundColor:
-                    VisualPalette.uiSurface.withValues(alpha: 0.88),
-                borderColor: VisualPalette.uiAccent,
-                child: Row(
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(18),
                   children: [
-                    const Icon(
-                      Icons.star,
-                      color: VisualPalette.uiAccent,
-                      size: 34,
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Text(
-                        'STARS',
-                        style: TextStyle(
-                          color: VisualPalette.courtLineWhite,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ArcadePanel(
+                      backgroundColor:
+                          VisualPalette.uiSurface.withValues(alpha: 0.88),
+                      borderColor: VisualPalette.uiAccent,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: VisualPalette.uiAccent,
+                            size: 34,
+                          ),
+                          const SizedBox(width: 14),
+                          const Expanded(
+                            child: Text(
+                              'STARS',
+                              style: TextStyle(
+                                color: VisualPalette.courtLineWhite,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            '${save.stars}',
+                            key: const Key('trophy-room-stars'),
+                            style: const TextStyle(
+                              color: VisualPalette.uiAccent,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'monospace',
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      '${save.stars}',
-                      key: const Key('trophy-room-stars'),
-                      style: const TextStyle(
-                        color: VisualPalette.uiAccent,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'monospace',
-                      ),
+                    const SizedBox(height: 14),
+                    _UnlockRow(
+                      keyName: 'classic-cup-trophy',
+                      icon: Icons.emoji_events,
+                      title: TournamentDefinitions.classicCupTrophyName,
+                      detail: save.classicCupTrophyUnlocked
+                          ? 'Classic Cup wins: ${save.classicCupWins}'
+                          : 'Win Classic Cup',
+                      unlocked: save.classicCupTrophyUnlocked,
+                    ),
+                    const SizedBox(height: 12),
+                    _UnlockRow(
+                      keyName: 'park-court',
+                      icon: Icons.park,
+                      title: 'Classic Park Court',
+                      detail: 'Playable court',
+                      unlocked: save.parkCourtUnlocked,
+                    ),
+                    const SizedBox(height: 12),
+                    _UnlockRow(
+                      keyName: 'tutorial',
+                      icon: Icons.school,
+                      title: 'Quick Start',
+                      detail: save.tutorialSeen ? 'Seen' : 'Pending',
+                      unlocked: save.tutorialSeen,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 14),
-              _UnlockRow(
-                keyName: 'classic-cup-trophy',
-                icon: Icons.emoji_events,
-                title: TournamentDefinitions.classicCupTrophyName,
-                detail: save.classicCupTrophyUnlocked
-                    ? 'Classic Cup wins: ${save.classicCupWins}'
-                    : 'Win Classic Cup',
-                unlocked: save.classicCupTrophyUnlocked,
-              ),
-              const SizedBox(height: 12),
-              _UnlockRow(
-                keyName: 'park-court',
-                icon: Icons.park,
-                title: 'Classic Park Court',
-                detail: 'Playable court',
-                unlocked: save.parkCourtUnlocked,
-              ),
-              const SizedBox(height: 12),
-              _UnlockRow(
-                keyName: 'tutorial',
-                icon: Icons.school,
-                title: 'Quick Start',
-                detail: save.tutorialSeen ? 'Seen' : 'Pending',
-                unlocked: save.tutorialSeen,
-              ),
+              const AdBannerSlot(placement: 'trophy-room'),
             ],
           ),
         ),

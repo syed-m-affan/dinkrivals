@@ -10,6 +10,7 @@ import '../game/config/character_visuals.dart';
 import '../game/config/tournament_definitions.dart';
 import '../game/config/visual_palette.dart';
 import '../services/save_service.dart';
+import '../widgets/ad_banner_slot.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
 import '../widgets/park_backdrop.dart';
@@ -75,167 +76,178 @@ class RosterScreen extends ConsumerWidget {
       body: ParkBackdrop(
         overlayOpacity: 0.78,
         child: SafeArea(
-          child: ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: _mvpRoster.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final char = _mvpRoster[index];
-              final visual = CharacterVisuals.byDisplayName(char.name);
-              final unlocked = save.isCharacterUnlocked(visual.id);
-              final selected = save.activeCharacterId == visual.id;
-              final challengeRival = _challengeRivalFor(visual.id);
-              return ArcadePanel(
-                backgroundColor: VisualPalette.uiSurface.withValues(
-                  alpha: 0.88,
-                ),
-                borderColor: selected
-                    ? VisualPalette.uiAccent
-                    : unlocked
-                        ? VisualPalette.courtLineWhite.withValues(alpha: 0.52)
-                        : VisualPalette.textMuted.withValues(alpha: 0.58),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Opacity(
-                          opacity: unlocked ? 1 : 0.42,
-                          child: Image.asset(
-                            visual.portraitAsset,
-                            key: Key('roster-portrait-${char.name}'),
-                            width: 72,
-                            height: 72,
-                            filterQuality: FilterQuality.none,
-                          ),
-                        ),
-                        if (!unlocked)
-                          const Icon(
-                            Icons.lock,
-                            key: Key('roster-locked-icon'),
-                            color: VisualPalette.courtLineWhite,
-                            size: 30,
-                          ),
-                        if (selected)
-                          const Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Icon(
-                              Icons.check_circle,
-                              key: Key('roster-selected-icon'),
-                              color: VisualPalette.uiAccent,
-                              size: 24,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _mvpRoster.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final char = _mvpRoster[index];
+                    final visual = CharacterVisuals.byDisplayName(char.name);
+                    final unlocked = save.isCharacterUnlocked(visual.id);
+                    final selected = save.activeCharacterId == visual.id;
+                    final challengeRival = _challengeRivalFor(visual.id);
+                    return ArcadePanel(
+                      backgroundColor: VisualPalette.uiSurface.withValues(
+                        alpha: 0.88,
+                      ),
+                      borderColor: selected
+                          ? VisualPalette.uiAccent
+                          : unlocked
+                              ? VisualPalette.courtLineWhite
+                                  .withValues(alpha: 0.52)
+                              : VisualPalette.textMuted.withValues(alpha: 0.58),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            char.name.toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: VisualPalette.uiAccent,
-                            ),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Opacity(
+                                opacity: unlocked ? 1 : 0.42,
+                                child: Image.asset(
+                                  visual.portraitAsset,
+                                  key: Key('roster-portrait-${char.name}'),
+                                  width: 72,
+                                  height: 72,
+                                  filterQuality: FilterQuality.none,
+                                ),
+                              ),
+                              if (!unlocked)
+                                const Icon(
+                                  Icons.lock,
+                                  key: Key('roster-locked-icon'),
+                                  color: VisualPalette.courtLineWhite,
+                                  size: 30,
+                                ),
+                              if (selected)
+                                const Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Icon(
+                                    Icons.check_circle,
+                                    key: Key('roster-selected-icon'),
+                                    color: VisualPalette.uiAccent,
+                                    size: 24,
+                                  ),
+                                ),
+                            ],
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            selected
-                                ? 'SELECTED'
-                                : unlocked
-                                    ? 'UNLOCKED'
-                                    : 'LOCKED',
-                            key: Key('roster-unlock-${visual.id}'),
-                            style: TextStyle(
-                              color: selected
-                                  ? VisualPalette.uiAccent
-                                  : unlocked
-                                      ? VisualPalette.feedbackDink
-                                      : VisualPalette.textMuted,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'monospace',
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            char.role,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: VisualPalette.courtLineWhite,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Strength: ${char.strength}',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Weakness: ${char.weakness}',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (unlocked) ...[
-                            const SizedBox(height: 10),
-                            ArcadeButton(
-                              key: Key('roster-select-${visual.id}'),
-                              label: selected ? 'SELECTED' : 'SELECT',
-                              icon: selected
-                                  ? Icons.check_circle
-                                  : Icons.person_pin_circle,
-                              compact: true,
-                              onPressed: selected
-                                  ? null
-                                  : () async {
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  char.name.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: VisualPalette.uiAccent,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  selected
+                                      ? 'SELECTED'
+                                      : unlocked
+                                          ? 'UNLOCKED'
+                                          : 'LOCKED',
+                                  key: Key('roster-unlock-${visual.id}'),
+                                  style: TextStyle(
+                                    color: selected
+                                        ? VisualPalette.uiAccent
+                                        : unlocked
+                                            ? VisualPalette.feedbackDink
+                                            : VisualPalette.textMuted,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'monospace',
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  char.role,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: VisualPalette.courtLineWhite,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Strength: ${char.strength}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  'Weakness: ${char.weakness}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                if (unlocked) ...[
+                                  const SizedBox(height: 10),
+                                  ArcadeButton(
+                                    key: Key('roster-select-${visual.id}'),
+                                    label: selected ? 'SELECTED' : 'SELECT',
+                                    icon: selected
+                                        ? Icons.check_circle
+                                        : Icons.person_pin_circle,
+                                    compact: true,
+                                    onPressed: selected
+                                        ? null
+                                        : () async {
+                                            ref
+                                                .read(audioServiceProvider)
+                                                .playMenuClick();
+                                            ref
+                                                .read(dinkRivalsGameProvider)
+                                                .setSelectedPlayerCharacter(
+                                                  visual.id,
+                                                );
+                                            await ref
+                                                .read(saveDataProvider.notifier)
+                                                .selectCharacter(visual.id);
+                                          },
+                                  ),
+                                ] else if (challengeRival != null) ...[
+                                  const SizedBox(height: 10),
+                                  ArcadeButton(
+                                    key: Key('roster-challenge-${visual.id}'),
+                                    label: 'CHALLENGE',
+                                    icon: Icons.sports_tennis,
+                                    compact: true,
+                                    onPressed: () {
                                       ref
                                           .read(audioServiceProvider)
                                           .playMenuClick();
                                       ref
-                                          .read(dinkRivalsGameProvider)
-                                          .setSelectedPlayerCharacter(
-                                            visual.id,
-                                          );
-                                      await ref
-                                          .read(saveDataProvider.notifier)
-                                          .selectCharacter(visual.id);
+                                          .read(rivalChallengeProvider.notifier)
+                                          .start(challengeRival.id);
+                                      final game =
+                                          ref.read(dinkRivalsGameProvider);
+                                      game.setOpponentAiProfile(
+                                        challengeRival.aiProfile,
+                                      );
+                                      game.resetMatch();
+                                      context.go(AppRoutes.game);
                                     },
+                                  ),
+                                ],
+                              ],
                             ),
-                          ] else if (challengeRival != null) ...[
-                            const SizedBox(height: 10),
-                            ArcadeButton(
-                              key: Key('roster-challenge-${visual.id}'),
-                              label: 'CHALLENGE',
-                              icon: Icons.sports_tennis,
-                              compact: true,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                ref
-                                    .read(rivalChallengeProvider.notifier)
-                                    .start(challengeRival.id);
-                                final game = ref.read(dinkRivalsGameProvider);
-                                game.setOpponentAiProfile(
-                                  challengeRival.aiProfile,
-                                );
-                                game.resetMatch();
-                                context.go(AppRoutes.game);
-                              },
-                            ),
-                          ],
+                          ),
                         ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+              const AdBannerSlot(placement: 'roster'),
+            ],
           ),
         ),
       ),

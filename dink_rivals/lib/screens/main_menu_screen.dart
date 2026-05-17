@@ -9,6 +9,7 @@ import '../app/router.dart';
 import '../app/tournament_provider.dart';
 import '../game/config/visual_palette.dart';
 import '../game/systems/opponent_ai_system.dart';
+import '../widgets/ad_banner_slot.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
 import '../widgets/park_backdrop.dart';
@@ -19,140 +20,164 @@ class MainMenuScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          ParkBackdrop(
-            overlayOpacity: 0.44,
-            showCourtImage: false,
-            child: Center(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const _Logo(),
-                    const SizedBox(height: 54),
-                    ArcadePanel(
-                      backgroundColor:
-                          VisualPalette.uiSurface.withValues(alpha: 0.82),
-                      borderColor: VisualPalette.environmentSignBorder
-                          .withValues(alpha: 0.78),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: ArcadeButton(
-                              key: const Key('menu-quick-match'),
-                              label: 'QUICK MATCH',
-                              icon: Icons.sports_tennis,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                ref.read(tournamentProvider.notifier).reset();
-                                ref
-                                    .read(rivalChallengeProvider.notifier)
-                                    .reset();
-                                ref
-                                    .read(dinkRivalsGameProvider)
-                                    .setOpponentAiProfile(
-                                      OpponentAISystem.defaultProfile,
-                                    );
-                                ref.read(dinkRivalsGameProvider).resetMatch();
-                                context.go(AppRoutes.game);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ArcadeButton(
-                              key: const Key('menu-debug-rally'),
-                              label: 'DEBUG RALLY',
-                              icon: Icons.science,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                context.go(AppRoutes.debugRally);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ArcadeButton(
-                              key: const Key('menu-roster'),
-                              label: 'ROSTER',
-                              icon: Icons.groups,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                context.go(AppRoutes.roster);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ArcadeButton(
-                              key: const Key('menu-tournament'),
-                              label: 'TOURNAMENT',
-                              icon: Icons.emoji_events,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                context.go(AppRoutes.tournament);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ArcadeButton(
-                              key: const Key('menu-courts'),
-                              label: 'COURTS',
-                              icon: Icons.park,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                context.go(AppRoutes.courts);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ArcadeButton(
-                              key: const Key('menu-trophy-room'),
-                              label: 'TROPHY ROOM',
-                              icon: Icons.emoji_events,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                context.go(AppRoutes.trophyRoom);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ArcadeButton(
-                              key: const Key('menu-settings'),
-                              label: 'SETTINGS',
-                              icon: Icons.settings,
-                              onPressed: () {
-                                ref.read(audioServiceProvider).playMenuClick();
-                                context.go(AppRoutes.settings);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+      body: ParkBackdrop(
+        overlayOpacity: 0.44,
+        showCourtImage: false,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
                     ),
-                  ],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const _Logo(),
+                        const SizedBox(height: 54),
+                        ArcadePanel(
+                          backgroundColor:
+                              VisualPalette.uiSurface.withValues(alpha: 0.82),
+                          borderColor: VisualPalette.environmentSignBorder
+                              .withValues(alpha: 0.78),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: ArcadeButton(
+                                  key: const Key('menu-quick-match'),
+                                  label: 'QUICK MATCH',
+                                  icon: Icons.sports_tennis,
+                                  onPressed: () {
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playMenuClick();
+                                    ref
+                                        .read(tournamentProvider.notifier)
+                                        .reset();
+                                    ref
+                                        .read(rivalChallengeProvider.notifier)
+                                        .reset();
+                                    ref
+                                        .read(dinkRivalsGameProvider)
+                                        .setOpponentAiProfile(
+                                          OpponentAISystem.defaultProfile,
+                                        );
+                                    ref
+                                        .read(dinkRivalsGameProvider)
+                                        .resetMatch();
+                                    context.go(AppRoutes.game);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ArcadeButton(
+                                  key: const Key('menu-debug-rally'),
+                                  label: 'DEBUG RALLY',
+                                  icon: Icons.science,
+                                  onPressed: () {
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playMenuClick();
+                                    context.go(AppRoutes.debugRally);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ArcadeButton(
+                                  key: const Key('menu-roster'),
+                                  label: 'ROSTER',
+                                  icon: Icons.groups,
+                                  onPressed: () {
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playMenuClick();
+                                    context.go(AppRoutes.roster);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ArcadeButton(
+                                  key: const Key('menu-tournament'),
+                                  label: 'TOURNAMENT',
+                                  icon: Icons.emoji_events,
+                                  onPressed: () {
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playMenuClick();
+                                    context.go(AppRoutes.tournament);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ArcadeButton(
+                                  key: const Key('menu-courts'),
+                                  label: 'COURTS',
+                                  icon: Icons.park,
+                                  onPressed: () {
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playMenuClick();
+                                    context.go(AppRoutes.courts);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ArcadeButton(
+                                  key: const Key('menu-trophy-room'),
+                                  label: 'TROPHY ROOM',
+                                  icon: Icons.emoji_events,
+                                  onPressed: () {
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playMenuClick();
+                                    context.go(AppRoutes.trophyRoom);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ArcadeButton(
+                                  key: const Key('menu-settings'),
+                                  label: 'SETTINGS',
+                                  icon: Icons.settings,
+                                  onPressed: () {
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playMenuClick();
+                                    context.go(AppRoutes.settings);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              const AdBannerSlot(placement: 'menu'),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
