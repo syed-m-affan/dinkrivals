@@ -1759,6 +1759,9 @@ first-match flow test also asserts Quick Match reaches the tutorial/game path
 without any banner, interstitial, or rewarded ad call before gameplay. The
 product-rules guard test scans app source/config for forbidden energy, stamina,
 gems, gacha, loot box, premium-currency, heart-gate, and pay-to-win mechanics.
+An asset-manifest guard test also verifies pubspec asset declarations,
+checked-in asset reachability, and the approved runtime sprite PNG set so
+missing or accidental sprite/art drift fails CI.
 The `google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
 opt-in `AdMobAdService` uses Google's Android test app ID plus test
 banner/rewarded/interstitial ad unit IDs by default and preserves

@@ -67,6 +67,11 @@ scans app source/config for forbidden energy, stamina, gems, gacha, loot box,
 premium-currency, heart-gate, and pay-to-win mechanics so the MVP
 non-negotiables fail in CI if accidentally introduced.
 
+Asset-manifest guard update (2026-05-17): `asset_manifest_guard_test.dart` now
+verifies pubspec asset declarations, checked-in asset reachability, and the
+approved runtime sprite PNG set so missing files and accidental art-package
+drift fail in CI.
+
 ## Dashboard
 
 | ID | Phase | Status | Priority | Parallel | Depends on | Summary |

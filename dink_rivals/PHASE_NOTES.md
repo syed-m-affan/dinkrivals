@@ -458,7 +458,7 @@ Re-run the previous QA checklists with attention to:
   from the current environment so the checked build path and configured values
   stay aligned.
 - Verification for this slice: `flutter analyze` passes, `flutter test` passes
-  with 291 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
+  with 293 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
   -BuildRelease` passes with expected warnings for external production values,
   and strict release preflight exits nonzero as expected until real signing,
   final app id, production AdMob values, production ad mode, and a physical
@@ -470,12 +470,14 @@ Re-run the previous QA checklists with attention to:
   court-space arcs under the sprites. Claude recommended this non-sprite
   overlay approach over tinting the approved character sheets; full
   per-character runtime sprite sheets remain blocked on approved art workflow.
-- Latest verification now passes with 291 tests after adding the character
+- Latest verification now passes with 293 tests after adding the character
   accent, Dink Streak Accent equip/persistence coverage, and a first-match
   no-pre-game-ad flow guard.
 - Added a product-rules guard test that scans app source/config for forbidden
   energy, stamina, gems, gacha, loot box, premium-currency, heart-gate, and
   pay-to-win mechanics.
+- Added an asset-manifest guard test that verifies pubspec asset declarations,
+  checked-in asset reachability, and the approved runtime sprite PNG set.
 - The current release APK installed and launched on `emulator-5554`; ADB
   reported `com.example.dink_rivals/.MainActivity` focused with pid `18064`.
   The physical Pixel remains unavailable, so this is only emulator smoke.

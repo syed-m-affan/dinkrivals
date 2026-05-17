@@ -15,7 +15,7 @@ and install on the connected Pixel when finished.
   - `3ab6194 add admob production consent plumbing`
 - Verification on the current tree:
   - `flutter analyze`: no issues.
-  - `flutter test`: 291 tests passed.
+  - `flutter test`: 293 tests passed.
   - `flutter build apk --debug`: built `build/app/outputs/flutter-apk/app-debug.apk`.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
@@ -35,6 +35,8 @@ and install on the connected Pixel when finished.
   - Product-rule guard tests scan app source/config for forbidden energy,
     gems, gacha, loot box, premium-currency, heart-gate, and pay-to-win
     mechanics.
+  - Asset-manifest guard tests verify pubspec asset declarations, checked-in
+    asset reachability, and the approved runtime sprite PNG set.
 - Device state: `adb devices -l` lists only `emulator-5554`; the physical Pixel is not visible.
 - Working tree after push: clean except pre-existing untracked `.idea/`.
 
@@ -62,6 +64,7 @@ and install on the connected Pixel when finished.
 | Release signing scaffolding | `android/key.properties` / `DINK_RIVALS_UPLOAD_*` support | Implemented; real credentials external |
 | Final application ID plumbing | `DINK_RIVALS_APPLICATION_ID` override with stable QA default | Implemented; final value external |
 | No energy/gems/gacha/pay-to-win | `product_rules_guard_test.dart` scans app source/config for forbidden energy, gems, gacha, loot box, premium-currency, heart-gate, and pay-to-win mechanics | Implemented |
+| Asset manifest integrity | `asset_manifest_guard_test.dart` verifies declared assets exist, checked-in assets are reachable from pubspec, and the approved runtime sprite PNG set has not drifted accidentally | Implemented |
 | No forced ad before first gameplay | `main_menu_flow_test.dart` asserts first Quick Match/tutorial path shows no banner/interstitial/rewarded ad; banners hidden before first completed match; interstitial gates require completed matches/time; rewarded ads user-initiated | Implemented |
 | No ads during active gameplay | route-level banner tests assert no banner slots on game/debug/tournament/courts/end-match; interstitial calls occur only at natural breaks | Implemented |
 | Offline gameplay | 900-second offline emulator QA harness runs recorded without crash/ANR for debug APK and current release APK | Verified on emulator |
