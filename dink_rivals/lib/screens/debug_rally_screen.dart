@@ -29,6 +29,7 @@ class _DebugRallyScreenState extends ConsumerState<DebugRallyScreen> {
       audioService: ref.read(audioServiceProvider),
       hapticsService: ref.read(hapticsServiceProvider),
       controlMode: saveData.gameplayControlMode,
+      selectedCourtId: saveData.activeCourtId,
       freeRallyDebugMode: true,
     );
   }

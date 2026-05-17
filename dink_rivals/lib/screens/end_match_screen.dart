@@ -9,6 +9,7 @@ import '../app/router.dart';
 import '../game/config/character_visuals.dart';
 import '../game/config/visual_palette.dart';
 import '../game/models/player_side.dart';
+import '../services/save_service.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
 import '../widgets/park_backdrop.dart';
@@ -37,6 +38,10 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
       return;
     }
     if (didShow) {
+      await ref.read(saveDataProvider.notifier).addStars(100);
+      if (!mounted) {
+        return;
+      }
       setState(() => _rewardClaimed = true);
     } else {
       setState(() => _rewardAvailable = false);
@@ -93,6 +98,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
   @override
   Widget build(BuildContext context) {
     final game = ref.watch(dinkRivalsGameProvider);
+    final saveData = ref.watch(saveDataProvider);
     ref.watch(adPlacementTickProvider);
     final adPlacement = ref.watch(adPlacementSystemProvider);
     final match = game.matchState;
@@ -209,6 +215,18 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
                             : VisualPalette.courtLineWhite,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'STARS ${saveData.stars}',
+                      key: const Key('end-match-stars-label'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: VisualPalette.textSoft,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'monospace',
                       ),
                     ),
                     const SizedBox(height: 12),

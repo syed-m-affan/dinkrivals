@@ -331,3 +331,20 @@ Re-run the previous QA checklists with attention to:
   `GameScreen` tournament-match advancement. Physical Android tournament QA,
   richer results presentation, optional tournament retry ads, and broader
   unlock/court-selection surfaces remain follow-up work.
+
+## Phase 7 progression slice (2026-05-17)
+- Added persistent reward currency (`stars`), tutorial completion, and selected
+  cosmetic court ID to `SaveData` / `SaveService`.
+- Post-match rewarded fake ads now persist the bonus 100 stars instead of only
+  changing local screen text. Completed matches grant the base 100 stars through
+  the existing match-completion path.
+- Added a first-game quick-start overlay that pauses the match until dismissed,
+  then persists `tutorialSeen` so it does not keep interrupting returning
+  players.
+- Added `CourtSelectScreen` and `TrophyRoomScreen`, both reachable from the
+  main menu. Court selection currently offers the current Classic Park visual
+  environment plus the gray projection-training court as cosmetic options.
+- The Classic Cup trophy remains the first achievement unlock; trophy room
+  displays the trophy state, stars, court availability, and tutorial state.
+- Real AdMob, optional banners, character-specific unlock flows, tournament
+  retry ads, release signing, and physical Pixel QA remain open Phase 7 work.

@@ -23,6 +23,7 @@ import 'config/court_constants.dart';
 import 'config/debug_flags.dart';
 import 'config/tuning_constants.dart';
 import 'models/ball_state.dart';
+import 'models/court_unlock.dart';
 import 'models/gameplay_control_mode.dart';
 import 'models/match_state.dart';
 import 'models/opponent_ai_profile.dart';
@@ -49,8 +50,10 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     AudioService? audioService,
     HapticsService? hapticsService,
     this.controlMode = GameplayControlMode.classicRacketStick,
+    String selectedCourtId = CourtUnlockIds.defaultCourt,
     this.freeRallyDebugMode = false,
-  })  : audioService = audioService ?? FakeAudioService(),
+  })  : selectedCourtId = normalizedCourtId(selectedCourtId),
+        audioService = audioService ?? FakeAudioService(),
         hapticsService = hapticsService ?? FakeHapticsService();
 
   late final PlayerComponent player;
@@ -61,6 +64,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   final HapticsService hapticsService;
   final GameplayControlMode controlMode;
   final bool freeRallyDebugMode;
+  String selectedCourtId;
 
   final CourtLayoutSystem courtLayoutSystem = CourtLayoutSystem();
   final InputSystem inputSystem = InputSystem();
@@ -180,6 +184,12 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   bool get isServeCharging => serveFlowSystem.hasActivePlayerServeCharge;
 
   double get serveChargeFraction => serveFlowSystem.playerServeChargeFraction;
+
+  bool get usesProjectionEnvironment => selectedCourtId == CourtUnlockIds.park;
+
+  void setSelectedCourt(String courtId) {
+    selectedCourtId = normalizedCourtId(courtId);
+  }
 
   void resetPoint() {
     ball.state

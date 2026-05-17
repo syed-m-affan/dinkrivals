@@ -1721,6 +1721,15 @@ Ship a small but complete free ad-supported game.
 * Android release APK builds.
 * App does not crash after 15 minutes of testing.
 
+## Current Implementation Note (2026-05-17)
+
+The non-human Phase 7 progression slice now includes persistent stars,
+tutorial dismissal, cosmetic court selection, a Trophy Room route, and a Courts
+route. The existing fake rewarded post-match ad persists bonus stars, and the
+first game visit shows a dismissible quick-start overlay. Real AdMob, optional
+banners, character-specific unlocks, release signing, offline checks, 15-minute
+stability QA, and physical Pixel closeout remain open.
+
 ## Android QA Checklist
 
 * Fresh install.

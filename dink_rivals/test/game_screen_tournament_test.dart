@@ -18,7 +18,10 @@ import 'package:dink_rivals/services/audio_service.dart';
 import 'package:dink_rivals/services/haptics_service.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
-Future<ProviderContainer> _container(DinkRivalsGame game) async {
+Future<ProviderContainer> _container(
+  DinkRivalsGame game, {
+  SaveData initialSaveData = const SaveData(tutorialSeen: true),
+}) async {
   SharedPreferences.setMockInitialValues({});
   final service = SaveService(await SharedPreferences.getInstance());
   return ProviderContainer(
@@ -30,7 +33,7 @@ Future<ProviderContainer> _container(DinkRivalsGame game) async {
       hapticsServiceProvider.overrideWithValue(FakeHapticsService()),
       saveServiceProvider.overrideWithValue(service),
       saveDataProvider.overrideWith(
-        () => SaveDataNotifier(service, const SaveData()),
+        () => SaveDataNotifier(service, initialSaveData),
       ),
     ],
   );
@@ -75,5 +78,26 @@ void main() {
     expect(
         container.read(tournamentProvider).status, TournamentStatus.finalRound);
     expect(container.read(saveDataProvider).matchesCompleted, 1);
+    expect(container.read(saveDataProvider).stars, 100);
+  });
+
+  testWidgets('first game visit shows and persists quick-start tutorial',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game, initialSaveData: const SaveData());
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    expect(find.byKey(const Key('tutorial-title')), findsOneWidget);
+    expect(game.paused, isTrue);
+
+    await tester.tap(find.byKey(const Key('tutorial-dismiss')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('tutorial-title')), findsNothing);
+    expect(game.paused, isFalse);
+    expect(container.read(saveDataProvider).tutorialSeen, isTrue);
   });
 }

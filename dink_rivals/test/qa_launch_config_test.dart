@@ -24,6 +24,18 @@ void main() {
     );
   });
 
+  test('QA launch router accepts progression routes', () {
+    final courtsRouter = createAppRouter(initialLocation: AppRoutes.courts);
+    final trophyRouter = createAppRouter(initialLocation: AppRoutes.trophyRoom);
+    addTearDown(courtsRouter.dispose);
+    addTearDown(trophyRouter.dispose);
+
+    expect(
+        courtsRouter.routeInformationProvider.value.uri.path, AppRoutes.courts);
+    expect(trophyRouter.routeInformationProvider.value.uri.path,
+        AppRoutes.trophyRoom);
+  });
+
   test('QA launch router falls back to menu for unknown routes', () {
     final router = createAppRouter(initialLocation: '/not-a-real-route');
     addTearDown(router.dispose);

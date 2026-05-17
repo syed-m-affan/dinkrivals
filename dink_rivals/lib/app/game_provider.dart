@@ -21,6 +21,7 @@ final dinkRivalsGameProvider = Provider<DinkRivalsGame>((ref) {
     audioService: ref.watch(audioServiceProvider),
     hapticsService: ref.watch(hapticsServiceProvider),
     controlMode: saveData.gameplayControlMode,
+    selectedCourtId: saveData.activeCourtId,
   );
   seedQaEndMatchForLaunch(
     game,

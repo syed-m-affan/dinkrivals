@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/models/gameplay_control_mode.dart';
+import '../game/models/court_unlock.dart';
 import '../game/models/save_data.dart';
 
 class SaveService {
@@ -13,6 +14,9 @@ class SaveService {
   static const _controlModeKey = 'gameplay_control_mode';
   static const _matchesKey = 'matches_completed';
   static const _classicCupWinsKey = 'classic_cup_wins';
+  static const _starsKey = 'stars';
+  static const _tutorialSeenKey = 'tutorial_seen';
+  static const _selectedCourtKey = 'selected_court_id';
   static const _currentVersion = 1;
 
   final SharedPreferences _prefs;
@@ -25,6 +29,9 @@ class SaveService {
           _prefs.getString(_controlModeKey)),
       matchesCompleted: _prefs.getInt(_matchesKey) ?? 0,
       classicCupWins: _prefs.getInt(_classicCupWinsKey) ?? 0,
+      stars: _prefs.getInt(_starsKey) ?? 0,
+      tutorialSeen: _prefs.getBool(_tutorialSeenKey) ?? false,
+      selectedCourtId: normalizedCourtId(_prefs.getString(_selectedCourtKey)),
     );
   }
 
@@ -38,6 +45,9 @@ class SaveService {
     );
     await _prefs.setInt(_matchesKey, data.matchesCompleted);
     await _prefs.setInt(_classicCupWinsKey, data.classicCupWins);
+    await _prefs.setInt(_starsKey, data.stars);
+    await _prefs.setBool(_tutorialSeenKey, data.tutorialSeen);
+    await _prefs.setString(_selectedCourtKey, data.activeCourtId);
   }
 }
 
@@ -70,13 +80,32 @@ class SaveDataNotifier extends Notifier<SaveData> {
     await _service.save(state);
   }
 
-  Future<void> recordMatchCompleted() async {
-    state = state.copyWith(matchesCompleted: state.matchesCompleted + 1);
+  Future<void> recordMatchCompleted({int earnedStars = 100}) async {
+    state = state.copyWith(
+      matchesCompleted: state.matchesCompleted + 1,
+      stars: state.stars + earnedStars,
+    );
     await _service.save(state);
   }
 
   Future<void> recordClassicCupWin() async {
     state = state.copyWith(classicCupWins: state.classicCupWins + 1);
+    await _service.save(state);
+  }
+
+  Future<void> addStars(int amount) async {
+    state = state.copyWith(stars: state.stars + amount);
+    await _service.save(state);
+  }
+
+  Future<void> setTutorialSeen(bool value) async {
+    state = state.copyWith(tutorialSeen: value);
+    await _service.save(state);
+  }
+
+  Future<void> selectCourt(String courtId) async {
+    final normalized = normalizedCourtId(courtId);
+    state = state.copyWith(selectedCourtId: normalized);
     await _service.save(state);
   }
 }

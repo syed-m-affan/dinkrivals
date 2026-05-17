@@ -26,12 +26,17 @@ class GameScreen extends ConsumerStatefulWidget {
 class _GameScreenState extends ConsumerState<GameScreen> {
   bool _showPause = false;
   bool _handlingMatchOver = false;
+  late bool _showTutorial;
   late final DinkRivalsGame _game;
 
   @override
   void initState() {
     super.initState();
     _game = ref.read(dinkRivalsGameProvider);
+    _showTutorial = !ref.read(saveDataProvider).tutorialSeen;
+    if (_showTutorial) {
+      _game.paused = true;
+    }
     _game.matchOverNotifier.addListener(_handleMatchOver);
   }
 
@@ -83,9 +88,21 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     context.go(AppRoutes.menu);
   }
 
+  Future<void> _dismissTutorial() async {
+    ref.read(audioServiceProvider).playMenuClick();
+    await ref.read(saveDataProvider.notifier).setTutorialSeen(true);
+    if (!mounted) {
+      return;
+    }
+    _game.paused = false;
+    setState(() => _showTutorial = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final game = ref.watch(dinkRivalsGameProvider);
+    final saveData = ref.watch(saveDataProvider);
+    game.setSelectedCourt(saveData.activeCourtId);
     // Keep the game canvas full-bleed in immersive mode, but offset tappable
     // Flutter controls away from cutouts/status areas.
     final viewPadding = MediaQuery.viewPaddingOf(context);
@@ -148,8 +165,132 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   _game.confirmOpponentServeReady();
                 },
               ),
+            if (_showTutorial)
+              _TutorialOverlay(
+                onDismiss: _dismissTutorial,
+              ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TutorialOverlay extends StatelessWidget {
+  const _TutorialOverlay({required this.onDismiss});
+
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: ColoredBox(
+        color: VisualPalette.overlayScrim,
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: ArcadePanel(
+                backgroundColor: VisualPalette.uiSurface.withValues(
+                  alpha: 0.94,
+                ),
+                borderColor: VisualPalette.uiAccent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      'QUICK START',
+                      key: Key('tutorial-title'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: VisualPalette.uiAccent,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const _TutorialCue(
+                      icon: Icons.gamepad,
+                      label: 'MOVE',
+                      detail: 'left ring',
+                    ),
+                    const _TutorialCue(
+                      icon: Icons.navigation,
+                      label: 'AIM',
+                      detail: 'red arrow',
+                    ),
+                    const _TutorialCue(
+                      icon: Icons.sports_tennis,
+                      label: 'SWING',
+                      detail: 'right ring',
+                    ),
+                    const _TutorialCue(
+                      icon: Icons.touch_app,
+                      label: 'DINK',
+                      detail: 'body contact',
+                    ),
+                    const SizedBox(height: 22),
+                    ArcadeButton(
+                      key: const Key('tutorial-dismiss'),
+                      label: 'PLAY',
+                      icon: Icons.play_arrow,
+                      onPressed: onDismiss,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TutorialCue extends StatelessWidget {
+  const _TutorialCue({
+    required this.icon,
+    required this.label,
+    required this.detail,
+  });
+
+  final IconData icon;
+  final String label;
+  final String detail;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Icon(icon, color: VisualPalette.courtLineWhite, size: 26),
+          const SizedBox(width: 14),
+          SizedBox(
+            width: 78,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: VisualPalette.courtLineWhite,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              detail,
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: VisualPalette.textSoft,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

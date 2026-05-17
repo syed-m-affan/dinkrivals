@@ -26,6 +26,11 @@ class ClassicEnvironmentComponent extends Component {
 
   @override
   void render(Canvas canvas) {
+    if (!game.usesProjectionEnvironment) {
+      canvas.drawRect(Offset.zero & game.size.toSize(), _fallbackPaint);
+      return;
+    }
+
     final background = _background;
     if (background == null) {
       canvas.drawRect(Offset.zero & game.size.toSize(), _fallbackPaint);

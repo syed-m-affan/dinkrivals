@@ -105,6 +105,32 @@ class MainMenuScreen extends ConsumerWidget {
                           SizedBox(
                             width: double.infinity,
                             child: ArcadeButton(
+                              key: const Key('menu-courts'),
+                              label: 'COURTS',
+                              icon: Icons.park,
+                              onPressed: () {
+                                ref.read(audioServiceProvider).playMenuClick();
+                                context.go(AppRoutes.courts);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ArcadeButton(
+                              key: const Key('menu-trophy-room'),
+                              label: 'TROPHY ROOM',
+                              icon: Icons.emoji_events,
+                              onPressed: () {
+                                ref.read(audioServiceProvider).playMenuClick();
+                                context.go(AppRoutes.trophyRoom);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ArcadeButton(
                               key: const Key('menu-settings'),
                               label: 'SETTINGS',
                               icon: Icons.settings,

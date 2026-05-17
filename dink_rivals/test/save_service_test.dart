@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
+import 'package:dink_rivals/game/models/court_unlock.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
@@ -22,6 +23,9 @@ void main() {
     expect(data.matchesCompleted, 0);
     expect(data.classicCupWins, 0);
     expect(data.classicCupTrophyUnlocked, isFalse);
+    expect(data.stars, 0);
+    expect(data.tutorialSeen, isFalse);
+    expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
   });
 
   test('save then load round-trips all fields', () async {
@@ -34,6 +38,9 @@ void main() {
       gameplayControlMode: GameplayControlMode.classicRacketStick,
       matchesCompleted: 7,
       classicCupWins: 2,
+      stars: 350,
+      tutorialSeen: true,
+      selectedCourtId: CourtUnlockIds.training,
     );
     await service.save(target);
 
@@ -67,6 +74,9 @@ void main() {
     expect(data.gameplayControlMode, GameplayControlMode.classicRacketStick);
     expect(data.matchesCompleted, 0);
     expect(data.classicCupWins, 0);
+    expect(data.stars, 0);
+    expect(data.tutorialSeen, isFalse);
+    expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
   });
 
   test('SaveData copyWith leaves untouched fields alone', () {
@@ -78,5 +88,8 @@ void main() {
     expect(updated.hapticsEnabled, original.hapticsEnabled);
     expect(updated.gameplayControlMode, original.gameplayControlMode);
     expect(updated.classicCupWins, original.classicCupWins);
+    expect(updated.stars, original.stars);
+    expect(updated.tutorialSeen, original.tutorialSeen);
+    expect(updated.selectedCourtId, original.selectedCourtId);
   });
 }

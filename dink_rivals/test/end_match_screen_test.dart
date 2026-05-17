@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dink_rivals/app/ad_provider.dart';
 import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/game/config/character_visuals.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
+import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/screens/end_match_screen.dart';
 import 'package:dink_rivals/services/audio_service.dart';
+import 'package:dink_rivals/services/save_service.dart';
 
-Widget _wrap(
+Future<Widget> _wrap(
   DinkRivalsGame game, {
   FakeAdService? adService,
   AdPlacementSystem? adPlacement,
-}) {
+  SaveData initialSaveData = const SaveData(),
+}) async {
+  SharedPreferences.setMockInitialValues({});
+  final saveService = SaveService(await SharedPreferences.getInstance());
   final router = GoRouter(
     initialLocation: '/end-match',
     routes: [
@@ -37,6 +43,10 @@ Widget _wrap(
       audioServiceProvider.overrideWithValue(FakeAudioService()),
       adPlacementSystemProvider
           .overrideWithValue(adPlacement ?? AdPlacementSystem()),
+      saveServiceProvider.overrideWithValue(saveService),
+      saveDataProvider.overrideWith(
+        () => SaveDataNotifier(saveService, initialSaveData),
+      ),
     ],
     child: MaterialApp.router(routerConfig: router),
   );
@@ -59,7 +69,7 @@ void main() {
     game.matchState.rallyCount = 12;
     game.matchState.longestRally = 19;
 
-    await tester.pumpWidget(_wrap(game));
+    await tester.pumpWidget(await _wrap(game));
     await tester.pump();
 
     expect(find.text('YOU WIN'), findsOneWidget);
@@ -78,7 +88,7 @@ void main() {
     game.matchState.playerScore = 5;
     game.matchState.opponentScore = 7;
 
-    await tester.pumpWidget(_wrap(game));
+    await tester.pumpWidget(await _wrap(game));
     await tester.pump();
 
     expect(find.text('OPPONENT WINS'), findsOneWidget);
@@ -93,7 +103,7 @@ void main() {
     game.matchState.playerScore = 0;
     game.matchState.opponentScore = 0;
 
-    await tester.pumpWidget(_wrap(game));
+    await tester.pumpWidget(await _wrap(game));
     await tester.pump();
 
     expect(find.text('MATCH COMPLETE'), findsOneWidget);
@@ -105,7 +115,7 @@ void main() {
     game.matchState.playerScore = 7;
     game.matchState.opponentScore = 3;
 
-    await tester.pumpWidget(_wrap(game));
+    await tester.pumpWidget(await _wrap(game));
     await tester.pump();
 
     expect(find.byKey(const Key('end-match-rematch')), findsOneWidget);
@@ -119,7 +129,7 @@ void main() {
     game.matchState.opponentScore = 3;
     final adService = FakeAdService();
 
-    await tester.pumpWidget(_wrap(game, adService: adService));
+    await tester.pumpWidget(await _wrap(game, adService: adService));
     await tester.pump();
 
     expect(find.text('MATCH REWARD 100'), findsOneWidget);
@@ -132,6 +142,7 @@ void main() {
 
     expect(adService.rewardedShows, 1);
     expect(find.text('REWARD CLAIMED 2X'), findsOneWidget);
+    expect(find.text('STARS 100'), findsOneWidget);
   });
 
   testWidgets('return to menu skips interstitial before eligibility',
@@ -141,7 +152,7 @@ void main() {
     game.matchState.opponentScore = 3;
     final adService = FakeAdService();
 
-    await tester.pumpWidget(_wrap(game, adService: adService));
+    await tester.pumpWidget(await _wrap(game, adService: adService));
     await tester.pump();
 
     await tester.ensureVisible(find.byKey(const Key('end-match-menu')));
@@ -166,7 +177,7 @@ void main() {
     }
 
     await tester.pumpWidget(
-      _wrap(game, adService: adService, adPlacement: adPlacement),
+      await _wrap(game, adService: adService, adPlacement: adPlacement),
     );
     await tester.pump();
 
@@ -197,7 +208,7 @@ void main() {
     }
 
     await tester.pumpWidget(
-      _wrap(game, adService: adService, adPlacement: adPlacement),
+      await _wrap(game, adService: adService, adPlacement: adPlacement),
     );
     await tester.pump();
 

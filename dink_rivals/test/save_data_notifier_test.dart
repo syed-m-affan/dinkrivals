@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dink_rivals/game/models/court_unlock.dart';
 import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/services/save_service.dart';
@@ -65,7 +66,7 @@ void main() {
         reloaded.gameplayControlMode, GameplayControlMode.classicRacketStick);
   });
 
-  test('recordMatchCompleted increments by exactly one', () async {
+  test('recordMatchCompleted increments match count and stars', () async {
     final prefs = await SharedPreferences.getInstance();
     final service = SaveService(prefs);
     final container = _container(service, const SaveData(matchesCompleted: 2));
@@ -75,8 +76,10 @@ void main() {
     await container.read(saveDataProvider.notifier).recordMatchCompleted();
 
     expect(container.read(saveDataProvider).matchesCompleted, 4);
+    expect(container.read(saveDataProvider).stars, 200);
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.matchesCompleted, 4);
+    expect(reloaded.stars, 200);
   });
 
   test('recordClassicCupWin unlocks and persists trophy count', () async {
@@ -91,5 +94,47 @@ void main() {
     expect(container.read(saveDataProvider).classicCupTrophyUnlocked, isTrue);
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.classicCupWins, 1);
+  });
+
+  test('addStars persists reward currency', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData(stars: 50));
+    addTearDown(container.dispose);
+
+    await container.read(saveDataProvider.notifier).addStars(100);
+
+    expect(container.read(saveDataProvider).stars, 150);
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.stars, 150);
+  });
+
+  test('setTutorialSeen persists tutorial completion', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData());
+    addTearDown(container.dispose);
+
+    await container.read(saveDataProvider.notifier).setTutorialSeen(true);
+
+    expect(container.read(saveDataProvider).tutorialSeen, isTrue);
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.tutorialSeen, isTrue);
+  });
+
+  test('selectCourt persists cosmetic court choice', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData());
+    addTearDown(container.dispose);
+
+    await container
+        .read(saveDataProvider.notifier)
+        .selectCourt(CourtUnlockIds.training);
+
+    expect(container.read(saveDataProvider).activeCourtId,
+        CourtUnlockIds.training);
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.activeCourtId, CourtUnlockIds.training);
   });
 }

@@ -50,6 +50,8 @@ Projection-locked environment rebuild (2026-05-14): The first rebuilt environmen
 
 Phase 6 implementation start (2026-05-17): A minimal Classic Cup tournament MVP is now implemented for non-human scope. The main menu routes to a new tournament screen, `TournamentState` and `TournamentSystem` drive a 4-player single-elimination bracket, tournament matches use the existing `GameScreen`, and completed tournament matches advance back to the bracket instead of the normal end-match screen. Three rival profiles (Rookie, Veteran, Showman) now provide simple opponent AI stat differences for tournament play. Winning the final increments persisted `classicCupWins`, which unlocks the Classic Cup trophy and survives restart through `SaveService`. Automated coverage includes pure tournament progression tests, tournament provider/trophy persistence tests, tournament screen widget tests, and a `GameScreen` integration test for bracket advancement. Remaining Phase 6 work: richer tournament results presentation, optional rewarded retry flow after a failed tournament match, broader unlock/court selection surfaces, and physical Android QA.
 
+Phase 7 progression slice (2026-05-17): Persistent stars, tutorial completion, and cosmetic court selection are implemented in `SaveData` / `SaveService`. Completed matches grant base stars and the existing fake rewarded post-match ad persists the bonus 100 stars. `GameScreen` now shows a first-visit quick-start overlay and stores `tutorialSeen` after dismissal. New `CourtSelectScreen` and `TrophyRoomScreen` routes are reachable from the main menu; the court screen selects between the current Classic Park environment and a gray projection-training court, while the trophy room shows stars, Classic Cup trophy state, court availability, and tutorial state. Remaining Phase 7 work: character-specific achievement unlocks, optional tournament retry rewarded ad, optional non-gameplay banner placeholder/real AdMob planning after fake-ad QA, Android release build/signing, physical Pixel QA, and 15-minute stability/offline checks.
+
 ## Dashboard
 
 | ID | Phase | Status | Priority | Parallel | Depends on | Summary |
@@ -90,6 +92,14 @@ Phase 6 implementation start (2026-05-17): A minimal Classic Cup tournament MVP 
 | P6-003 | 6 | done | high | C | [P6-001] | Persist Classic Cup wins and trophy unlock state through `SaveService`. |
 | P6-004 | 6 | review | medium | D | [P6-001] | Add simple rival AI profile differences for tournament opponents; needs physical gameplay tuning. |
 | P6-005 | 6 | todo | high | final | [P6-001, P6-002, P6-003, P6-004] | Phase 6 physical Android QA, richer results notes, and residual unlock/trophy backlog. |
+| P7-001 | 7 | done | high | A | [P6-003] | Persist stars, tutorial completion, and cosmetic selected court ID. |
+| P7-002 | 7 | done | high | B | [P7-001, P3-003] | Persist post-match reward stars and base match-completion stars through the existing fake rewarded ad flow. |
+| P7-003 | 7 | done | high | C | [P7-001] | Add first-game quick-start tutorial overlay with persisted dismissal. |
+| P7-004 | 7 | done | high | D | [P7-001] | Add Trophy Room route/screen for stars, Classic Cup trophy, court availability, and tutorial state. |
+| P7-005 | 7 | done | medium | E | [P7-001] | Add Courts route/screen and runtime cosmetic selection for Classic Park vs projection-training court. |
+| P7-006 | 7 | todo | high | F | [P7-001] | Character-specific achievement unlocks and any roster/player selection behavior. |
+| P7-007 | 7 | todo | high | G | [P3-006, P7-002] | Optional tournament retry rewarded ad and banner/non-gameplay ad planning after fake-ad QA. |
+| P7-008 | 7 | todo | high | final | [P7-001..P7-007] | Release APK, offline/15-minute stability QA, physical Pixel QA, and MVP release-candidate closeout. |
 | P5-001 | 5 | done | high | A | [] | Visual palette, asset pipeline, and pixel-style court art (preserves 3/4 projection). |
 | P5-002 | 5 | done | high | B | [P5-001] | Player and opponent sprite components with idle/run/swing animations driven by `PlayerState`. |
 | P5-003 | 5 | done | high | C | [P5-001] | Ball and paddle sprites; shadow component unchanged; height-scale curve preserved. |
