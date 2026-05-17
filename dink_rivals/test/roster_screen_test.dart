@@ -56,6 +56,19 @@ void main() {
       find.byKey(const Key('roster-unlock-${CharacterUnlockIds.rookie}')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('roster-select-${CharacterUnlockIds.rookie}')),
+      findsOneWidget,
+    );
+
+    await tester.tap(
+      find.byKey(const Key('roster-select-${CharacterUnlockIds.rookie}')),
+    );
+    await tester.pumpAndSettle();
+
+    final reloaded = await service.load();
+    expect(reloaded.activeCharacterId, CharacterUnlockIds.rookie);
+    expect(game.selectedPlayerCharacterId, CharacterUnlockIds.rookie);
 
     await tester.drag(find.byType(ListView), const Offset(0, -360));
     await tester.pumpAndSettle();

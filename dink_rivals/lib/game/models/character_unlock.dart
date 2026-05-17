@@ -5,6 +5,7 @@ class CharacterUnlockIds {
   static const rallyQueen = 'rally_queen';
   static const veteran = 'veteran';
   static const showman = 'showman';
+  static const defaultSelected = rallyQueen;
 
   static const all = <String>[
     rookie,
@@ -31,4 +32,15 @@ List<String> normalizedCharacterUnlocks(List<String>? ids) {
     for (final id in CharacterUnlockIds.all)
       if (selected.contains(id)) id,
   ];
+}
+
+String normalizedSelectedCharacterId(String? id, List<String>? unlockedIds) {
+  final unlocked = normalizedCharacterUnlocks(unlockedIds);
+  if (id != null && CharacterUnlockIds.isKnown(id) && unlocked.contains(id)) {
+    return id;
+  }
+  if (unlocked.contains(CharacterUnlockIds.defaultSelected)) {
+    return CharacterUnlockIds.defaultSelected;
+  }
+  return unlocked.first;
 }

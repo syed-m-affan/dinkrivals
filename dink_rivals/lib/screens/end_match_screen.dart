@@ -117,10 +117,12 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     };
     final rewardText =
         _rewardClaimed ? 'REWARD CLAIMED 2X' : 'MATCH REWARD 100';
+    final playerPortrait =
+        CharacterVisuals.byId(saveData.activeCharacterId).portraitAsset;
     final winnerPortrait = switch (winnerSide) {
-      PlayerSide.player => CharacterVisuals.gameplayPlayer.portraitAsset,
+      PlayerSide.player => playerPortrait,
       PlayerSide.opponent => CharacterVisuals.gameplayOpponent.portraitAsset,
-      null => CharacterVisuals.gameplayPlayer.portraitAsset,
+      null => playerPortrait,
     };
 
     return PopScope(

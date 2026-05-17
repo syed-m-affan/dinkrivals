@@ -28,6 +28,7 @@ void main() {
     expect(data.tutorialSeen, isFalse);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
     expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
+    expect(data.activeCharacterId, CharacterUnlockIds.defaultSelected);
   });
 
   test('save then load round-trips all fields', () async {
@@ -48,6 +49,7 @@ void main() {
         CharacterUnlockIds.rallyQueen,
         CharacterUnlockIds.showman,
       ],
+      selectedCharacterId: CharacterUnlockIds.showman,
     );
     await service.save(target);
 
@@ -85,6 +87,7 @@ void main() {
     expect(data.tutorialSeen, isFalse);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
     expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
+    expect(data.activeCharacterId, CharacterUnlockIds.defaultSelected);
   });
 
   test('SaveData copyWith leaves untouched fields alone', () {
@@ -100,5 +103,6 @@ void main() {
     expect(updated.tutorialSeen, original.tutorialSeen);
     expect(updated.selectedCourtId, original.selectedCourtId);
     expect(updated.unlockedCharacterIds, original.unlockedCharacterIds);
+    expect(updated.selectedCharacterId, original.selectedCharacterId);
   });
 }

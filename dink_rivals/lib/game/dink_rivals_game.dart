@@ -19,10 +19,12 @@ import 'components/score_component.dart';
 import 'components/shadow_component.dart';
 import 'components/touch_controls_component.dart';
 import 'components/vfx/vfx_layer_component.dart';
+import 'config/character_visuals.dart';
 import 'config/court_constants.dart';
 import 'config/debug_flags.dart';
 import 'config/tuning_constants.dart';
 import 'models/ball_state.dart';
+import 'models/character_unlock.dart';
 import 'models/court_unlock.dart';
 import 'models/gameplay_control_mode.dart';
 import 'models/match_state.dart';
@@ -51,8 +53,13 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     HapticsService? hapticsService,
     this.controlMode = GameplayControlMode.classicRacketStick,
     String selectedCourtId = CourtUnlockIds.defaultCourt,
+    String selectedPlayerCharacterId = CharacterUnlockIds.defaultSelected,
     this.freeRallyDebugMode = false,
   })  : selectedCourtId = normalizedCourtId(selectedCourtId),
+        selectedPlayerCharacterId = normalizedSelectedCharacterId(
+          selectedPlayerCharacterId,
+          CharacterUnlockIds.all,
+        ),
         audioService = audioService ?? FakeAudioService(),
         hapticsService = hapticsService ?? FakeHapticsService();
 
@@ -65,6 +72,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   final GameplayControlMode controlMode;
   final bool freeRallyDebugMode;
   String selectedCourtId;
+  String selectedPlayerCharacterId;
 
   final CourtLayoutSystem courtLayoutSystem = CourtLayoutSystem();
   final InputSystem inputSystem = InputSystem();
@@ -189,6 +197,16 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
 
   void setSelectedCourt(String courtId) {
     selectedCourtId = normalizedCourtId(courtId);
+  }
+
+  CharacterVisualDefinition get selectedPlayerVisual =>
+      CharacterVisuals.byId(selectedPlayerCharacterId);
+
+  void setSelectedPlayerCharacter(String characterId) {
+    selectedPlayerCharacterId = normalizedSelectedCharacterId(
+      characterId,
+      CharacterUnlockIds.all,
+    );
   }
 
   void resetPoint() {

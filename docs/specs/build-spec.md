@@ -1724,15 +1724,19 @@ Ship a small but complete free ad-supported game.
 ## Current Implementation Note (2026-05-17)
 
 The non-human Phase 7 progression slice now includes persistent stars,
-tutorial dismissal, cosmetic court selection, character unlock IDs, a Trophy
-Room route, and a Courts route. The existing fake rewarded post-match ad
-persists bonus stars, the first game visit shows a dismissible quick-start
-overlay, defeated tournament rivals unlock in the roster, locked Veteran and
+tutorial dismissal, cosmetic court selection, character unlock IDs, selected
+player character ID, a Trophy Room route, and a Courts route. The existing fake
+rewarded post-match ad persists bonus stars, the first game visit shows a
+dismissible quick-start overlay, defeated tournament rivals unlock in the
+roster, unlocked characters can be selected from the roster, locked Veteran and
 Showman roster cards can start direct challenge matches, and eliminated
 tournament runs can use a fake rewarded retry ad to restore the failed match.
-Real AdMob, optional banners, player-character selection, Rally Queen-specific
-challenge handling, release signing, offline checks, 15-minute stability QA,
-and physical Pixel closeout remain open.
+The current player-character selection is cosmetic/persistent and updates
+roster state, game state, and player-win end-match portrait; gameplay still
+uses the accepted player runtime sprite sheets until per-character sheets are
+approved. Real AdMob, optional banners, Rally Queen-specific challenge
+handling, per-character runtime sprites, release signing, offline checks,
+15-minute stability QA, and physical Pixel closeout remain open.
 
 ## Android QA Checklist
 

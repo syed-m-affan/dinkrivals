@@ -157,4 +157,47 @@ void main() {
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.isCharacterUnlocked(CharacterUnlockIds.showman), isTrue);
   });
+
+  test('selectCharacter persists unlocked cosmetic player choice', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    const initial = SaveData(
+      unlockedCharacterIds: [
+        CharacterUnlockIds.rookie,
+        CharacterUnlockIds.rallyQueen,
+        CharacterUnlockIds.veteran,
+      ],
+    );
+    final container = _container(service, initial);
+    addTearDown(container.dispose);
+
+    await container
+        .read(saveDataProvider.notifier)
+        .selectCharacter(CharacterUnlockIds.veteran);
+
+    expect(
+      container.read(saveDataProvider).activeCharacterId,
+      CharacterUnlockIds.veteran,
+    );
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.activeCharacterId, CharacterUnlockIds.veteran);
+  });
+
+  test('selectCharacter ignores locked characters', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData());
+    addTearDown(container.dispose);
+
+    await container
+        .read(saveDataProvider.notifier)
+        .selectCharacter(CharacterUnlockIds.showman);
+
+    expect(
+      container.read(saveDataProvider).activeCharacterId,
+      CharacterUnlockIds.defaultSelected,
+    );
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.activeCharacterId, CharacterUnlockIds.defaultSelected);
+  });
 }

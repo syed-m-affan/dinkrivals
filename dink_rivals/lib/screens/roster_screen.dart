@@ -83,14 +83,17 @@ class RosterScreen extends ConsumerWidget {
               final char = _mvpRoster[index];
               final visual = CharacterVisuals.byDisplayName(char.name);
               final unlocked = save.isCharacterUnlocked(visual.id);
+              final selected = save.activeCharacterId == visual.id;
               final challengeRival = _challengeRivalFor(visual.id);
               return ArcadePanel(
                 backgroundColor: VisualPalette.uiSurface.withValues(
                   alpha: 0.88,
                 ),
-                borderColor: unlocked
-                    ? VisualPalette.courtLineWhite.withValues(alpha: 0.52)
-                    : VisualPalette.textMuted.withValues(alpha: 0.58),
+                borderColor: selected
+                    ? VisualPalette.uiAccent
+                    : unlocked
+                        ? VisualPalette.courtLineWhite.withValues(alpha: 0.52)
+                        : VisualPalette.textMuted.withValues(alpha: 0.58),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -114,6 +117,17 @@ class RosterScreen extends ConsumerWidget {
                             color: VisualPalette.courtLineWhite,
                             size: 30,
                           ),
+                        if (selected)
+                          const Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Icon(
+                              Icons.check_circle,
+                              key: Key('roster-selected-icon'),
+                              color: VisualPalette.uiAccent,
+                              size: 24,
+                            ),
+                          ),
                       ],
                     ),
                     const SizedBox(width: 16),
@@ -131,12 +145,18 @@ class RosterScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            unlocked ? 'UNLOCKED' : 'LOCKED',
+                            selected
+                                ? 'SELECTED'
+                                : unlocked
+                                    ? 'UNLOCKED'
+                                    : 'LOCKED',
                             key: Key('roster-unlock-${visual.id}'),
                             style: TextStyle(
-                              color: unlocked
-                                  ? VisualPalette.feedbackDink
-                                  : VisualPalette.textMuted,
+                              color: selected
+                                  ? VisualPalette.uiAccent
+                                  : unlocked
+                                      ? VisualPalette.feedbackDink
+                                      : VisualPalette.textMuted,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'monospace',
@@ -163,7 +183,32 @@ class RosterScreen extends ConsumerWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (!unlocked && challengeRival != null) ...[
+                          if (unlocked) ...[
+                            const SizedBox(height: 10),
+                            ArcadeButton(
+                              key: Key('roster-select-${visual.id}'),
+                              label: selected ? 'SELECTED' : 'SELECT',
+                              icon: selected
+                                  ? Icons.check_circle
+                                  : Icons.person_pin_circle,
+                              compact: true,
+                              onPressed: selected
+                                  ? null
+                                  : () async {
+                                      ref
+                                          .read(audioServiceProvider)
+                                          .playMenuClick();
+                                      ref
+                                          .read(dinkRivalsGameProvider)
+                                          .setSelectedPlayerCharacter(
+                                            visual.id,
+                                          );
+                                      await ref
+                                          .read(saveDataProvider.notifier)
+                                          .selectCharacter(visual.id);
+                                    },
+                            ),
+                          ] else if (challengeRival != null) ...[
                             const SizedBox(height: 10),
                             ArcadeButton(
                               key: Key('roster-challenge-${visual.id}'),

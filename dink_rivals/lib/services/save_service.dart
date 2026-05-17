@@ -19,11 +19,15 @@ class SaveService {
   static const _tutorialSeenKey = 'tutorial_seen';
   static const _selectedCourtKey = 'selected_court_id';
   static const _unlockedCharactersKey = 'unlocked_character_ids';
+  static const _selectedCharacterKey = 'selected_character_id';
   static const _currentVersion = 1;
 
   final SharedPreferences _prefs;
 
   Future<SaveData> load() async {
+    final unlockedCharacterIds = normalizedCharacterUnlocks(
+      _prefs.getStringList(_unlockedCharactersKey),
+    );
     return SaveData(
       soundEnabled: _prefs.getBool(_soundKey) ?? true,
       hapticsEnabled: _prefs.getBool(_hapticsKey) ?? true,
@@ -34,8 +38,10 @@ class SaveService {
       stars: _prefs.getInt(_starsKey) ?? 0,
       tutorialSeen: _prefs.getBool(_tutorialSeenKey) ?? false,
       selectedCourtId: normalizedCourtId(_prefs.getString(_selectedCourtKey)),
-      unlockedCharacterIds: normalizedCharacterUnlocks(
-        _prefs.getStringList(_unlockedCharactersKey),
+      unlockedCharacterIds: unlockedCharacterIds,
+      selectedCharacterId: normalizedSelectedCharacterId(
+        _prefs.getString(_selectedCharacterKey),
+        unlockedCharacterIds,
       ),
     );
   }
@@ -57,6 +63,7 @@ class SaveService {
       _unlockedCharactersKey,
       normalizedCharacterUnlocks(data.unlockedCharacterIds),
     );
+    await _prefs.setString(_selectedCharacterKey, data.activeCharacterId);
   }
 }
 
@@ -128,6 +135,18 @@ class SaveDataNotifier extends Notifier<SaveData> {
   Future<void> selectCourt(String courtId) async {
     final normalized = normalizedCourtId(courtId);
     state = state.copyWith(selectedCourtId: normalized);
+    await _service.save(state);
+  }
+
+  Future<void> selectCharacter(String characterId) async {
+    if (!state.isCharacterUnlocked(characterId)) {
+      return;
+    }
+    final normalized = normalizedSelectedCharacterId(
+      characterId,
+      state.unlockedCharacterIds,
+    );
+    state = state.copyWith(selectedCharacterId: normalized);
     await _service.save(state);
   }
 }

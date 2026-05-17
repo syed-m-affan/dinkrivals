@@ -40,4 +40,11 @@ void main() {
     expect(CharacterVisuals.byDisplayName('Veteran').id, 'veteran');
     expect(CharacterVisuals.byDisplayName('Showman').id, 'showman');
   });
+
+  test('id lookup returns expected visual definition', () {
+    expect(CharacterVisuals.byId('rookie').displayName, 'Rookie');
+    expect(CharacterVisuals.byId('rally_queen').displayName, 'Rally Queen');
+    expect(CharacterVisuals.byId('veteran').displayName, 'Veteran');
+    expect(CharacterVisuals.byId('showman').displayName, 'Showman');
+  });
 }

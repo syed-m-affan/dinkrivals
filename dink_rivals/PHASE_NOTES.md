@@ -359,11 +359,17 @@ Re-run the previous QA checklists with attention to:
   Locked Veteran and Showman roster cards now also offer direct challenge
   matches using the existing rival AI profiles; winning the challenge unlocks
   that rival through the same save-data path.
+- Added persisted cosmetic player-character selection for unlocked roster
+  characters. The roster distinguishes `SELECTED`, `UNLOCKED`, and `LOCKED`
+  states, blocks locked selection, updates the active game object, and uses the
+  selected character portrait on player-win end-match screens. This does not
+  add stat modifiers or generate unapproved per-character runtime sprite sheets;
+  gameplay still uses the accepted player sprite set.
 - Added fake rewarded tournament retry: after an eliminated Classic Cup match,
   the tournament screen offers a user-initiated `RETRY AD` button. A successful
   fake rewarded ad restores the failed bracket match by removing only the loss
   record; no real AdMob SDK or in-gameplay ad placement was added.
-- Remaining Phase 7 release-candidate gaps include player-character selection,
-  Rally Queen-specific challenge handling, optional banners/real AdMob planning,
-  production signing, offline and 15-minute stability checks, and physical Pixel
-  QA.
+- Remaining Phase 7 release-candidate gaps include Rally Queen-specific
+  challenge handling, per-character runtime sprite sheets, optional banners/real
+  AdMob planning, production signing, offline and 15-minute stability checks,
+  and physical Pixel QA.

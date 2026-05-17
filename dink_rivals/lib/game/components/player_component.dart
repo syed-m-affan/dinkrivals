@@ -286,6 +286,7 @@ class PlayerComponent extends Component {
   }
 
   void _renderPrimitive(Canvas canvas) {
+    _bodyPaint.color = game.selectedPlayerVisual.primaryColor;
     final depthScale = game.visualScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final torso = game.courtToWorld(state.position, 16);

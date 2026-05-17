@@ -13,6 +13,7 @@ class SaveData {
     this.tutorialSeen = false,
     this.selectedCourtId = CourtUnlockIds.defaultCourt,
     this.unlockedCharacterIds = CharacterUnlockIds.defaultUnlocked,
+    this.selectedCharacterId = CharacterUnlockIds.defaultSelected,
   });
 
   final bool soundEnabled;
@@ -24,10 +25,17 @@ class SaveData {
   final bool tutorialSeen;
   final String selectedCourtId;
   final List<String> unlockedCharacterIds;
+  final String selectedCharacterId;
 
   bool get classicCupTrophyUnlocked => classicCupWins > 0;
   bool get parkCourtUnlocked => true;
-  bool isCharacterUnlocked(String id) => unlockedCharacterIds.contains(id);
+  bool isCharacterUnlocked(String id) =>
+      normalizedCharacterUnlocks(unlockedCharacterIds).contains(id);
+  String get activeCharacterId => normalizedSelectedCharacterId(
+        selectedCharacterId,
+        unlockedCharacterIds,
+      );
+
   String get activeCourtId {
     final normalized = normalizedCourtId(selectedCourtId);
     return normalized;
@@ -43,6 +51,7 @@ class SaveData {
     bool? tutorialSeen,
     String? selectedCourtId,
     List<String>? unlockedCharacterIds,
+    String? selectedCharacterId,
   }) {
     return SaveData(
       soundEnabled: soundEnabled ?? this.soundEnabled,
@@ -54,6 +63,7 @@ class SaveData {
       tutorialSeen: tutorialSeen ?? this.tutorialSeen,
       selectedCourtId: selectedCourtId ?? this.selectedCourtId,
       unlockedCharacterIds: unlockedCharacterIds ?? this.unlockedCharacterIds,
+      selectedCharacterId: selectedCharacterId ?? this.selectedCharacterId,
     );
   }
 
@@ -68,7 +78,8 @@ class SaveData {
         other.stars == stars &&
         other.tutorialSeen == tutorialSeen &&
         other.selectedCourtId == selectedCourtId &&
-        _stringListEquals(other.unlockedCharacterIds, unlockedCharacterIds);
+        _stringListEquals(other.unlockedCharacterIds, unlockedCharacterIds) &&
+        other.selectedCharacterId == selectedCharacterId;
   }
 
   @override
@@ -82,6 +93,7 @@ class SaveData {
         tutorialSeen,
         selectedCourtId,
         Object.hashAll(unlockedCharacterIds),
+        selectedCharacterId,
       );
 }
 

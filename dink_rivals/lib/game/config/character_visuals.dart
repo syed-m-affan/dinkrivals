@@ -94,4 +94,15 @@ class CharacterVisuals {
       ),
     );
   }
+
+  static CharacterVisualDefinition byId(String id) {
+    return mvpRoster.firstWhere(
+      (visual) => visual.id == id,
+      orElse: () => throw ArgumentError.value(
+        id,
+        'id',
+        'No character visual definition exists for this ID.',
+      ),
+    );
+  }
 }
