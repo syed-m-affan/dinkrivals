@@ -1783,9 +1783,10 @@ override `applicationId` with `DINK_RIVALS_APPLICATION_ID` once the final Play
 Console package name is confirmed. A repeatable Android QA harness now lives at
 `dink_rivals/tool/android_qa.ps1`; it can install/launch the debug APK, force
 best-effort offline mode, and monitor logcat for crash/ANR signatures during
-the 15-minute stability window. The harness completed a 900-second offline
-emulator run on `emulator-5554` against the default debug APK without crash or
-ANR signatures; physical Pixel closeout remains open.
+the 15-minute stability window. The harness completed 900-second offline
+emulator runs on `emulator-5554` against the default debug APK and the current
+release APK without crash or ANR signatures; physical Pixel closeout remains
+open.
 `tool/release_readiness.ps1` can now also run analyze/tests/build and enforce a
 production-safe ad mode for stricter release preflight checks.
 

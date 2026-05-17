@@ -474,8 +474,11 @@ Re-run the previous QA checklists with attention to:
   accent, Dink Streak Accent equip/persistence coverage, and a first-match
   no-pre-game-ad flow guard.
 - The current release APK installed and launched on `emulator-5554`; ADB
-  reported `com.example.dink_rivals/.MainActivity` focused with pid `17837`.
+  reported `com.example.dink_rivals/.MainActivity` focused with pid `18064`.
   The physical Pixel remains unavailable, so this is only emulator smoke.
+- The release APK also completed
+  `.\tool\android_qa.ps1 -DeviceId emulator-5554 -ApkPath build\app\outputs\flutter-apk\app-release.apk -Offline -DurationSeconds 900`
+  without crash or ANR signatures, then restored emulator networking.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
   credentials/final application id value validation, physical Pixel QA, and

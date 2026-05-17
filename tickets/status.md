@@ -57,6 +57,11 @@ asserts that a new player can tap Quick Match, reach the tutorial/game path,
 dismiss into active play, and trigger no banner, interstitial, or rewarded ad
 calls before first gameplay.
 
+Release offline QA update (2026-05-17): The current release APK completed
+`.\tool\android_qa.ps1 -DeviceId emulator-5554 -ApkPath build\app\outputs\flutter-apk\app-release.apk -Offline -DurationSeconds 900`
+without crash or ANR signatures on `emulator-5554`; physical Pixel QA remains
+blocked by device availability.
+
 ## Dashboard
 
 | ID | Phase | Status | Priority | Parallel | Depends on | Summary |

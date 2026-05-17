@@ -20,8 +20,9 @@ and install on the connected Pixel when finished.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-release.apk`: installed current release APK.
+  - `.\tool\android_qa.ps1 -DeviceId emulator-5554 -ApkPath build\app\outputs\flutter-apk\app-release.apk -Offline -DurationSeconds 900`: completed without crash or ANR signatures.
   - `adb shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1`: launched the current release APK on `emulator-5554`.
-  - Current release emulator launch check: `pidof com.example.dink_rivals` returned `17837`, and `dumpsys window` focused `com.example.dink_rivals/.MainActivity`.
+  - Current release emulator launch check: `pidof com.example.dink_rivals` returned `18064`, and `dumpsys window` focused `com.example.dink_rivals/.MainActivity`.
   - `.\tool\release_readiness.ps1`: mechanical release preflight passes with warnings for external production values and physical device availability.
   - `.\tool\release_readiness.ps1 -RunAnalyze -RunTests -BuildRelease`: analyzer, all tests, and release build pass; external production values still warn.
   - `.\tool\release_readiness.ps1 -RequireProductionSecrets -RequireProductionAdMode -RequirePhysicalDevice -RequireReleaseApk`: exits nonzero as expected for missing signing/app id/production AdMob/physical-device inputs.
@@ -60,7 +61,7 @@ and install on the connected Pixel when finished.
 | No energy/gems/gacha/pay-to-win | No implementation evidence for those mechanics; monetization remains ads/cosmetic-style only | Implemented by omission |
 | No forced ad before first gameplay | `main_menu_flow_test.dart` asserts first Quick Match/tutorial path shows no banner/interstitial/rewarded ad; banners hidden before first completed match; interstitial gates require completed matches/time; rewarded ads user-initiated | Implemented |
 | No ads during active gameplay | route-level banner tests assert no banner slots on game/debug/tournament/courts/end-match; interstitial calls occur only at natural breaks | Implemented |
-| Offline gameplay | 900-second offline emulator QA harness run previously recorded without crash/ANR | Verified on emulator |
+| Offline gameplay | 900-second offline emulator QA harness runs recorded without crash/ANR for debug APK and current release APK | Verified on emulator |
 | Visible release/debug label | `AppConfig.phaseLabel` is `MVP Release Candidate` and shown on main menu | Implemented |
 | Release preflight gates | `release_readiness.ps1` has optional analyze/test/build and production-ad-mode checks | Implemented |
 | Physical Pixel install/QA | Current ADB output lists only emulator | Blocked |
