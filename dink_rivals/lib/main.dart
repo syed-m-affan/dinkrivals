@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,8 +16,13 @@ import 'services/audio_service.dart';
 import 'services/haptics_service.dart';
 import 'services/save_service.dart';
 
-Future<void> main() async {
+void main() {
+  runZonedGuarded(_bootstrap, _reportUncaughtError);
+}
+
+Future<void> _bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
+  installGlobalErrorHandlers();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -56,6 +64,27 @@ Future<void> main() async {
       child: const DinkRivalsApp(),
     ),
   );
+}
+
+@visibleForTesting
+void installGlobalErrorHandlers({
+  void Function(Object error, StackTrace stackTrace) reportError =
+      _reportUncaughtError,
+  void Function(FlutterErrorDetails details)? presentFlutterError,
+}) {
+  FlutterError.onError = (details) {
+    (presentFlutterError ?? FlutterError.presentError)(details);
+    reportError(details.exception, details.stack ?? StackTrace.current);
+  };
+  PlatformDispatcher.instance.onError = (error, stackTrace) {
+    reportError(error, stackTrace);
+    return true;
+  };
+}
+
+void _reportUncaughtError(Object error, StackTrace stackTrace) {
+  debugPrint('Uncaught error: $error');
+  debugPrintStack(stackTrace: stackTrace);
 }
 
 AdService _createAdService() {

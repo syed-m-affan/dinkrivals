@@ -1762,6 +1762,12 @@ gems, gacha, loot box, premium-currency, heart-gate, and pay-to-win mechanics.
 An asset-manifest guard test also verifies pubspec asset declarations,
 checked-in asset reachability, and the approved runtime sprite PNG set so
 missing or accidental sprite/art drift fails CI.
+The app bootstrap now installs zoned, Flutter, and platform uncaught-error
+handlers so release builds report otherwise unhandled failures through one
+path.
+The current release APK has built and launched once on Pixel 10 Pro XL
+`58011FDCQ00992`; extended physical gameplay/readability QA remains pending
+because the device was not visible to later ADB/Flutter checks.
 The `google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
 opt-in `AdMobAdService` uses Google's Android test app ID plus test
 banner/rewarded/interstitial ad unit IDs by default and preserves
@@ -1776,8 +1782,8 @@ native banners only when native ads are configured. Setup notes live in
 Rally Queen is now a locked direct challenge rival with a soft-game AI profile,
 and beating her or winning the Classic Cup semifinal unlocks `rally_queen`.
 Actual AdMob account IDs/UMP message verification, per-character runtime
-sprites, real signing credentials/application id validation, and physical Pixel
-closeout remain open.
+sprites, real signing credentials/application id validation, extended physical
+Pixel gameplay/readability closeout, and human signoff remain open.
 Android release-signing scaffolding reads a gitignored
 `android/key.properties` file or
 `DINK_RIVALS_UPLOAD_*` environment variables and falls back to debug signing
@@ -1790,8 +1796,10 @@ Console package name is confirmed. A repeatable Android QA harness now lives at
 best-effort offline mode, and monitor logcat for crash/ANR signatures during
 the 15-minute stability window. The harness completed 900-second offline
 emulator runs on `emulator-5554` against the default debug APK and the current
-release APK without crash or ANR signatures; physical Pixel closeout remains
-open.
+release APK without crash or ANR signatures. The current release APK also
+installed and launched once on Pixel 10 Pro XL `58011FDCQ00992`; extended
+physical Pixel closeout remains open because a later ADB/Flutter device check
+listed no Android devices.
 `tool/release_readiness.ps1` can now also run analyze/tests/build and enforce a
 production-safe ad mode for stricter release preflight checks.
 

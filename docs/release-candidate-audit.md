@@ -15,17 +15,19 @@ and install on the connected Pixel when finished.
   - `3ab6194 add admob production consent plumbing`
 - Verification on the current tree:
   - `flutter analyze`: no issues.
-  - `flutter test`: 293 tests passed.
-  - `flutter build apk --debug`: built `build/app/outputs/flutter-apk/app-debug.apk`.
+  - `flutter test`: 294 tests passed.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
+  - `flutter install -d 58011FDCQ00992 --use-application-binary=build\app\outputs\flutter-apk\app-release.apk`: installed the current release APK on Pixel 10 Pro XL when the device was visible.
+  - `adb -s 58011FDCQ00992 shell am start -W -n com.example.dink_rivals/.MainActivity`: launched the current release APK on Pixel 10 Pro XL with `Status: ok`, cold launch `TotalTime: 783`, `WaitTime: 786`, pid `20597`, and focused `com.example.dink_rivals/.MainActivity`.
+  - `.\tool\release_readiness.ps1 -RequireProductionSecrets -RequireProductionAdMode -RequirePhysicalDevice -RequireReleaseApk`: exits nonzero as expected for missing signing/app id/production AdMob/ad-mode inputs; the latest post-launch ADB check also reported no Android devices visible, so this strict gate still fails the physical-device check when the Pixel is disconnected.
+- Historical emulator evidence retained for stability:
+  - `flutter build apk --debug`: built `build/app/outputs/flutter-apk/app-debug.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-release.apk`: installed current release APK.
   - `.\tool\android_qa.ps1 -DeviceId emulator-5554 -ApkPath build\app\outputs\flutter-apk\app-release.apk -Offline -DurationSeconds 900`: completed without crash or ANR signatures.
   - `adb shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1`: launched the current release APK on `emulator-5554`.
   - Current release emulator launch check: `pidof com.example.dink_rivals` returned `18064`, and `dumpsys window` focused `com.example.dink_rivals/.MainActivity`.
-  - `.\tool\release_readiness.ps1`: mechanical release preflight passes with warnings for external production values and physical device availability.
-  - `.\tool\release_readiness.ps1 -RunAnalyze -RunTests -BuildRelease`: analyzer, all tests, and release build pass; external production values still warn.
-  - `.\tool\release_readiness.ps1 -RequireProductionSecrets -RequireProductionAdMode -RequirePhysicalDevice -RequireReleaseApk`: exits nonzero as expected for missing signing/app id/production AdMob/physical-device inputs.
+  - `.\tool\release_readiness.ps1 -RunAnalyze -RunTests -BuildRelease`: completed on the 293-test tree before the global error-handler slice; the latest tree has equivalent standalone analyzer/test/release-build verification instead of a completed wrapper pass.
   - Focused progression tests cover pure unlock rules, tournament loss/final
     champion screen paths, challenge win/loss paths, persisted rewarded stars,
     Dink Streak Paddle achievement persistence, selectable Dink Streak Accent
@@ -37,8 +39,9 @@ and install on the connected Pixel when finished.
     mechanics.
   - Asset-manifest guard tests verify pubspec asset declarations, checked-in
     asset reachability, and the approved runtime sprite PNG set.
-- Device state: `adb devices -l` lists only `emulator-5554`; the physical Pixel is not visible.
-- Working tree after push: clean except pre-existing untracked `.idea/`.
+  - Global error-handler tests verify Flutter and platform uncaught errors are
+    reported through the release bootstrap hooks.
+- Device state: Pixel 10 Pro XL `58011FDCQ00992` was visible long enough for release install/launch evidence, then a later ADB/Flutter device check listed no Android devices. Extended physical-device gameplay/visual QA still needs a stable connection.
 
 ## Checklist
 
@@ -70,7 +73,9 @@ and install on the connected Pixel when finished.
 | Offline gameplay | 900-second offline emulator QA harness runs recorded without crash/ANR for debug APK and current release APK | Verified on emulator |
 | Visible release/debug label | `AppConfig.phaseLabel` is `MVP Release Candidate` and shown on main menu | Implemented |
 | Release preflight gates | `release_readiness.ps1` has optional analyze/test/build and production-ad-mode checks | Implemented |
-| Physical Pixel install/QA | Current ADB output lists only emulator | Blocked |
+| Global uncaught error hooks | `main.dart` installs zoned, Flutter, and platform error handlers; `main_error_handlers_test.dart` covers reporting behavior | Implemented |
+| Physical Pixel install | Current release APK installed and launched on Pixel 10 Pro XL `58011FDCQ00992` with `Status: ok` | Implemented |
+| Physical Pixel extended QA | Current ADB/Flutter device check later listed no Android devices; human gameplay/readability pass still pending | Blocked |
 | Human feel/visual signoff | Requires human/device review | Blocked |
 | Per-character runtime sprite sheets | Current gameplay keeps accepted player/opponent sheets byte-identical and adds separate color accents; user rejected casual regeneration path | Blocked on approved art workflow/signoff |
 | Approved music asset | Placeholder music was rejected by Claude as a polish regression | Blocked on approved audio asset |
@@ -96,7 +101,7 @@ physical Android device, run:
 ## Decision
 
 The remaining known release-candidate gaps are not implementable in this
-session without external account values, approved production art/audio, a
-visible physical Pixel, or human subjective signoff. The active goal should not
-be marked complete because the physical Pixel install/QA and external release
-values remain unresolved.
+session without external account values, approved production art/audio, a stable
+physical-device QA session, or human subjective signoff. The active goal should
+not be marked complete because extended physical Pixel QA/signoff and external
+release values remain unresolved.

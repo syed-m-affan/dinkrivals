@@ -354,10 +354,11 @@ Re-run the previous QA checklists with attention to:
   environment plus the gray projection-training court as cosmetic options.
 - The Classic Cup trophy remains the first achievement unlock; trophy room
   displays the trophy state, stars, court availability, and tutorial state.
-- Real AdMob, optional banners, character-specific unlock flows, tournament
-  retry ads, release signing, and physical Pixel QA remain open Phase 7 work.
+- Real AdMob production account values, release signing, final application id
+  validation, extended physical Pixel gameplay/readability QA, and human signoff
+  remain open Phase 7 work.
 - `flutter build apk --release` succeeds and produced
-  `build/app/outputs/flutter-apk/app-release.apk` (62.7 MB) on 2026-05-17.
+  `build/app/outputs/flutter-apk/app-release.apk` (65.2 MB) on 2026-05-17.
   The Gradle release config still uses the debug signing config, so production
   signing remains a release-candidate follow-up.
 - Added persistent character unlock IDs with Rookie and Rally Queen unlocked by
@@ -458,11 +459,14 @@ Re-run the previous QA checklists with attention to:
   from the current environment so the checked build path and configured values
   stay aligned.
 - Verification for this slice: `flutter analyze` passes, `flutter test` passes
-  with 293 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
-  -BuildRelease` passes with expected warnings for external production values,
-  and strict release preflight exits nonzero as expected until real signing,
-  final app id, production AdMob values, production ad mode, and a physical
-  Android device are available.
+  with 294 tests, and `flutter build apk --release` builds
+  `build\app\outputs\flutter-apk\app-release.apk`. The latest completed
+  `.\tool\release_readiness.ps1 -RunAnalyze -RunTests -BuildRelease` pass was
+  on the 293-test tree before the global error-handler slice; the newer tree
+  has equivalent standalone analyzer/test/release-build verification. Strict
+  release preflight still exits nonzero as expected until real signing, final
+  app id, production AdMob values, production ad mode, and stable physical
+  Android visibility are available.
 - Added route-level banner placement coverage proving the guarded banner slot is
   present only on menu/settings/roster/trophy room and absent from game, debug
   rally, court select, tournament, and end-match routes after a completed match.
@@ -470,7 +474,7 @@ Re-run the previous QA checklists with attention to:
   court-space arcs under the sprites. Claude recommended this non-sprite
   overlay approach over tinting the approved character sheets; full
   per-character runtime sprite sheets remain blocked on approved art workflow.
-- Latest verification now passes with 293 tests after adding the character
+- Latest verification now passes with 294 tests after adding the character
   accent, Dink Streak Accent equip/persistence coverage, and a first-match
   no-pre-game-ad flow guard.
 - Added a product-rules guard test that scans app source/config for forbidden
@@ -478,14 +482,22 @@ Re-run the previous QA checklists with attention to:
   pay-to-win mechanics.
 - Added an asset-manifest guard test that verifies pubspec asset declarations,
   checked-in asset reachability, and the approved runtime sprite PNG set.
+- Added global zoned, Flutter, and platform uncaught-error handlers in the app
+  bootstrap with focused handler coverage.
 - The current release APK installed and launched on `emulator-5554`; ADB
   reported `com.example.dink_rivals/.MainActivity` focused with pid `18064`.
-  The physical Pixel remains unavailable, so this is only emulator smoke.
+- The current release APK also installed and launched on Pixel 10 Pro XL
+  `58011FDCQ00992`; `adb shell am start -W` returned `Status: ok`, cold launch
+  `TotalTime: 783`, `WaitTime: 786`, pid `20597`, and focus on
+  `com.example.dink_rivals/.MainActivity`. A later ADB/Flutter device check
+  listed no Android devices, so extended physical-device QA still needs a
+  stable reconnection.
 - The release APK also completed
   `.\tool\android_qa.ps1 -DeviceId emulator-5554 -ApkPath build\app\outputs\flutter-apk\app-release.apk -Offline -DurationSeconds 900`
   without crash or ANR signatures, then restored emulator networking.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
-  credentials/final application id value validation, physical Pixel QA, and
-  production-quality music. Claude recommended not shipping placeholder music;
-  current MVP audio remains SFX-only until an approved music asset exists.
+  credentials/final application id value validation, extended physical Pixel
+  gameplay/visual QA, human signoff, and production-quality music. Claude
+  recommended not shipping placeholder music; current MVP audio remains
+  SFX-only until an approved music asset exists.
