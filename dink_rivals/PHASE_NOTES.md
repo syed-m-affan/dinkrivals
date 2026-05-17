@@ -392,6 +392,12 @@ Re-run the previous QA checklists with attention to:
 - Ran the 15-minute offline/stability harness on `emulator-5554` against the
   default debug APK. Result: completed the 900-second logcat monitoring window
   without crash or ANR signatures, then restored device network transports.
+- Added Android release-signing scaffolding in
+  `android/app/build.gradle.kts`. Release builds now read the gitignored
+  `android/key.properties` file or `DINK_RIVALS_UPLOAD_*` environment
+  variables when credentials exist, otherwise they fall back to debug signing
+  for local QA. Setup notes live in `docs/release-signing.md`.
 - Remaining Phase 7 release-candidate gaps include Rally Queen-specific
   challenge handling, per-character runtime sprite sheets, production AdMob
-  unit IDs/consent flow, production signing, and physical Pixel QA.
+  unit IDs/consent flow, real signing credentials/application id validation,
+  and physical Pixel QA.
