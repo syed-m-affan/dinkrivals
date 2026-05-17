@@ -405,6 +405,9 @@ Re-run the previous QA checklists with attention to:
   device QA and release-candidate polish. The Android package id/namespace
   intentionally remain `com.example.dink_rivals` until the final Play Console
   package name is confirmed.
+- Added release-candidate guard coverage for the Android launcher label, Google
+  AdMob test app ID, release-signing fallback, and temporary package ID. The
+  default debug APK rebuilt, installed, and launched on `emulator-5554`.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, production AdMob unit IDs/consent flow, real signing
   credentials/final application id validation, and physical Pixel QA.
