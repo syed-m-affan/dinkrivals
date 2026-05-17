@@ -432,6 +432,9 @@ Re-run the previous QA checklists with attention to:
   explicitly supplied. Production-ID mode serves no ads if consent cannot
   establish that ads may be requested. Setup notes live in
   `docs/admob-release.md`.
+- Added `docs/release-candidate-audit.md`, which maps the Phase 7 MVP
+  requirements to current evidence and explicitly records the remaining
+  external/human blockers.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
   credentials/final application id value validation, and physical Pixel QA.
