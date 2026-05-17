@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dink_rivals/app/ad_provider.dart';
 import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/app/tournament_provider.dart';
@@ -14,12 +15,16 @@ import 'package:dink_rivals/screens/tournament_screen.dart';
 import 'package:dink_rivals/services/audio_service.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
-Future<ProviderContainer> _container(DinkRivalsGame game) async {
+Future<ProviderContainer> _container(
+  DinkRivalsGame game, {
+  FakeAdService? adService,
+}) async {
   SharedPreferences.setMockInitialValues({});
   final service = SaveService(await SharedPreferences.getInstance());
   return ProviderContainer(
     overrides: [
       dinkRivalsGameProvider.overrideWithValue(game),
+      adServiceProvider.overrideWithValue(adService ?? FakeAdService()),
       audioServiceProvider.overrideWithValue(FakeAudioService()),
       saveServiceProvider.overrideWithValue(service),
       saveDataProvider.overrideWith(
@@ -98,5 +103,26 @@ void main() {
     expect(find.text('Classic Cup Trophy unlocked'), findsOneWidget);
     expect(find.text('WINS 1'), findsOneWidget);
     expect(find.byKey(const Key('tournament-restart')), findsOneWidget);
+  });
+
+  testWidgets('eliminated player can watch retry ad to replay failed match',
+      (tester) async {
+    final adService = FakeAdService();
+    final container = await _container(DinkRivalsGame(), adService: adService);
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container));
+    final tournament = container.read(tournamentProvider.notifier);
+    tournament.startClassicCup();
+    await tournament.recordCompletedMatch(playerScore: 8, opponentScore: 11);
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('tournament-retry-ad')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('tournament-retry-ad')));
+    await tester.pumpAndSettle();
+
+    expect(adService.rewardedShows, 1);
+    expect(find.byKey(const Key('tournament-play-match')), findsOneWidget);
+    expect(find.textContaining('YOU  VS  Rookie'), findsOneWidget);
   });
 }

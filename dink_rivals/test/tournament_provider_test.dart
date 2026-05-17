@@ -60,4 +60,28 @@ void main() {
     );
     expect(container.read(saveDataProvider).classicCupWins, 0);
   });
+
+  test('retryEliminatedMatch restores bracket without trophy unlock', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final saveService = SaveService(prefs);
+    final container = ProviderContainer(
+      overrides: [
+        saveServiceProvider.overrideWithValue(saveService),
+        saveDataProvider.overrideWith(
+          () => SaveDataNotifier(saveService, const SaveData()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final tournament = container.read(tournamentProvider.notifier);
+    tournament.startClassicCup();
+    await tournament.recordCompletedMatch(playerScore: 8, opponentScore: 11);
+    tournament.retryEliminatedMatch();
+
+    expect(
+        container.read(tournamentProvider).status, TournamentStatus.semifinal);
+    expect(container.read(tournamentProvider).completedMatches, isEmpty);
+    expect(container.read(saveDataProvider).classicCupWins, 0);
+  });
 }

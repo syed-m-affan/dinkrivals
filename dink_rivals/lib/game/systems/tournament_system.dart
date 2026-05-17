@@ -59,4 +59,25 @@ class TournamentSystem {
       completedMatches: completed,
     );
   }
+
+  TournamentState retryEliminatedMatch(TournamentState state) {
+    if (state.status != TournamentStatus.eliminated ||
+        state.completedMatches.isEmpty) {
+      throw StateError('No eliminated tournament match is ready to retry.');
+    }
+    final failedMatch = state.completedMatches.last;
+    final priorMatches =
+        state.completedMatches.sublist(0, state.completedMatches.length - 1);
+    final status = switch (failedMatch.roundName) {
+      'Semifinal' => TournamentStatus.semifinal,
+      'Final' => TournamentStatus.finalRound,
+      _ => throw StateError('Unknown tournament round to retry.'),
+    };
+    return state.copyWith(
+      status: status,
+      currentOpponentId: failedMatch.opponentId,
+      currentOpponentName: failedMatch.opponentName,
+      completedMatches: priorMatches,
+    );
+  }
 }

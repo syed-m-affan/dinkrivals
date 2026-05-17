@@ -63,6 +63,26 @@ void main() {
     expect(champion.completedMatches.last.roundName, 'Final');
   });
 
+  test('retry restores the failed eliminated match', () {
+    final finalist = system.recordPlayerMatch(
+      state: system.startClassicCup(),
+      playerScore: 11,
+      opponentScore: 8,
+    );
+    final eliminated = system.recordPlayerMatch(
+      state: finalist,
+      playerScore: 8,
+      opponentScore: 11,
+    );
+
+    final retry = system.retryEliminatedMatch(eliminated);
+
+    expect(retry.status, TournamentStatus.finalRound);
+    expect(retry.currentOpponentId, TournamentDefinitions.showman.id);
+    expect(retry.completedMatches, hasLength(1));
+    expect(retry.completedMatches.single.roundName, 'Semifinal');
+  });
+
   test('inactive tournament cannot record a match', () {
     expect(
       () => system.recordPlayerMatch(

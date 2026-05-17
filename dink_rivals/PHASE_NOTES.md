@@ -357,3 +357,7 @@ Re-run the previous QA checklists with attention to:
   roster screen displays locked/unlocked state without changing gameplay
   character rendering or stats. The current tournament path can unlock Showman;
   direct Rally Queen/Veteran challenge flows remain future Phase 7 work.
+- Added fake rewarded tournament retry: after an eliminated Classic Cup match,
+  the tournament screen offers a user-initiated `RETRY AD` button. A successful
+  fake rewarded ad restores the failed bracket match by removing only the loss
+  record; no real AdMob SDK or in-gameplay ad placement was added.

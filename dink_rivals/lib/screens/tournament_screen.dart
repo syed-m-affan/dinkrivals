@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
 import '../app/router.dart';
@@ -320,7 +321,11 @@ class _TournamentActions extends ConsumerWidget {
           )
         else if (state.isActive)
           _PlayMatchButton(state: state)
-        else
+        else ...[
+          if (state.status == TournamentStatus.eliminated) ...[
+            const _RetryMatchAdButton(),
+            const SizedBox(height: 14),
+          ],
           ArcadeButton(
             key: const Key('tournament-restart'),
             label: state.playerWonCup ? 'RUN IT BACK' : 'TRY AGAIN',
@@ -330,6 +335,7 @@ class _TournamentActions extends ConsumerWidget {
               notifier.startClassicCup();
             },
           ),
+        ],
         const SizedBox(height: 14),
         ArcadeButton(
           key: const Key('tournament-menu'),
@@ -341,6 +347,55 @@ class _TournamentActions extends ConsumerWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+class _RetryMatchAdButton extends ConsumerStatefulWidget {
+  const _RetryMatchAdButton();
+
+  @override
+  ConsumerState<_RetryMatchAdButton> createState() =>
+      _RetryMatchAdButtonState();
+}
+
+class _RetryMatchAdButtonState extends ConsumerState<_RetryMatchAdButton> {
+  bool _adUnavailable = false;
+  bool _showingAd = false;
+
+  Future<void> _retry() async {
+    if (_showingAd || _adUnavailable) {
+      return;
+    }
+    ref.read(audioServiceProvider).playMenuClick();
+    setState(() => _showingAd = true);
+    final didShow = await ref
+        .read(adServiceProvider)
+        .showRewardedAd(placement: 'tournament_retry');
+    if (!mounted) {
+      return;
+    }
+    if (didShow) {
+      ref.read(tournamentProvider.notifier).retryEliminatedMatch();
+    } else {
+      setState(() {
+        _showingAd = false;
+        _adUnavailable = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ArcadeButton(
+      key: const Key('tournament-retry-ad'),
+      label: _adUnavailable
+          ? 'RETRY AD UNAVAILABLE'
+          : _showingAd
+              ? 'LOADING RETRY'
+              : 'RETRY AD',
+      icon: Icons.play_circle,
+      onPressed: _adUnavailable || _showingAd ? null : _retry,
     );
   }
 }

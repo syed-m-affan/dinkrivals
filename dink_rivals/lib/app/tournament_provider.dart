@@ -44,4 +44,8 @@ class TournamentNotifier extends Notifier<TournamentState> {
       await ref.read(saveDataProvider.notifier).recordClassicCupWin();
     }
   }
+
+  void retryEliminatedMatch() {
+    state = _system.retryEliminatedMatch(state);
+  }
 }
