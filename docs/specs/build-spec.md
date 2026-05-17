@@ -1743,8 +1743,11 @@ debug rally, tournament match flow, or end-match/reward screens. The
 opt-in `AdMobAdService` uses Google's Android test app ID plus test
 rewarded/interstitial ad unit IDs and preserves `FakeAdService` as the default.
 Production AdMob IDs/consent/banner widgets, Rally Queen-specific challenge
-handling, per-character runtime sprites, release signing, offline checks,
-15-minute stability QA, and physical Pixel closeout remain open.
+handling, per-character runtime sprites, release signing, and physical Pixel
+closeout remain open. A repeatable Android QA harness now lives at
+`dink_rivals/tool/android_qa.ps1`; it can install/launch the debug APK, force
+best-effort offline mode, and monitor logcat for crash/ANR signatures during
+the 15-minute stability window.
 
 ## Android QA Checklist
 

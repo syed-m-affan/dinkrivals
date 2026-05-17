@@ -381,7 +381,13 @@ Re-run the previous QA checklists with attention to:
   service if initialization fails, and avoids showing the fake interstitial
   dialog when native interstitial UI is active. The default app path still uses
   `FakeAdService`.
+- Added `tool/android_qa.ps1` as a repeatable Android closeout harness. It can
+  optionally build, install the debug APK, launch the app, disable device
+  network transports for offline checks, monitor logcat for crash/ANR
+  signatures, and restore networking after the run. Use
+  `.\tool\android_qa.ps1 -DeviceId <id> -Offline -DurationSeconds 900` from
+  `dink_rivals/` for the spec's 15-minute offline/stability pass.
 - Remaining Phase 7 release-candidate gaps include Rally Queen-specific
   challenge handling, per-character runtime sprite sheets, production AdMob
-  unit IDs/consent/banner widgets, production signing, offline and 15-minute
-  stability checks, and physical Pixel QA.
+  unit IDs/consent/banner widgets, production signing, full offline/15-minute
+  stability execution, and physical Pixel QA.
