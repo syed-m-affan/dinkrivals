@@ -7,12 +7,15 @@ import 'package:dink_rivals/game/systems/tournament_system.dart';
 void main() {
   const system = TournamentSystem();
 
-  test('classic cup starts at player semifinal against rookie', () {
+  test('classic cup starts at player semifinal against Rally Queen', () {
     final state = system.startClassicCup();
 
     expect(state.status, TournamentStatus.semifinal);
-    expect(state.currentOpponentId, TournamentDefinitions.rookie.id);
-    expect(state.currentOpponentName, TournamentDefinitions.rookie.displayName);
+    expect(state.currentOpponentId, TournamentDefinitions.rallyQueen.id);
+    expect(
+      state.currentOpponentName,
+      TournamentDefinitions.rallyQueen.displayName,
+    );
     expect(state.completedMatches, isEmpty);
   });
 

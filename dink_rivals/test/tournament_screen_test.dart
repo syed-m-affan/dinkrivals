@@ -68,7 +68,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('tournament-play-match')), findsOneWidget);
-    expect(find.textContaining('YOU  VS  Rookie'), findsOneWidget);
+    expect(find.textContaining('YOU  VS  Rally Queen'), findsOneWidget);
     expect(find.text('NEXT'), findsOneWidget);
   });
 
@@ -86,7 +86,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('game'), findsOneWidget);
-    expect(game.opponentAiSystem.profile.id, TournamentDefinitions.rookie.id);
+    expect(
+      game.opponentAiSystem.profile.id,
+      TournamentDefinitions.rallyQueen.id,
+    );
   });
 
   testWidgets('championship state shows unlocked trophy', (tester) async {
@@ -123,6 +126,6 @@ void main() {
 
     expect(adService.rewardedShows, 1);
     expect(find.byKey(const Key('tournament-play-match')), findsOneWidget);
-    expect(find.textContaining('YOU  VS  Rookie'), findsOneWidget);
+    expect(find.textContaining('YOU  VS  Rally Queen'), findsOneWidget);
   });
 }

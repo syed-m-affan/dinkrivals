@@ -85,6 +85,12 @@ void main() {
         container.read(tournamentProvider).status, TournamentStatus.finalRound);
     expect(container.read(saveDataProvider).matchesCompleted, 1);
     expect(container.read(saveDataProvider).stars, 100);
+    expect(
+      container.read(saveDataProvider).isCharacterUnlocked(
+            CharacterUnlockIds.rallyQueen,
+          ),
+      isTrue,
+    );
   });
 
   testWidgets('first game visit shows and persists quick-start tutorial',

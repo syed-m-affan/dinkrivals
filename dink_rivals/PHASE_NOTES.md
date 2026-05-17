@@ -320,8 +320,9 @@ Re-run the previous QA checklists with attention to:
   4-player single-elimination bracket, semifinal/final progression, and return
   from completed tournament matches back to the bracket screen.
 - Added `TournamentState`, `TournamentSystem`, and a Riverpod tournament
-  provider. The bracket uses Rookie as the semifinal rival and Showman as the
-  final rival, with Veteran represented in the simulated opposite semifinal.
+  provider. The bracket now uses Rally Queen as the player semifinal rival and
+  Showman as the final rival, with Veteran represented in the simulated
+  opposite semifinal.
 - Added simple tournament rival AI profile differences for speed, whiff rate,
   lob probability, and smash probability without changing quick-match defaults.
 - Added persisted `classicCupWins` save data. Winning the final unlocks the
@@ -399,8 +400,10 @@ Re-run the previous QA checklists with attention to:
   for local QA. Setup notes live in `docs/release-signing.md`.
 - New saves now start with Rookie unlocked and selected. Rally Queen is a
   locked direct challenge rival with a soft-game AI profile; beating her through
-  the existing rival challenge flow unlocks `rally_queen`. Existing saves that
-  already unlocked Rally Queen continue to keep that unlock.
+  the existing rival challenge flow unlocks `rally_queen`. The Classic Cup
+  semifinal also uses Rally Queen, so tournament wins can unlock her through the
+  regular defeated-rival path. Existing saves that already unlocked Rally Queen
+  continue to keep that unlock.
 - Updated the Android launcher label from `dink_rivals` to `Dink Rivals` for
   device QA and release-candidate polish. The Android package id/namespace
   intentionally remain `com.example.dink_rivals` until the final Play Console

@@ -42,7 +42,7 @@ class TournamentDefinitions {
   static const rallyQueen = TournamentRival(
     id: 'rally_queen',
     displayName: 'Rally Queen',
-    seedLabel: 'Challenge',
+    seedLabel: 'Seed 4',
     visual: CharacterVisuals.rallyQueen,
     aiProfile: OpponentAiProfile(
       id: 'rally_queen',
@@ -88,7 +88,7 @@ class TournamentDefinitions {
   );
 
   static const rivals = [rookie, rallyQueen, veteran, showman];
-  static const semifinalRival = rookie;
+  static const semifinalRival = rallyQueen;
   static const otherSemifinalRival = veteran;
   static const finalRival = showman;
 
