@@ -454,11 +454,14 @@ Re-run the previous QA checklists with attention to:
   from the current environment so the checked build path and configured values
   stay aligned.
 - Verification for this slice: `flutter analyze` passes, `flutter test` passes
-  with 273 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
+  with 282 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
   -BuildRelease` passes with expected warnings for external production values,
   and strict release preflight exits nonzero as expected until real signing,
   final app id, production AdMob values, production ad mode, and a physical
   Android device are available.
+- Added route-level banner placement coverage proving the guarded banner slot is
+  present only on menu/settings/roster/trophy room and absent from game, debug
+  rally, court select, tournament, and end-match routes after a completed match.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
   credentials/final application id value validation, physical Pixel QA, and

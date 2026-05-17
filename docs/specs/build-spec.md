@@ -1749,7 +1749,8 @@ approved. A guarded fake banner placeholder is mounted only on the main menu,
 settings, roster, and trophy room screens, stays hidden before the first
 completed match, and is feature-flagged off with
 `DINK_RIVALS_SHOW_AD_PLACEHOLDERS=false`; no banner is mounted on gameplay,
-debug rally, tournament match flow, or end-match/reward screens. The
+debug rally, court select, tournament match flow, or end-match/reward screens;
+route-level widget tests now guard the exact allowed and blocked surfaces. The
 `google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
 opt-in `AdMobAdService` uses Google's Android test app ID plus test
 banner/rewarded/interstitial ad unit IDs by default and preserves
