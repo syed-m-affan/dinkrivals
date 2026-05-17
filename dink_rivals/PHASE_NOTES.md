@@ -335,6 +335,10 @@ Re-run the previous QA checklists with attention to:
 - Follow-up tournament polish adds a compact champion/eliminated result panel
   using the completed match record, so cup closeout now shows the last opponent,
   final score, and trophy/elimination state before the retry/restart actions.
+- Tournament exit through the main-menu action now reuses the existing
+  interstitial frequency gates as an allowed natural-break placement. It still
+  cannot fire before the session match/time gates pass and never runs during a
+  rally.
 
 ## Phase 7 progression slice (2026-05-17)
 - Added persistent reward currency (`stars`), tutorial completion, and selected

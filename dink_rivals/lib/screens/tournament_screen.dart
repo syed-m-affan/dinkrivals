@@ -422,12 +422,55 @@ class _TournamentActions extends ConsumerWidget {
           key: const Key('tournament-menu'),
           label: 'MAIN MENU',
           icon: Icons.home,
-          onPressed: () {
+          onPressed: () async {
             audio.playMenuClick();
+            await _maybeShowExitInterstitial(context, ref);
+            if (!context.mounted) {
+              return;
+            }
             context.go(AppRoutes.menu);
           },
         ),
       ],
+    );
+  }
+
+  Future<void> _maybeShowExitInterstitial(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final placement = ref.read(adPlacementSystemProvider);
+    final adService = ref.read(adServiceProvider);
+    final eligible = placement.isInterstitialEligible(isNaturalBreak: true);
+    final ready = await adService.isInterstitialReady();
+    if (!context.mounted || !eligible || !ready) {
+      return;
+    }
+
+    placement.recordInterstitialShown();
+    final didShowInterstitial =
+        await adService.maybeShowInterstitial(placement: 'exit_tournament');
+    if (!context.mounted ||
+        !didShowInterstitial ||
+        adService.usesNativeInterstitialUi) {
+      return;
+    }
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        key: const Key('fake-interstitial-dialog'),
+        title: const Text('FAKE INTERSTITIAL'),
+        content: const Text('Test ad break after tournament.'),
+        actions: [
+          TextButton(
+            key: const Key('fake-interstitial-close'),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CLOSE'),
+          ),
+        ],
+      ),
     );
   }
 }

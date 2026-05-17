@@ -18,6 +18,7 @@ import 'package:dink_rivals/services/save_service.dart';
 Future<ProviderContainer> _container(
   DinkRivalsGame game, {
   FakeAdService? adService,
+  AdPlacementSystem? adPlacement,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final service = SaveService(await SharedPreferences.getInstance());
@@ -25,6 +26,8 @@ Future<ProviderContainer> _container(
     overrides: [
       dinkRivalsGameProvider.overrideWithValue(game),
       adServiceProvider.overrideWithValue(adService ?? FakeAdService()),
+      adPlacementSystemProvider
+          .overrideWithValue(adPlacement ?? AdPlacementSystem()),
       audioServiceProvider.overrideWithValue(FakeAudioService()),
       saveServiceProvider.overrideWithValue(service),
       saveDataProvider.overrideWith(
@@ -147,5 +150,38 @@ void main() {
     expect(adService.rewardedShows, 1);
     expect(find.byKey(const Key('tournament-play-match')), findsOneWidget);
     expect(find.textContaining('YOU  VS  Rally Queen'), findsOneWidget);
+  });
+
+  testWidgets('eligible tournament exit shows fake interstitial before menu',
+      (tester) async {
+    final adService = FakeAdService();
+    final adPlacement = AdPlacementSystem()
+      ..advance(AdPlacementSystem.minTimeBetweenInterstitials);
+    for (var i = 0; i < 3; i++) {
+      adPlacement.recordMatchCompleted();
+    }
+    final container = await _container(
+      DinkRivalsGame(),
+      adService: adService,
+      adPlacement: adPlacement,
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('tournament-menu')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('tournament-menu')));
+    await tester.pump();
+
+    expect(adService.interstitialShows, 1);
+    expect(find.byKey(const Key('fake-interstitial-dialog')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('fake-interstitial-close')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('menu'), findsOneWidget);
+    expect(adPlacement.matchesSinceInterstitial, 0);
   });
 }
