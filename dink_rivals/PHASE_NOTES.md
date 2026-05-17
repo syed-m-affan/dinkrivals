@@ -348,3 +348,7 @@ Re-run the previous QA checklists with attention to:
   displays the trophy state, stars, court availability, and tutorial state.
 - Real AdMob, optional banners, character-specific unlock flows, tournament
   retry ads, release signing, and physical Pixel QA remain open Phase 7 work.
+- `flutter build apk --release` succeeds and produced
+  `build/app/outputs/flutter-apk/app-release.apk` (62.7 MB) on 2026-05-17.
+  The Gradle release config still uses the debug signing config, so production
+  signing remains a release-candidate follow-up.
