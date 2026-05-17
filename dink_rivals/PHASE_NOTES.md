@@ -435,6 +435,10 @@ Re-run the previous QA checklists with attention to:
 - Added `docs/release-candidate-audit.md`, which maps the Phase 7 MVP
   requirements to current evidence and explicitly records the remaining
   external/human blockers.
+- Added `tool/release_readiness.ps1`, a mechanical preflight for release APK,
+  signing config, production AdMob IDs, application ID override, release audit
+  doc, and non-emulator Android device visibility. It warns by default and can
+  fail with `-RequireProductionSecrets -RequirePhysicalDevice -RequireReleaseApk`.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
   credentials/final application id value validation, and physical Pixel QA.

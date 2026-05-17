@@ -49,6 +49,12 @@ Run from `dink_rivals/`:
 flutter build apk --release
 ```
 
+Then run the mechanical release preflight:
+
+```powershell
+.\tool\release_readiness.ps1 -RequireProductionSecrets -RequirePhysicalDevice -RequireReleaseApk
+```
+
 Production closeout still requires a real upload keystore, a Play Console-ready
 application id supplied through this override, and a signed artifact
 verification pass.

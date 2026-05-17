@@ -20,6 +20,7 @@ and install on the connected Pixel when finished.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
   - `adb shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1`: launched, process id `16695`.
+  - `.\tool\release_readiness.ps1`: mechanical release preflight passes with warnings for external production values and physical device availability.
 - Device state: `adb devices -l` lists only `emulator-5554`; the physical Pixel is not visible.
 - Working tree after push: clean except pre-existing untracked `.idea/`.
 
@@ -55,6 +56,21 @@ and install on the connected Pixel when finished.
 | Per-character runtime sprite sheets | Current gameplay still uses accepted player/opponent sheets; user rejected casual regeneration path | Blocked on approved art workflow/signoff |
 | Actual AdMob production verification | Requires AdMob app ID, ad unit IDs, and configured UMP message | Blocked on account setup |
 | Real signing verification | Requires upload keystore/passwords and final package ID value | Blocked on credentials/account setup |
+
+## Mechanical Preflight
+
+Run from `dink_rivals/`:
+
+```powershell
+.\tool\release_readiness.ps1
+```
+
+The default mode reports warnings for missing production-only values. To require
+production secrets and a physical Android device, run:
+
+```powershell
+.\tool\release_readiness.ps1 -RequireProductionSecrets -RequirePhysicalDevice -RequireReleaseApk
+```
 
 ## Decision
 

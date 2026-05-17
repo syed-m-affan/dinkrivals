@@ -21,7 +21,7 @@ val releaseStoreFilePath = signingValue("storeFile", "DINK_RIVALS_UPLOAD_STORE_F
 val releaseStorePassword = signingValue("storePassword", "DINK_RIVALS_UPLOAD_STORE_PASSWORD")
 val releaseKeyAlias = signingValue("keyAlias", "DINK_RIVALS_UPLOAD_KEY_ALIAS")
 val releaseKeyPassword = signingValue("keyPassword", "DINK_RIVALS_UPLOAD_KEY_PASSWORD")
-val releaseStoreFile = releaseStoreFilePath?.let { file(it) }
+val releaseStoreFile = releaseStoreFilePath?.let { rootProject.file(it) }
 val hasReleaseSigning = releaseStoreFile?.exists() == true &&
     !releaseStorePassword.isNullOrBlank() &&
     !releaseKeyAlias.isNullOrBlank() &&
