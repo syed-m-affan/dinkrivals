@@ -1729,8 +1729,13 @@ player character ID, a Trophy Room route, and a Courts route. The existing fake
 rewarded post-match ad persists bonus stars, the first game visit shows a
 dismissible quick-start overlay, defeated tournament rivals unlock in the
 roster, unlocked characters can be selected from the roster, locked Veteran and
-Showman roster cards can start direct challenge matches, and eliminated
+Showman roster cards can start direct challenge matches, Rally Queen can unlock
+either through her direct challenge or the Classic Cup semifinal, and eliminated
 tournament runs can use a fake rewarded retry ad to restore the failed match.
+The Classic Cup now presents Rally Queen / Veteran / Showman as the three rival
+profiles, includes a compact champion/eliminated result panel, and treats
+user-initiated tournament exit as a natural-break interstitial placement behind
+the existing completed-match/time gates.
 The current player-character selection is cosmetic/persistent and updates
 roster state, game state, and player-win end-match portrait; gameplay still
 uses the accepted player runtime sprite sheets until per-character sheets are
@@ -1746,9 +1751,10 @@ default. The guarded non-gameplay `AdBannerSlot` placements render opt-in
 native test banners when AdMob is enabled and fall back to fake placeholders on
 load failure. New saves start with Rookie unlocked and selected; Rally Queen is
 now a locked direct challenge rival with a soft-game AI profile, and beating her
-unlocks `rally_queen`. Production AdMob IDs/consent flow, per-character runtime
-sprites, real signing credentials/application id validation, and physical Pixel
-closeout remain open. Android release-signing scaffolding reads a gitignored
+or winning the Classic Cup semifinal unlocks `rally_queen`. Production AdMob
+IDs/consent flow, per-character runtime sprites, real signing
+credentials/application id validation, and physical Pixel closeout remain open.
+Android release-signing scaffolding reads a gitignored
 `android/key.properties` file or
 `DINK_RIVALS_UPLOAD_*` environment variables and falls back to debug signing
 when credentials are absent; setup notes live in `docs/release-signing.md`. The
