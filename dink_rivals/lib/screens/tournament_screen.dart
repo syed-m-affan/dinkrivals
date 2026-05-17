@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
+import '../app/rival_challenge_provider.dart';
 import '../app/router.dart';
 import '../app/tournament_provider.dart';
 import '../game/config/tournament_definitions.dart';
@@ -418,6 +419,7 @@ class _PlayMatchButton extends ConsumerWidget {
           ? null
           : () {
               ref.read(audioServiceProvider).playMenuClick();
+              ref.read(rivalChallengeProvider.notifier).reset();
               final game = ref.read(dinkRivalsGameProvider);
               game.setOpponentAiProfile(rival.aiProfile);
               game.resetMatch();

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
+import '../app/rival_challenge_provider.dart';
 import '../app/router.dart';
 import '../app/tournament_provider.dart';
 import '../game/config/visual_palette.dart';
@@ -52,6 +53,9 @@ class MainMenuScreen extends ConsumerWidget {
                               onPressed: () {
                                 ref.read(audioServiceProvider).playMenuClick();
                                 ref.read(tournamentProvider.notifier).reset();
+                                ref
+                                    .read(rivalChallengeProvider.notifier)
+                                    .reset();
                                 ref
                                     .read(dinkRivalsGameProvider)
                                     .setOpponentAiProfile(

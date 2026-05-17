@@ -355,9 +355,15 @@ Re-run the previous QA checklists with attention to:
 - Added persistent character unlock IDs with Rookie and Rally Queen unlocked by
   default. Defeating a tournament rival now unlocks that rival ID, and the
   roster screen displays locked/unlocked state without changing gameplay
-  character rendering or stats. The current tournament path can unlock Showman;
-  direct Rally Queen/Veteran challenge flows remain future Phase 7 work.
+  character rendering or stats. The current tournament path can unlock Showman.
+  Locked Veteran and Showman roster cards now also offer direct challenge
+  matches using the existing rival AI profiles; winning the challenge unlocks
+  that rival through the same save-data path.
 - Added fake rewarded tournament retry: after an eliminated Classic Cup match,
   the tournament screen offers a user-initiated `RETRY AD` button. A successful
   fake rewarded ad restores the failed bracket match by removing only the loss
   record; no real AdMob SDK or in-gameplay ad placement was added.
+- Remaining Phase 7 release-candidate gaps include player-character selection,
+  Rally Queen-specific challenge handling, optional banners/real AdMob planning,
+  production signing, offline and 15-minute stability checks, and physical Pixel
+  QA.

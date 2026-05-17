@@ -8,6 +8,7 @@ import 'package:dink_rivals/app/ad_provider.dart';
 import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/app/haptics_provider.dart';
+import 'package:dink_rivals/app/rival_challenge_provider.dart';
 import 'package:dink_rivals/app/tournament_provider.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/game/models/character_unlock.dart';
@@ -48,6 +49,10 @@ Widget _wrap(ProviderContainer container) {
       GoRoute(
         path: '/tournament',
         builder: (context, state) => const TournamentScreen(),
+      ),
+      GoRoute(
+        path: '/end-match',
+        builder: (context, state) => const Text('end'),
       ),
     ],
   );
@@ -125,5 +130,32 @@ void main() {
               CharacterUnlockIds.showman,
             ),
         isTrue);
+  });
+
+  testWidgets('winning rival challenge unlocks challenged character',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+    container
+        .read(rivalChallengeProvider.notifier)
+        .start(CharacterUnlockIds.veteran);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 11
+      ..opponentScore = 8;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(find.text('end'), findsOneWidget);
+    expect(
+        container.read(saveDataProvider).isCharacterUnlocked(
+              CharacterUnlockIds.veteran,
+            ),
+        isTrue);
+    expect(container.read(rivalChallengeProvider), isNull);
   });
 }

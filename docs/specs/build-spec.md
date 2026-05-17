@@ -1727,11 +1727,12 @@ The non-human Phase 7 progression slice now includes persistent stars,
 tutorial dismissal, cosmetic court selection, character unlock IDs, a Trophy
 Room route, and a Courts route. The existing fake rewarded post-match ad
 persists bonus stars, the first game visit shows a dismissible quick-start
-overlay, defeated tournament rivals unlock in the roster, and eliminated
+overlay, defeated tournament rivals unlock in the roster, locked Veteran and
+Showman roster cards can start direct challenge matches, and eliminated
 tournament runs can use a fake rewarded retry ad to restore the failed match.
-Real AdMob, optional banners, direct Rally Queen/Veteran challenge unlock
-flows, release signing, offline checks, 15-minute stability QA, and physical
-Pixel closeout remain open.
+Real AdMob, optional banners, player-character selection, Rally Queen-specific
+challenge handling, release signing, offline checks, 15-minute stability QA,
+and physical Pixel closeout remain open.
 
 ## Android QA Checklist
 

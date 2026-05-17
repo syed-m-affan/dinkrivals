@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
+import '../app/rival_challenge_provider.dart';
 import '../app/router.dart';
 import '../app/tournament_provider.dart';
 import '../game/config/visual_palette.dart';
@@ -74,6 +75,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       }
       return;
     }
+    final challengeId = ref.read(rivalChallengeProvider);
+    if (challengeId != null) {
+      if (_game.matchState.playerScore > _game.matchState.opponentScore) {
+        await ref.read(saveDataProvider.notifier).unlockCharacter(challengeId);
+      }
+      ref.read(rivalChallengeProvider.notifier).reset();
+      _game.setOpponentAiProfile(OpponentAISystem.defaultProfile);
+    }
     if (mounted) {
       context.go(AppRoutes.endMatch);
     }
@@ -88,6 +97,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   void _returnToMenu() {
+    ref.read(rivalChallengeProvider.notifier).reset();
     _game.setOpponentAiProfile(OpponentAISystem.defaultProfile);
     _game.resetMatch();
     _game.paused = false;

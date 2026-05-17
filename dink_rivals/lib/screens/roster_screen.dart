@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/audio_provider.dart';
+import '../app/game_provider.dart';
+import '../app/rival_challenge_provider.dart';
 import '../app/router.dart';
 import '../game/config/character_visuals.dart';
+import '../game/config/tournament_definitions.dart';
 import '../game/config/visual_palette.dart';
 import '../services/save_service.dart';
+import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
 import '../widgets/park_backdrop.dart';
 
@@ -79,6 +83,7 @@ class RosterScreen extends ConsumerWidget {
               final char = _mvpRoster[index];
               final visual = CharacterVisuals.byDisplayName(char.name);
               final unlocked = save.isCharacterUnlocked(visual.id);
+              final challengeRival = _challengeRivalFor(visual.id);
               return ArcadePanel(
                 backgroundColor: VisualPalette.uiSurface.withValues(
                   alpha: 0.88,
@@ -158,6 +163,27 @@ class RosterScreen extends ConsumerWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          if (!unlocked && challengeRival != null) ...[
+                            const SizedBox(height: 10),
+                            ArcadeButton(
+                              key: Key('roster-challenge-${visual.id}'),
+                              label: 'CHALLENGE',
+                              icon: Icons.sports_tennis,
+                              compact: true,
+                              onPressed: () {
+                                ref.read(audioServiceProvider).playMenuClick();
+                                ref
+                                    .read(rivalChallengeProvider.notifier)
+                                    .start(challengeRival.id);
+                                final game = ref.read(dinkRivalsGameProvider);
+                                game.setOpponentAiProfile(
+                                  challengeRival.aiProfile,
+                                );
+                                game.resetMatch();
+                                context.go(AppRoutes.game);
+                              },
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -170,4 +196,14 @@ class RosterScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+TournamentRival? _challengeRivalFor(String characterId) {
+  if (characterId == TournamentDefinitions.veteran.id) {
+    return TournamentDefinitions.veteran;
+  }
+  if (characterId == TournamentDefinitions.showman.id) {
+    return TournamentDefinitions.showman;
+  }
+  return null;
 }
