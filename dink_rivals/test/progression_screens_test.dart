@@ -8,6 +8,7 @@ import 'package:dink_rivals/app/audio_provider.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/game/models/court_unlock.dart';
+import 'package:dink_rivals/game/models/paddle_skin.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/screens/court_select_screen.dart';
 import 'package:dink_rivals/screens/trophy_room_screen.dart';
@@ -84,8 +85,43 @@ void main() {
 
     expect(find.byKey(const Key('trophy-room-dink-streak-paddle-title')),
         findsOneWidget);
-    expect(find.text('Dink Streak Paddle'), findsOneWidget);
-    expect(find.text('Five dink contacts in one match'), findsOneWidget);
+    expect(find.text('Dink Streak Accent'), findsOneWidget);
+    expect(find.text('Recolors aim marker after five dinks'), findsOneWidget);
+  });
+
+  testWidgets('trophy room equips and unequips dink streak accent',
+      (tester) async {
+    final container = await _container(
+      DinkRivalsGame(),
+      const SaveData(dinkStreakPaddleUnlocked: true),
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container, initialLocation: '/trophy-room'));
+    await tester.pump();
+
+    final action =
+        find.byKey(const Key('trophy-room-dink-streak-paddle-action'));
+    expect(action, findsOneWidget);
+    expect(find.text('EQUIP'), findsOneWidget);
+
+    await tester.tap(action);
+    await tester.pumpAndSettle();
+
+    expect(
+      container.read(saveDataProvider).activePaddleSkinId,
+      PaddleSkinIds.dinkStreak,
+    );
+    expect(find.text('UNEQUIP'), findsOneWidget);
+
+    await tester.tap(action);
+    await tester.pumpAndSettle();
+
+    expect(
+      container.read(saveDataProvider).activePaddleSkinId,
+      PaddleSkinIds.classic,
+    );
+    expect(find.text('EQUIP'), findsOneWidget);
   });
 
   testWidgets('court screen selects cosmetic court and updates game',

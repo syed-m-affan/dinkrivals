@@ -23,6 +23,7 @@ final dinkRivalsGameProvider = Provider<DinkRivalsGame>((ref) {
     controlMode: saveData.gameplayControlMode,
     selectedCourtId: saveData.activeCourtId,
     selectedPlayerCharacterId: saveData.activeCharacterId,
+    selectedPaddleSkinId: saveData.activePaddleSkinId,
   );
   seedQaEndMatchForLaunch(
     game,

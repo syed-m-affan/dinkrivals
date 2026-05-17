@@ -31,6 +31,7 @@ class _DebugRallyScreenState extends ConsumerState<DebugRallyScreen> {
       controlMode: saveData.gameplayControlMode,
       selectedCourtId: saveData.activeCourtId,
       selectedPlayerCharacterId: saveData.activeCharacterId,
+      selectedPaddleSkinId: saveData.activePaddleSkinId,
       freeRallyDebugMode: true,
     );
   }

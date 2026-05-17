@@ -8,6 +8,7 @@ import '../config/court_constants.dart';
 import '../config/debug_flags.dart';
 import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
+import '../models/paddle_skin.dart';
 import '../models/player_side.dart';
 import '../models/player_state.dart';
 import '../models/shot_type.dart';
@@ -136,7 +137,12 @@ class PlayerComponent extends Component {
         rect, math.pi * 0.06, math.pi * 0.88, false, _identityAccentPaint);
   }
 
-  Color _identityAccentColor() => game.selectedPlayerVisual.secondaryColor;
+  Color _identityAccentColor() {
+    if (game.selectedPaddleSkinId != PaddleSkinIds.classic) {
+      return game.selectedPaddleSkin.accentColor;
+    }
+    return game.selectedPlayerVisual.secondaryColor;
+  }
 
   bool _renderSprite(Canvas canvas) {
     final pose = _currentPose();

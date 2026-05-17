@@ -30,6 +30,7 @@ import 'models/gameplay_control_mode.dart';
 import 'models/match_state.dart';
 import 'models/opponent_ai_profile.dart';
 import 'models/opponent_serve_phase.dart';
+import 'models/paddle_skin.dart';
 import 'models/player_side.dart';
 import 'models/rule_result.dart';
 import 'models/shot_type.dart';
@@ -54,12 +55,14 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     this.controlMode = GameplayControlMode.classicRacketStick,
     String selectedCourtId = CourtUnlockIds.defaultCourt,
     String selectedPlayerCharacterId = CharacterUnlockIds.defaultSelected,
+    String selectedPaddleSkinId = PaddleSkinIds.classic,
     this.freeRallyDebugMode = false,
   })  : selectedCourtId = normalizedCourtId(selectedCourtId),
         selectedPlayerCharacterId = normalizedSelectedCharacterId(
           selectedPlayerCharacterId,
           CharacterUnlockIds.all,
         ),
+        selectedPaddleSkinId = normalizedPaddleSkinId(selectedPaddleSkinId),
         audioService = audioService ?? FakeAudioService(),
         hapticsService = hapticsService ?? FakeHapticsService();
 
@@ -73,6 +76,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   final bool freeRallyDebugMode;
   String selectedCourtId;
   String selectedPlayerCharacterId;
+  String selectedPaddleSkinId;
 
   final CourtLayoutSystem courtLayoutSystem = CourtLayoutSystem();
   final InputSystem inputSystem = InputSystem();
@@ -208,6 +212,13 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     } on ArgumentError {
       return CharacterVisuals.gameplayOpponent;
     }
+  }
+
+  PaddleSkinDefinition get selectedPaddleSkin =>
+      PaddleSkins.byId(selectedPaddleSkinId);
+
+  void setSelectedPaddleSkin(String skinId) {
+    selectedPaddleSkinId = normalizedPaddleSkinId(skinId);
   }
 
   void setSelectedPlayerCharacter(String characterId) {

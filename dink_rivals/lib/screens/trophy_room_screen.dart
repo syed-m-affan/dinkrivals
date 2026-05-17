@@ -6,6 +6,7 @@ import '../app/audio_provider.dart';
 import '../app/router.dart';
 import '../game/config/tournament_definitions.dart';
 import '../game/config/visual_palette.dart';
+import '../game/models/paddle_skin.dart';
 import '../services/save_service.dart';
 import '../widgets/ad_banner_slot.dart';
 import '../widgets/arcade_panel.dart';
@@ -17,6 +18,9 @@ class TrophyRoomScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final save = ref.watch(saveDataProvider);
+    final saveNotifier = ref.read(saveDataProvider.notifier);
+    final dinkStreakAccentEquipped =
+        save.activePaddleSkinId == PaddleSkinIds.dinkStreak;
     return Scaffold(
       appBar: AppBar(
         title: const Text('TROPHY ROOM'),
@@ -94,11 +98,24 @@ class TrophyRoomScreen extends ConsumerWidget {
                     _UnlockRow(
                       keyName: 'dink-streak-paddle',
                       icon: Icons.sports_tennis,
-                      title: 'Dink Streak Paddle',
+                      title: PaddleSkins.dinkStreak.displayName,
                       detail: save.dinkStreakPaddleUnlocked
-                          ? 'Five dink contacts in one match'
+                          ? PaddleSkins.dinkStreak.detail
                           : 'Land five dinks in one match',
                       unlocked: save.dinkStreakPaddleUnlocked,
+                      actionLabel: save.dinkStreakPaddleUnlocked
+                          ? (dinkStreakAccentEquipped ? 'UNEQUIP' : 'EQUIP')
+                          : null,
+                      onAction: save.dinkStreakPaddleUnlocked
+                          ? () {
+                              ref.read(audioServiceProvider).playMenuClick();
+                              saveNotifier.selectPaddleSkin(
+                                dinkStreakAccentEquipped
+                                    ? PaddleSkinIds.classic
+                                    : PaddleSkinIds.dinkStreak,
+                              );
+                            }
+                          : null,
                     ),
                     const SizedBox(height: 12),
                     _UnlockRow(
@@ -127,6 +144,8 @@ class _UnlockRow extends StatelessWidget {
     required this.title,
     required this.detail,
     required this.unlocked,
+    this.actionLabel,
+    this.onAction,
   });
 
   final String keyName;
@@ -134,6 +153,8 @@ class _UnlockRow extends StatelessWidget {
   final String title;
   final String detail;
   final bool unlocked;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -177,16 +198,34 @@ class _UnlockRow extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            unlocked ? 'OPEN' : 'LOCKED',
-            key: Key('trophy-room-$keyName-state'),
-            style: TextStyle(
-              color: color,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'monospace',
+          if (actionLabel != null)
+            TextButton(
+              key: Key('trophy-room-$keyName-action'),
+              onPressed: onAction,
+              style: TextButton.styleFrom(
+                foregroundColor: color,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                minimumSize: const Size(64, 32),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                textStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'monospace',
+                ),
+              ),
+              child: Text(actionLabel!),
+            )
+          else
+            Text(
+              unlocked ? 'OPEN' : 'LOCKED',
+              key: Key('trophy-room-$keyName-state'),
+              style: TextStyle(
+                color: color,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'monospace',
+              ),
             ),
-          ),
         ],
       ),
     );

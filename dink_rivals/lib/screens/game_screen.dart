@@ -145,6 +145,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final game = ref.watch(dinkRivalsGameProvider);
     final saveData = ref.watch(saveDataProvider);
     game.setSelectedCourt(saveData.activeCourtId);
+    game.setSelectedPaddleSkin(saveData.activePaddleSkinId);
     // Keep the game canvas full-bleed in immersive mode, but offset tappable
     // Flutter controls away from cutouts/status areas.
     final viewPadding = MediaQuery.viewPaddingOf(context);

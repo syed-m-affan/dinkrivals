@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../game/models/character_unlock.dart';
 import '../game/models/court_unlock.dart';
 import '../game/models/gameplay_control_mode.dart';
+import '../game/models/paddle_skin.dart';
 import '../game/models/save_data.dart';
 
 class SaveService {
@@ -18,6 +19,7 @@ class SaveService {
   static const _starsKey = 'stars';
   static const _tutorialSeenKey = 'tutorial_seen';
   static const _dinkStreakPaddleUnlockedKey = 'dink_streak_paddle_unlocked';
+  static const _selectedPaddleSkinKey = 'selected_paddle_skin_id';
   static const _selectedCourtKey = 'selected_court_id';
   static const _unlockedCharactersKey = 'unlocked_character_ids';
   static const _selectedCharacterKey = 'selected_character_id';
@@ -29,6 +31,11 @@ class SaveService {
     final unlockedCharacterIds = normalizedCharacterUnlocks(
       _prefs.getStringList(_unlockedCharactersKey),
     );
+    final dinkStreakPaddleUnlocked =
+        _prefs.getBool(_dinkStreakPaddleUnlockedKey) ?? false;
+    final selectedPaddleSkinId = normalizedPaddleSkinId(
+      _prefs.getString(_selectedPaddleSkinKey),
+    );
     return SaveData(
       soundEnabled: _prefs.getBool(_soundKey) ?? true,
       hapticsEnabled: _prefs.getBool(_hapticsKey) ?? true,
@@ -38,8 +45,11 @@ class SaveService {
       classicCupWins: _prefs.getInt(_classicCupWinsKey) ?? 0,
       stars: _prefs.getInt(_starsKey) ?? 0,
       tutorialSeen: _prefs.getBool(_tutorialSeenKey) ?? false,
-      dinkStreakPaddleUnlocked:
-          _prefs.getBool(_dinkStreakPaddleUnlockedKey) ?? false,
+      dinkStreakPaddleUnlocked: dinkStreakPaddleUnlocked,
+      selectedPaddleSkinId: selectedPaddleSkinId == PaddleSkinIds.dinkStreak &&
+              !dinkStreakPaddleUnlocked
+          ? PaddleSkinIds.classic
+          : selectedPaddleSkinId,
       selectedCourtId: normalizedCourtId(_prefs.getString(_selectedCourtKey)),
       unlockedCharacterIds: unlockedCharacterIds,
       selectedCharacterId: normalizedSelectedCharacterId(
@@ -65,6 +75,7 @@ class SaveService {
       _dinkStreakPaddleUnlockedKey,
       data.dinkStreakPaddleUnlocked,
     );
+    await _prefs.setString(_selectedPaddleSkinKey, data.activePaddleSkinId);
     await _prefs.setString(_selectedCourtKey, data.activeCourtId);
     await _prefs.setStringList(
       _unlockedCharactersKey,
@@ -150,6 +161,15 @@ class SaveDataNotifier extends Notifier<SaveData> {
   Future<void> selectCourt(String courtId) async {
     final normalized = normalizedCourtId(courtId);
     state = state.copyWith(selectedCourtId: normalized);
+    await _service.save(state);
+  }
+
+  Future<void> selectPaddleSkin(String skinId) async {
+    final normalized = normalizedPaddleSkinId(skinId);
+    if (!state.isPaddleSkinUnlocked(normalized)) {
+      return;
+    }
+    state = state.copyWith(selectedPaddleSkinId: normalized);
     await _service.save(state);
   }
 

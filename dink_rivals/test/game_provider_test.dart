@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/app/haptics_provider.dart';
 import 'package:dink_rivals/game/models/character_unlock.dart';
+import 'package:dink_rivals/game/models/paddle_skin.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/services/audio_service.dart';
 import 'package:dink_rivals/services/haptics_service.dart';
@@ -73,5 +74,31 @@ void main() {
     final game = container.read(dinkRivalsGameProvider);
 
     expect(game.selectedPlayerCharacterId, CharacterUnlockIds.veteran);
+  });
+
+  test('game starts with persisted selected paddle skin accent', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = ProviderContainer(
+      overrides: [
+        saveServiceProvider.overrideWithValue(service),
+        saveDataProvider.overrideWith(
+          () => SaveDataNotifier(
+            service,
+            const SaveData(
+              dinkStreakPaddleUnlocked: true,
+              selectedPaddleSkinId: PaddleSkinIds.dinkStreak,
+            ),
+          ),
+        ),
+        audioServiceProvider.overrideWithValue(FakeAudioService()),
+        hapticsServiceProvider.overrideWithValue(FakeHapticsService()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final game = container.read(dinkRivalsGameProvider);
+
+    expect(game.selectedPaddleSkinId, PaddleSkinIds.dinkStreak);
   });
 }

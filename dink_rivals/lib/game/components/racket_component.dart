@@ -105,6 +105,9 @@ class RacketComponent extends Component {
     };
   }
 
+  @visibleForTesting
+  Color aimIndicatorColorForTesting() => game.selectedPaddleSkin.aimColor;
+
   void _drawPixelSwipe(
     Canvas canvas,
     Offset start,
@@ -147,6 +150,7 @@ class RacketComponent extends Component {
     final size = game.logicalToScreen(8.5 * depthScale).clamp(7.0, 14.0);
     final angle =
         math.atan2(screenDirection.y, screenDirection.x) + math.pi / 2;
+    _aimArrowFillPaint.color = game.selectedPaddleSkin.aimColor;
     _aimArrowOutlinePaint.strokeWidth = (size * 0.16).clamp(1.0, 2.0);
 
     canvas.save();

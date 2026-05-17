@@ -7,11 +7,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/components/opponent_component.dart';
 import 'package:dink_rivals/game/components/player_component.dart';
+import 'package:dink_rivals/game/components/racket_component.dart';
 import 'package:dink_rivals/game/config/character_visuals.dart';
 import 'package:dink_rivals/game/config/court_constants.dart';
 import 'package:dink_rivals/game/config/tournament_definitions.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
 import 'package:dink_rivals/game/models/character_unlock.dart';
+import 'package:dink_rivals/game/models/paddle_skin.dart';
 import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
 import 'package:dink_rivals/game/util/court_projection.dart';
@@ -346,6 +348,25 @@ void main() {
     expect(
       opponent.identityAccentColorForTesting(),
       CharacterVisuals.showman.secondaryColor,
+    );
+
+    game.setSelectedPaddleSkin(PaddleSkinIds.dinkStreak);
+
+    expect(
+      player.identityAccentColorForTesting(),
+      PaddleSkins.dinkStreak.accentColor,
+    );
+  });
+
+  test('racket aim indicator follows equipped paddle skin accent', () {
+    final game = DinkRivalsGame(
+      selectedPaddleSkinId: PaddleSkinIds.dinkStreak,
+    );
+    final racket = RacketComponent(game);
+
+    expect(
+      racket.aimIndicatorColorForTesting(),
+      PaddleSkins.dinkStreak.aimColor,
     );
   });
 

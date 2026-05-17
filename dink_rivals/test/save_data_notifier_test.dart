@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/court_unlock.dart';
 import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
+import 'package:dink_rivals/game/models/paddle_skin.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
@@ -151,6 +152,45 @@ void main() {
         CourtUnlockIds.training);
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.activeCourtId, CourtUnlockIds.training);
+  });
+
+  test('selectPaddleSkin persists unlocked cosmetic accent choice', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(
+      service,
+      const SaveData(dinkStreakPaddleUnlocked: true),
+    );
+    addTearDown(container.dispose);
+
+    await container
+        .read(saveDataProvider.notifier)
+        .selectPaddleSkin(PaddleSkinIds.dinkStreak);
+
+    expect(
+      container.read(saveDataProvider).activePaddleSkinId,
+      PaddleSkinIds.dinkStreak,
+    );
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.activePaddleSkinId, PaddleSkinIds.dinkStreak);
+  });
+
+  test('selectPaddleSkin ignores locked cosmetic accent choice', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData());
+    addTearDown(container.dispose);
+
+    await container
+        .read(saveDataProvider.notifier)
+        .selectPaddleSkin(PaddleSkinIds.dinkStreak);
+
+    expect(
+      container.read(saveDataProvider).activePaddleSkinId,
+      PaddleSkinIds.classic,
+    );
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.activePaddleSkinId, PaddleSkinIds.classic);
   });
 
   test('unlockCharacter persists defeated rival unlocks', () async {

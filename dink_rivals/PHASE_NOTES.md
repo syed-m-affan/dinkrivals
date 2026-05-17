@@ -444,6 +444,10 @@ Re-run the previous QA checklists with attention to:
   challenge unlock decisions through it, tracks player dink/smash contacts, and
   persists the `Dink Streak Paddle` achievement into the Trophy Room when a
   completed match has at least five player dink contacts.
+- The five-dink reward is now selectable as `Dink Streak Accent` in the Trophy
+  Room. Equipping it persists a cosmetic paddle-skin ID and recolors the
+  non-colliding aim indicator plus the player's separate on-court accent arc,
+  avoiding edits to the approved character sprites or a fake visible paddle.
 - Added release-candidate metadata polish: `AppConfig.phaseLabel` is now `MVP
   Release Candidate`, the main menu exposes that label, and `pubspec.yaml`
   describes the current release-candidate build instead of the original Phase 0
@@ -454,7 +458,7 @@ Re-run the previous QA checklists with attention to:
   from the current environment so the checked build path and configured values
   stay aligned.
 - Verification for this slice: `flutter analyze` passes, `flutter test` passes
-  with 283 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
+  with 289 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
   -BuildRelease` passes with expected warnings for external production values,
   and strict release preflight exits nonzero as expected until real signing,
   final app id, production AdMob values, production ad mode, and a physical
@@ -466,10 +470,10 @@ Re-run the previous QA checklists with attention to:
   court-space arcs under the sprites. Claude recommended this non-sprite
   overlay approach over tinting the approved character sheets; full
   per-character runtime sprite sheets remain blocked on approved art workflow.
-- Latest verification now passes with 283 tests after adding the character
-  accent mapping coverage.
+- Latest verification now passes with 289 tests after adding the character
+  accent and Dink Streak Accent equip/persistence coverage.
 - The current release APK installed and launched on `emulator-5554`; ADB
-  reported `com.example.dink_rivals/.MainActivity` focused with pid `17635`.
+  reported `com.example.dink_rivals/.MainActivity` focused with pid `17837`.
   The physical Pixel remains unavailable, so this is only emulator smoke.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing

@@ -1,6 +1,7 @@
 import 'character_unlock.dart';
 import 'court_unlock.dart';
 import 'gameplay_control_mode.dart';
+import 'paddle_skin.dart';
 
 class SaveData {
   const SaveData({
@@ -12,6 +13,7 @@ class SaveData {
     this.stars = 0,
     this.tutorialSeen = false,
     this.dinkStreakPaddleUnlocked = false,
+    this.selectedPaddleSkinId = PaddleSkinIds.classic,
     this.selectedCourtId = CourtUnlockIds.defaultCourt,
     this.unlockedCharacterIds = CharacterUnlockIds.defaultUnlocked,
     this.selectedCharacterId = CharacterUnlockIds.defaultSelected,
@@ -25,6 +27,7 @@ class SaveData {
   final int stars;
   final bool tutorialSeen;
   final bool dinkStreakPaddleUnlocked;
+  final String selectedPaddleSkinId;
   final String selectedCourtId;
   final List<String> unlockedCharacterIds;
   final String selectedCharacterId;
@@ -37,6 +40,19 @@ class SaveData {
         selectedCharacterId,
         unlockedCharacterIds,
       );
+  String get activePaddleSkinId {
+    final normalized = normalizedPaddleSkinId(selectedPaddleSkinId);
+    if (normalized == PaddleSkinIds.dinkStreak && !dinkStreakPaddleUnlocked) {
+      return PaddleSkinIds.classic;
+    }
+    return normalized;
+  }
+
+  bool isPaddleSkinUnlocked(String id) {
+    final normalized = normalizedPaddleSkinId(id);
+    return normalized == PaddleSkinIds.classic ||
+        (normalized == PaddleSkinIds.dinkStreak && dinkStreakPaddleUnlocked);
+  }
 
   String get activeCourtId {
     final normalized = normalizedCourtId(selectedCourtId);
@@ -52,6 +68,7 @@ class SaveData {
     int? stars,
     bool? tutorialSeen,
     bool? dinkStreakPaddleUnlocked,
+    String? selectedPaddleSkinId,
     String? selectedCourtId,
     List<String>? unlockedCharacterIds,
     String? selectedCharacterId,
@@ -66,6 +83,7 @@ class SaveData {
       tutorialSeen: tutorialSeen ?? this.tutorialSeen,
       dinkStreakPaddleUnlocked:
           dinkStreakPaddleUnlocked ?? this.dinkStreakPaddleUnlocked,
+      selectedPaddleSkinId: selectedPaddleSkinId ?? this.selectedPaddleSkinId,
       selectedCourtId: selectedCourtId ?? this.selectedCourtId,
       unlockedCharacterIds: unlockedCharacterIds ?? this.unlockedCharacterIds,
       selectedCharacterId: selectedCharacterId ?? this.selectedCharacterId,
@@ -83,6 +101,7 @@ class SaveData {
         other.stars == stars &&
         other.tutorialSeen == tutorialSeen &&
         other.dinkStreakPaddleUnlocked == dinkStreakPaddleUnlocked &&
+        other.selectedPaddleSkinId == selectedPaddleSkinId &&
         other.selectedCourtId == selectedCourtId &&
         _stringListEquals(other.unlockedCharacterIds, unlockedCharacterIds) &&
         other.selectedCharacterId == selectedCharacterId;
@@ -98,6 +117,7 @@ class SaveData {
         stars,
         tutorialSeen,
         dinkStreakPaddleUnlocked,
+        selectedPaddleSkinId,
         selectedCourtId,
         Object.hashAll(unlockedCharacterIds),
         selectedCharacterId,

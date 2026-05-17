@@ -1725,8 +1725,8 @@ Ship a small but complete free ad-supported game.
 
 The non-human Phase 7 progression slice now includes persistent stars,
 tutorial dismissal, cosmetic court selection, character unlock IDs, selected
-player character ID, Dink Streak Paddle achievement state, a Trophy Room route,
-and a Courts route. The existing fake
+player character ID, Dink Streak Paddle achievement state, selected Dink
+Streak Accent cosmetic state, a Trophy Room route, and a Courts route. The existing fake
 rewarded post-match ad persists bonus stars, the first game visit shows a
 dismissible quick-start overlay, defeated tournament rivals unlock in the
 roster, unlocked characters can be selected from the roster, locked Veteran and
@@ -1738,6 +1738,9 @@ paddle achievement completion now live in a pure `UnlockSystem` with focused
 tests. The Classic Park court remains open by default because it is the
 polished first-session environment; the gray court is a projection-training
 variant, and a future earned-court reward should use a second polished court.
+The five-dink reward can now be equipped from the Trophy Room as `Dink Streak
+Accent`, which recolors the visual-only aim indicator and the player's separate
+on-court accent arc without changing approved sprite pixels.
 The Classic Cup now presents Rally Queen / Veteran / Showman as the three rival
 profiles, includes a compact champion/eliminated result panel, and treats
 user-initiated tournament exit as a natural-break interstitial placement behind

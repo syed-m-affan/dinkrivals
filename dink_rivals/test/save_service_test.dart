@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/court_unlock.dart';
 import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
+import 'package:dink_rivals/game/models/paddle_skin.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
@@ -27,6 +28,7 @@ void main() {
     expect(data.stars, 0);
     expect(data.tutorialSeen, isFalse);
     expect(data.dinkStreakPaddleUnlocked, isFalse);
+    expect(data.activePaddleSkinId, PaddleSkinIds.classic);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
     expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
     expect(data.activeCharacterId, CharacterUnlockIds.defaultSelected);
@@ -45,6 +47,7 @@ void main() {
       stars: 350,
       tutorialSeen: true,
       dinkStreakPaddleUnlocked: true,
+      selectedPaddleSkinId: PaddleSkinIds.dinkStreak,
       selectedCourtId: CourtUnlockIds.training,
       unlockedCharacterIds: [
         CharacterUnlockIds.rookie,
@@ -88,6 +91,7 @@ void main() {
     expect(data.stars, 0);
     expect(data.tutorialSeen, isFalse);
     expect(data.dinkStreakPaddleUnlocked, isFalse);
+    expect(data.activePaddleSkinId, PaddleSkinIds.classic);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
     expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
     expect(data.activeCharacterId, CharacterUnlockIds.defaultSelected);
@@ -108,8 +112,24 @@ void main() {
       updated.dinkStreakPaddleUnlocked,
       original.dinkStreakPaddleUnlocked,
     );
+    expect(updated.selectedPaddleSkinId, original.selectedPaddleSkinId);
     expect(updated.selectedCourtId, original.selectedCourtId);
     expect(updated.unlockedCharacterIds, original.unlockedCharacterIds);
     expect(updated.selectedCharacterId, original.selectedCharacterId);
+  });
+
+  test('load ignores locked selected paddle skin ids', () async {
+    SharedPreferences.setMockInitialValues({
+      'dink_streak_paddle_unlocked': false,
+      'selected_paddle_skin_id': PaddleSkinIds.dinkStreak,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+
+    final data = await service.load();
+
+    expect(data.dinkStreakPaddleUnlocked, isFalse);
+    expect(data.selectedPaddleSkinId, PaddleSkinIds.classic);
+    expect(data.activePaddleSkinId, PaddleSkinIds.classic);
   });
 }

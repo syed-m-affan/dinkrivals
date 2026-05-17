@@ -15,21 +15,21 @@ and install on the connected Pixel when finished.
   - `3ab6194 add admob production consent plumbing`
 - Verification on the current tree:
   - `flutter analyze`: no issues.
-  - `flutter test`: 283 tests passed.
+  - `flutter test`: 289 tests passed.
   - `flutter build apk --debug`: built `build/app/outputs/flutter-apk/app-debug.apk`.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-release.apk`: installed current release APK.
-  - `adb shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1`: launched, process id `16695`.
-  - Current release emulator launch check: `pidof com.example.dink_rivals` returned `17635`, and `dumpsys window` focused `com.example.dink_rivals/.MainActivity`.
+  - `adb shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1`: launched the current release APK on `emulator-5554`.
+  - Current release emulator launch check: `pidof com.example.dink_rivals` returned `17837`, and `dumpsys window` focused `com.example.dink_rivals/.MainActivity`.
   - `.\tool\release_readiness.ps1`: mechanical release preflight passes with warnings for external production values and physical device availability.
   - `.\tool\release_readiness.ps1 -RunAnalyze -RunTests -BuildRelease`: analyzer, all tests, and release build pass; external production values still warn.
   - `.\tool\release_readiness.ps1 -RequireProductionSecrets -RequireProductionAdMode -RequirePhysicalDevice -RequireReleaseApk`: exits nonzero as expected for missing signing/app id/production AdMob/physical-device inputs.
   - Focused progression tests cover pure unlock rules, tournament loss/final
     champion screen paths, challenge win/loss paths, persisted rewarded stars,
-    Dink Streak Paddle achievement persistence, release metadata/preflight
-    switches, exact banner route placement, and non-sprite character identity
-    accents.
+    Dink Streak Paddle achievement persistence, selectable Dink Streak Accent
+    persistence/equip UI, release metadata/preflight switches, exact banner
+    route placement, and non-sprite character identity accents.
 - Device state: `adb devices -l` lists only `emulator-5554`; the physical Pixel is not visible.
 - Working tree after push: clean except pre-existing untracked `.idea/`.
 
@@ -43,8 +43,8 @@ and install on the connected Pixel when finished.
 | 4 characters | Rookie, Rally Queen, Veteran, Showman roster definitions, portraits, AI profiles, and non-sprite on-court identity accents | Implemented for roster/meta/runtime accent |
 | 2 courts | `CourtSelectScreen`; Classic Park and projection-training court selection | Implemented |
 | Achievement unlocks | `UnlockSystem`, character unlock IDs, Classic Cup trophy, Dink Streak Paddle, challenge/tournament unlock flow | Implemented |
-| Local save | `SaveData`, `SaveService`, notifier tests cover stars, settings, unlocks, tutorial, selected court/character, Dink Streak Paddle | Implemented |
-| Trophy room | `TrophyRoomScreen`, `AppRoutes.trophyRoom`, progression screen tests including Dink Streak Paddle | Implemented |
+| Local save | `SaveData`, `SaveService`, notifier tests cover stars, settings, unlocks, tutorial, selected court/character, Dink Streak Accent selection | Implemented |
+| Trophy room | `TrophyRoomScreen`, `AppRoutes.trophyRoom`, progression screen tests including Dink Streak Accent equip/unequip | Implemented |
 | Settings | persisted sound/haptics settings and tests | Implemented |
 | Rewarded ads | post-match reward and tournament retry flows, fake default, native AdMob opt-in | Implemented |
 | Respectful interstitials | `AdPlacementSystem` gates, end-match/tournament-exit natural breaks, regression tests | Implemented |
