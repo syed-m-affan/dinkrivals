@@ -418,6 +418,19 @@ Re-run the previous QA checklists with attention to:
 - Added release-candidate guard coverage for the Android launcher label, Google
   AdMob test app ID, release-signing fallback, and temporary package ID. The
   default debug APK rebuilt, installed, and launched on `emulator-5554`.
+- Added production AdMob release plumbing without committing real IDs. The
+  Android manifest now receives its AdMob app ID through the Gradle
+  `adMobApplicationId` placeholder, defaulting to Google's test app ID unless
+  `DINK_RIVALS_ADMOB_APP_ID` is supplied. Runtime banner/rewarded/interstitial
+  unit IDs can now be supplied with `DINK_RIVALS_USE_PRODUCTION_ADMOB_IDS=true`
+  plus the three `DINK_RIVALS_ADMOB_*_AD_UNIT_ID` dart-defines; missing
+  production unit IDs select `NoAdsService` instead of fake ads.
+- Added UMP consent gating for native AdMob. When
+  `DINK_RIVALS_USE_ADMOB=true`, consent is requested before Mobile Ads
+  initializes or loads ads unless `DINK_RIVALS_REQUEST_AD_CONSENT=false` is
+  explicitly supplied. Production-ID mode serves no ads if consent cannot
+  establish that ads may be requested. Setup notes live in
+  `docs/admob-release.md`.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
-  sheets, production AdMob unit IDs/consent flow, real signing
+  sheets, actual AdMob account IDs/UMP message verification, real signing
   credentials/final application id validation, and physical Pixel QA.

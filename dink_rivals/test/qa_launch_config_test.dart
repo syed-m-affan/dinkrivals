@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dink_rivals/app/admob_config.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/app/router.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
@@ -73,14 +74,14 @@ void main() {
     expect(manifest, contains('android:label="Dink Rivals"'));
   });
 
-  test('Android manifest uses Google AdMob test app id', () {
+  test('Android manifest uses a Gradle-provided AdMob app id placeholder', () {
     final manifest =
         File('android/app/src/main/AndroidManifest.xml').readAsStringSync();
+    final gradle = File('android/app/build.gradle.kts').readAsStringSync();
 
-    expect(
-      manifest,
-      contains('ca-app-pub-3940256099942544~3347511713'),
-    );
+    expect(manifest, contains(r'android:value="${adMobApplicationId}"'));
+    expect(gradle, contains('DINK_RIVALS_ADMOB_APP_ID'));
+    expect(gradle, contains(AdMobConfig.androidTestAppId));
   });
 
   test('Android release signing falls back without credentials', () {

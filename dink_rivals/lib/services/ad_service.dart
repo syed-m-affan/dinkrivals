@@ -69,6 +69,36 @@ class FakeAdService implements AdService {
   }
 }
 
+class NoAdsService implements AdService {
+  bool _initialized = false;
+
+  bool get initialized => _initialized;
+
+  @override
+  bool get adsRemoved => false;
+
+  @override
+  bool get usesNativeInterstitialUi => false;
+
+  @override
+  Future<void> initialize() async {
+    _initialized = true;
+  }
+
+  @override
+  Future<bool> isRewardedAdReady() async => false;
+
+  @override
+  Future<bool> showRewardedAd({required String placement}) async => false;
+
+  @override
+  Future<bool> isInterstitialReady() async => false;
+
+  @override
+  Future<bool> maybeShowInterstitial({required String placement}) async =>
+      false;
+}
+
 final adServiceProvider = Provider<AdService>((ref) {
   throw UnimplementedError('adServiceProvider must be overridden in main.dart');
 });

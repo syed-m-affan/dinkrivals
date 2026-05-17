@@ -27,6 +27,15 @@ val hasReleaseSigning = releaseStoreFile?.exists() == true &&
     !releaseKeyAlias.isNullOrBlank() &&
     !releaseKeyPassword.isNullOrBlank()
 
+val googleTestAdMobAppId = "ca-app-pub-3940256099942544~3347511713"
+val adMobApplicationIdOverride = (
+    (project.findProperty("DINK_RIVALS_ADMOB_APP_ID") as String?)
+        ?: System.getenv("DINK_RIVALS_ADMOB_APP_ID")
+).orEmpty().trim()
+val adMobApplicationId = adMobApplicationIdOverride.ifEmpty {
+    googleTestAdMobAppId
+}
+
 android {
     namespace = "com.example.dink_rivals"
     compileSdk = flutter.compileSdkVersion
@@ -48,6 +57,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["adMobApplicationId"] = adMobApplicationId
     }
 
     signingConfigs {

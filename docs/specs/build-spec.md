@@ -1746,14 +1746,20 @@ completed match, and is feature-flagged off with
 debug rally, tournament match flow, or end-match/reward screens. The
 `google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
 opt-in `AdMobAdService` uses Google's Android test app ID plus test
-banner/rewarded/interstitial ad unit IDs and preserves `FakeAdService` as the
-default. The guarded non-gameplay `AdBannerSlot` placements render opt-in
-native test banners when AdMob is enabled and fall back to fake placeholders on
-load failure. New saves start with Rookie unlocked and selected; Rally Queen is
-now a locked direct challenge rival with a soft-game AI profile, and beating her
-or winning the Classic Cup semifinal unlocks `rally_queen`. Production AdMob
-IDs/consent flow, per-character runtime sprites, real signing
-credentials/application id validation, and physical Pixel closeout remain open.
+banner/rewarded/interstitial ad unit IDs by default and preserves
+`FakeAdService` as the default non-AdMob path. Production AdMob release
+plumbing now exists: the Android manifest app ID is supplied through a Gradle
+placeholder, production unit IDs are supplied with dart-defines, UMP consent
+gates native ad initialization/loading, and production-ID mode selects
+`NoAdsService` instead of fake ads if IDs are incomplete or consent blocks ad
+requests. The guarded non-gameplay `AdBannerSlot` placements render opt-in
+native banners only when native ads are configured. Setup notes live in
+`docs/admob-release.md`. New saves start with Rookie unlocked and selected;
+Rally Queen is now a locked direct challenge rival with a soft-game AI profile,
+and beating her or winning the Classic Cup semifinal unlocks `rally_queen`.
+Actual AdMob account IDs/UMP message verification, per-character runtime
+sprites, real signing credentials/application id validation, and physical Pixel
+closeout remain open.
 Android release-signing scaffolding reads a gitignored
 `android/key.properties` file or
 `DINK_RIVALS_UPLOAD_*` environment variables and falls back to debug signing

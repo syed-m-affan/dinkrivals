@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../app/ad_provider.dart';
+import '../app/admob_config.dart';
 import '../app/app_config.dart';
 import '../game/config/visual_palette.dart';
 import '../services/admob_ad_service.dart';
@@ -32,12 +33,18 @@ class AdBannerSlot extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final fallback = AppConfig.showAdPlaceholders
+    final allowPlaceholder =
+        AppConfig.showAdPlaceholders && !AdMobConfig.useProductionIds;
+    final fallback = allowPlaceholder
         ? _FakeBannerSlot(placement: placement)
         : const SizedBox.shrink();
-    if (AppConfig.useAdMob) {
+    if (AppConfig.useAdMob &&
+        AdMobConfig.canRequestConfiguredNativeAds &&
+        adService is AdMobAdService &&
+        adService.initialized) {
       return _AdMobBannerSlot(
         placement: placement,
+        adUnitId: adService.bannerAdUnitId,
         fallback: fallback,
       );
     }
@@ -108,10 +115,12 @@ class _FakeBannerSlot extends StatelessWidget {
 class _AdMobBannerSlot extends StatefulWidget {
   const _AdMobBannerSlot({
     required this.placement,
+    required this.adUnitId,
     required this.fallback,
   });
 
   final String placement;
+  final String adUnitId;
   final Widget fallback;
 
   @override
@@ -161,7 +170,7 @@ class _AdMobBannerSlotState extends State<_AdMobBannerSlot> {
 
       final ad = BannerAd(
         size: size,
-        adUnitId: AdMobAdService.androidTestBannerAdUnitId,
+        adUnitId: widget.adUnitId,
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             if (!mounted) {

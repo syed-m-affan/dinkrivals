@@ -2,26 +2,114 @@ import 'dart:async';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../app/admob_config.dart';
 import 'ad_service.dart';
+
+abstract class AdConsentGateway {
+  Future<bool> gatherConsent({
+    required bool resetForDebug,
+    required DebugGeography? debugGeography,
+    required List<String> testDeviceIds,
+  });
+}
+
+class GoogleUmpAdConsentGateway implements AdConsentGateway {
+  @override
+  Future<bool> gatherConsent({
+    required bool resetForDebug,
+    required DebugGeography? debugGeography,
+    required List<String> testDeviceIds,
+  }) async {
+    if (resetForDebug) {
+      await ConsentInformation.instance.reset();
+    }
+
+    final params = ConsentRequestParameters(
+      tagForUnderAgeOfConsent: false,
+      consentDebugSettings: debugGeography == null && testDeviceIds.isEmpty
+          ? null
+          : ConsentDebugSettings(
+              debugGeography: debugGeography,
+              testIdentifiers: testDeviceIds,
+            ),
+    );
+    final updateCompleted = Completer<void>();
+    ConsentInformation.instance.requestConsentInfoUpdate(
+      params,
+      () {
+        if (!updateCompleted.isCompleted) {
+          updateCompleted.complete();
+        }
+      },
+      (_) {
+        if (!updateCompleted.isCompleted) {
+          updateCompleted.complete();
+        }
+      },
+    );
+
+    try {
+      await updateCompleted.future.timeout(const Duration(seconds: 15));
+    } catch (_) {
+      return _canRequestAds();
+    }
+
+    FormError? formError;
+    try {
+      await ConsentForm.loadAndShowConsentFormIfRequired((error) {
+        formError = error;
+      });
+    } catch (_) {
+      return _canRequestAds();
+    }
+    if (formError != null) {
+      return _canRequestAds();
+    }
+    return _canRequestAds();
+  }
+
+  Future<bool> _canRequestAds() async {
+    try {
+      return ConsentInformation.instance.canRequestAds();
+    } catch (_) {
+      return false;
+    }
+  }
+}
 
 class AdMobAdService implements AdService {
   AdMobAdService({
     AdService? fallback,
+    this.fallbackOnInitializationFailure = true,
+    this.bannerAdUnitId = androidTestBannerAdUnitId,
     this.rewardedAdUnitId = androidTestRewardedAdUnitId,
     this.interstitialAdUnitId = androidTestInterstitialAdUnitId,
-  }) : _fallback = fallback ?? FakeAdService();
+    this.requestConsent = true,
+    this.resetConsentForDebug = false,
+    this.consentDebugGeography,
+    this.consentTestDeviceIds = const [],
+    AdConsentGateway? consentGateway,
+  })  : _fallback = fallback ?? FakeAdService(),
+        _consentGateway = consentGateway ?? GoogleUmpAdConsentGateway();
 
-  static const androidTestAppId = 'ca-app-pub-3940256099942544~3347511713';
+  static const androidTestAppId = AdMobConfig.androidTestAppId;
   static const androidTestBannerAdUnitId =
-      'ca-app-pub-3940256099942544/6300978111';
+      AdMobConfig.androidTestBannerAdUnitId;
   static const androidTestRewardedAdUnitId =
-      'ca-app-pub-3940256099942544/5224354917';
+      AdMobConfig.androidTestRewardedAdUnitId;
   static const androidTestInterstitialAdUnitId =
-      'ca-app-pub-3940256099942544/1033173712';
+      AdMobConfig.androidTestInterstitialAdUnitId;
 
   final AdService _fallback;
+  final AdConsentGateway _consentGateway;
+  final bool fallbackOnInitializationFailure;
+  final String bannerAdUnitId;
   final String rewardedAdUnitId;
   final String interstitialAdUnitId;
+  final bool requestConsent;
+  final bool resetConsentForDebug;
+  final DebugGeography? consentDebugGeography;
+  final List<String> consentTestDeviceIds;
 
   bool _initialized = false;
   bool _initializationFailed = false;
@@ -34,12 +122,36 @@ class AdMobAdService implements AdService {
   bool get adsRemoved => _fallback.adsRemoved;
 
   @override
-  bool get usesNativeInterstitialUi => !_initializationFailed;
+  bool get usesNativeInterstitialUi => _initialized && !_initializationFailed;
+
+  bool get initialized => _initialized;
+  bool get initializationFailed => _initializationFailed;
+
+  bool get _shouldUseFallback =>
+      _initializationFailed && fallbackOnInitializationFailure;
 
   @override
   Future<void> initialize() async {
     await _fallback.initialize();
     try {
+      if (requestConsent) {
+        final canRequestAds = await _consentGateway.gatherConsent(
+          resetForDebug: resetConsentForDebug,
+          debugGeography: consentDebugGeography,
+          testDeviceIds: consentTestDeviceIds,
+        );
+        if (!canRequestAds) {
+          _initializationFailed = true;
+          return;
+        }
+      }
+      await MobileAds.instance.updateRequestConfiguration(
+        RequestConfiguration(
+          maxAdContentRating: MaxAdContentRating.pg,
+          tagForChildDirectedTreatment: TagForChildDirectedTreatment.no,
+          tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+        ),
+      );
       await MobileAds.instance.initialize();
       _initialized = true;
       unawaited(_loadRewardedAd());
@@ -51,7 +163,7 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> isRewardedAdReady() async {
-    if (_initializationFailed) {
+    if (_shouldUseFallback) {
       return _fallback.isRewardedAdReady();
     }
     if (!_initialized || adsRemoved) {
@@ -66,7 +178,7 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> showRewardedAd({required String placement}) async {
-    if (_initializationFailed) {
+    if (_shouldUseFallback) {
       return _fallback.showRewardedAd(placement: placement);
     }
     if (!await isRewardedAdReady()) {
@@ -114,7 +226,7 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> isInterstitialReady() async {
-    if (_initializationFailed) {
+    if (_shouldUseFallback) {
       return _fallback.isInterstitialReady();
     }
     if (!_initialized || adsRemoved) {
@@ -129,7 +241,7 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> maybeShowInterstitial({required String placement}) async {
-    if (_initializationFailed) {
+    if (_shouldUseFallback) {
       return _fallback.maybeShowInterstitial(placement: placement);
     }
     if (!await isInterstitialReady()) {
