@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/app/router.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
@@ -62,5 +64,45 @@ void main() {
     expect(game.matchState.playerScore, 11);
     expect(game.matchState.opponentScore, 6);
     expect(game.matchState.longestRally, 12);
+  });
+
+  test('Android manifest uses release-candidate launcher label', () {
+    final manifest =
+        File('android/app/src/main/AndroidManifest.xml').readAsStringSync();
+
+    expect(manifest, contains('android:label="Dink Rivals"'));
+  });
+
+  test('Android manifest uses Google AdMob test app id', () {
+    final manifest =
+        File('android/app/src/main/AndroidManifest.xml').readAsStringSync();
+
+    expect(
+      manifest,
+      contains('ca-app-pub-3940256099942544~3347511713'),
+    );
+  });
+
+  test('Android release signing falls back without credentials', () {
+    final gradle = File('android/app/build.gradle.kts').readAsStringSync();
+
+    expect(gradle, contains('DINK_RIVALS_UPLOAD_STORE_FILE'));
+    expect(gradle, contains('DINK_RIVALS_UPLOAD_STORE_PASSWORD'));
+    expect(gradle, contains('DINK_RIVALS_UPLOAD_KEY_ALIAS'));
+    expect(gradle, contains('DINK_RIVALS_UPLOAD_KEY_PASSWORD'));
+    expect(
+      gradle,
+      contains('if (hasReleaseSigning) "release" else "debug"'),
+    );
+  });
+
+  test('Android package id stays pending until Play package is confirmed', () {
+    final gradle = File('android/app/build.gradle.kts').readAsStringSync();
+
+    expect(gradle, contains('applicationId = "com.example.dink_rivals"'));
+    expect(
+      gradle,
+      contains('final Play package name is confirmed'),
+    );
   });
 }
