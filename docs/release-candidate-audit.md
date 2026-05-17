@@ -15,7 +15,7 @@ and install on the connected Pixel when finished.
   - `3ab6194 add admob production consent plumbing`
 - Verification on the current tree:
   - `flutter analyze`: no issues.
-  - `flutter test`: 289 tests passed.
+  - `flutter test`: 290 tests passed.
   - `flutter build apk --debug`: built `build/app/outputs/flutter-apk/app-debug.apk`.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
@@ -29,7 +29,8 @@ and install on the connected Pixel when finished.
     champion screen paths, challenge win/loss paths, persisted rewarded stars,
     Dink Streak Paddle achievement persistence, selectable Dink Streak Accent
     persistence/equip UI, release metadata/preflight switches, exact banner
-    route placement, and non-sprite character identity accents.
+    route placement, first-match/no-pre-game-ad flow, and non-sprite character
+    identity accents.
 - Device state: `adb devices -l` lists only `emulator-5554`; the physical Pixel is not visible.
 - Working tree after push: clean except pre-existing untracked `.idea/`.
 
@@ -57,7 +58,7 @@ and install on the connected Pixel when finished.
 | Release signing scaffolding | `android/key.properties` / `DINK_RIVALS_UPLOAD_*` support | Implemented; real credentials external |
 | Final application ID plumbing | `DINK_RIVALS_APPLICATION_ID` override with stable QA default | Implemented; final value external |
 | No energy/gems/gacha/pay-to-win | No implementation evidence for those mechanics; monetization remains ads/cosmetic-style only | Implemented by omission |
-| No forced ad before first gameplay | banners hidden before first completed match; interstitial gates require completed matches/time; rewarded ads user-initiated | Implemented |
+| No forced ad before first gameplay | `main_menu_flow_test.dart` asserts first Quick Match/tutorial path shows no banner/interstitial/rewarded ad; banners hidden before first completed match; interstitial gates require completed matches/time; rewarded ads user-initiated | Implemented |
 | No ads during active gameplay | route-level banner tests assert no banner slots on game/debug/tournament/courts/end-match; interstitial calls occur only at natural breaks | Implemented |
 | Offline gameplay | 900-second offline emulator QA harness run previously recorded without crash/ANR | Verified on emulator |
 | Visible release/debug label | `AppConfig.phaseLabel` is `MVP Release Candidate` and shown on main menu | Implemented |
