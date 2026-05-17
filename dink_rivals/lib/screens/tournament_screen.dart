@@ -37,6 +37,10 @@ class TournamentScreen extends ConsumerWidget {
                 _TrophyPanel(wins: saveData.classicCupWins),
                 const SizedBox(height: 18),
                 _BracketPanel(state: state),
+                if (state.isComplete) ...[
+                  const SizedBox(height: 18),
+                  _ResultPanel(state: state),
+                ],
                 const SizedBox(height: 22),
                 _TournamentActions(state: state),
               ],
@@ -127,6 +131,82 @@ class _TrophyPanel extends StatelessWidget {
             style: const TextStyle(
               color: VisualPalette.uiAccent,
               fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'monospace',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ResultPanel extends StatelessWidget {
+  const _ResultPanel({required this.state});
+
+  final TournamentState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final lastMatch =
+        state.completedMatches.isEmpty ? null : state.completedMatches.last;
+    final playerWon = state.playerWonCup;
+    final title = playerWon
+        ? 'CHAMPION'
+        : 'ELIMINATED IN ${lastMatch?.roundName.toUpperCase() ?? 'CUP'}';
+    final detail = playerWon
+        ? '${TournamentDefinitions.classicCupTrophyName} unlocked'
+        : 'Lost to ${lastMatch?.opponentName ?? 'the rival'}';
+    final score = lastMatch == null
+        ? '--'
+        : '${lastMatch.playerScore}-${lastMatch.opponentScore}';
+    final accent =
+        playerWon ? VisualPalette.feedbackDink : VisualPalette.feedbackFault;
+    return ArcadePanel(
+      backgroundColor: VisualPalette.uiSurface.withValues(alpha: 0.88),
+      borderColor: accent,
+      child: Row(
+        key: const Key('tournament-result-panel'),
+        children: [
+          Icon(
+            playerWon ? Icons.emoji_events : Icons.sports_tennis,
+            color: accent,
+            size: 38,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  key: const Key('tournament-result-title'),
+                  style: TextStyle(
+                    color: accent,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  detail,
+                  key: const Key('tournament-result-detail'),
+                  style: const TextStyle(
+                    color: VisualPalette.courtLineWhite,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          Text(
+            score,
+            key: const Key('tournament-result-score'),
+            style: TextStyle(
+              color: accent,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               fontFamily: 'monospace',
             ),

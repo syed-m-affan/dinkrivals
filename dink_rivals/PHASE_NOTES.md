@@ -330,8 +330,11 @@ Re-run the previous QA checklists with attention to:
 - Automated verification added for tournament progression, provider/trophy
   persistence, tournament screen behavior, save migration/defaults, and
   `GameScreen` tournament-match advancement. Physical Android tournament QA,
-  richer results presentation, optional tournament retry ads, and broader
-  unlock/court-selection surfaces remain follow-up work.
+  optional tournament retry ads, and broader unlock/court-selection surfaces
+  remain follow-up work.
+- Follow-up tournament polish adds a compact champion/eliminated result panel
+  using the completed match record, so cup closeout now shows the last opponent,
+  final score, and trophy/elimination state before the retry/restart actions.
 
 ## Phase 7 progression slice (2026-05-17)
 - Added persistent reward currency (`stars`), tutorial completion, and selected

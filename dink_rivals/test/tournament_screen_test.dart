@@ -103,8 +103,17 @@ void main() {
     await tournament.recordCompletedMatch(playerScore: 11, opponentScore: 9);
     await tester.pumpAndSettle();
 
-    expect(find.text('Classic Cup Trophy unlocked'), findsOneWidget);
+    expect(find.byKey(const Key('tournament-trophy-label')), findsOneWidget);
+    expect(find.text('Classic Cup Trophy unlocked'), findsNWidgets(2));
     expect(find.text('WINS 1'), findsOneWidget);
+    expect(find.byKey(const Key('tournament-result-panel')), findsOneWidget);
+    expect(find.text('CHAMPION'), findsOneWidget);
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('tournament-result-score')))
+          .data,
+      '11-9',
+    );
     expect(find.byKey(const Key('tournament-restart')), findsOneWidget);
   });
 
@@ -120,7 +129,18 @@ void main() {
     await tournament.recordCompletedMatch(playerScore: 8, opponentScore: 11);
     await tester.pumpAndSettle();
 
+    expect(find.byKey(const Key('tournament-result-panel')), findsOneWidget);
+    expect(find.text('ELIMINATED IN SEMIFINAL'), findsOneWidget);
+    expect(find.text('Lost to Rally Queen'), findsOneWidget);
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('tournament-result-score')))
+          .data,
+      '8-11',
+    );
     expect(find.byKey(const Key('tournament-retry-ad')), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('tournament-retry-ad')));
+    await tester.pump();
     await tester.tap(find.byKey(const Key('tournament-retry-ad')));
     await tester.pumpAndSettle();
 
