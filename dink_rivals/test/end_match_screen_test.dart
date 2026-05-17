@@ -20,9 +20,12 @@ Future<Widget> _wrap(
   FakeAdService? adService,
   AdPlacementSystem? adPlacement,
   SaveData initialSaveData = const SaveData(),
+  SaveService? saveService,
 }) async {
-  SharedPreferences.setMockInitialValues({});
-  final saveService = SaveService(await SharedPreferences.getInstance());
+  final service = saveService ??
+      SaveService(
+        await SharedPreferences.getInstance(),
+      );
   final router = GoRouter(
     initialLocation: '/end-match',
     routes: [
@@ -44,9 +47,9 @@ Future<Widget> _wrap(
       audioServiceProvider.overrideWithValue(FakeAudioService()),
       adPlacementSystemProvider
           .overrideWithValue(adPlacement ?? AdPlacementSystem()),
-      saveServiceProvider.overrideWithValue(saveService),
+      saveServiceProvider.overrideWithValue(service),
       saveDataProvider.overrideWith(
-        () => SaveDataNotifier(saveService, initialSaveData),
+        () => SaveDataNotifier(service, initialSaveData),
       ),
     ],
     child: MaterialApp.router(routerConfig: router),
@@ -79,6 +82,10 @@ class _StubScreen extends StatelessWidget {
 }
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('player win shows YOU WIN with scores and rally stats',
       (tester) async {
     final game = DinkRivalsGame();
@@ -164,6 +171,41 @@ void main() {
     expect(adService.rewardedShows, 1);
     expect(find.text('REWARD CLAIMED 2X'), findsOneWidget);
     expect(find.text('STARS 100'), findsOneWidget);
+  });
+
+  testWidgets('rewarded ad persists bonus stars and cannot be double-claimed',
+      (tester) async {
+    final prefs = await SharedPreferences.getInstance();
+    final saveService = SaveService(prefs);
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 7;
+    game.matchState.opponentScore = 3;
+    final adService = FakeAdService();
+
+    await tester.pumpWidget(
+      await _wrap(
+        game,
+        adService: adService,
+        saveService: saveService,
+        initialSaveData: const SaveData(stars: 100),
+      ),
+    );
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('end-match-rewarded-ad')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('end-match-rewarded-ad')));
+    await tester.pumpAndSettle();
+
+    expect(adService.rewardedShows, 1);
+    expect((await SaveService(prefs).load()).stars, 200);
+    expect(find.text('STARS 200'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('end-match-rewarded-ad')));
+    await tester.pumpAndSettle();
+
+    expect(adService.rewardedShows, 1);
+    expect((await SaveService(prefs).load()).stars, 200);
   });
 
   testWidgets('return to menu skips interstitial before eligibility',

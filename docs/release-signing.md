@@ -49,10 +49,11 @@ Run from `dink_rivals/`:
 flutter build apk --release
 ```
 
-Then run the mechanical release preflight:
+Then run the mechanical release preflight. For the strict release path, include
+the checks that rebuild the artifact with the current dart-define environment:
 
 ```powershell
-.\tool\release_readiness.ps1 -RequireProductionSecrets -RequirePhysicalDevice -RequireReleaseApk
+.\tool\release_readiness.ps1 -RunAnalyze -RunTests -BuildRelease -RequireProductionSecrets -RequireProductionAdMode -RequirePhysicalDevice -RequireReleaseApk
 ```
 
 Production closeout still requires a real upload keystore, a Play Console-ready

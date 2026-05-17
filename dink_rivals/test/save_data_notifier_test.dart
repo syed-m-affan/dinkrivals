@@ -123,6 +123,20 @@ void main() {
     expect(reloaded.tutorialSeen, isTrue);
   });
 
+  test('unlockDinkStreakPaddle persists achievement state', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData());
+    addTearDown(container.dispose);
+
+    await container.read(saveDataProvider.notifier).unlockDinkStreakPaddle();
+    await container.read(saveDataProvider.notifier).unlockDinkStreakPaddle();
+
+    expect(container.read(saveDataProvider).dinkStreakPaddleUnlocked, isTrue);
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.dinkStreakPaddleUnlocked, isTrue);
+  });
+
   test('selectCourt persists cosmetic court choice', () async {
     final prefs = await SharedPreferences.getInstance();
     final service = SaveService(prefs);

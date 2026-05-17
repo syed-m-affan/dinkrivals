@@ -439,6 +439,28 @@ Re-run the previous QA checklists with attention to:
   signing config, production AdMob IDs, application ID override, release audit
   doc, and non-emulator Android device visibility. It warns by default and can
   fail with `-RequireProductionSecrets -RequirePhysicalDevice -RequireReleaseApk`.
+- Added a pure `UnlockSystem` for defeated-rival, Classic Cup trophy, and
+  five-dink paddle achievement rules. `GameScreen` now routes tournament and
+  challenge unlock decisions through it, tracks player dink/smash contacts, and
+  persists the `Dink Streak Paddle` achievement into the Trophy Room when a
+  completed match has at least five player dink contacts.
+- Added release-candidate metadata polish: `AppConfig.phaseLabel` is now `MVP
+  Release Candidate`, the main menu exposes that label, and `pubspec.yaml`
+  describes the current release-candidate build instead of the original Phase 0
+  prototype.
+- Strengthened `tool/release_readiness.ps1` with optional `-RunAnalyze`,
+  `-RunTests`, `-BuildRelease`, and `-RequireProductionAdMode` switches. Release
+  builds launched through the preflight forward the relevant AdMob dart-defines
+  from the current environment so the checked build path and configured values
+  stay aligned.
+- Verification for this slice: `flutter analyze` passes, `flutter test` passes
+  with 273 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
+  -BuildRelease` passes with expected warnings for external production values,
+  and strict release preflight exits nonzero as expected until real signing,
+  final app id, production AdMob values, production ad mode, and a physical
+  Android device are available.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
-  credentials/final application id value validation, and physical Pixel QA.
+  credentials/final application id value validation, physical Pixel QA, and
+  production-quality music. Claude recommended not shipping placeholder music;
+  current MVP audio remains SFX-only until an approved music asset exists.

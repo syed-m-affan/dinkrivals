@@ -1,5 +1,5 @@
 name: dink_rivals
-description: Phase 0 gray-box rally prototype for Dink Rivals.
+description: MVP release-candidate arcade pickleball game for Dink Rivals.
 publish_to: "none"
 version: 0.1.0+1
 

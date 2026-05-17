@@ -92,6 +92,16 @@ class TrophyRoomScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     _UnlockRow(
+                      keyName: 'dink-streak-paddle',
+                      icon: Icons.sports_tennis,
+                      title: 'Dink Streak Paddle',
+                      detail: save.dinkStreakPaddleUnlocked
+                          ? 'Five dink contacts in one match'
+                          : 'Land five dinks in one match',
+                      unlocked: save.dinkStreakPaddleUnlocked,
+                    ),
+                    const SizedBox(height: 12),
+                    _UnlockRow(
                       keyName: 'tutorial',
                       icon: Icons.school,
                       title: 'Quick Start',

@@ -93,6 +93,36 @@ void main() {
     );
   });
 
+  testWidgets('completed tournament loss eliminates without rival unlock',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+    container.read(tournamentProvider.notifier).startClassicCup();
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 7
+      ..opponentScore = 11;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TournamentScreen), findsOneWidget);
+    expect(
+      container.read(tournamentProvider).status,
+      TournamentStatus.eliminated,
+    );
+    expect(
+      container.read(saveDataProvider).isCharacterUnlocked(
+            CharacterUnlockIds.rallyQueen,
+          ),
+      isFalse,
+    );
+    expect(container.read(saveDataProvider).classicCupWins, 0);
+  });
+
   testWidgets('first game visit shows and persists quick-start tutorial',
       (tester) async {
     final game = DinkRivalsGame();
@@ -136,6 +166,32 @@ void main() {
               CharacterUnlockIds.showman,
             ),
         isTrue);
+  });
+
+  testWidgets('winning tournament final through screen unlocks trophy',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+    final tournament = container.read(tournamentProvider.notifier);
+    tournament.startClassicCup();
+    await tournament.recordCompletedMatch(playerScore: 11, opponentScore: 7);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 11
+      ..opponentScore = 9;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(
+      container.read(tournamentProvider).status,
+      TournamentStatus.champion,
+    );
+    expect(container.read(saveDataProvider).classicCupWins, 1);
+    expect(container.read(saveDataProvider).classicCupTrophyUnlocked, isTrue);
   });
 
   testWidgets('winning rival challenge unlocks challenged character',
@@ -189,5 +245,79 @@ void main() {
             ),
         isTrue);
     expect(container.read(rivalChallengeProvider), isNull);
+  });
+
+  testWidgets('winning Showman challenge unlocks Showman', (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+    container
+        .read(rivalChallengeProvider.notifier)
+        .start(CharacterUnlockIds.showman);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 11
+      ..opponentScore = 8;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(
+        container.read(saveDataProvider).isCharacterUnlocked(
+              CharacterUnlockIds.showman,
+            ),
+        isTrue);
+    expect(container.read(rivalChallengeProvider), isNull);
+  });
+
+  testWidgets('losing rival challenge keeps rival locked and resets challenge',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+    container
+        .read(rivalChallengeProvider.notifier)
+        .start(CharacterUnlockIds.showman);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 8
+      ..opponentScore = 11;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(find.text('end'), findsOneWidget);
+    expect(
+        container.read(saveDataProvider).isCharacterUnlocked(
+              CharacterUnlockIds.showman,
+            ),
+        isFalse);
+    expect(container.read(rivalChallengeProvider), isNull);
+  });
+
+  testWidgets('five player dinks unlock the dink streak paddle',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 11
+      ..opponentScore = 8
+      ..playerDinkContactsThisMatch = 5;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(
+      container.read(saveDataProvider).dinkStreakPaddleUnlocked,
+      isTrue,
+    );
   });
 }

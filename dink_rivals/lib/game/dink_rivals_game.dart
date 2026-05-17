@@ -438,7 +438,13 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     hapticsService.light();
     player.showHitConfirm();
     inputSystem.consumeSwingCommand();
-    _showFeedback(shotSystem.lastShotType?.name.toUpperCase() ?? 'HIT');
+    final playerShotType = shotSystem.lastShotType;
+    if (playerShotType == ShotType.dink) {
+      matchState.playerDinkContactsThisMatch++;
+    } else if (playerShotType == ShotType.smash) {
+      matchState.playerSmashContactsThisMatch++;
+    }
+    _showFeedback(playerShotType?.name.toUpperCase() ?? 'HIT');
     vfx.spawnContact(
       courtPosition: Vector2(preHitBall.x, preHitBall.y),
       z: preHitBall.z,

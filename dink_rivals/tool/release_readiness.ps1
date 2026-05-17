@@ -2,7 +2,11 @@ param(
   [string]$ReleaseApkPath = "build/app/outputs/flutter-apk/app-release.apk",
   [switch]$RequireProductionSecrets,
   [switch]$RequirePhysicalDevice,
-  [switch]$RequireReleaseApk
+  [switch]$RequireReleaseApk,
+  [switch]$RequireProductionAdMode,
+  [switch]$RunAnalyze,
+  [switch]$RunTests,
+  [switch]$BuildRelease
 )
 
 $ErrorActionPreference = "Stop"
@@ -85,6 +89,36 @@ function Is-ProductionAdMobValue {
   return (Is-Present $Value) -and $Value.Trim() -ne $TestValue
 }
 
+function Invoke-ToolCheck {
+  param(
+    [string]$Name,
+    [string]$Command,
+    [string[]]$Arguments
+  )
+  try {
+    & $Command @Arguments
+    if ($LASTEXITCODE -eq 0) {
+      Add-Check $Name "PASS" "$Command $($Arguments -join ' ')"
+    } else {
+      Add-Check $Name "FAIL" "Exited with code $LASTEXITCODE."
+    }
+  } catch {
+    Add-Check $Name "FAIL" $_.Exception.Message
+  }
+}
+
+function Add-DartDefineIfPresent {
+  param(
+    [System.Collections.Generic.List[string]]$Target,
+    [string]$Name,
+    [string]$Value
+  )
+  if (Is-Present $Value) {
+    $Target.Add("--dart-define") | Out-Null
+    $Target.Add("$Name=$Value") | Out-Null
+  }
+}
+
 Set-Location $projectRoot
 
 $flutter = Get-Command flutter -ErrorAction SilentlyContinue
@@ -92,6 +126,28 @@ if ($null -eq $flutter) {
   Add-Check "Flutter CLI" "FAIL" "flutter is not on PATH."
 } else {
   Add-Check "Flutter CLI" "PASS" $flutter.Source
+}
+
+if ($null -ne $flutter -and $RunAnalyze) {
+  Invoke-ToolCheck "Flutter analyze" $flutter.Source @("analyze")
+}
+
+if ($null -ne $flutter -and $RunTests) {
+  Invoke-ToolCheck "Flutter tests" $flutter.Source @("test")
+}
+
+if ($null -ne $flutter -and $BuildRelease) {
+  $buildArgs = New-Object System.Collections.Generic.List[string]
+  $buildArgs.Add("build") | Out-Null
+  $buildArgs.Add("apk") | Out-Null
+  $buildArgs.Add("--release") | Out-Null
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_USE_ADMOB" $env:DINK_RIVALS_USE_ADMOB
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_SHOW_AD_PLACEHOLDERS" $env:DINK_RIVALS_SHOW_AD_PLACEHOLDERS
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_USE_PRODUCTION_ADMOB_IDS" $env:DINK_RIVALS_USE_PRODUCTION_ADMOB_IDS
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_ADMOB_BANNER_AD_UNIT_ID" $env:DINK_RIVALS_ADMOB_BANNER_AD_UNIT_ID
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_ADMOB_REWARDED_AD_UNIT_ID" $env:DINK_RIVALS_ADMOB_REWARDED_AD_UNIT_ID
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_ADMOB_INTERSTITIAL_AD_UNIT_ID" $env:DINK_RIVALS_ADMOB_INTERSTITIAL_AD_UNIT_ID
+  Invoke-ToolCheck "Release build" $flutter.Source $buildArgs.ToArray()
 }
 
 $releaseApk = Resolve-ProjectRelativePath $ReleaseApkPath
@@ -162,6 +218,25 @@ if ($hasProductionAdMob) {
   Add-Check "AdMob IDs" "FAIL" "Production AdMob app/unit IDs are missing or still Google test IDs."
 } else {
   Add-Check "AdMob IDs" "WARN" "Production AdMob IDs are not present; native test IDs remain the default."
+}
+
+$showPlaceholders = if (Is-Present $env:DINK_RIVALS_SHOW_AD_PLACEHOLDERS) {
+  $env:DINK_RIVALS_SHOW_AD_PLACEHOLDERS.Trim().ToLowerInvariant()
+} else {
+  "true"
+}
+$useAdMob = if (Is-Present $env:DINK_RIVALS_USE_ADMOB) {
+  $env:DINK_RIVALS_USE_ADMOB.Trim().ToLowerInvariant()
+} else {
+  "false"
+}
+$productionAdModeOk = ($useAdMob -eq "true") -or ($showPlaceholders -eq "false")
+if ($productionAdModeOk) {
+  Add-Check "Production ad mode" "PASS" "AdMob is enabled or fake placeholders are disabled for this build environment."
+} elseif ($RequireProductionAdMode -or $RequireProductionSecrets) {
+  Add-Check "Production ad mode" "FAIL" "Set DINK_RIVALS_USE_ADMOB=true or DINK_RIVALS_SHOW_AD_PLACEHOLDERS=false before production release builds."
+} else {
+  Add-Check "Production ad mode" "WARN" "Current defaults allow fake ad placeholders in non-AdMob builds."
 }
 
 $adb = Resolve-Adb

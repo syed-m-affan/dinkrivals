@@ -13,6 +13,7 @@ import '../game/config/visual_palette.dart';
 import '../game/dink_rivals_game.dart';
 import '../game/models/opponent_serve_phase.dart';
 import '../game/systems/opponent_ai_system.dart';
+import '../game/systems/unlock_system.dart';
 import '../services/save_service.dart';
 import '../widgets/arcade_button.dart';
 import '../widgets/arcade_panel.dart';
@@ -25,6 +26,8 @@ class GameScreen extends ConsumerStatefulWidget {
 }
 
 class _GameScreenState extends ConsumerState<GameScreen> {
+  static const UnlockSystem _unlockSystem = UnlockSystem();
+
   bool _showPause = false;
   bool _handlingMatchOver = false;
   late bool _showTutorial;
@@ -56,19 +59,28 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   Future<void> _finishCompletedMatch() async {
+    final playerScore = _game.matchState.playerScore;
+    final opponentScore = _game.matchState.opponentScore;
+    final playerWon = _unlockSystem.playerWonMatch(
+      playerScore: playerScore,
+      opponentScore: opponentScore,
+    );
     ref.read(adPlacementSystemProvider).recordMatchCompleted();
     await ref.read(saveDataProvider.notifier).recordMatchCompleted();
+    await _unlockDinkStreakPaddleIfEarned();
     final tournament = ref.read(tournamentProvider);
     if (tournament.isActive) {
-      if (_game.matchState.playerScore > _game.matchState.opponentScore) {
-        final defeatedId = tournament.currentOpponentId;
-        if (defeatedId != null) {
-          await ref.read(saveDataProvider.notifier).unlockCharacter(defeatedId);
-        }
+      final defeatedId = tournament.currentOpponentId;
+      if (_unlockSystem.shouldUnlockDefeatedRival(
+        playerWon: playerWon,
+        rivalId: defeatedId,
+        saveData: ref.read(saveDataProvider),
+      )) {
+        await ref.read(saveDataProvider.notifier).unlockCharacter(defeatedId!);
       }
       await ref.read(tournamentProvider.notifier).recordCompletedMatch(
-            playerScore: _game.matchState.playerScore,
-            opponentScore: _game.matchState.opponentScore,
+            playerScore: playerScore,
+            opponentScore: opponentScore,
           );
       if (mounted) {
         context.go(AppRoutes.tournament);
@@ -77,7 +89,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     }
     final challengeId = ref.read(rivalChallengeProvider);
     if (challengeId != null) {
-      if (_game.matchState.playerScore > _game.matchState.opponentScore) {
+      if (_unlockSystem.shouldUnlockDefeatedRival(
+        playerWon: playerWon,
+        rivalId: challengeId,
+        saveData: ref.read(saveDataProvider),
+      )) {
         await ref.read(saveDataProvider.notifier).unlockCharacter(challengeId);
       }
       ref.read(rivalChallengeProvider.notifier).reset();
@@ -86,6 +102,16 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     if (mounted) {
       context.go(AppRoutes.endMatch);
     }
+  }
+
+  Future<void> _unlockDinkStreakPaddleIfEarned() async {
+    if (!_unlockSystem.shouldUnlockDinkStreakPaddle(
+      playerDinkContactsThisMatch: _game.matchState.playerDinkContactsThisMatch,
+      saveData: ref.read(saveDataProvider),
+    )) {
+      return;
+    }
+    await ref.read(saveDataProvider.notifier).unlockDinkStreakPaddle();
   }
 
   void _setPaused(bool value) {

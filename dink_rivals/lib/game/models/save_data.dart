@@ -11,6 +11,7 @@ class SaveData {
     this.classicCupWins = 0,
     this.stars = 0,
     this.tutorialSeen = false,
+    this.dinkStreakPaddleUnlocked = false,
     this.selectedCourtId = CourtUnlockIds.defaultCourt,
     this.unlockedCharacterIds = CharacterUnlockIds.defaultUnlocked,
     this.selectedCharacterId = CharacterUnlockIds.defaultSelected,
@@ -23,6 +24,7 @@ class SaveData {
   final int classicCupWins;
   final int stars;
   final bool tutorialSeen;
+  final bool dinkStreakPaddleUnlocked;
   final String selectedCourtId;
   final List<String> unlockedCharacterIds;
   final String selectedCharacterId;
@@ -49,6 +51,7 @@ class SaveData {
     int? classicCupWins,
     int? stars,
     bool? tutorialSeen,
+    bool? dinkStreakPaddleUnlocked,
     String? selectedCourtId,
     List<String>? unlockedCharacterIds,
     String? selectedCharacterId,
@@ -61,6 +64,8 @@ class SaveData {
       classicCupWins: classicCupWins ?? this.classicCupWins,
       stars: stars ?? this.stars,
       tutorialSeen: tutorialSeen ?? this.tutorialSeen,
+      dinkStreakPaddleUnlocked:
+          dinkStreakPaddleUnlocked ?? this.dinkStreakPaddleUnlocked,
       selectedCourtId: selectedCourtId ?? this.selectedCourtId,
       unlockedCharacterIds: unlockedCharacterIds ?? this.unlockedCharacterIds,
       selectedCharacterId: selectedCharacterId ?? this.selectedCharacterId,
@@ -77,6 +82,7 @@ class SaveData {
         other.classicCupWins == classicCupWins &&
         other.stars == stars &&
         other.tutorialSeen == tutorialSeen &&
+        other.dinkStreakPaddleUnlocked == dinkStreakPaddleUnlocked &&
         other.selectedCourtId == selectedCourtId &&
         _stringListEquals(other.unlockedCharacterIds, unlockedCharacterIds) &&
         other.selectedCharacterId == selectedCharacterId;
@@ -91,6 +97,7 @@ class SaveData {
         classicCupWins,
         stars,
         tutorialSeen,
+        dinkStreakPaddleUnlocked,
         selectedCourtId,
         Object.hashAll(unlockedCharacterIds),
         selectedCharacterId,

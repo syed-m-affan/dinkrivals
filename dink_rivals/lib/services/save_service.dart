@@ -17,6 +17,7 @@ class SaveService {
   static const _classicCupWinsKey = 'classic_cup_wins';
   static const _starsKey = 'stars';
   static const _tutorialSeenKey = 'tutorial_seen';
+  static const _dinkStreakPaddleUnlockedKey = 'dink_streak_paddle_unlocked';
   static const _selectedCourtKey = 'selected_court_id';
   static const _unlockedCharactersKey = 'unlocked_character_ids';
   static const _selectedCharacterKey = 'selected_character_id';
@@ -37,6 +38,8 @@ class SaveService {
       classicCupWins: _prefs.getInt(_classicCupWinsKey) ?? 0,
       stars: _prefs.getInt(_starsKey) ?? 0,
       tutorialSeen: _prefs.getBool(_tutorialSeenKey) ?? false,
+      dinkStreakPaddleUnlocked:
+          _prefs.getBool(_dinkStreakPaddleUnlockedKey) ?? false,
       selectedCourtId: normalizedCourtId(_prefs.getString(_selectedCourtKey)),
       unlockedCharacterIds: unlockedCharacterIds,
       selectedCharacterId: normalizedSelectedCharacterId(
@@ -58,6 +61,10 @@ class SaveService {
     await _prefs.setInt(_classicCupWinsKey, data.classicCupWins);
     await _prefs.setInt(_starsKey, data.stars);
     await _prefs.setBool(_tutorialSeenKey, data.tutorialSeen);
+    await _prefs.setBool(
+      _dinkStreakPaddleUnlockedKey,
+      data.dinkStreakPaddleUnlocked,
+    );
     await _prefs.setString(_selectedCourtKey, data.activeCourtId);
     await _prefs.setStringList(
       _unlockedCharactersKey,
@@ -129,6 +136,14 @@ class SaveDataNotifier extends Notifier<SaveData> {
 
   Future<void> setTutorialSeen(bool value) async {
     state = state.copyWith(tutorialSeen: value);
+    await _service.save(state);
+  }
+
+  Future<void> unlockDinkStreakPaddle() async {
+    if (state.dinkStreakPaddleUnlocked) {
+      return;
+    }
+    state = state.copyWith(dinkStreakPaddleUnlocked: true);
     await _service.save(state);
   }
 

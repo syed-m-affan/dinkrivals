@@ -71,6 +71,23 @@ void main() {
     expect(find.text('Seen'), findsOneWidget);
   });
 
+  testWidgets('trophy room shows dink streak paddle achievement',
+      (tester) async {
+    final container = await _container(
+      DinkRivalsGame(),
+      const SaveData(dinkStreakPaddleUnlocked: true),
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container, initialLocation: '/trophy-room'));
+    await tester.pump();
+
+    expect(find.byKey(const Key('trophy-room-dink-streak-paddle-title')),
+        findsOneWidget);
+    expect(find.text('Dink Streak Paddle'), findsOneWidget);
+    expect(find.text('Five dink contacts in one match'), findsOneWidget);
+  });
+
   testWidgets('court screen selects cosmetic court and updates game',
       (tester) async {
     final game = DinkRivalsGame();

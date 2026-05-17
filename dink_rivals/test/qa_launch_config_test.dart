@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dink_rivals/app/admob_config.dart';
+import 'package:dink_rivals/app/app_config.dart';
 import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/app/router.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
@@ -109,5 +110,29 @@ void main() {
       gradle,
       contains('applicationId is the install/Play identity'),
     );
+  });
+
+  test('release-candidate metadata is current and visible', () {
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+    final menu = File('lib/screens/main_menu_screen.dart').readAsStringSync();
+
+    expect(AppConfig.phaseLabel, 'MVP Release Candidate');
+    expect(pubspec, contains('MVP release-candidate arcade pickleball game'));
+    expect(menu, contains("Key('menu-phase-label')"));
+    expect(menu, contains('AppConfig.phaseLabel'));
+  });
+
+  test('release preflight can run analyze tests build and production ad gate',
+      () {
+    final script = File('tool/release_readiness.ps1').readAsStringSync();
+
+    expect(script, contains(r'[switch]$RunAnalyze'));
+    expect(script, contains(r'[switch]$RunTests'));
+    expect(script, contains(r'[switch]$BuildRelease'));
+    expect(script, contains(r'[switch]$RequireProductionAdMode'));
+    expect(script, contains('DINK_RIVALS_SHOW_AD_PLACEHOLDERS=false'));
+    expect(script, contains('Flutter analyze'));
+    expect(script, contains('Flutter tests'));
+    expect(script, contains('Release build'));
   });
 }

@@ -26,6 +26,7 @@ void main() {
     expect(data.classicCupTrophyUnlocked, isFalse);
     expect(data.stars, 0);
     expect(data.tutorialSeen, isFalse);
+    expect(data.dinkStreakPaddleUnlocked, isFalse);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
     expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
     expect(data.activeCharacterId, CharacterUnlockIds.defaultSelected);
@@ -43,6 +44,7 @@ void main() {
       classicCupWins: 2,
       stars: 350,
       tutorialSeen: true,
+      dinkStreakPaddleUnlocked: true,
       selectedCourtId: CourtUnlockIds.training,
       unlockedCharacterIds: [
         CharacterUnlockIds.rookie,
@@ -85,6 +87,7 @@ void main() {
     expect(data.classicCupWins, 0);
     expect(data.stars, 0);
     expect(data.tutorialSeen, isFalse);
+    expect(data.dinkStreakPaddleUnlocked, isFalse);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
     expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
     expect(data.activeCharacterId, CharacterUnlockIds.defaultSelected);
@@ -101,6 +104,10 @@ void main() {
     expect(updated.classicCupWins, original.classicCupWins);
     expect(updated.stars, original.stars);
     expect(updated.tutorialSeen, original.tutorialSeen);
+    expect(
+      updated.dinkStreakPaddleUnlocked,
+      original.dinkStreakPaddleUnlocked,
+    );
     expect(updated.selectedCourtId, original.selectedCourtId);
     expect(updated.unlockedCharacterIds, original.unlockedCharacterIds);
     expect(updated.selectedCharacterId, original.selectedCharacterId);

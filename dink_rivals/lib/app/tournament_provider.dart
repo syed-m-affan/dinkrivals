@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../game/config/tournament_definitions.dart';
 import '../game/models/tournament_state.dart';
 import '../game/systems/tournament_system.dart';
+import '../game/systems/unlock_system.dart';
 import '../services/save_service.dart';
 
 final tournamentProvider =
@@ -12,6 +13,7 @@ final tournamentProvider =
 
 class TournamentNotifier extends Notifier<TournamentState> {
   final TournamentSystem _system = const TournamentSystem();
+  final UnlockSystem _unlockSystem = const UnlockSystem();
 
   @override
   TournamentState build() => const TournamentState();
@@ -40,7 +42,10 @@ class TournamentNotifier extends Notifier<TournamentState> {
       opponentScore: opponentScore,
     );
     state = next;
-    if (next.playerWonCup && !previous.playerWonCup) {
+    if (_unlockSystem.shouldRecordClassicCupWin(
+      previouslyChampion: previous.playerWonCup,
+      nowChampion: next.playerWonCup,
+    )) {
       await ref.read(saveDataProvider.notifier).recordClassicCupWin();
     }
   }

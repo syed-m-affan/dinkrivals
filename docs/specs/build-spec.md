@@ -1725,13 +1725,19 @@ Ship a small but complete free ad-supported game.
 
 The non-human Phase 7 progression slice now includes persistent stars,
 tutorial dismissal, cosmetic court selection, character unlock IDs, selected
-player character ID, a Trophy Room route, and a Courts route. The existing fake
+player character ID, Dink Streak Paddle achievement state, a Trophy Room route,
+and a Courts route. The existing fake
 rewarded post-match ad persists bonus stars, the first game visit shows a
 dismissible quick-start overlay, defeated tournament rivals unlock in the
 roster, unlocked characters can be selected from the roster, locked Veteran and
 Showman roster cards can start direct challenge matches, Rally Queen can unlock
 either through her direct challenge or the Classic Cup semifinal, and eliminated
 tournament runs can use a fake rewarded retry ad to restore the failed match.
+Unlock decisions for defeated rivals, Classic Cup trophy wins, and five-dink
+paddle achievement completion now live in a pure `UnlockSystem` with focused
+tests. The Classic Park court remains open by default because it is the
+polished first-session environment; the gray court is a projection-training
+variant, and a future earned-court reward should use a second polished court.
 The Classic Cup now presents Rally Queen / Veteran / Showman as the three rival
 profiles, includes a compact champion/eliminated result panel, and treats
 user-initiated tournament exit as a natural-break interstitial placement behind
@@ -1773,6 +1779,8 @@ best-effort offline mode, and monitor logcat for crash/ANR signatures during
 the 15-minute stability window. The harness completed a 900-second offline
 emulator run on `emulator-5554` against the default debug APK without crash or
 ANR signatures; physical Pixel closeout remains open.
+`tool/release_readiness.ps1` can now also run analyze/tests/build and enforce a
+production-safe ad mode for stricter release preflight checks.
 
 ## Android QA Checklist
 
