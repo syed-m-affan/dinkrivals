@@ -447,9 +447,11 @@ class _TournamentActions extends ConsumerWidget {
       return;
     }
 
-    placement.recordInterstitialShown();
     final didShowInterstitial =
         await adService.maybeShowInterstitial(placement: 'exit_tournament');
+    if (didShowInterstitial) {
+      placement.recordInterstitialShown();
+    }
     if (!context.mounted ||
         !didShowInterstitial ||
         adService.usesNativeInterstitialUi) {

@@ -58,6 +58,18 @@ class _NativeInterstitialFakeService extends FakeAdService {
   bool get usesNativeInterstitialUi => true;
 }
 
+class _FailingInterstitialFakeService extends FakeAdService {
+  @override
+  Future<bool> maybeShowInterstitial({required String placement}) async {
+    if (!await isInterstitialReady()) {
+      return false;
+    }
+    interstitialShows++;
+    lastInterstitialPlacement = placement;
+    return false;
+  }
+}
+
 class _StubScreen extends StatelessWidget {
   const _StubScreen(this.label);
   final String label;
@@ -203,6 +215,39 @@ void main() {
 
     expect(find.text('stub-menu'), findsOneWidget);
     expect(adPlacement.matchesSinceInterstitial, 0);
+  });
+
+  testWidgets('failed return-to-menu interstitial keeps cadence',
+      (tester) async {
+    final game = DinkRivalsGame();
+    game.matchState.playerScore = 7;
+    game.matchState.opponentScore = 3;
+    final adService = _FailingInterstitialFakeService();
+    final adPlacement = AdPlacementSystem()
+      ..advance(AdPlacementSystem.minTimeBetweenInterstitials);
+    for (var i = 0; i < 3; i++) {
+      adPlacement.recordMatchCompleted();
+    }
+
+    await tester.pumpWidget(
+      await _wrap(game, adService: adService, adPlacement: adPlacement),
+    );
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('end-match-menu')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('end-match-menu')));
+    await tester.pumpAndSettle();
+
+    expect(adService.interstitialShows, 1);
+    expect(adService.lastInterstitialPlacement, 'return_to_menu');
+    expect(find.byKey(const Key('fake-interstitial-dialog')), findsNothing);
+    expect(find.text('stub-menu'), findsOneWidget);
+    expect(adPlacement.matchesSinceInterstitial, 3);
+    expect(
+      adPlacement.timeSinceInterstitial,
+      AdPlacementSystem.minTimeBetweenInterstitials,
+    );
   });
 
   testWidgets('native interstitial service skips fake dialog', (tester) async {

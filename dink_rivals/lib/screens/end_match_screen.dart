@@ -63,9 +63,11 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     }
     if (eligible && ready) {
       setState(() => _showingInterstitial = true);
-      placement.recordInterstitialShown();
       final didShowInterstitial =
           await adService.maybeShowInterstitial(placement: 'return_to_menu');
+      if (didShowInterstitial) {
+        placement.recordInterstitialShown();
+      }
       if (!mounted) {
         return;
       }

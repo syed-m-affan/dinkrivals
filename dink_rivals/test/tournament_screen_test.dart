@@ -55,6 +55,18 @@ Widget _wrap(ProviderContainer container) {
   );
 }
 
+class _FailingInterstitialFakeService extends FakeAdService {
+  @override
+  Future<bool> maybeShowInterstitial({required String placement}) async {
+    if (!await isInterstitialReady()) {
+      return false;
+    }
+    interstitialShows++;
+    lastInterstitialPlacement = placement;
+    return false;
+  }
+}
+
 void main() {
   testWidgets('tournament screen starts a Classic Cup run', (tester) async {
     final container = await _container(DinkRivalsGame());
@@ -183,5 +195,39 @@ void main() {
 
     expect(find.text('menu'), findsOneWidget);
     expect(adPlacement.matchesSinceInterstitial, 0);
+  });
+
+  testWidgets('failed tournament exit interstitial keeps cadence',
+      (tester) async {
+    final adService = _FailingInterstitialFakeService();
+    final adPlacement = AdPlacementSystem()
+      ..advance(AdPlacementSystem.minTimeBetweenInterstitials);
+    for (var i = 0; i < 3; i++) {
+      adPlacement.recordMatchCompleted();
+    }
+    final container = await _container(
+      DinkRivalsGame(),
+      adService: adService,
+      adPlacement: adPlacement,
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    await tester.ensureVisible(find.byKey(const Key('tournament-menu')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('tournament-menu')));
+    await tester.pumpAndSettle();
+
+    expect(adService.interstitialShows, 1);
+    expect(adService.lastInterstitialPlacement, 'exit_tournament');
+    expect(find.byKey(const Key('fake-interstitial-dialog')), findsNothing);
+    expect(find.text('menu'), findsOneWidget);
+    expect(adPlacement.matchesSinceInterstitial, 3);
+    expect(
+      adPlacement.timeSinceInterstitial,
+      AdPlacementSystem.minTimeBetweenInterstitials,
+    );
   });
 }
