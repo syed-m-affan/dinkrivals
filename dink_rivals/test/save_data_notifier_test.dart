@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/court_unlock.dart';
 import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
@@ -136,5 +137,24 @@ void main() {
         CourtUnlockIds.training);
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.activeCourtId, CourtUnlockIds.training);
+  });
+
+  test('unlockCharacter persists defeated rival unlocks', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = SaveService(prefs);
+    final container = _container(service, const SaveData());
+    addTearDown(container.dispose);
+
+    await container
+        .read(saveDataProvider.notifier)
+        .unlockCharacter(CharacterUnlockIds.showman);
+
+    expect(
+        container.read(saveDataProvider).isCharacterUnlocked(
+              CharacterUnlockIds.showman,
+            ),
+        isTrue);
+    final reloaded = await SaveService(prefs).load();
+    expect(reloaded.isCharacterUnlocked(CharacterUnlockIds.showman), isTrue);
   });
 }

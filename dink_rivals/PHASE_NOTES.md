@@ -352,3 +352,8 @@ Re-run the previous QA checklists with attention to:
   `build/app/outputs/flutter-apk/app-release.apk` (62.7 MB) on 2026-05-17.
   The Gradle release config still uses the debug signing config, so production
   signing remains a release-candidate follow-up.
+- Added persistent character unlock IDs with Rookie and Rally Queen unlocked by
+  default. Defeating a tournament rival now unlocks that rival ID, and the
+  roster screen displays locked/unlocked state without changing gameplay
+  character rendering or stats. The current tournament path can unlock Showman;
+  direct Rally Queen/Veteran challenge flows remain future Phase 7 work.

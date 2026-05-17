@@ -59,6 +59,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     await ref.read(saveDataProvider.notifier).recordMatchCompleted();
     final tournament = ref.read(tournamentProvider);
     if (tournament.isActive) {
+      if (_game.matchState.playerScore > _game.matchState.opponentScore) {
+        final defeatedId = tournament.currentOpponentId;
+        if (defeatedId != null) {
+          await ref.read(saveDataProvider.notifier).unlockCharacter(defeatedId);
+        }
+      }
       await ref.read(tournamentProvider.notifier).recordCompletedMatch(
             playerScore: _game.matchState.playerScore,
             opponentScore: _game.matchState.opponentScore,

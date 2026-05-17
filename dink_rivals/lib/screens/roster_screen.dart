@@ -6,6 +6,7 @@ import '../app/audio_provider.dart';
 import '../app/router.dart';
 import '../game/config/character_visuals.dart';
 import '../game/config/visual_palette.dart';
+import '../services/save_service.dart';
 import '../widgets/arcade_panel.dart';
 import '../widgets/park_backdrop.dart';
 
@@ -55,6 +56,7 @@ class RosterScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final save = ref.watch(saveDataProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('ROSTER'),
@@ -76,22 +78,38 @@ class RosterScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final char = _mvpRoster[index];
               final visual = CharacterVisuals.byDisplayName(char.name);
+              final unlocked = save.isCharacterUnlocked(visual.id);
               return ArcadePanel(
                 backgroundColor: VisualPalette.uiSurface.withValues(
                   alpha: 0.88,
                 ),
-                borderColor: VisualPalette.courtLineWhite.withValues(
-                  alpha: 0.52,
-                ),
+                borderColor: unlocked
+                    ? VisualPalette.courtLineWhite.withValues(alpha: 0.52)
+                    : VisualPalette.textMuted.withValues(alpha: 0.58),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      visual.portraitAsset,
-                      key: Key('roster-portrait-${char.name}'),
-                      width: 72,
-                      height: 72,
-                      filterQuality: FilterQuality.none,
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Opacity(
+                          opacity: unlocked ? 1 : 0.42,
+                          child: Image.asset(
+                            visual.portraitAsset,
+                            key: Key('roster-portrait-${char.name}'),
+                            width: 72,
+                            height: 72,
+                            filterQuality: FilterQuality.none,
+                          ),
+                        ),
+                        if (!unlocked)
+                          const Icon(
+                            Icons.lock,
+                            key: Key('roster-locked-icon'),
+                            color: VisualPalette.courtLineWhite,
+                            size: 30,
+                          ),
+                      ],
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -107,6 +125,19 @@ class RosterScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
+                          Text(
+                            unlocked ? 'UNLOCKED' : 'LOCKED',
+                            key: Key('roster-unlock-${visual.id}'),
+                            style: TextStyle(
+                              color: unlocked
+                                  ? VisualPalette.feedbackDink
+                                  : VisualPalette.textMuted,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'monospace',
+                            ),
+                          ),
+                          const SizedBox(height: 6),
                           Text(
                             char.role,
                             maxLines: 2,

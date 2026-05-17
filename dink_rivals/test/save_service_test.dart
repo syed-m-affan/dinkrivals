@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
+import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/court_unlock.dart';
+import 'package:dink_rivals/game/models/gameplay_control_mode.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
@@ -26,6 +27,7 @@ void main() {
     expect(data.stars, 0);
     expect(data.tutorialSeen, isFalse);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
+    expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
   });
 
   test('save then load round-trips all fields', () async {
@@ -41,6 +43,11 @@ void main() {
       stars: 350,
       tutorialSeen: true,
       selectedCourtId: CourtUnlockIds.training,
+      unlockedCharacterIds: [
+        CharacterUnlockIds.rookie,
+        CharacterUnlockIds.rallyQueen,
+        CharacterUnlockIds.showman,
+      ],
     );
     await service.save(target);
 
@@ -77,6 +84,7 @@ void main() {
     expect(data.stars, 0);
     expect(data.tutorialSeen, isFalse);
     expect(data.activeCourtId, CourtUnlockIds.defaultCourt);
+    expect(data.unlockedCharacterIds, CharacterUnlockIds.defaultUnlocked);
   });
 
   test('SaveData copyWith leaves untouched fields alone', () {
@@ -91,5 +99,6 @@ void main() {
     expect(updated.stars, original.stars);
     expect(updated.tutorialSeen, original.tutorialSeen);
     expect(updated.selectedCourtId, original.selectedCourtId);
+    expect(updated.unlockedCharacterIds, original.unlockedCharacterIds);
   });
 }

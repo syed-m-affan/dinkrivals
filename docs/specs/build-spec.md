@@ -1724,11 +1724,13 @@ Ship a small but complete free ad-supported game.
 ## Current Implementation Note (2026-05-17)
 
 The non-human Phase 7 progression slice now includes persistent stars,
-tutorial dismissal, cosmetic court selection, a Trophy Room route, and a Courts
-route. The existing fake rewarded post-match ad persists bonus stars, and the
-first game visit shows a dismissible quick-start overlay. Real AdMob, optional
-banners, character-specific unlocks, release signing, offline checks, 15-minute
-stability QA, and physical Pixel closeout remain open.
+tutorial dismissal, cosmetic court selection, character unlock IDs, a Trophy
+Room route, and a Courts route. The existing fake rewarded post-match ad
+persists bonus stars, the first game visit shows a dismissible quick-start
+overlay, and defeated tournament rivals unlock in the roster. Real AdMob,
+optional banners, direct Rally Queen/Veteran challenge unlock flows, release
+signing, offline checks, 15-minute stability QA, and physical Pixel closeout
+remain open.
 
 ## Android QA Checklist
 

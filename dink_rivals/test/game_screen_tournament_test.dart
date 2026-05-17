@@ -10,6 +10,7 @@ import 'package:dink_rivals/app/game_provider.dart';
 import 'package:dink_rivals/app/haptics_provider.dart';
 import 'package:dink_rivals/app/tournament_provider.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
+import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
 import 'package:dink_rivals/game/models/tournament_state.dart';
 import 'package:dink_rivals/screens/game_screen.dart';
@@ -99,5 +100,30 @@ void main() {
     expect(find.byKey(const Key('tutorial-title')), findsNothing);
     expect(game.paused, isFalse);
     expect(container.read(saveDataProvider).tutorialSeen, isTrue);
+  });
+
+  testWidgets('winning tournament final unlocks defeated rival',
+      (tester) async {
+    final game = DinkRivalsGame();
+    final container = await _container(game);
+    addTearDown(container.dispose);
+    final tournament = container.read(tournamentProvider.notifier);
+    tournament.startClassicCup();
+    await tournament.recordCompletedMatch(playerScore: 11, opponentScore: 7);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+
+    game.matchState
+      ..playerScore = 11
+      ..opponentScore = 9;
+    game.matchOverNotifier.value = true;
+    await tester.pumpAndSettle();
+
+    expect(
+        container.read(saveDataProvider).isCharacterUnlocked(
+              CharacterUnlockIds.showman,
+            ),
+        isTrue);
   });
 }

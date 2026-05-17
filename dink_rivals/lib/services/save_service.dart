@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../game/models/gameplay_control_mode.dart';
+import '../game/models/character_unlock.dart';
 import '../game/models/court_unlock.dart';
+import '../game/models/gameplay_control_mode.dart';
 import '../game/models/save_data.dart';
 
 class SaveService {
@@ -17,6 +18,7 @@ class SaveService {
   static const _starsKey = 'stars';
   static const _tutorialSeenKey = 'tutorial_seen';
   static const _selectedCourtKey = 'selected_court_id';
+  static const _unlockedCharactersKey = 'unlocked_character_ids';
   static const _currentVersion = 1;
 
   final SharedPreferences _prefs;
@@ -32,6 +34,9 @@ class SaveService {
       stars: _prefs.getInt(_starsKey) ?? 0,
       tutorialSeen: _prefs.getBool(_tutorialSeenKey) ?? false,
       selectedCourtId: normalizedCourtId(_prefs.getString(_selectedCourtKey)),
+      unlockedCharacterIds: normalizedCharacterUnlocks(
+        _prefs.getStringList(_unlockedCharactersKey),
+      ),
     );
   }
 
@@ -48,6 +53,10 @@ class SaveService {
     await _prefs.setInt(_starsKey, data.stars);
     await _prefs.setBool(_tutorialSeenKey, data.tutorialSeen);
     await _prefs.setString(_selectedCourtKey, data.activeCourtId);
+    await _prefs.setStringList(
+      _unlockedCharactersKey,
+      normalizedCharacterUnlocks(data.unlockedCharacterIds),
+    );
   }
 }
 
@@ -90,6 +99,19 @@ class SaveDataNotifier extends Notifier<SaveData> {
 
   Future<void> recordClassicCupWin() async {
     state = state.copyWith(classicCupWins: state.classicCupWins + 1);
+    await _service.save(state);
+  }
+
+  Future<void> unlockCharacter(String characterId) async {
+    if (!CharacterUnlockIds.isKnown(characterId) ||
+        state.isCharacterUnlocked(characterId)) {
+      return;
+    }
+    final unlocked = normalizedCharacterUnlocks([
+      ...state.unlockedCharacterIds,
+      characterId,
+    ]);
+    state = state.copyWith(unlockedCharacterIds: unlocked);
     await _service.save(state);
   }
 

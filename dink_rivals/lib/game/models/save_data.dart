@@ -1,5 +1,6 @@
-import 'gameplay_control_mode.dart';
+import 'character_unlock.dart';
 import 'court_unlock.dart';
+import 'gameplay_control_mode.dart';
 
 class SaveData {
   const SaveData({
@@ -11,6 +12,7 @@ class SaveData {
     this.stars = 0,
     this.tutorialSeen = false,
     this.selectedCourtId = CourtUnlockIds.defaultCourt,
+    this.unlockedCharacterIds = CharacterUnlockIds.defaultUnlocked,
   });
 
   final bool soundEnabled;
@@ -21,9 +23,11 @@ class SaveData {
   final int stars;
   final bool tutorialSeen;
   final String selectedCourtId;
+  final List<String> unlockedCharacterIds;
 
   bool get classicCupTrophyUnlocked => classicCupWins > 0;
   bool get parkCourtUnlocked => true;
+  bool isCharacterUnlocked(String id) => unlockedCharacterIds.contains(id);
   String get activeCourtId {
     final normalized = normalizedCourtId(selectedCourtId);
     return normalized;
@@ -38,6 +42,7 @@ class SaveData {
     int? stars,
     bool? tutorialSeen,
     String? selectedCourtId,
+    List<String>? unlockedCharacterIds,
   }) {
     return SaveData(
       soundEnabled: soundEnabled ?? this.soundEnabled,
@@ -48,6 +53,7 @@ class SaveData {
       stars: stars ?? this.stars,
       tutorialSeen: tutorialSeen ?? this.tutorialSeen,
       selectedCourtId: selectedCourtId ?? this.selectedCourtId,
+      unlockedCharacterIds: unlockedCharacterIds ?? this.unlockedCharacterIds,
     );
   }
 
@@ -61,7 +67,8 @@ class SaveData {
         other.classicCupWins == classicCupWins &&
         other.stars == stars &&
         other.tutorialSeen == tutorialSeen &&
-        other.selectedCourtId == selectedCourtId;
+        other.selectedCourtId == selectedCourtId &&
+        _stringListEquals(other.unlockedCharacterIds, unlockedCharacterIds);
   }
 
   @override
@@ -74,5 +81,21 @@ class SaveData {
         stars,
         tutorialSeen,
         selectedCourtId,
+        Object.hashAll(unlockedCharacterIds),
       );
+}
+
+bool _stringListEquals(List<String> a, List<String> b) {
+  if (identical(a, b)) {
+    return true;
+  }
+  if (a.length != b.length) {
+    return false;
+  }
+  for (var i = 0; i < a.length; i += 1) {
+    if (a[i] != b[i]) {
+      return false;
+    }
+  }
+  return true;
 }
