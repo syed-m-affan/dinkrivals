@@ -401,6 +401,10 @@ Re-run the previous QA checklists with attention to:
   locked direct challenge rival with a soft-game AI profile; beating her through
   the existing rival challenge flow unlocks `rally_queen`. Existing saves that
   already unlocked Rally Queen continue to keep that unlock.
+- Updated the Android launcher label from `dink_rivals` to `Dink Rivals` for
+  device QA and release-candidate polish. The Android package id/namespace
+  intentionally remain `com.example.dink_rivals` until the final Play Console
+  package name is confirmed.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, production AdMob unit IDs/consent flow, real signing
-  credentials/application id validation, and physical Pixel QA.
+  credentials/final application id validation, and physical Pixel QA.
