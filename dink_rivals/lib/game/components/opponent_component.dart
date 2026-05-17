@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
@@ -23,6 +24,9 @@ class OpponentComponent extends Component {
   final PlayerState state;
   final Paint _bodyPaint = Paint()..color = VisualPalette.opponentPrimary;
   final Paint _headPaint = Paint()..color = VisualPalette.playerSkin;
+  final Paint _identityAccentPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
 
   ui.Image? _idleSheet;
   ui.Image? _runSheet;
@@ -110,11 +114,30 @@ class OpponentComponent extends Component {
   @override
   void render(Canvas canvas) {
     _renderGroundShadow(canvas);
+    _renderIdentityAccent(canvas);
     if (DebugFlags.useSprites && _renderSprite(canvas)) {
       return;
     }
     _renderPrimitive(canvas);
   }
+
+  void _renderIdentityAccent(Canvas canvas) {
+    final depthScale = game.visualScaleForY(state.position.y);
+    final feet = game.courtToWorld(state.position);
+    final rect = Rect.fromCenter(
+      center:
+          feet.toOffset() + Offset(0, game.logicalToScreen(2.1 * depthScale)),
+      width: game.logicalToScreen(21 * depthScale),
+      height: game.logicalToScreen(6.8 * depthScale),
+    );
+    _identityAccentPaint
+      ..color = _identityAccentColor().withValues(alpha: 0.82)
+      ..strokeWidth = game.logicalToScreen(1.4 * depthScale).clamp(1.0, 2.2);
+    canvas.drawArc(
+        rect, math.pi * 0.06, math.pi * 0.88, false, _identityAccentPaint);
+  }
+
+  Color _identityAccentColor() => game.opponentVisual.secondaryColor;
 
   bool _renderSprite(Canvas canvas) {
     final pose = _currentPose();
@@ -239,6 +262,9 @@ class OpponentComponent extends Component {
   double facingXForTesting() => _facingX;
 
   @visibleForTesting
+  Color identityAccentColorForTesting() => _identityAccentColor();
+
+  @visibleForTesting
   static double runFpsForSpeedForTesting(double speed) =>
       _runFpsForSpeed(speed);
 
@@ -287,6 +313,7 @@ class OpponentComponent extends Component {
   }
 
   void _renderPrimitive(Canvas canvas) {
+    _bodyPaint.color = game.opponentVisual.primaryColor;
     final depthScale = game.visualScaleForY(state.position.y);
     final feet = game.courtToWorld(state.position);
     final torso = game.courtToWorld(state.position, 16);

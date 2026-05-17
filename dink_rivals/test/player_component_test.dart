@@ -7,8 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dink_rivals/game/components/opponent_component.dart';
 import 'package:dink_rivals/game/components/player_component.dart';
+import 'package:dink_rivals/game/config/character_visuals.dart';
 import 'package:dink_rivals/game/config/court_constants.dart';
+import 'package:dink_rivals/game/config/tournament_definitions.dart';
 import 'package:dink_rivals/game/dink_rivals_game.dart';
+import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/player_side.dart';
 import 'package:dink_rivals/game/models/shot_type.dart';
 import 'package:dink_rivals/game/util/court_projection.dart';
@@ -316,6 +319,34 @@ void main() {
     opponent.state.velocity = Vector2(20, 0);
     opponent.update(0.016);
     expect(opponent.facingXForTesting(), 1);
+  });
+
+  test('identity accents follow selected player and opponent profiles', () {
+    final game = DinkRivalsGame(
+      selectedPlayerCharacterId: CharacterUnlockIds.veteran,
+    );
+    final player = PlayerComponent(game);
+    final opponent = OpponentComponent(game);
+
+    expect(
+      player.identityAccentColorForTesting(),
+      CharacterVisuals.veteran.secondaryColor,
+    );
+    expect(
+      opponent.identityAccentColorForTesting(),
+      CharacterVisuals.gameplayOpponent.secondaryColor,
+    );
+
+    game.setOpponentAiProfile(TournamentDefinitions.showman.aiProfile);
+
+    expect(
+      game.opponentVisual,
+      CharacterVisuals.showman,
+    );
+    expect(
+      opponent.identityAccentColorForTesting(),
+      CharacterVisuals.showman.secondaryColor,
+    );
   });
 
   test('run animation rate scales with movement speed', () {

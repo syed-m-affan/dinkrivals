@@ -1743,7 +1743,8 @@ profiles, includes a compact champion/eliminated result panel, and treats
 user-initiated tournament exit as a natural-break interstitial placement behind
 the existing completed-match/time gates.
 The current player-character selection is cosmetic/persistent and updates
-roster state, game state, and player-win end-match portrait; gameplay still
+roster state, game state, player-win end-match portrait, and a separate
+court-space identity accent under the selected player/opponent; gameplay still
 uses the accepted player runtime sprite sheets until per-character sheets are
 approved. A guarded fake banner placeholder is mounted only on the main menu,
 settings, roster, and trophy room screens, stays hidden before the first

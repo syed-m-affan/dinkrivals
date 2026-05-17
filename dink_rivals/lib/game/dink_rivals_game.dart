@@ -202,6 +202,14 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   CharacterVisualDefinition get selectedPlayerVisual =>
       CharacterVisuals.byId(selectedPlayerCharacterId);
 
+  CharacterVisualDefinition get opponentVisual {
+    try {
+      return CharacterVisuals.byId(opponentAiSystem.profile.id);
+    } on ArgumentError {
+      return CharacterVisuals.gameplayOpponent;
+    }
+  }
+
   void setSelectedPlayerCharacter(String characterId) {
     selectedPlayerCharacterId = normalizedSelectedCharacterId(
       characterId,

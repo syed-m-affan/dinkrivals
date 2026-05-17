@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
@@ -23,6 +24,9 @@ class PlayerComponent extends Component {
   final PlayerState state;
   final Paint _bodyPaint = Paint()..color = VisualPalette.playerPrimary;
   final Paint _headPaint = Paint()..color = VisualPalette.playerSkin;
+  final Paint _identityAccentPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
 
   ui.Image? _idleSheet;
   ui.Image? _runSheet;
@@ -109,11 +113,30 @@ class PlayerComponent extends Component {
   @override
   void render(Canvas canvas) {
     _renderGroundShadow(canvas);
+    _renderIdentityAccent(canvas);
     if (DebugFlags.useSprites && _renderSprite(canvas)) {
       return;
     }
     _renderPrimitive(canvas);
   }
+
+  void _renderIdentityAccent(Canvas canvas) {
+    final depthScale = game.visualScaleForY(state.position.y);
+    final feet = game.courtToWorld(state.position);
+    final rect = Rect.fromCenter(
+      center:
+          feet.toOffset() + Offset(0, game.logicalToScreen(2.2 * depthScale)),
+      width: game.logicalToScreen(22 * depthScale),
+      height: game.logicalToScreen(7.2 * depthScale),
+    );
+    _identityAccentPaint
+      ..color = _identityAccentColor().withValues(alpha: 0.86)
+      ..strokeWidth = game.logicalToScreen(1.5 * depthScale).clamp(1.0, 2.3);
+    canvas.drawArc(
+        rect, math.pi * 0.06, math.pi * 0.88, false, _identityAccentPaint);
+  }
+
+  Color _identityAccentColor() => game.selectedPlayerVisual.secondaryColor;
 
   bool _renderSprite(Canvas canvas) {
     final pose = _currentPose();
@@ -236,6 +259,9 @@ class PlayerComponent extends Component {
 
   @visibleForTesting
   double facingXForTesting() => _facingX;
+
+  @visibleForTesting
+  Color identityAccentColorForTesting() => _identityAccentColor();
 
   @visibleForTesting
   static double runFpsForSpeedForTesting(double speed) =>

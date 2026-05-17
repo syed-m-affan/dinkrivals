@@ -15,7 +15,7 @@ and install on the connected Pixel when finished.
   - `3ab6194 add admob production consent plumbing`
 - Verification on the current tree:
   - `flutter analyze`: no issues.
-  - `flutter test`: 282 tests passed.
+  - `flutter test`: 283 tests passed.
   - `flutter build apk --debug`: built `build/app/outputs/flutter-apk/app-debug.apk`.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
@@ -26,7 +26,8 @@ and install on the connected Pixel when finished.
   - Focused progression tests cover pure unlock rules, tournament loss/final
     champion screen paths, challenge win/loss paths, persisted rewarded stars,
     Dink Streak Paddle achievement persistence, release metadata/preflight
-    switches, and exact banner route placement.
+    switches, exact banner route placement, and non-sprite character identity
+    accents.
 - Device state: `adb devices -l` lists only `emulator-5554`; the physical Pixel is not visible.
 - Working tree after push: clean except pre-existing untracked `.idea/`.
 
@@ -37,7 +38,7 @@ and install on the connected Pixel when finished.
 | Main menu | `MainMenuScreen`, `AppRoutes.menu`, menu tests/goldens | Implemented |
 | Quick Match | Main menu Quick Match navigates to `AppRoutes.game`; default route starts playable game | Implemented |
 | 4-player tournament | `TournamentState`, `TournamentSystem`, `TournamentScreen`, `tournament_*` tests | Implemented |
-| 4 characters | Rookie, Rally Queen, Veteran, Showman roster definitions and portraits | Implemented for roster/meta |
+| 4 characters | Rookie, Rally Queen, Veteran, Showman roster definitions, portraits, AI profiles, and non-sprite on-court identity accents | Implemented for roster/meta/runtime accent |
 | 2 courts | `CourtSelectScreen`; Classic Park and projection-training court selection | Implemented |
 | Achievement unlocks | `UnlockSystem`, character unlock IDs, Classic Cup trophy, Dink Streak Paddle, challenge/tournament unlock flow | Implemented |
 | Local save | `SaveData`, `SaveService`, notifier tests cover stars, settings, unlocks, tutorial, selected court/character, Dink Streak Paddle | Implemented |
@@ -61,7 +62,7 @@ and install on the connected Pixel when finished.
 | Release preflight gates | `release_readiness.ps1` has optional analyze/test/build and production-ad-mode checks | Implemented |
 | Physical Pixel install/QA | Current ADB output lists only emulator | Blocked |
 | Human feel/visual signoff | Requires human/device review | Blocked |
-| Per-character runtime sprite sheets | Current gameplay still uses accepted player/opponent sheets; user rejected casual regeneration path | Blocked on approved art workflow/signoff |
+| Per-character runtime sprite sheets | Current gameplay keeps accepted player/opponent sheets byte-identical and adds separate color accents; user rejected casual regeneration path | Blocked on approved art workflow/signoff |
 | Approved music asset | Placeholder music was rejected by Claude as a polish regression | Blocked on approved audio asset |
 | Actual AdMob production verification | Requires AdMob app ID, ad unit IDs, and configured UMP message | Blocked on account setup |
 | Real signing verification | Requires upload keystore/passwords and final package ID value | Blocked on credentials/account setup |

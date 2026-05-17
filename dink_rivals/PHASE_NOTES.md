@@ -454,7 +454,7 @@ Re-run the previous QA checklists with attention to:
   from the current environment so the checked build path and configured values
   stay aligned.
 - Verification for this slice: `flutter analyze` passes, `flutter test` passes
-  with 282 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
+  with 283 tests, `.\tool\release_readiness.ps1 -RunAnalyze -RunTests
   -BuildRelease` passes with expected warnings for external production values,
   and strict release preflight exits nonzero as expected until real signing,
   final app id, production AdMob values, production ad mode, and a physical
@@ -462,6 +462,12 @@ Re-run the previous QA checklists with attention to:
 - Added route-level banner placement coverage proving the guarded banner slot is
   present only on menu/settings/roster/trophy room and absent from game, debug
   rally, court select, tournament, and end-match routes after a completed match.
+- Added selected-character and rival-profile identity accents as separate
+  court-space arcs under the sprites. Claude recommended this non-sprite
+  overlay approach over tinting the approved character sheets; full
+  per-character runtime sprite sheets remain blocked on approved art workflow.
+- Latest verification now passes with 283 tests after adding the character
+  accent mapping coverage.
 - Remaining Phase 7 release-candidate gaps include per-character runtime sprite
   sheets, actual AdMob account IDs/UMP message verification, real signing
   credentials/final application id value validation, physical Pixel QA, and
