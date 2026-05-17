@@ -19,7 +19,9 @@ and install on the connected Pixel when finished.
   - `flutter build apk --debug`: built `build/app/outputs/flutter-apk/app-debug.apk`.
   - `flutter build apk --release`: built `build/app/outputs/flutter-apk/app-release.apk`.
   - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-debug.apk`: installed.
+  - `flutter install -d emulator-5554 --use-application-binary=build\app\outputs\flutter-apk\app-release.apk`: installed current release APK.
   - `adb shell monkey -p com.example.dink_rivals -c android.intent.category.LAUNCHER 1`: launched, process id `16695`.
+  - Current release emulator launch check: `pidof com.example.dink_rivals` returned `17635`, and `dumpsys window` focused `com.example.dink_rivals/.MainActivity`.
   - `.\tool\release_readiness.ps1`: mechanical release preflight passes with warnings for external production values and physical device availability.
   - `.\tool\release_readiness.ps1 -RunAnalyze -RunTests -BuildRelease`: analyzer, all tests, and release build pass; external production values still warn.
   - `.\tool\release_readiness.ps1 -RequireProductionSecrets -RequireProductionAdMode -RequirePhysicalDevice -RequireReleaseApk`: exits nonzero as expected for missing signing/app id/production AdMob/physical-device inputs.
