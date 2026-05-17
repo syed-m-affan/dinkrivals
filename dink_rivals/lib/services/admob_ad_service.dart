@@ -12,6 +12,8 @@ class AdMobAdService implements AdService {
   }) : _fallback = fallback ?? FakeAdService();
 
   static const androidTestAppId = 'ca-app-pub-3940256099942544~3347511713';
+  static const androidTestBannerAdUnitId =
+      'ca-app-pub-3940256099942544/6300978111';
   static const androidTestRewardedAdUnitId =
       'ca-app-pub-3940256099942544/5224354917';
   static const androidTestInterstitialAdUnitId =

@@ -376,11 +376,13 @@ Re-run the previous QA checklists with attention to:
   in gameplay, debug rally, tournament match flow, or end-match/reward screens.
 - Added `google_mobile_ads` and an opt-in `AdMobAdService` selected only with
   `DINK_RIVALS_USE_ADMOB=true`. It initializes the Google Mobile Ads SDK with
-  Google's Android test app ID and test rewarded/interstitial unit IDs, preloads
-  fullscreen ads, preserves the existing `AdService` API, falls back to the fake
-  service if initialization fails, and avoids showing the fake interstitial
-  dialog when native interstitial UI is active. The default app path still uses
-  `FakeAdService`.
+  Google's Android test app ID and test banner/rewarded/interstitial unit IDs,
+  preloads fullscreen ads, preserves the existing `AdService` API, falls back to
+  the fake service if initialization fails, and avoids showing the fake
+  interstitial dialog when native interstitial UI is active. The existing
+  non-gameplay `AdBannerSlot` placements render opt-in native test banners when
+  AdMob is enabled and fall back to fake placeholders on load failure. The
+  default app path still uses `FakeAdService`.
 - Added `tool/android_qa.ps1` as a repeatable Android closeout harness. It can
   optionally build, install the debug APK, launch the app, disable device
   network transports for offline checks, monitor logcat for crash/ANR
@@ -389,5 +391,5 @@ Re-run the previous QA checklists with attention to:
   `dink_rivals/` for the spec's 15-minute offline/stability pass.
 - Remaining Phase 7 release-candidate gaps include Rally Queen-specific
   challenge handling, per-character runtime sprite sheets, production AdMob
-  unit IDs/consent/banner widgets, production signing, full offline/15-minute
+  unit IDs/consent flow, production signing, full offline/15-minute
   stability execution, and physical Pixel QA.

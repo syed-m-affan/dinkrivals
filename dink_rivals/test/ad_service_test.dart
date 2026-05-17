@@ -61,6 +61,10 @@ void main() {
       'ca-app-pub-3940256099942544~3347511713',
     );
     expect(
+      AdMobAdService.androidTestBannerAdUnitId,
+      'ca-app-pub-3940256099942544/6300978111',
+    );
+    expect(
       AdMobAdService.androidTestRewardedAdUnitId,
       'ca-app-pub-3940256099942544/5224354917',
     );

@@ -1741,8 +1741,10 @@ completed match, and is feature-flagged off with
 debug rally, tournament match flow, or end-match/reward screens. The
 `google_mobile_ads` SDK is present behind `DINK_RIVALS_USE_ADMOB=true`; the
 opt-in `AdMobAdService` uses Google's Android test app ID plus test
-rewarded/interstitial ad unit IDs and preserves `FakeAdService` as the default.
-Production AdMob IDs/consent/banner widgets, Rally Queen-specific challenge
+banner/rewarded/interstitial ad unit IDs and preserves `FakeAdService` as the
+default. The guarded non-gameplay `AdBannerSlot` placements render opt-in
+native test banners when AdMob is enabled and fall back to fake placeholders on
+load failure. Production AdMob IDs/consent flow, Rally Queen-specific challenge
 handling, per-character runtime sprites, release signing, and physical Pixel
 closeout remain open. A repeatable Android QA harness now lives at
 `dink_rivals/tool/android_qa.ps1`; it can install/launch the debug APK, force
