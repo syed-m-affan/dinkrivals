@@ -1,7 +1,7 @@
 name: dink_rivals
 description: MVP release-candidate arcade pickleball game for Dink Rivals.
 publish_to: "none"
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
@@ -27,6 +27,14 @@ flutter:
     - assets/images/environment/classic/
     - assets/images/environment/shared/
     - assets/images/sprites/
+    - assets/images/sprites/characters/rookie/north/
+    - assets/images/sprites/characters/rookie/south/
+    - assets/images/sprites/characters/rally_queen/north/
+    - assets/images/sprites/characters/rally_queen/south/
+    - assets/images/sprites/characters/veteran/north/
+    - assets/images/sprites/characters/veteran/south/
+    - assets/images/sprites/characters/showman/north/
+    - assets/images/sprites/characters/showman/south/
     - assets/images/ui/
     - assets/images/ui/hud/
     - assets/images/ui/court_cards/

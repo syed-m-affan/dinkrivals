@@ -16,6 +16,7 @@ class RacketComponent extends Component {
   final Paint _swingLanePaint = Paint()
     ..color = VisualPalette.uiAccent.withValues(alpha: 0.30)
     ..strokeCap = StrokeCap.round;
+  final Paint _swingLaneFillPaint = Paint();
   final Paint _swingLaneBorderPaint = Paint()
     ..color = VisualPalette.textPrimary.withValues(alpha: 0.76)
     ..style = PaintingStyle.stroke
@@ -33,6 +34,7 @@ class RacketComponent extends Component {
   final Paint _aimArrowShadowPaint = Paint()
     ..color = VisualPalette.projectedShadow.withValues(alpha: 0.36)
     ..style = PaintingStyle.fill;
+  final Paint _pixelSwipePaint = Paint();
 
   @override
   void update(double dt) {
@@ -86,7 +88,8 @@ class RacketComponent extends Component {
         ..lineTo(p2.x, p2.y)
         ..lineTo(p3.x, p3.y)
         ..close();
-      canvas.drawPath(fillPath, Paint()..color = _swingLanePaint.color);
+      _swingLaneFillPaint.color = _swingLanePaint.color;
+      canvas.drawPath(fillPath, _swingLaneFillPaint);
     }
 
     _swingLaneBorderPaint.strokeWidth = game.logicalToScreen(2.2 * midDepth);
@@ -118,7 +121,6 @@ class RacketComponent extends Component {
     final blockSize = game.logicalToScreen(4.6 * depthScale);
     final delta = end - start;
     final angle = math.atan2(delta.dy, delta.dx);
-    final paint = Paint()..color = VisualPalette.textPrimary;
     for (var i = 0; i < blocks; i += 1) {
       final t = blocks == 1 ? 1.0 : i / (blocks - 1);
       final center = Offset.lerp(start, end, t)!;
@@ -128,7 +130,7 @@ class RacketComponent extends Component {
       canvas.rotate(angle);
       canvas.drawRect(
         Rect.fromCenter(center: Offset.zero, width: size, height: size),
-        paint
+        _pixelSwipePaint
           ..color =
               VisualPalette.textPrimary.withValues(alpha: 0.32 + t * 0.48),
       );

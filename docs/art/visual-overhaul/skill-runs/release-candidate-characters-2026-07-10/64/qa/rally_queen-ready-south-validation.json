@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rally_queen-ready-south-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "rally_queen-ready-south",
+      "column": 0,
+      "nontransparent_pixels": 1317,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rally_queen-ready-south",
+      "column": 1,
+      "nontransparent_pixels": 1390,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        9,
+        4,
+        54,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rally_queen-ready-south",
+      "column": 2,
+      "nontransparent_pixels": 1321,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rally_queen-ready-south",
+      "column": 3,
+      "nontransparent_pixels": 1339,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        54,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rally_queen-ready-south",
+      "column": 4,
+      "nontransparent_pixels": 1363,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        54,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rally_queen-ready-south",
+      "column": 5,
+      "nontransparent_pixels": 1378,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        54,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "rally_queen-ready-south",
+      "frame_diffs": [
+        0.05766,
+        0.03532,
+        0.04404,
+        0.02975,
+        0.01972
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "rally_queen-ready-south",
+          "column": 0,
+          "nontransparent_pixels": 1317,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-ready-south",
+          "column": 1,
+          "nontransparent_pixels": 1390,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-ready-south",
+          "column": 2,
+          "nontransparent_pixels": 1321,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-ready-south",
+          "column": 3,
+          "nontransparent_pixels": 1339,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-ready-south",
+          "column": 4,
+          "nontransparent_pixels": 1363,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-ready-south",
+          "column": 5,
+          "nontransparent_pixels": 1378,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

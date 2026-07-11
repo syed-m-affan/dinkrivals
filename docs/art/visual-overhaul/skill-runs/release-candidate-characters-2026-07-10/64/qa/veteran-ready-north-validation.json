@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\veteran-ready-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "veteran-ready-north",
+      "column": 0,
+      "nontransparent_pixels": 1108,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-ready-north",
+      "column": 1,
+      "nontransparent_pixels": 1102,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-ready-north",
+      "column": 2,
+      "nontransparent_pixels": 1113,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-ready-north",
+      "column": 3,
+      "nontransparent_pixels": 1100,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-ready-north",
+      "column": 4,
+      "nontransparent_pixels": 1097,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-ready-north",
+      "column": 5,
+      "nontransparent_pixels": 1081,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        50,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "veteran-ready-north",
+      "frame_diffs": [
+        0.02264,
+        0.0123,
+        0.02012,
+        0.02522,
+        0.0105
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "veteran-ready-north",
+          "column": 0,
+          "nontransparent_pixels": 1108,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-ready-north",
+          "column": 1,
+          "nontransparent_pixels": 1102,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-ready-north",
+          "column": 2,
+          "nontransparent_pixels": 1113,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-ready-north",
+          "column": 3,
+          "nontransparent_pixels": 1100,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-ready-north",
+          "column": 4,
+          "nontransparent_pixels": 1097,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-ready-north",
+          "column": 5,
+          "nontransparent_pixels": 1081,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

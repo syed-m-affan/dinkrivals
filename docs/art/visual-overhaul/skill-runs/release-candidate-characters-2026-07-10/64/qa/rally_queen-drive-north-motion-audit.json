@@ -1,0 +1,107 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rally_queen-drive-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "north",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 0,
+          "nontransparent_pixels": 1100,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 1,
+          "nontransparent_pixels": 1185,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 2,
+          "nontransparent_pixels": 1179,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 3,
+          "nontransparent_pixels": 1079,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            5,
+            4,
+            59,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 4,
+          "nontransparent_pixels": 885,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 5,
+          "nontransparent_pixels": 1126,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.12938,
+        0.16343,
+        0.16061,
+        0.12066,
+        0.12468
+      ]
+    }
+  ]
+}

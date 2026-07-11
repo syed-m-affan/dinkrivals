@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rookie-drive-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "rookie-drive-north",
+      "column": 0,
+      "nontransparent_pixels": 1132,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-drive-north",
+      "column": 1,
+      "nontransparent_pixels": 1179,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-drive-north",
+      "column": 2,
+      "nontransparent_pixels": 1144,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        7,
+        4,
+        57,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-drive-north",
+      "column": 3,
+      "nontransparent_pixels": 1026,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        4,
+        6,
+        60,
+        58
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-drive-north",
+      "column": 4,
+      "nontransparent_pixels": 833,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        7,
+        4,
+        57,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-drive-north",
+      "column": 5,
+      "nontransparent_pixels": 1085,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        50,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "rookie-drive-north",
+      "frame_diffs": [
+        0.06737,
+        0.14328,
+        0.09614,
+        0.15053,
+        0.1401
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "rookie-drive-north",
+          "column": 0,
+          "nontransparent_pixels": 1132,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-drive-north",
+          "column": 1,
+          "nontransparent_pixels": 1179,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-drive-north",
+          "column": 2,
+          "nontransparent_pixels": 1144,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-drive-north",
+          "column": 3,
+          "nontransparent_pixels": 1026,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            4,
+            6,
+            60,
+            58
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-drive-north",
+          "column": 4,
+          "nontransparent_pixels": 833,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-drive-north",
+          "column": 5,
+          "nontransparent_pixels": 1085,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            50,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

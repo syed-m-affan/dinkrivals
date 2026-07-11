@@ -111,7 +111,7 @@ void main() {
     expect(find.text('19'), findsOneWidget);
   });
 
-  testWidgets('opponent win shows OPPONENT WINS', (tester) async {
+  testWidgets('opponent win shows the rival identity', (tester) async {
     final game = DinkRivalsGame();
     game.matchState.playerScore = 5;
     game.matchState.opponentScore = 7;
@@ -119,7 +119,7 @@ void main() {
     await tester.pumpWidget(await _wrap(game));
     await tester.pump();
 
-    expect(find.text('OPPONENT WINS'), findsOneWidget);
+    expect(find.text('ROOKIE WINS'), findsOneWidget);
     final portrait = tester
         .widget<Image>(find.byKey(const Key('end-match-winner-portrait')));
     final image = portrait.image as AssetImage;
@@ -135,7 +135,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('MATCH COMPLETE'), findsOneWidget);
-    expect(find.text('OPPONENT WINS'), findsNothing);
+    expect(find.text('ROOKIE WINS'), findsNothing);
   });
 
   testWidgets('rematch and menu buttons are present', (tester) async {

@@ -127,6 +127,20 @@ class SaveDataNotifier extends Notifier<SaveData> {
     await _service.save(state);
   }
 
+  Future<bool> recordClassicCupChampionship() async {
+    final showmanWasLocked =
+        !state.isCharacterUnlocked(CharacterUnlockIds.showman);
+    state = state.copyWith(
+      classicCupWins: state.classicCupWins + 1,
+      unlockedCharacterIds: normalizedCharacterUnlocks([
+        ...state.unlockedCharacterIds,
+        CharacterUnlockIds.showman,
+      ]),
+    );
+    await _service.save(state);
+    return showmanWasLocked;
+  }
+
   Future<void> unlockCharacter(String characterId) async {
     if (!CharacterUnlockIds.isKnown(characterId) ||
         state.isCharacterUnlocked(characterId)) {

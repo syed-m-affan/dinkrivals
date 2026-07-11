@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dink_rivals/app/tournament_provider.dart';
 import 'package:dink_rivals/game/models/save_data.dart';
+import 'package:dink_rivals/game/models/character_unlock.dart';
 import 'package:dink_rivals/game/models/tournament_state.dart';
 import 'package:dink_rivals/services/save_service.dart';
 
@@ -33,8 +34,19 @@ void main() {
     expect(
         container.read(tournamentProvider).status, TournamentStatus.champion);
     expect(container.read(saveDataProvider).classicCupWins, 1);
+    expect(
+      container
+          .read(saveDataProvider)
+          .isCharacterUnlocked(CharacterUnlockIds.showman),
+      isTrue,
+    );
+    expect(
+      container.read(tournamentProvider).championshipRewardWasNew,
+      isTrue,
+    );
     final reloaded = await SaveService(prefs).load();
     expect(reloaded.classicCupTrophyUnlocked, isTrue);
+    expect(reloaded.isCharacterUnlocked(CharacterUnlockIds.showman), isTrue);
   });
 
   test('semifinal loss does not unlock trophy', () async {

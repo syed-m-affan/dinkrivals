@@ -14,6 +14,7 @@ class ClassicEnvironmentComponent extends Component {
 
   final DinkRivalsGame game;
   final Paint _fallbackPaint = Paint()..color = VisualPalette.environmentGround;
+  final Paint _backgroundPaint = Paint()..filterQuality = FilterQuality.none;
   ui.Image? _background;
 
   @override
@@ -54,7 +55,7 @@ class ClassicEnvironmentComponent extends Component {
         background.height.toDouble(),
       ),
       dst,
-      Paint()..filterQuality = FilterQuality.none,
+      _backgroundPaint,
     );
   }
 }

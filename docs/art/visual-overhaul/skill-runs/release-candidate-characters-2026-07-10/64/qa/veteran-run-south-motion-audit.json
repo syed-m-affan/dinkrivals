@@ -1,0 +1,197 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\veteran-run-south-sheet-clean.png",
+  "width": 768,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "south",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 0,
+          "nontransparent_pixels": 926,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 1,
+          "nontransparent_pixels": 907,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 2,
+          "nontransparent_pixels": 953,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 3,
+          "nontransparent_pixels": 923,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 4,
+          "nontransparent_pixels": 949,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 5,
+          "nontransparent_pixels": 963,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 6,
+          "nontransparent_pixels": 918,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 7,
+          "nontransparent_pixels": 939,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 8,
+          "nontransparent_pixels": 926,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 9,
+          "nontransparent_pixels": 922,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 10,
+          "nontransparent_pixels": 930,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 11,
+          "nontransparent_pixels": 952,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            46,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.01864,
+        0.02839,
+        0.04881,
+        0.04032,
+        0.02302,
+        0.03871,
+        0.03039,
+        0.03457,
+        0.04111,
+        0.08637,
+        0.07901
+      ]
+    }
+  ]
+}

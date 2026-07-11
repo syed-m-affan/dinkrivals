@@ -1,0 +1,107 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\showman-dink-south-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "south",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 0,
+          "nontransparent_pixels": 957,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 1,
+          "nontransparent_pixels": 936,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 2,
+          "nontransparent_pixels": 1049,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 3,
+          "nontransparent_pixels": 955,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 4,
+          "nontransparent_pixels": 880,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 5,
+          "nontransparent_pixels": 952,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            50,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.11011,
+        0.07082,
+        0.09634,
+        0.0981,
+        0.08463
+      ]
+    }
+  ]
+}

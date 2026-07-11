@@ -36,6 +36,14 @@ void main() {
     expect(
       system.shouldUnlockDefeatedRival(
         playerWon: true,
+        rivalId: CharacterUnlockIds.showman,
+        saveData: const SaveData(),
+      ),
+      isFalse,
+    );
+    expect(
+      system.shouldUnlockDefeatedRival(
+        playerWon: true,
         rivalId: CharacterUnlockIds.rookie,
         saveData: const SaveData(),
       ),

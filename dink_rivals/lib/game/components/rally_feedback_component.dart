@@ -24,12 +24,23 @@ class RallyFeedbackComponent extends Component {
     ..color = VisualPalette.scoreboardShadow;
   String _lastText = '';
   double _popSeconds = 0;
+  late TextPainter _primaryPainter = _buildPainter('', _textStyle);
+  late TextPainter _secondaryPainter = _buildPainter(
+    '',
+    const TextStyle(
+      color: VisualPalette.feedbackBannerText,
+      fontSize: 11,
+      fontWeight: FontWeight.bold,
+      fontFamily: 'monospace',
+    ),
+  );
 
   @override
   void update(double dt) {
     if (game.feedbackText != _lastText) {
       _lastText = game.feedbackText;
       _popSeconds = game.feedbackText.isEmpty ? 0 : 0.25;
+      _rebuildPainters(game.feedbackText);
     } else if (_popSeconds > 0) {
       _popSeconds = (_popSeconds - dt).clamp(0, 1).toDouble();
     }
@@ -40,28 +51,13 @@ class RallyFeedbackComponent extends Component {
     if (game.feedbackText.isEmpty) {
       return;
     }
+    if (game.feedbackText != _lastText) {
+      _lastText = game.feedbackText;
+      _rebuildPainters(game.feedbackText);
+    }
     final scale = _popSeconds <= 0 ? 1.0 : 1.0 + 0.2 * (_popSeconds / 0.25);
-    final text = primaryTextFor(game.feedbackText);
-    final subtext = secondaryTextFor(game.feedbackText);
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: _textStyle.copyWith(color: colorForFeedback(game.feedbackText)),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    final subPainter = TextPainter(
-      text: TextSpan(
-        text: subtext,
-        style: const TextStyle(
-          color: VisualPalette.feedbackBannerText,
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'monospace',
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
+    final textPainter = _primaryPainter;
+    final subPainter = _secondaryPainter;
     canvas.save();
     canvas.translate(game.size.x / 2, bannerCenterYForSize(game.size.y));
     canvas.scale(scale);
@@ -97,6 +93,29 @@ class RallyFeedbackComponent extends Component {
       Offset(-subPainter.width / 2, panelRect.top + textPainter.height + 2),
     );
     canvas.restore();
+  }
+
+  void _rebuildPainters(String feedbackText) {
+    _primaryPainter = _buildPainter(
+      primaryTextFor(feedbackText),
+      _textStyle.copyWith(color: colorForFeedback(feedbackText)),
+    );
+    _secondaryPainter = _buildPainter(
+      secondaryTextFor(feedbackText),
+      const TextStyle(
+        color: VisualPalette.feedbackBannerText,
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'monospace',
+      ),
+    );
+  }
+
+  TextPainter _buildPainter(String text, TextStyle style) {
+    return TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+    )..layout();
   }
 
   @visibleForTesting

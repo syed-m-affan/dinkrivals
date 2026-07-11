@@ -83,15 +83,20 @@ void main() {
       find.byKey(const Key('roster-unlock-${CharacterUnlockIds.showman}')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('roster-win-classic-cup-showman')),
+      findsOneWidget,
+    );
     expect(find.text('LOCKED'), findsWidgets);
 
     await tester.tap(
-      find.byKey(const Key('roster-challenge-${CharacterUnlockIds.showman}')),
+      find.byKey(const Key('roster-challenge-${CharacterUnlockIds.veteran}')),
     );
     await tester.pumpAndSettle();
 
     expect(find.text('game'), findsOneWidget);
-    expect(game.opponentAiSystem.profile.id, TournamentDefinitions.showman.id);
+    expect(game.opponentAiSystem.profile.id, TournamentDefinitions.veteran.id);
+    expect(game.opponentCharacterId, TournamentDefinitions.veteran.id);
   });
 
   testWidgets('locked Rally Queen can start a direct challenge',

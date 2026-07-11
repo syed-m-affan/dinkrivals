@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
+import '../app/app_config.dart';
 import '../app/game_provider.dart';
+import '../app/match_session_provider.dart';
 import '../app/router.dart';
 import '../game/config/character_visuals.dart';
 import '../game/config/visual_palette.dart';
@@ -95,6 +97,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
       setState(() => _showingInterstitial = false);
     }
     game.resetMatch();
+    ref.read(matchSessionProvider.notifier).clear();
     if (mounted) {
       context.go(AppRoutes.menu);
     }
@@ -107,12 +110,16 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
     ref.watch(adPlacementTickProvider);
     final adPlacement = ref.watch(adPlacementSystemProvider);
     final match = game.matchState;
+    final completed = ref.watch(matchSessionProvider).completed;
+    final opponentVisual = CharacterVisuals.byId(
+      completed?.session.opponentCharacterId ?? game.opponentCharacterId,
+    );
     final winnerSide = _winnerSideFor(match.playerScore, match.opponentScore);
     final playerWon = winnerSide == PlayerSide.player;
     final opponentWon = winnerSide == PlayerSide.opponent;
     final winnerText = switch (winnerSide) {
       PlayerSide.player => 'YOU WIN',
-      PlayerSide.opponent => 'OPPONENT WINS',
+      PlayerSide.opponent => '${opponentVisual.displayName.toUpperCase()} WINS',
       null => 'MATCH COMPLETE',
     };
     final winnerColor = switch (winnerSide) {
@@ -126,7 +133,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
         CharacterVisuals.byId(saveData.activeCharacterId).portraitAsset;
     final winnerPortrait = switch (winnerSide) {
       PlayerSide.player => playerPortrait,
-      PlayerSide.opponent => CharacterVisuals.gameplayOpponent.portraitAsset,
+      PlayerSide.opponent => opponentVisual.portraitAsset,
       null => playerPortrait,
     };
 
@@ -194,7 +201,7 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
                           ),
                           const SizedBox(height: 8),
                           _ScoreLine(
-                            label: 'OPPONENT',
+                            label: opponentVisual.displayName.toUpperCase(),
                             side: PlayerSide.opponent,
                             score: match.opponentScore,
                             highlight: opponentWon,
@@ -249,17 +256,19 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
                           ? _claimReward
                           : null,
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      adPlacement.debugSummary(isNaturalBreak: true),
-                      key: const Key('end-match-ad-debug'),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: VisualPalette.netRail,
-                        fontSize: 12,
-                        fontFamily: 'monospace',
+                    if (AppConfig.showQaUi) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        adPlacement.debugSummary(isNaturalBreak: true),
+                        key: const Key('end-match-ad-debug'),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: VisualPalette.netRail,
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                        ),
                       ),
-                    ),
+                    ],
                     const SizedBox(height: 32),
                     ArcadeButton(
                       key: const Key('end-match-rematch'),
@@ -267,7 +276,17 @@ class _EndMatchScreenState extends ConsumerState<EndMatchScreen> {
                       icon: Icons.replay,
                       onPressed: () {
                         ref.read(audioServiceProvider).playMenuClick();
-                        game.resetMatch();
+                        final session =
+                            ref.read(matchSessionProvider.notifier).rematch();
+                        if (session == null) {
+                          game.resetMatch();
+                          context.go(AppRoutes.game);
+                          return;
+                        }
+                        game.configureMatch(
+                          opponentCharacterId: session.opponentCharacterId,
+                          opponentProfile: session.opponentProfile,
+                        );
                         context.go(AppRoutes.game);
                       },
                     ),

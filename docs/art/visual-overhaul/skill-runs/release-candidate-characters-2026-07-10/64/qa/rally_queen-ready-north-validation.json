@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rally_queen-ready-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 0,
+      "nontransparent_pixels": 878,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 1,
+      "nontransparent_pixels": 1197,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        9,
+        4,
+        55,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 2,
+      "nontransparent_pixels": 839,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        15,
+        4,
+        48,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 3,
+      "nontransparent_pixels": 754,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        15,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 4,
+      "nontransparent_pixels": 952,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 5,
+      "nontransparent_pixels": 921,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        50,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "north",
+      "frame_diffs": [
+        0.15241,
+        0.15016,
+        0.09198,
+        0.10431,
+        0.0531
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 0,
+          "nontransparent_pixels": 878,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 1,
+          "nontransparent_pixels": 1197,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            9,
+            4,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 2,
+          "nontransparent_pixels": 839,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 3,
+          "nontransparent_pixels": 754,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 4,
+          "nontransparent_pixels": 952,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 5,
+          "nontransparent_pixels": 921,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

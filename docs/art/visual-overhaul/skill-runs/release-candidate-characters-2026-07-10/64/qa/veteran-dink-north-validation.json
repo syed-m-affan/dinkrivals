@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\veteran-dink-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "veteran-dink-north",
+      "column": 0,
+      "nontransparent_pixels": 1186,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-dink-north",
+      "column": 1,
+      "nontransparent_pixels": 1124,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-dink-north",
+      "column": 2,
+      "nontransparent_pixels": 1155,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        8,
+        4,
+        55,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-dink-north",
+      "column": 3,
+      "nontransparent_pixels": 1176,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        5,
+        4,
+        58,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-dink-north",
+      "column": 4,
+      "nontransparent_pixels": 1008,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-dink-north",
+      "column": 5,
+      "nontransparent_pixels": 1155,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        51,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "veteran-dink-north",
+      "frame_diffs": [
+        0.05342,
+        0.0969,
+        0.06781,
+        0.14865,
+        0.03514
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "veteran-dink-north",
+          "column": 0,
+          "nontransparent_pixels": 1186,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-dink-north",
+          "column": 1,
+          "nontransparent_pixels": 1124,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-dink-north",
+          "column": 2,
+          "nontransparent_pixels": 1155,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-dink-north",
+          "column": 3,
+          "nontransparent_pixels": 1176,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            5,
+            4,
+            58,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-dink-north",
+          "column": 4,
+          "nontransparent_pixels": 1008,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-dink-north",
+          "column": 5,
+          "nontransparent_pixels": 1155,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            51,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

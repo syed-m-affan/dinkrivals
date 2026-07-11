@@ -37,10 +37,22 @@ class ScoreComponent extends Component {
     ..strokeWidth = 3;
   final Paint _serveIndicator = Paint()..color = VisualPalette.uiAccent;
   final Paint _shadowPaint = Paint()..color = VisualPalette.scoreboardShadow;
+  late final TextPainter _playerLabelPainter = _painter('YOU', _labelStyle);
+  late TextPainter _opponentLabelPainter = _painter('ROOKIE', _labelStyle);
+  late TextPainter _playerScorePainter = _painter('00', _textStyle);
+  late TextPainter _opponentScorePainter = _painter('00', _textStyle);
+  int? _lastPlayerScore;
+  int? _lastOpponentScore;
+  String? _lastOpponentLabel;
 
   @override
   void render(Canvas canvas) {
     final match = game.matchState;
+    final opponentLabel = opponentLabelForTesting();
+    if (_lastOpponentLabel != opponentLabel) {
+      _lastOpponentLabel = opponentLabel;
+      _opponentLabelPainter = _painter(opponentLabel, _labelStyle);
+    }
     final panelWidth = game.size.x < 390 ? 58.0 : 62.0;
     final panelHeight = 54.0;
     const gap = 2.0;
@@ -54,9 +66,20 @@ class ScoreComponent extends Component {
       panelHeight,
     );
 
-    _drawScorePanel(canvas, playerRect, 'YOU', match.playerScore, _playerPanel);
     _drawScorePanel(
-        canvas, opponentRect, 'RIVAL', match.opponentScore, _opponentPanel);
+      canvas,
+      playerRect,
+      _playerLabelPainter,
+      _scorePainterForPlayer(match.playerScore),
+      _playerPanel,
+    );
+    _drawScorePanel(
+      canvas,
+      opponentRect,
+      _opponentLabelPainter,
+      _scorePainterForOpponent(match.opponentScore),
+      _opponentPanel,
+    );
     final activeRect =
         match.servingSide == PlayerSide.player ? playerRect : opponentRect;
     canvas.drawRRect(
@@ -74,8 +97,8 @@ class ScoreComponent extends Component {
   void _drawScorePanel(
     Canvas canvas,
     Rect rect,
-    String label,
-    int score,
+    TextPainter labelPainter,
+    TextPainter scorePainter,
     Paint fill,
   ) {
     final shadowRect = rect.translate(0, 3);
@@ -91,12 +114,10 @@ class ScoreComponent extends Component {
       RRect.fromRectAndRadius(rect, const Radius.circular(6)),
       _border,
     );
-    final labelPainter = _painter(label, _labelStyle);
     labelPainter.paint(
       canvas,
       Offset(rect.center.dx - labelPainter.width / 2, rect.top + 4),
     );
-    final scorePainter = _painter(_scoreText(score), _textStyle);
     scorePainter.paint(
       canvas,
       Offset(
@@ -113,6 +134,22 @@ class ScoreComponent extends Component {
     )..layout();
   }
 
+  TextPainter _scorePainterForPlayer(int score) {
+    if (score != _lastPlayerScore) {
+      _lastPlayerScore = score;
+      _playerScorePainter = _painter(_scoreText(score), _textStyle);
+    }
+    return _playerScorePainter;
+  }
+
+  TextPainter _scorePainterForOpponent(int score) {
+    if (score != _lastOpponentScore) {
+      _lastOpponentScore = score;
+      _opponentScorePainter = _painter(_scoreText(score), _textStyle);
+    }
+    return _opponentScorePainter;
+  }
+
   String _scoreText(int score) => score.toString().padLeft(2, '0');
 
   @visibleForTesting
@@ -124,5 +161,11 @@ class ScoreComponent extends Component {
   @visibleForTesting
   PlayerSide servingIndicatorSideForTesting() {
     return game.matchState.servingSide;
+  }
+
+  @visibleForTesting
+  String opponentLabelForTesting() {
+    final name = game.opponentVisual.displayName.toUpperCase();
+    return name == 'RALLY QUEEN' ? 'RALLY' : name;
   }
 }

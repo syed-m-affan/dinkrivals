@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
+import '../config/character_visuals.dart';
 import '../config/debug_flags.dart';
 import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
@@ -27,16 +28,17 @@ class OpponentComponent extends Component {
   final Paint _identityAccentPaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
+  final Paint _spritePaint = Paint()..filterQuality = FilterQuality.none;
+  final Paint _primitiveBodyLinePaint = Paint()..strokeCap = StrokeCap.round;
 
-  ui.Image? _idleSheet;
-  ui.Image? _runSheet;
-  ui.Image? _swingSheet;
-  ui.Image? _dinkSheet;
-  ui.Image? _driveSheet;
-  ui.Image? _lobSheet;
-  ui.Image? _smashSheet;
-  ui.Image? _readySheet;
-  ui.Image? _hitConfirmSheet;
+  final Map<String, ui.Image> _idleSheets = {};
+  final Map<String, ui.Image> _runSheets = {};
+  final Map<String, ui.Image> _dinkSheets = {};
+  final Map<String, ui.Image> _driveSheets = {};
+  final Map<String, ui.Image> _lobSheets = {};
+  final Map<String, ui.Image> _smashSheets = {};
+  final Map<String, ui.Image> _readySheets = {};
+  final Map<String, ui.Image> _hitConfirmSheets = {};
   double _animationSeconds = 0;
   double _swingSeconds = 0;
   double _hitConfirmSeconds = 0;
@@ -60,16 +62,18 @@ class OpponentComponent extends Component {
     if (!DebugFlags.useSprites) {
       return;
     }
-    _idleSheet = await game.images.load('sprites/opponent_idle.png');
-    _runSheet = await game.images.load('sprites/opponent_run.png');
-    _swingSheet = await game.images.load('sprites/opponent_swing.png');
-    _dinkSheet = await game.images.load('sprites/opponent_dink.png');
-    _driveSheet = await game.images.load('sprites/opponent_drive.png');
-    _lobSheet = await game.images.load('sprites/opponent_lob.png');
-    _smashSheet = await game.images.load('sprites/opponent_smash.png');
-    _readySheet = await game.images.load('sprites/opponent_ready.png');
-    _hitConfirmSheet =
-        await game.images.load('sprites/opponent_hit_confirm.png');
+    for (final visual in CharacterVisuals.mvpRoster) {
+      final prefix = visual.southSpritePrefix;
+      _idleSheets[visual.id] = await game.images.load('$prefix/idle.png');
+      _runSheets[visual.id] = await game.images.load('$prefix/run.png');
+      _dinkSheets[visual.id] = await game.images.load('$prefix/dink.png');
+      _driveSheets[visual.id] = await game.images.load('$prefix/drive.png');
+      _lobSheets[visual.id] = await game.images.load('$prefix/lob.png');
+      _smashSheets[visual.id] = await game.images.load('$prefix/smash.png');
+      _readySheets[visual.id] = await game.images.load('$prefix/ready.png');
+      _hitConfirmSheets[visual.id] =
+          await game.images.load('$prefix/hit_confirm.png');
+    }
   }
 
   @override
@@ -141,18 +145,19 @@ class OpponentComponent extends Component {
 
   bool _renderSprite(Canvas canvas) {
     final pose = _currentPose();
+    final characterId = game.opponentCharacterId;
     final sheet = switch (pose) {
-      _OpponentPose.idle => _idleSheet,
-      _OpponentPose.run => _runSheet,
-      _OpponentPose.swing => _swingSheet,
-      _OpponentPose.dink => _dinkSheet,
-      _OpponentPose.drive => _driveSheet,
-      _OpponentPose.lob => _lobSheet,
-      _OpponentPose.smash => _smashSheet,
-      _OpponentPose.ready => _readySheet,
-      _OpponentPose.hitConfirm => _hitConfirmSheet,
-      _OpponentPose.pointWin => _readySheet,
-      _OpponentPose.pointLoss => _readySheet,
+      _OpponentPose.idle => _idleSheets[characterId],
+      _OpponentPose.run => _runSheets[characterId],
+      _OpponentPose.swing => _driveSheets[characterId],
+      _OpponentPose.dink => _dinkSheets[characterId],
+      _OpponentPose.drive => _driveSheets[characterId],
+      _OpponentPose.lob => _lobSheets[characterId],
+      _OpponentPose.smash => _smashSheets[characterId],
+      _OpponentPose.ready => _readySheets[characterId],
+      _OpponentPose.hitConfirm => _hitConfirmSheets[characterId],
+      _OpponentPose.pointWin => _readySheets[characterId],
+      _OpponentPose.pointLoss => _readySheets[characterId],
     };
     if (sheet == null) {
       return false;
@@ -202,7 +207,7 @@ class OpponentComponent extends Component {
         width: dst.width,
         height: dst.height,
       ),
-      Paint()..filterQuality = FilterQuality.none,
+      _spritePaint,
     );
     canvas.restore();
     return true;
@@ -241,6 +246,9 @@ class OpponentComponent extends Component {
 
   @visibleForTesting
   String currentPoseNameForTesting() => _currentPose().name;
+
+  @visibleForTesting
+  String spritePrefixForTesting() => game.opponentVisual.southSpritePrefix;
 
   @visibleForTesting
   static double swingLeanForShotForTesting(ShotType? shotType) {
@@ -321,13 +329,13 @@ class OpponentComponent extends Component {
     final bodyRadius = game.logicalToScreen(7.4 * depthScale);
     final headRadius = game.logicalToScreen(5.6 * depthScale);
 
+    _primitiveBodyLinePaint
+      ..color = _bodyPaint.color
+      ..strokeWidth = bodyRadius * 1.35;
     canvas.drawLine(
       feet.toOffset(),
       torso.toOffset(),
-      Paint()
-        ..color = _bodyPaint.color
-        ..strokeWidth = bodyRadius * 1.35
-        ..strokeCap = StrokeCap.round,
+      _primitiveBodyLinePaint,
     );
     canvas.drawCircle(torso.toOffset(), bodyRadius, _bodyPaint);
     canvas.drawCircle(head.toOffset(), headRadius, _headPaint);

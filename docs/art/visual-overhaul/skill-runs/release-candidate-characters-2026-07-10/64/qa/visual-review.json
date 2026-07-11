@@ -1,0 +1,22 @@
+{
+  "accepted": true,
+  "reviewed_at": "2026-07-10T21:35:00-04:00",
+  "artifacts": [
+    "runtime-character-review.png",
+    "showman-north-source-review.png",
+    "*-contact-sheet.png",
+    "../previews/*.gif",
+    "*-motion-audit.json"
+  ],
+  "checks": {
+    "reference_identity": true,
+    "direction": true,
+    "animation_readable": true,
+    "frame_separation": true,
+    "not_procedural": true,
+    "transparent_background": true,
+    "no_chroma_residue": true,
+    "no_clipped_frames": true
+  },
+  "reviewer_notes": "Reviewed the combined runtime character matrix, generated source strips, contact sheets, transparent previews, validation JSON, and motion audits. All four identities remain recognizable in both directions. Rookie south is the retained accepted pack; every missing pack was produced through native 64x64 imagegen strip import and cleanup."
+}

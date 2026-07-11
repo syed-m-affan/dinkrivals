@@ -1,0 +1,77 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rally_queen-hit_confirm-north-sheet-clean.png",
+  "width": 256,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "north",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 0,
+          "nontransparent_pixels": 1198,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 1,
+          "nontransparent_pixels": 1199,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            58,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 2,
+          "nontransparent_pixels": 894,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 3,
+          "nontransparent_pixels": 1187,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.12456,
+        0.14618,
+        0.10067
+      ]
+    }
+  ]
+}

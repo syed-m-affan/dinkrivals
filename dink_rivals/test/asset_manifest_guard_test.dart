@@ -89,6 +89,47 @@ void main() {
           'instead of accidental asset churn.',
     );
   });
+
+  test('every character has complete north and south runtime packs', () {
+    const frameCounts = <String, int>{
+      'idle': 2,
+      'ready': 6,
+      'run': 12,
+      'dink': 6,
+      'drive': 6,
+      'lob': 6,
+      'smash': 6,
+      'hit_confirm': 4,
+    };
+    for (final character in const [
+      'rookie',
+      'rally_queen',
+      'veteran',
+      'showman',
+    ]) {
+      for (final direction in const ['north', 'south']) {
+        for (final entry in frameCounts.entries) {
+          final file = File(
+            'assets/images/sprites/characters/$character/$direction/'
+            '${entry.key}.png',
+          );
+          expect(file.existsSync(), isTrue, reason: file.path);
+          final bytes = file.readAsBytesSync();
+          expect(bytes.length, greaterThan(24), reason: file.path);
+          expect(_pngDimension(bytes, 16), entry.value * 64,
+              reason: '${file.path} width');
+          expect(_pngDimension(bytes, 20), 64, reason: '${file.path} height');
+        }
+      }
+    }
+  });
+}
+
+int _pngDimension(List<int> bytes, int offset) {
+  return (bytes[offset] << 24) |
+      (bytes[offset + 1] << 16) |
+      (bytes[offset + 2] << 8) |
+      bytes[offset + 3];
 }
 
 List<String> _declaredFlutterAssets() {

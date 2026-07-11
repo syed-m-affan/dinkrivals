@@ -1,10 +1,12 @@
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'save_service.dart';
 
 abstract class AudioService {
   Future<void> initialize();
+  void dispose();
   Future<void> playHit();
   Future<void> playBounce();
   Future<void> playPoint();
@@ -21,23 +23,49 @@ class FlameAudioService implements AudioService {
   static const _point = 'sfx/point.wav';
   static const _fault = 'sfx/fault.wav';
   static const _menuClick = 'sfx/menu_click.wav';
+  static const _files = [_hit, _bounce, _point, _fault, _menuClick];
+  static bool _cacheLoaded = false;
+  static Future<void>? _cacheLoading;
 
   final bool Function() _soundEnabled;
   bool _initialized = false;
+  bool _disposed = false;
+
+  static Future<void> warmCache() => _ensureCacheLoaded();
 
   @override
   Future<void> initialize() async {
-    if (_initialized) {
+    if (_initialized || _disposed) {
       return;
     }
-    await FlameAudio.audioCache.loadAll([
-      _hit,
-      _bounce,
-      _point,
-      _fault,
-      _menuClick,
-    ]);
-    _initialized = true;
+    await _ensureCacheLoaded();
+    if (!_disposed) {
+      _initialized = true;
+    }
+  }
+
+  static Future<void> _ensureCacheLoaded() async {
+    if (_cacheLoaded) {
+      return;
+    }
+    final existingLoad = _cacheLoading;
+    if (existingLoad != null) {
+      await existingLoad;
+      return;
+    }
+    final load = FlameAudio.audioCache.loadAll(_files);
+    _cacheLoading = load;
+    try {
+      await load;
+      _cacheLoaded = true;
+    } finally {
+      _cacheLoading = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
   }
 
   @override
@@ -56,10 +84,19 @@ class FlameAudioService implements AudioService {
   Future<void> playMenuClick() => _play(_menuClick);
 
   Future<void> _play(String file) async {
-    if (!_soundEnabled()) {
+    if (_disposed || !_soundEnabled()) {
       return;
     }
-    await FlameAudio.play(file);
+    await initialize();
+    if (_disposed) {
+      return;
+    }
+    try {
+      await FlameAudio.play(file);
+    } catch (error, stackTrace) {
+      debugPrint('Audio playback failed for $file: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
   }
 }
 
@@ -75,10 +112,12 @@ class FakeAudioService implements AudioService {
   int pointCalls = 0;
   int faultCalls = 0;
   int menuClickCalls = 0;
+  int disposeCalls = 0;
+  bool disposed = false;
 
   @override
   Future<void> initialize() async {
-    if (initialized) {
+    if (initialized || disposed) {
       return;
     }
     initialized = true;
@@ -86,33 +125,41 @@ class FakeAudioService implements AudioService {
   }
 
   @override
+  void dispose() {
+    disposed = true;
+    disposeCalls++;
+  }
+
+  @override
   Future<void> playHit() async {
-    if (_soundEnabled()) hitCalls++;
+    if (!disposed && _soundEnabled()) hitCalls++;
   }
 
   @override
   Future<void> playBounce() async {
-    if (_soundEnabled()) bounceCalls++;
+    if (!disposed && _soundEnabled()) bounceCalls++;
   }
 
   @override
   Future<void> playPoint() async {
-    if (_soundEnabled()) pointCalls++;
+    if (!disposed && _soundEnabled()) pointCalls++;
   }
 
   @override
   Future<void> playFault() async {
-    if (_soundEnabled()) faultCalls++;
+    if (!disposed && _soundEnabled()) faultCalls++;
   }
 
   @override
   Future<void> playMenuClick() async {
-    if (_soundEnabled()) menuClickCalls++;
+    if (!disposed && _soundEnabled()) menuClickCalls++;
   }
 }
 
 final audioServiceProvider = Provider<AudioService>((ref) {
-  return FlameAudioService(
+  final service = FlameAudioService(
     soundEnabled: () => ref.read(saveDataProvider).soundEnabled,
   );
+  ref.onDispose(service.dispose);
+  return service;
 });

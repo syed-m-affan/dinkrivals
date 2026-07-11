@@ -156,6 +156,14 @@ class TouchInputController {
     inputSystem.clearMovement();
   }
 
+  void clearAll(InputSystem inputSystem) {
+    _movementPointerId = null;
+    _clearSwingPointer();
+    _clearShotPointer();
+    inputSystem.clearMovement();
+    inputSystem.resetRacket();
+  }
+
   void _clearSwingPointer() {
     _swingPointerId = null;
   }

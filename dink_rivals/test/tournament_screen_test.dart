@@ -119,7 +119,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('tournament-trophy-label')), findsOneWidget);
-    expect(find.text('Classic Cup Trophy unlocked'), findsNWidgets(2));
+    expect(find.text('Classic Cup Trophy unlocked'), findsOneWidget);
     expect(find.text('WINS 1'), findsOneWidget);
     expect(find.byKey(const Key('tournament-result-panel')), findsOneWidget);
     expect(find.text('CHAMPION'), findsOneWidget);

@@ -42,6 +42,7 @@ class TouchControlsComponent extends Component {
     ..color = VisualPalette.textPrimary
     ..style = PaintingStyle.stroke
     ..strokeWidth = 3;
+  final Paint _serveFill = Paint();
   final Paint _powerRing = Paint()
     ..color = VisualPalette.textPrimary
     ..style = PaintingStyle.stroke
@@ -55,6 +56,13 @@ class TouchControlsComponent extends Component {
     ..color = VisualPalette.scoreboardBorder.withValues(alpha: 0.72)
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1.4;
+  final Paint _moveChevronPaint = Paint()..style = PaintingStyle.fill;
+  final Path _moveChevronPath = Path()
+    ..moveTo(6, 0)
+    ..lineTo(-5, -6)
+    ..lineTo(-3, 0)
+    ..lineTo(-5, 6)
+    ..close();
 
   final TextPainter _serveText = TextPainter(
     text: const TextSpan(
@@ -73,6 +81,22 @@ class TouchControlsComponent extends Component {
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
+  final TextPainter _dinkChipText =
+      TextPainter(textDirection: TextDirection.ltr);
+  final TextPainter _driveChipText =
+      TextPainter(textDirection: TextDirection.ltr);
+  final TextPainter _verticalChipText =
+      TextPainter(textDirection: TextDirection.ltr);
+  Rect _dinkChipRect = Rect.zero;
+  Rect _driveChipRect = Rect.zero;
+  Rect _verticalChipRect = Rect.zero;
+  bool _dinkChipActive = false;
+  bool _driveChipActive = false;
+  bool _verticalChipActive = false;
+  SwingIntent? _cachedShotIndicatorActive;
+  double _cachedShotIndicatorWidth = -1;
+  double _cachedShotIndicatorHeight = -1;
+  String _cachedVerticalChipLabel = '';
   double _pulseSeconds = 0;
 
   @override
@@ -135,33 +159,29 @@ class TouchControlsComponent extends Component {
     TouchControlLayout layout,
     bool waitingToServe,
   ) {
-    final paint = Paint()
-      ..color = waitingToServe
-          ? VisualPalette.controlStroke.withValues(alpha: 0.36)
-          : VisualPalette.controlStroke
-      ..style = PaintingStyle.fill;
+    _moveChevronPaint.color = waitingToServe
+        ? VisualPalette.controlStroke.withValues(alpha: 0.36)
+        : VisualPalette.controlStroke;
     final center = layout.moveCenter;
     final radius = layout.moveVisualRadius * 0.72;
-    final chevrons = <({double angle, Offset offset})>[
-      (angle: -math.pi / 2, offset: Offset(0, -radius)),
-      (angle: math.pi / 2, offset: Offset(0, radius)),
-      (angle: math.pi, offset: Offset(-radius, 0)),
-      (angle: 0, offset: Offset(radius, 0)),
-    ];
-    for (final chevron in chevrons) {
-      canvas.save();
-      canvas.translate(
-          center.x + chevron.offset.dx, center.y + chevron.offset.dy);
-      canvas.rotate(chevron.angle);
-      final path = Path()
-        ..moveTo(6, 0)
-        ..lineTo(-5, -6)
-        ..lineTo(-3, 0)
-        ..lineTo(-5, 6)
-        ..close();
-      canvas.drawPath(path, paint);
-      canvas.restore();
-    }
+    _drawMoveChevron(canvas, center, 0, -radius, -math.pi / 2);
+    _drawMoveChevron(canvas, center, 0, radius, math.pi / 2);
+    _drawMoveChevron(canvas, center, -radius, 0, math.pi);
+    _drawMoveChevron(canvas, center, radius, 0, 0);
+  }
+
+  void _drawMoveChevron(
+    Canvas canvas,
+    Vector2 center,
+    double dx,
+    double dy,
+    double angle,
+  ) {
+    canvas.save();
+    canvas.translate(center.x + dx, center.y + dy);
+    canvas.rotate(angle);
+    canvas.drawPath(_moveChevronPath, _moveChevronPaint);
+    canvas.restore();
   }
 
   void _renderSwingControl(Canvas canvas, TouchControlLayout layout) {
@@ -221,23 +241,115 @@ class TouchControlsComponent extends Component {
 
   void _renderShotIndicators(Canvas canvas, TouchControlLayout layout) {
     final active = game.inputSystem.activeSwingCommand?.intent;
-    for (final item in _shotIndicatorLayout(layout, active)) {
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(item.rect, const Radius.circular(4)),
-        item.isActive ? _shotChipActivePaint : _shotChipPaint,
-      );
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(item.rect, const Radius.circular(4)),
-        _shotChipBorderPaint,
-      );
-      item.painter.paint(
-        canvas,
-        Offset(
-          item.rect.center.dx - item.painter.width / 2,
-          item.rect.center.dy - item.painter.height / 2,
-        ),
-      );
+    _ensureShotIndicatorLayout(layout, active);
+    _paintShotChip(canvas, _dinkChipText, _dinkChipRect, _dinkChipActive);
+    _paintShotChip(canvas, _driveChipText, _driveChipRect, _driveChipActive);
+    _paintShotChip(
+        canvas, _verticalChipText, _verticalChipRect, _verticalChipActive);
+  }
+
+  void _paintShotChip(
+    Canvas canvas,
+    TextPainter painter,
+    Rect rect,
+    bool isActive,
+  ) {
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(4)),
+      isActive ? _shotChipActivePaint : _shotChipPaint,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(4)),
+      _shotChipBorderPaint,
+    );
+    painter.paint(
+      canvas,
+      Offset(
+        rect.center.dx - painter.width / 2,
+        rect.center.dy - painter.height / 2,
+      ),
+    );
+  }
+
+  void _ensureShotIndicatorLayout(
+    TouchControlLayout layout,
+    SwingIntent? active,
+  ) {
+    final verticalLabel = switch (active) {
+      SwingIntent.lob => 'LOB',
+      SwingIntent.smash => 'SMASH',
+      _ => 'LOB/SMASH',
+    };
+    if (_cachedShotIndicatorActive == active &&
+        _cachedShotIndicatorWidth == layout.size.x &&
+        _cachedShotIndicatorHeight == layout.size.y &&
+        _cachedVerticalChipLabel == verticalLabel) {
+      return;
     }
+    _cachedShotIndicatorActive = active;
+    _cachedShotIndicatorWidth = layout.size.x;
+    _cachedShotIndicatorHeight = layout.size.y;
+    _cachedVerticalChipLabel = verticalLabel;
+
+    const horizontalMargin = 8.0;
+    final y = layout.swingCenter.y - layout.swingVisualRadius - 70;
+    final centerX = layout.swingCenter.x;
+    _dinkChipActive = false;
+    _driveChipActive = active == SwingIntent.drive;
+    _verticalChipActive =
+        active == SwingIntent.lob || active == SwingIntent.smash;
+    _configureChip(_dinkChipText, 'DINK', _dinkChipActive);
+    _configureChip(_driveChipText, 'DRIVE', _driveChipActive);
+    _configureChip(_verticalChipText, verticalLabel, _verticalChipActive);
+    _dinkChipRect = Rect.fromCenter(
+      center: Offset(centerX - 60, y),
+      width: _dinkChipText.width + 14,
+      height: 22,
+    );
+    _driveChipRect = Rect.fromCenter(
+      center: Offset(centerX, y),
+      width: _driveChipText.width + 14,
+      height: 22,
+    );
+    _verticalChipRect = Rect.fromCenter(
+      center: Offset(centerX + 68, y),
+      width: _verticalChipText.width + 14,
+      height: 22,
+    );
+
+    final minLeft = math.min(
+      _dinkChipRect.left,
+      math.min(_driveChipRect.left, _verticalChipRect.left),
+    );
+    final maxRight = math.max(
+      _dinkChipRect.right,
+      math.max(_driveChipRect.right, _verticalChipRect.right),
+    );
+    final rightLimit = layout.size.x - horizontalMargin;
+    final shiftRight = math.max(0, horizontalMargin - minLeft).toDouble();
+    final shiftLeft =
+        math.min(0, rightLimit - (maxRight + shiftRight)).toDouble();
+    final shift = shiftRight + shiftLeft;
+    if (shift == 0) {
+      return;
+    }
+    final offset = Offset(shift, 0);
+    _dinkChipRect = _dinkChipRect.shift(offset);
+    _driveChipRect = _driveChipRect.shift(offset);
+    _verticalChipRect = _verticalChipRect.shift(offset);
+  }
+
+  void _configureChip(TextPainter painter, String label, bool isActive) {
+    painter.text = TextSpan(
+      text: label,
+      style: TextStyle(
+        color: isActive ? VisualPalette.textInverse : VisualPalette.textPrimary,
+        fontSize: label.length > 6 ? 9 : 10,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'monospace',
+      ),
+    );
+    painter.layout();
   }
 
   static List<({TextPainter painter, Rect rect, bool isActive})>
@@ -323,17 +435,16 @@ class TouchControlsComponent extends Component {
   void _renderServeButton(Canvas canvas, TouchControlLayout layout) {
     final charge = game.serveChargeFraction;
     final visualRadius = layout.serveVisualRadius;
-    final serveFill = Paint()
-      ..color = Color.lerp(
-        VisualPalette.uiAccent.withValues(alpha: 0.8),
-        VisualPalette.servePowerEnd,
-        charge,
-      )!;
+    _serveFill.color = Color.lerp(
+      VisualPalette.uiAccent.withValues(alpha: 0.8),
+      VisualPalette.servePowerEnd,
+      charge,
+    )!;
 
     canvas.drawCircle(
       layout.serveCenter.toOffset(),
       visualRadius,
-      serveFill,
+      _serveFill,
     );
     canvas.drawCircle(
       layout.serveCenter.toOffset(),

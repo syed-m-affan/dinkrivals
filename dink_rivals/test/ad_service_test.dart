@@ -54,6 +54,20 @@ void main() {
     expect(service.lastInterstitialPlacement, 'return_to_menu');
   });
 
+  test('disposed fake service stops serving ads', () async {
+    final service = FakeAdService();
+
+    service.dispose();
+    await service.initialize();
+
+    expect(service.disposed, isTrue);
+    expect(service.initialized, isFalse);
+    expect(await service.isRewardedAdReady(), isFalse);
+    expect(await service.showRewardedAd(placement: 'post_match'), isFalse);
+    expect(await service.isInterstitialReady(), isFalse);
+    expect(await service.maybeShowInterstitial(placement: 'menu'), isFalse);
+  });
+
   test('provider can return initialized fake service', () async {
     final service = FakeAdService();
     await service.initialize();

@@ -28,6 +28,7 @@ class BallComponent extends Component {
     ..color = VisualPalette.ballPrimary.withValues(alpha: 0.32)
     ..strokeWidth = 1.4
     ..strokeCap = StrokeCap.round;
+  final Paint _spritePaint = Paint()..filterQuality = FilterQuality.none;
   ui.Image? _ballSprite;
 
   @override
@@ -71,7 +72,7 @@ class BallComponent extends Component {
           _ballSprite!.height.toDouble(),
         ),
         dst,
-        Paint()..filterQuality = FilterQuality.none,
+        _spritePaint,
       );
       _drawHighlight(canvas, center, screenRadius);
       return;

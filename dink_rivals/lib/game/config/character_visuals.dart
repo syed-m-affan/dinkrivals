@@ -7,6 +7,8 @@ class CharacterVisualDefinition {
     required this.id,
     required this.displayName,
     required this.portraitAsset,
+    required this.northSpritePrefix,
+    required this.southSpritePrefix,
     required this.primaryColor,
     required this.secondaryColor,
     required this.paddleAsset,
@@ -17,6 +19,8 @@ class CharacterVisualDefinition {
   final String id;
   final String displayName;
   final String portraitAsset;
+  final String northSpritePrefix;
+  final String southSpritePrefix;
   final Color primaryColor;
   final Color secondaryColor;
   final String paddleAsset;
@@ -32,6 +36,8 @@ class CharacterVisuals {
     id: 'rookie',
     displayName: 'Rookie',
     portraitAsset: 'assets/images/ui/portrait_rookie.png',
+    northSpritePrefix: 'sprites/characters/rookie/north',
+    southSpritePrefix: 'sprites/characters/rookie/south',
     primaryColor: VisualPalette.rookiePrimary,
     secondaryColor: VisualPalette.rookieSecondary,
     paddleAsset: 'assets/images/sprites/paddle_player.png',
@@ -43,6 +49,8 @@ class CharacterVisuals {
     id: 'rally_queen',
     displayName: 'Rally Queen',
     portraitAsset: 'assets/images/ui/portrait_rally_queen.png',
+    northSpritePrefix: 'sprites/characters/rally_queen/north',
+    southSpritePrefix: 'sprites/characters/rally_queen/south',
     primaryColor: VisualPalette.rallyQueenPrimary,
     secondaryColor: VisualPalette.rallyQueenSecondary,
     paddleAsset: 'assets/images/sprites/paddle_player.png',
@@ -55,6 +63,8 @@ class CharacterVisuals {
     id: 'veteran',
     displayName: 'Veteran',
     portraitAsset: 'assets/images/ui/portrait_veteran.png',
+    northSpritePrefix: 'sprites/characters/veteran/north',
+    southSpritePrefix: 'sprites/characters/veteran/south',
     primaryColor: VisualPalette.veteranPrimary,
     secondaryColor: VisualPalette.veteranSecondary,
     paddleAsset: 'assets/images/sprites/paddle_player.png',
@@ -67,6 +77,8 @@ class CharacterVisuals {
     id: 'showman',
     displayName: 'Showman',
     portraitAsset: 'assets/images/ui/portrait_showman.png',
+    northSpritePrefix: 'sprites/characters/showman/north',
+    southSpritePrefix: 'sprites/characters/showman/south',
     primaryColor: VisualPalette.showmanPrimary,
     secondaryColor: VisualPalette.showmanSecondary,
     paddleAsset: 'assets/images/sprites/paddle_opponent.png',

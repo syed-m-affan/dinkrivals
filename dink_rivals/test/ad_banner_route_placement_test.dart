@@ -66,8 +66,8 @@ void main() {
       await _pumpRoute(tester, route: entry.key);
 
       expect(find.byType(AdBannerSlot), findsOneWidget);
-      expect(find.byKey(Key('fake-banner-${entry.value}')), findsOneWidget);
-      expect(_fakeBannerWidgets(), findsOneWidget);
+      expect(find.byKey(Key('fake-banner-${entry.value}')), findsNothing);
+      expect(_fakeBannerWidgets(), findsNothing);
     });
   }
 

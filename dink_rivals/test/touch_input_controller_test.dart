@@ -185,6 +185,51 @@ void main() {
         isTrue);
   });
 
+  test('clearAll clears every active pointer and transient input', () {
+    final controller = TouchInputController();
+    final input = InputSystem();
+    final size = Vector2(360, 720);
+    final layout = TouchControlLayout(size);
+    final shotStart = Vector2(size.x * 0.5, size.y * 0.45);
+
+    controller.handlePointerStart(
+      pointerId: 1,
+      position: layout.moveCenter + Vector2(layout.moveRadius, 0),
+      size: size,
+      canMove: true,
+      inputSystem: input,
+    );
+    controller.handlePointerStart(
+      pointerId: 2,
+      position: layout.swingCenter + Vector2(24, 0),
+      size: size,
+      canMove: true,
+      inputSystem: input,
+    );
+    controller.handlePointerStart(
+      pointerId: 3,
+      position: shotStart,
+      size: size,
+      canMove: true,
+      inputSystem: input,
+    );
+
+    expect(controller.movementPointerId, 1);
+    expect(controller.swingPointerId, 2);
+    expect(controller.shotPointerId, 3);
+    expect(input.hasMovementInput, isTrue);
+
+    controller.clearAll(input);
+
+    expect(controller.movementPointerId, isNull);
+    expect(controller.swingPointerId, isNull);
+    expect(controller.shotPointerId, isNull);
+    expect(input.hasMovementInput, isFalse);
+    expect(input.racketAngle, 0);
+    expect(input.aimDirection.x, 0);
+    expect(input.aimDirection.y, -1);
+  });
+
   test('shot indicator chips stay inside narrow portrait canvas', () {
     final rects = TouchControlsComponent.shotIndicatorRectsForTesting(
       size: Vector2(448, 997),

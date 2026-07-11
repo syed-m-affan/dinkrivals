@@ -49,12 +49,14 @@ class TournamentState {
     this.currentOpponentId,
     this.currentOpponentName,
     this.completedMatches = const [],
+    this.championshipRewardWasNew,
   });
 
   final TournamentStatus status;
   final String? currentOpponentId;
   final String? currentOpponentName;
   final List<TournamentMatchRecord> completedMatches;
+  final bool? championshipRewardWasNew;
 
   bool get isActive =>
       status == TournamentStatus.semifinal ||
@@ -81,6 +83,7 @@ class TournamentState {
     Object? currentOpponentId = _sentinel,
     Object? currentOpponentName = _sentinel,
     List<TournamentMatchRecord>? completedMatches,
+    Object? championshipRewardWasNew = _sentinel,
   }) {
     return TournamentState(
       status: status ?? this.status,
@@ -91,6 +94,9 @@ class TournamentState {
           ? this.currentOpponentName
           : currentOpponentName as String?,
       completedMatches: completedMatches ?? this.completedMatches,
+      championshipRewardWasNew: championshipRewardWasNew == _sentinel
+          ? this.championshipRewardWasNew
+          : championshipRewardWasNew as bool?,
     );
   }
 
@@ -100,7 +106,8 @@ class TournamentState {
         other.status == status &&
         other.currentOpponentId == currentOpponentId &&
         other.currentOpponentName == currentOpponentName &&
-        _listEquals(other.completedMatches, completedMatches);
+        _listEquals(other.completedMatches, completedMatches) &&
+        other.championshipRewardWasNew == championshipRewardWasNew;
   }
 
   @override
@@ -109,6 +116,7 @@ class TournamentState {
         currentOpponentId,
         currentOpponentName,
         Object.hashAll(completedMatches),
+        championshipRewardWasNew,
       );
 }
 

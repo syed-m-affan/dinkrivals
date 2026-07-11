@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rookie-smash-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "rookie-smash-north",
+      "column": 0,
+      "nontransparent_pixels": 1297,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-smash-north",
+      "column": 1,
+      "nontransparent_pixels": 950,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        15,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-smash-north",
+      "column": 2,
+      "nontransparent_pixels": 809,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        17,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-smash-north",
+      "column": 3,
+      "nontransparent_pixels": 660,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        19,
+        4,
+        44,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-smash-north",
+      "column": 4,
+      "nontransparent_pixels": 1149,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rookie-smash-north",
+      "column": 5,
+      "nontransparent_pixels": 1332,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "rookie-smash-north",
+      "frame_diffs": [
+        0.12927,
+        0.07253,
+        0.06707,
+        0.15542,
+        0.10673
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "rookie-smash-north",
+          "column": 0,
+          "nontransparent_pixels": 1297,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-smash-north",
+          "column": 1,
+          "nontransparent_pixels": 950,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-smash-north",
+          "column": 2,
+          "nontransparent_pixels": 809,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            17,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-smash-north",
+          "column": 3,
+          "nontransparent_pixels": 660,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            19,
+            4,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-smash-north",
+          "column": 4,
+          "nontransparent_pixels": 1149,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-smash-north",
+          "column": 5,
+          "nontransparent_pixels": 1332,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

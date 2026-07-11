@@ -42,7 +42,7 @@ void main() {
     expect(find.byKey(const Key('fake-banner-menu')), findsNothing);
   });
 
-  testWidgets('banner placeholder appears after first completed match',
+  testWidgets('fake banner stays hidden when RC placeholders are disabled',
       (tester) async {
     await tester.pumpWidget(
       await _wrap(
@@ -51,9 +51,8 @@ void main() {
       ),
     );
 
-    expect(find.byKey(const Key('fake-banner-menu')), findsOneWidget);
-    expect(find.text('AD'), findsOneWidget);
-    expect(find.text('TEST BANNER'), findsOneWidget);
+    expect(find.byKey(const Key('fake-banner-menu')), findsNothing);
+    expect(find.text('TEST BANNER'), findsNothing);
   });
 
   testWidgets('banner placeholder is hidden when ads are removed',

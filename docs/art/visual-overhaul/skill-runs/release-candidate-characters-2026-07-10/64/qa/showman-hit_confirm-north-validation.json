@@ -1,0 +1,136 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\showman-hit_confirm-north-sheet-clean.png",
+  "width": 256,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 0,
+      "nontransparent_pixels": 872,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        53,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 1,
+      "nontransparent_pixels": 841,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 2,
+      "nontransparent_pixels": 643,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "north",
+      "column": 3,
+      "nontransparent_pixels": 869,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        53,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "north",
+      "frame_diffs": [
+        0.0853,
+        0.09821,
+        0.0903
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 0,
+          "nontransparent_pixels": 872,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 1,
+          "nontransparent_pixels": 841,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 2,
+          "nontransparent_pixels": 643,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 3,
+          "nontransparent_pixels": 869,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

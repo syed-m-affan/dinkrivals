@@ -1,6 +1,6 @@
 # Current Visual Overhaul State
 
-Last updated: 2026-05-17
+Last updated: 2026-07-10
 
 ## Summary
 
@@ -8,12 +8,13 @@ The current runtime visual direction is a projection-locked park court built
 from the graybox control points, not the retired painted park-court environment
 described by earlier VO2 closeout notes.
 
-Player and opponent sprite production is complete for the current pass. The
-accepted runtime sheets and gameplay animations were created with the sprite
-generation workflow documented in
+Player and opponent sprite production now covers all four roster identities in
+both court directions. The accepted runtime sheets and gameplay animations were
+created with the sprite generation workflow documented in
 `docs/art/visual-overhaul/sprite-generator-skill-workflow.md`, using the
-`character-animation-creator` run under
-`docs/art/visual-overhaul/skill-runs/character-animation-creator-2026-05-12/`.
+the original `character-animation-creator` run plus the release-candidate run
+under
+`docs/art/visual-overhaul/skill-runs/release-candidate-characters-2026-07-10/`.
 Future character sprite edits should continue through that workflow. Do not use
 `dink_rivals/tool/generate_chibi_64_sprites.py` for production character work
 unless the user explicitly asks for the legacy procedural fallback.
@@ -88,14 +89,20 @@ accepted player/opponent sprites.
 
 ## Character State
 
-Character work is done for this stage:
+Character work is done for this RC stage:
 
-- Player and opponent runtime sheets use 64x64 cells.
+- Rookie, Rally Queen, Veteran, and Showman each have north/player and
+  south/opponent runtime sheets using native 64x64 cells.
+- Rookie's accepted south-facing production pack remains unchanged; every
+  missing pack was generated and reviewed through the accepted imagegen strip
+  workflow rather than the rejected procedural generator.
 - Idle, ready, run, swing/serve, dink, drive, lob, smash, and hit-confirm
   gameplay animations are wired.
 - Point-result visuals no longer fall back to the rejected old/manual model.
-- Frame slicing, visible silhouette height, chroma cleanup, and runtime
-  integration are covered by the existing sprite workflow evidence and tests.
+- Frame slicing, visible silhouette height, chroma cleanup, motion strength,
+  direction, identity, and runtime integration are covered by 64 validation
+  reports, 64 motion audits, previews/contact sheets, the run manifest, and
+  runtime asset guard tests.
 
 The character art can still receive polish later, but it is not the next
 production dependency.

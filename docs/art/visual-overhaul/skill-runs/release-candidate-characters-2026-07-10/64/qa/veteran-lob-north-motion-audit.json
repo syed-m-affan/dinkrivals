@@ -1,0 +1,107 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\veteran-lob-north-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "north",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 0,
+          "nontransparent_pixels": 1198,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 1,
+          "nontransparent_pixels": 1155,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 2,
+          "nontransparent_pixels": 1197,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            6,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 3,
+          "nontransparent_pixels": 902,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 4,
+          "nontransparent_pixels": 746,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "north",
+          "column": 5,
+          "nontransparent_pixels": 1209,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.06209,
+        0.13663,
+        0.13074,
+        0.04911,
+        0.12226
+      ]
+    }
+  ]
+}

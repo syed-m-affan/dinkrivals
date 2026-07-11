@@ -115,6 +115,7 @@ class AdMobAdService implements AdService {
   bool _initializationFailed = false;
   bool _rewardedLoading = false;
   bool _interstitialLoading = false;
+  bool _disposed = false;
   RewardedAd? _rewardedAd;
   InterstitialAd? _interstitialAd;
 
@@ -122,7 +123,8 @@ class AdMobAdService implements AdService {
   bool get adsRemoved => _fallback.adsRemoved;
 
   @override
-  bool get usesNativeInterstitialUi => _initialized && !_initializationFailed;
+  bool get usesNativeInterstitialUi =>
+      !_disposed && _initialized && !_initializationFailed;
 
   bool get initialized => _initialized;
   bool get initializationFailed => _initializationFailed;
@@ -132,6 +134,9 @@ class AdMobAdService implements AdService {
 
   @override
   Future<void> initialize() async {
+    if (_disposed) {
+      return;
+    }
     await _fallback.initialize();
     try {
       if (requestConsent) {
@@ -153,6 +158,9 @@ class AdMobAdService implements AdService {
         ),
       );
       await MobileAds.instance.initialize();
+      if (_disposed) {
+        return;
+      }
       _initialized = true;
       unawaited(_loadRewardedAd());
       unawaited(_loadInterstitialAd());
@@ -162,7 +170,22 @@ class AdMobAdService implements AdService {
   }
 
   @override
+  void dispose() {
+    _disposed = true;
+    _rewardedLoading = false;
+    _interstitialLoading = false;
+    _rewardedAd?.dispose();
+    _rewardedAd = null;
+    _interstitialAd?.dispose();
+    _interstitialAd = null;
+    _fallback.dispose();
+  }
+
+  @override
   Future<bool> isRewardedAdReady() async {
+    if (_disposed) {
+      return false;
+    }
     if (_shouldUseFallback) {
       return _fallback.isRewardedAdReady();
     }
@@ -178,6 +201,9 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> showRewardedAd({required String placement}) async {
+    if (_disposed) {
+      return false;
+    }
     if (_shouldUseFallback) {
       return _fallback.showRewardedAd(placement: placement);
     }
@@ -226,6 +252,9 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> isInterstitialReady() async {
+    if (_disposed) {
+      return false;
+    }
     if (_shouldUseFallback) {
       return _fallback.isInterstitialReady();
     }
@@ -241,6 +270,9 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> maybeShowInterstitial({required String placement}) async {
+    if (_disposed) {
+      return false;
+    }
     if (_shouldUseFallback) {
       return _fallback.maybeShowInterstitial(placement: placement);
     }
@@ -283,7 +315,8 @@ class AdMobAdService implements AdService {
   }
 
   Future<void> _loadRewardedAd() async {
-    if (!_initialized ||
+    if (_disposed ||
+        !_initialized ||
         _initializationFailed ||
         adsRemoved ||
         _rewardedLoading ||
@@ -297,6 +330,11 @@ class AdMobAdService implements AdService {
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (ad) {
+            if (_disposed) {
+              ad.dispose();
+              _rewardedLoading = false;
+              return;
+            }
             _rewardedAd = ad;
             _rewardedLoading = false;
           },
@@ -311,7 +349,8 @@ class AdMobAdService implements AdService {
   }
 
   Future<void> _loadInterstitialAd() async {
-    if (!_initialized ||
+    if (_disposed ||
+        !_initialized ||
         _initializationFailed ||
         adsRemoved ||
         _interstitialLoading ||
@@ -325,6 +364,11 @@ class AdMobAdService implements AdService {
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (ad) {
+            if (_disposed) {
+              ad.dispose();
+              _interstitialLoading = false;
+              return;
+            }
             _interstitialAd = ad;
             _interstitialLoading = false;
           },

@@ -30,6 +30,11 @@ class ServeFlowSystem {
 
   bool get hasActivePlayerServeCharge => _playerServePointerId != null;
 
+  void dispose() {
+    opponentServePhase.dispose();
+    opponentServeCountdown.dispose();
+  }
+
   bool ownsPlayerServePointer(int pointerId) {
     return pointerId == _playerServePointerId;
   }

@@ -46,7 +46,10 @@ class TournamentNotifier extends Notifier<TournamentState> {
       previouslyChampion: previous.playerWonCup,
       nowChampion: next.playerWonCup,
     )) {
-      await ref.read(saveDataProvider.notifier).recordClassicCupWin();
+      final rewardWasNew = await ref
+          .read(saveDataProvider.notifier)
+          .recordClassicCupChampionship();
+      state = state.copyWith(championshipRewardWasNew: rewardWasNew);
     }
   }
 

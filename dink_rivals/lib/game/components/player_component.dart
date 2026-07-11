@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../config/court_constants.dart';
+import '../config/character_visuals.dart';
 import '../config/debug_flags.dart';
 import '../config/visual_palette.dart';
 import '../dink_rivals_game.dart';
@@ -28,16 +29,17 @@ class PlayerComponent extends Component {
   final Paint _identityAccentPaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
+  final Paint _spritePaint = Paint()..filterQuality = FilterQuality.none;
+  final Paint _primitiveBodyLinePaint = Paint()..strokeCap = StrokeCap.round;
 
-  ui.Image? _idleSheet;
-  ui.Image? _runSheet;
-  ui.Image? _swingSheet;
-  ui.Image? _dinkSheet;
-  ui.Image? _driveSheet;
-  ui.Image? _lobSheet;
-  ui.Image? _smashSheet;
-  ui.Image? _readySheet;
-  ui.Image? _hitConfirmSheet;
+  final Map<String, ui.Image> _idleSheets = {};
+  final Map<String, ui.Image> _runSheets = {};
+  final Map<String, ui.Image> _dinkSheets = {};
+  final Map<String, ui.Image> _driveSheets = {};
+  final Map<String, ui.Image> _lobSheets = {};
+  final Map<String, ui.Image> _smashSheets = {};
+  final Map<String, ui.Image> _readySheets = {};
+  final Map<String, ui.Image> _hitConfirmSheets = {};
   double _animationSeconds = 0;
   double _swingSeconds = 0;
   double _hitConfirmSeconds = 0;
@@ -61,15 +63,18 @@ class PlayerComponent extends Component {
     if (!DebugFlags.useSprites) {
       return;
     }
-    _idleSheet = await game.images.load('sprites/player_idle.png');
-    _runSheet = await game.images.load('sprites/player_run.png');
-    _swingSheet = await game.images.load('sprites/player_swing.png');
-    _dinkSheet = await game.images.load('sprites/player_dink.png');
-    _driveSheet = await game.images.load('sprites/player_drive.png');
-    _lobSheet = await game.images.load('sprites/player_lob.png');
-    _smashSheet = await game.images.load('sprites/player_smash.png');
-    _readySheet = await game.images.load('sprites/player_ready.png');
-    _hitConfirmSheet = await game.images.load('sprites/player_hit_confirm.png');
+    for (final visual in CharacterVisuals.mvpRoster) {
+      final prefix = visual.northSpritePrefix;
+      _idleSheets[visual.id] = await game.images.load('$prefix/idle.png');
+      _runSheets[visual.id] = await game.images.load('$prefix/run.png');
+      _dinkSheets[visual.id] = await game.images.load('$prefix/dink.png');
+      _driveSheets[visual.id] = await game.images.load('$prefix/drive.png');
+      _lobSheets[visual.id] = await game.images.load('$prefix/lob.png');
+      _smashSheets[visual.id] = await game.images.load('$prefix/smash.png');
+      _readySheets[visual.id] = await game.images.load('$prefix/ready.png');
+      _hitConfirmSheets[visual.id] =
+          await game.images.load('$prefix/hit_confirm.png');
+    }
   }
 
   @override
@@ -146,18 +151,19 @@ class PlayerComponent extends Component {
 
   bool _renderSprite(Canvas canvas) {
     final pose = _currentPose();
+    final characterId = game.selectedPlayerCharacterId;
     final sheet = switch (pose) {
-      _PlayerPose.idle => _idleSheet,
-      _PlayerPose.run => _runSheet,
-      _PlayerPose.swing => _swingSheet,
-      _PlayerPose.dink => _dinkSheet,
-      _PlayerPose.drive => _driveSheet,
-      _PlayerPose.lob => _lobSheet,
-      _PlayerPose.smash => _smashSheet,
-      _PlayerPose.ready => _readySheet,
-      _PlayerPose.hitConfirm => _hitConfirmSheet,
-      _PlayerPose.pointWin => _readySheet,
-      _PlayerPose.pointLoss => _readySheet,
+      _PlayerPose.idle => _idleSheets[characterId],
+      _PlayerPose.run => _runSheets[characterId],
+      _PlayerPose.swing => _driveSheets[characterId],
+      _PlayerPose.dink => _dinkSheets[characterId],
+      _PlayerPose.drive => _driveSheets[characterId],
+      _PlayerPose.lob => _lobSheets[characterId],
+      _PlayerPose.smash => _smashSheets[characterId],
+      _PlayerPose.ready => _readySheets[characterId],
+      _PlayerPose.hitConfirm => _hitConfirmSheets[characterId],
+      _PlayerPose.pointWin => _readySheets[characterId],
+      _PlayerPose.pointLoss => _readySheets[characterId],
     };
     if (sheet == null) {
       return false;
@@ -207,7 +213,7 @@ class PlayerComponent extends Component {
         width: dst.width,
         height: dst.height,
       ),
-      Paint()..filterQuality = FilterQuality.none,
+      _spritePaint,
     );
     canvas.restore();
     return true;
@@ -246,6 +252,10 @@ class PlayerComponent extends Component {
 
   @visibleForTesting
   String currentPoseNameForTesting() => _currentPose().name;
+
+  @visibleForTesting
+  String spritePrefixForTesting() =>
+      game.selectedPlayerVisual.northSpritePrefix;
 
   @visibleForTesting
   static double swingLeanForShotForTesting(ShotType? shotType) {
@@ -326,13 +336,13 @@ class PlayerComponent extends Component {
     final bodyRadius = game.logicalToScreen(7.4 * depthScale);
     final headRadius = game.logicalToScreen(5.6 * depthScale);
 
+    _primitiveBodyLinePaint
+      ..color = _bodyPaint.color
+      ..strokeWidth = bodyRadius * 1.35;
     canvas.drawLine(
       feet.toOffset(),
       torso.toOffset(),
-      Paint()
-        ..color = _bodyPaint.color
-        ..strokeWidth = bodyRadius * 1.35
-        ..strokeCap = StrokeCap.round,
+      _primitiveBodyLinePaint,
     );
     canvas.drawCircle(torso.toOffset(), bodyRadius, _bodyPaint);
     canvas.drawCircle(head.toOffset(), headRadius, _headPaint);

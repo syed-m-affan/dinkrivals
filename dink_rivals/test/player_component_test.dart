@@ -339,7 +339,10 @@ void main() {
       CharacterVisuals.gameplayOpponent.secondaryColor,
     );
 
-    game.setOpponentAiProfile(TournamentDefinitions.showman.aiProfile);
+    game.configureMatch(
+      opponentCharacterId: CharacterUnlockIds.showman,
+      opponentProfile: TournamentDefinitions.showman.aiProfile,
+    );
 
     expect(
       game.opponentVisual,

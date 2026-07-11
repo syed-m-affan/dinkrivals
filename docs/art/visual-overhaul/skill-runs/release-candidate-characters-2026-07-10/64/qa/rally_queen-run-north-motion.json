@@ -1,0 +1,197 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rally_queen-run-north-sheet-clean.png",
+  "width": 768,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "rally_queen-run-north",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 0,
+          "nontransparent_pixels": 1023,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 1,
+          "nontransparent_pixels": 984,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 2,
+          "nontransparent_pixels": 911,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 3,
+          "nontransparent_pixels": 1000,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 4,
+          "nontransparent_pixels": 1023,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 5,
+          "nontransparent_pixels": 1038,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 6,
+          "nontransparent_pixels": 1071,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 7,
+          "nontransparent_pixels": 1017,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 8,
+          "nontransparent_pixels": 1007,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 9,
+          "nontransparent_pixels": 957,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 10,
+          "nontransparent_pixels": 999,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-run-north",
+          "column": 11,
+          "nontransparent_pixels": 974,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.10532,
+        0.08804,
+        0.06248,
+        0.06699,
+        0.05947,
+        0.11017,
+        0.07482,
+        0.02113,
+        0.06971,
+        0.05892,
+        0.04035
+      ]
+    }
+  ]
+}

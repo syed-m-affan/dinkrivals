@@ -5,6 +5,10 @@ class UnlockSystem {
   const UnlockSystem();
 
   static const int dinkStreakPaddleRequiredContacts = 5;
+  static const Set<String> directChallengeCharacterIds = {
+    CharacterUnlockIds.rallyQueen,
+    CharacterUnlockIds.veteran,
+  };
 
   bool playerWonMatch({
     required int playerScore,
@@ -21,7 +25,7 @@ class UnlockSystem {
     if (!playerWon || rivalId == null) {
       return false;
     }
-    return CharacterUnlockIds.isKnown(rivalId) &&
+    return directChallengeCharacterIds.contains(rivalId) &&
         !saveData.isCharacterUnlocked(rivalId);
   }
 

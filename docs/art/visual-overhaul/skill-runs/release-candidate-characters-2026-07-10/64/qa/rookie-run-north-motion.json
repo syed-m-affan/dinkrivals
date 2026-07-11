@@ -1,0 +1,197 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rookie-run-north-sheet-clean.png",
+  "width": 768,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "rookie-run-north",
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 0,
+          "nontransparent_pixels": 1058,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 1,
+          "nontransparent_pixels": 1072,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 2,
+          "nontransparent_pixels": 1098,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 3,
+          "nontransparent_pixels": 1075,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 4,
+          "nontransparent_pixels": 1086,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 5,
+          "nontransparent_pixels": 1042,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 6,
+          "nontransparent_pixels": 1027,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 7,
+          "nontransparent_pixels": 1073,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 8,
+          "nontransparent_pixels": 1084,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 9,
+          "nontransparent_pixels": 1042,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 10,
+          "nontransparent_pixels": 1080,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rookie-run-north",
+          "column": 11,
+          "nontransparent_pixels": 1095,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            48,
+            60
+          ]
+        }
+      ],
+      "frame_diffs": [
+        0.03637,
+        0.03544,
+        0.03179,
+        0.04242,
+        0.04988,
+        0.02974,
+        0.02691,
+        0.04773,
+        0.02494,
+        0.03833,
+        0.04005
+      ]
+    }
+  ]
+}

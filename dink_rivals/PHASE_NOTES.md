@@ -501,3 +501,46 @@ Re-run the previous QA checklists with attention to:
   gameplay/visual QA, human signoff, and production-quality music. Claude
   recommended not shipping placeholder music; current MVP audio remains
   SFX-only until an approved music asset exists.
+
+## Release Candidate Completion - 2026-07-10
+
+- Added immutable `MatchSession` state and a single match launch path so quick
+  matches, direct challenges, Cup rounds, results, and rematches preserve the
+  correct opponent character independently from mutable AI state.
+- Rebuilt the main menu as an arcade hub with one-tap Quick Match, a featured
+  Classic Cup card, and compact secondary navigation. Normal RC builds hide
+  phase/debug routes and fake-ad surfaces.
+- Classic Cup championships now persist the win, trophy, and exclusive Showman
+  unlock atomically. Rally Queen and Veteran remain direct-challenge rewards.
+- Added and integrated four-character north/south native 64x64 sprite packs;
+  all 64 strips pass structural validation and motion audit. The accepted
+  Rookie south pack was retained.
+- Reduced player maximum speed from 240 to 225 without changing acceleration,
+  physics, hitboxes, controls, or AI tuning.
+- Added branded Android icon/splash assets and set version `0.2.0+2`.
+- Strengthened release preflight for RC UI flags, branded launch assets,
+  complete structured sprite packs, analyzer/tests, and release APK presence.
+- Final local verification: analyzer clean, 308 tests passed, RC preflight
+  passed, release APK built (67.7 MB), release APK installed/launched on
+  `emulator-5554`, and 60-second offline monitoring completed without crash or
+  ANR. Quick Match, Rally Queen challenge identity, and Classic Cup launch were
+  visually smoke-tested on the emulator.
+- External follow-up remains: physical Android pass and human character/menu
+  signoff; public Play signing/package/production-AdMob/store work is excluded
+  from this internal RC.
+- Fixed rival-challenge pause navigation: `RETURN TO MENU` previously passed
+  the default AI profile ID (`quick_match`) as a character ID and threw before
+  navigation. It now restores Rookie identity with the default AI profile, and
+  the challenge -> pause -> menu path is regression-tested and emulator-verified.
+- Reworked the RC menu after visual review: removed the generated raster logo
+  from runtime, added a code-native Dink Rivals wordmark, restored the detailed
+  park court backdrop, simplified navigation into one bottom rail, and reduced
+  repeated borders/panels. The refreshed golden and 360x800/412x915 responsive
+  tests pass, including 1.3x text scaling.
+- Rebuilt the menu again after three independent brand/UX/implementation
+  critiques. The final park-scoreboard layout makes the matchup the focal point,
+  explicitly labels the mirror opponent `ROOKIE BOT`, uses a single high-
+  contrast Quick Match action and matching Cup ticket, replaces stock icon
+  navigation with numbered text tabs, and keeps all actions tightly grouped in
+  the upper half. Geometry regression assertions now prevent the large control
+  gaps that made the earlier layouts feel empty.

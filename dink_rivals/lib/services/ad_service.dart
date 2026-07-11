@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class AdService {
   Future<void> initialize();
+  void dispose();
   Future<bool> isRewardedAdReady();
   Future<bool> showRewardedAd({required String placement});
   Future<bool> isInterstitialReady();
@@ -18,6 +19,7 @@ class FakeAdService implements AdService {
         _interstitialReady = interstitialReady;
 
   bool _initialized = false;
+  bool _disposed = false;
   bool _rewardedReady;
   bool _interstitialReady;
 
@@ -27,6 +29,7 @@ class FakeAdService implements AdService {
   String? lastInterstitialPlacement;
 
   bool get initialized => _initialized;
+  bool get disposed => _disposed;
 
   set rewardedReady(bool value) => _rewardedReady = value;
   set interstitialReady(bool value) => _interstitialReady = value;
@@ -39,11 +42,20 @@ class FakeAdService implements AdService {
 
   @override
   Future<void> initialize() async {
+    if (_disposed) {
+      return;
+    }
     _initialized = true;
   }
 
   @override
-  Future<bool> isRewardedAdReady() async => _rewardedReady && !adsRemoved;
+  void dispose() {
+    _disposed = true;
+  }
+
+  @override
+  Future<bool> isRewardedAdReady() async =>
+      !_disposed && _rewardedReady && !adsRemoved;
 
   @override
   Future<bool> showRewardedAd({required String placement}) async {
@@ -56,7 +68,8 @@ class FakeAdService implements AdService {
   }
 
   @override
-  Future<bool> isInterstitialReady() async => _interstitialReady && !adsRemoved;
+  Future<bool> isInterstitialReady() async =>
+      !_disposed && _interstitialReady && !adsRemoved;
 
   @override
   Future<bool> maybeShowInterstitial({required String placement}) async {
@@ -71,8 +84,10 @@ class FakeAdService implements AdService {
 
 class NoAdsService implements AdService {
   bool _initialized = false;
+  bool _disposed = false;
 
   bool get initialized => _initialized;
+  bool get disposed => _disposed;
 
   @override
   bool get adsRemoved => false;
@@ -82,7 +97,15 @@ class NoAdsService implements AdService {
 
   @override
   Future<void> initialize() async {
+    if (_disposed) {
+      return;
+    }
     _initialized = true;
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
   }
 
   @override

@@ -1,0 +1,78 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rally_queen-idle-north-sheet-clean.png",
+  "width": 128,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "rally_queen-idle-north",
+      "column": 0,
+      "nontransparent_pixels": 1177,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "rally_queen-idle-north",
+      "column": 1,
+      "nontransparent_pixels": 1157,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "rally_queen-idle-north",
+      "frame_diffs": [
+        0.0267
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "rally_queen-idle-north",
+          "column": 0,
+          "nontransparent_pixels": 1177,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "rally_queen-idle-north",
+          "column": 1,
+          "nontransparent_pixels": 1157,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

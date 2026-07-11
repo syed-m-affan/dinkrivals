@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\rookie-smash-south-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 0,
+      "nontransparent_pixels": 1105,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 1,
+      "nontransparent_pixels": 1114,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        12,
+        4,
+        51,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 2,
+      "nontransparent_pixels": 1180,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        50,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 3,
+      "nontransparent_pixels": 1032,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        13,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 4,
+      "nontransparent_pixels": 1268,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        11,
+        4,
+        52,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 5,
+      "nontransparent_pixels": 1096,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        49,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "south",
+      "frame_diffs": [
+        0.09482,
+        0.09706,
+        0.09342,
+        0.13249,
+        0.09811
+      ],
+      "bbox_shift": 1.0,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 0,
+          "nontransparent_pixels": 1105,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 1,
+          "nontransparent_pixels": 1114,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            12,
+            4,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 2,
+          "nontransparent_pixels": 1180,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 3,
+          "nontransparent_pixels": 1032,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            13,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 4,
+          "nontransparent_pixels": 1268,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            11,
+            4,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 5,
+          "nontransparent_pixels": 1096,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

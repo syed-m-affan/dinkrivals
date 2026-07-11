@@ -1,0 +1,5 @@
+Native 64x64 pixel-art Rookie idle animation, north/back-facing, one row of
+exactly 2 frames. Preserve the white cap, red shirt, black shorts, white shoes,
+and black paddle from the roster portrait. Match the accepted VO3 runtime
+proportions and outlines. Pure #00ff00 chroma key; no ball, VFX, shadow, props,
+UI, text, border, crop, gradient, or front-facing facial features.

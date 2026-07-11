@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flame/events.dart';
@@ -55,6 +56,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     this.controlMode = GameplayControlMode.classicRacketStick,
     String selectedCourtId = CourtUnlockIds.defaultCourt,
     String selectedPlayerCharacterId = CharacterUnlockIds.defaultSelected,
+    String opponentCharacterId = CharacterUnlockIds.rookie,
     String selectedPaddleSkinId = PaddleSkinIds.classic,
     this.freeRallyDebugMode = false,
   })  : selectedCourtId = normalizedCourtId(selectedCourtId),
@@ -62,6 +64,9 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
           selectedPlayerCharacterId,
           CharacterUnlockIds.all,
         ),
+        opponentCharacterId = CharacterUnlockIds.isKnown(opponentCharacterId)
+            ? opponentCharacterId
+            : CharacterUnlockIds.rookie,
         selectedPaddleSkinId = normalizedPaddleSkinId(selectedPaddleSkinId),
         audioService = audioService ?? FakeAudioService(),
         hapticsService = hapticsService ?? FakeHapticsService();
@@ -76,6 +81,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   final bool freeRallyDebugMode;
   String selectedCourtId;
   String selectedPlayerCharacterId;
+  String opponentCharacterId;
   String selectedPaddleSkinId;
 
   final CourtLayoutSystem courtLayoutSystem = CourtLayoutSystem();
@@ -97,6 +103,18 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
 
   bool paused = false;
   final ValueNotifier<bool> matchOverNotifier = ValueNotifier<bool>(false);
+  static const double _hitSoundCooldownSeconds = 0.05;
+  static const double _bounceSoundCooldownSeconds = 0.05;
+  static const double _pointSoundCooldownSeconds = 0.25;
+  static const double _faultSoundCooldownSeconds = 0.25;
+  static const double _hapticCooldownSeconds = 0.08;
+  double _elapsedSeconds = 0;
+  double _lastHitSoundSeconds = -1000;
+  double _lastBounceSoundSeconds = -1000;
+  double _lastPointSoundSeconds = -1000;
+  double _lastFaultSoundSeconds = -1000;
+  double _lastHapticSeconds = -1000;
+  bool _ownedResourcesDisposed = false;
 
   ValueNotifier<OpponentServePhase> get opponentServePhase =>
       serveFlowSystem.opponentServePhase;
@@ -143,6 +161,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   @override
   void update(double dt) {
     super.update(dt);
+    _elapsedSeconds += dt;
     if (paused) {
       return;
     }
@@ -206,13 +225,8 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   CharacterVisualDefinition get selectedPlayerVisual =>
       CharacterVisuals.byId(selectedPlayerCharacterId);
 
-  CharacterVisualDefinition get opponentVisual {
-    try {
-      return CharacterVisuals.byId(opponentAiSystem.profile.id);
-    } on ArgumentError {
-      return CharacterVisuals.gameplayOpponent;
-    }
-  }
+  CharacterVisualDefinition get opponentVisual =>
+      CharacterVisuals.byId(opponentCharacterId);
 
   PaddleSkinDefinition get selectedPaddleSkin =>
       PaddleSkins.byId(selectedPaddleSkinId);
@@ -265,6 +279,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   void resetMatch() {
+    clearActiveInput();
     scoringSystem.resetMatch(matchState);
     lastRuleResult = null;
     matchOverNotifier.value = false;
@@ -299,12 +314,48 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     }
   }
 
+  void clearActiveInput() {
+    serveFlowSystem.clearPlayerServeCharge();
+    touchInputController.clearAll(inputSystem);
+  }
+
+  void disposeOwnedResources() {
+    if (_ownedResourcesDisposed) {
+      return;
+    }
+    _ownedResourcesDisposed = true;
+    matchOverNotifier.dispose();
+    serveFlowSystem.dispose();
+  }
+
+  @override
+  void onRemove() {
+    clearActiveInput();
+    super.onRemove();
+  }
+
   void confirmOpponentServeReady() {
     serveFlowSystem.confirmOpponentServeReady();
   }
 
   void setOpponentAiProfile(OpponentAiProfile profile) {
     opponentAiSystem.setProfile(profile);
+  }
+
+  void configureMatch({
+    required String opponentCharacterId,
+    required OpponentAiProfile opponentProfile,
+  }) {
+    if (!CharacterUnlockIds.isKnown(opponentCharacterId)) {
+      throw ArgumentError.value(
+        opponentCharacterId,
+        'opponentCharacterId',
+        'Unknown opponent character.',
+      );
+    }
+    this.opponentCharacterId = opponentCharacterId;
+    opponentAiSystem.setProfile(opponentProfile);
+    resetMatch();
   }
 
   Vector2 playerRacketDirection() {
@@ -453,8 +504,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
       return false;
     }
 
-    audioService.playHit();
-    hapticsService.light();
+    _playHitEffects(haptic: true);
     player.showHitConfirm();
     inputSystem.consumeSwingCommand();
     final playerShotType = shotSystem.lastShotType;
@@ -533,7 +583,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   bool _updatePhysicsAndRules(double dt) {
     final physics = ballPhysicsSystem.update(ball.state, dt);
     if (physics.groundContact) {
-      audioService.playBounce();
+      _playBounceSound();
       vfx.spawnBounce(courtPosition: Vector2(ball.state.x, ball.state.y));
     }
     if (physics.crossedNet) {
@@ -590,7 +640,7 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     );
     if (ball.state.lastHitBy != preAiLastHitBy &&
         ball.state.lastHitBy == opponent.state.side) {
-      audioService.playHit();
+      _playHitEffects();
       opponent.showHitConfirm();
       _showFeedback(shotSystem.lastShotType?.name.toUpperCase() ?? 'HIT');
       vfx.spawnContact(
@@ -626,13 +676,13 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
     _showFeedback(pointFeedback);
     final isFault = result.fault != null;
     if (isFault) {
-      audioService.playFault();
+      _playFaultSound();
     }
     final changed = scoringSystem.awardPoint(matchState, winner);
     if (changed) {
-      audioService.playPoint();
+      _playPointSound();
       if (winner == PlayerSide.player) {
-        hapticsService.medium();
+        _playMediumHaptic();
       }
     }
     player.showPointResult(winner);
@@ -654,6 +704,62 @@ class DinkRivalsGame extends FlameGame with TapCallbacks, DragCallbacks {
   void _showFeedback(String text) {
     feedbackText = text;
     feedbackSeconds = 1.1;
+  }
+
+  void _playHitEffects({bool haptic = false}) {
+    if (_elapsedSeconds - _lastHitSoundSeconds >= _hitSoundCooldownSeconds) {
+      _lastHitSoundSeconds = _elapsedSeconds;
+      unawaited(audioService.playHit());
+    }
+    if (haptic) {
+      _playLightHaptic();
+    }
+  }
+
+  void _playBounceSound() {
+    if (_elapsedSeconds - _lastBounceSoundSeconds <
+        _bounceSoundCooldownSeconds) {
+      return;
+    }
+    _lastBounceSoundSeconds = _elapsedSeconds;
+    unawaited(audioService.playBounce());
+  }
+
+  void _playPointSound() {
+    if (_elapsedSeconds - _lastPointSoundSeconds < _pointSoundCooldownSeconds) {
+      return;
+    }
+    _lastPointSoundSeconds = _elapsedSeconds;
+    unawaited(audioService.playPoint());
+  }
+
+  void _playFaultSound() {
+    if (_elapsedSeconds - _lastFaultSoundSeconds < _faultSoundCooldownSeconds) {
+      return;
+    }
+    _lastFaultSoundSeconds = _elapsedSeconds;
+    unawaited(audioService.playFault());
+  }
+
+  void _playLightHaptic() {
+    if (_elapsedSeconds - _lastHapticSeconds < _hapticCooldownSeconds) {
+      return;
+    }
+    _lastHapticSeconds = _elapsedSeconds;
+    unawaited(hapticsService.light());
+  }
+
+  void _playMediumHaptic() {
+    if (_elapsedSeconds - _lastHapticSeconds < _hapticCooldownSeconds) {
+      return;
+    }
+    _lastHapticSeconds = _elapsedSeconds;
+    unawaited(hapticsService.medium());
+  }
+
+  @visibleForTesting
+  void setElapsedSecondsForTesting(double seconds) {
+    _elapsedSeconds = seconds;
   }
 
   String _feedbackForRule(RuleResult result) {

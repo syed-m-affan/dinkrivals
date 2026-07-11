@@ -1,0 +1,194 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\veteran-drive-south-sheet-clean.png",
+  "width": 384,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 0,
+      "nontransparent_pixels": 1181,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 1,
+      "nontransparent_pixels": 1039,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        15,
+        4,
+        49,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 2,
+      "nontransparent_pixels": 1195,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        10,
+        4,
+        54,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 3,
+      "nontransparent_pixels": 1152,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        7,
+        4,
+        57,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 4,
+      "nontransparent_pixels": 1097,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        8,
+        4,
+        55,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "south",
+      "column": 5,
+      "nontransparent_pixels": 1172,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        14,
+        4,
+        49,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "south",
+      "frame_diffs": [
+        0.07285,
+        0.13414,
+        0.11149,
+        0.05757,
+        0.1304
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 0,
+          "nontransparent_pixels": 1181,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 1,
+          "nontransparent_pixels": 1039,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            15,
+            4,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 2,
+          "nontransparent_pixels": 1195,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            10,
+            4,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 3,
+          "nontransparent_pixels": 1152,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            7,
+            4,
+            57,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 4,
+          "nontransparent_pixels": 1097,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            8,
+            4,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "south",
+          "column": 5,
+          "nontransparent_pixels": 1172,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            14,
+            4,
+            49,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

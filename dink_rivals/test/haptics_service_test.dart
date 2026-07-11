@@ -30,4 +30,19 @@ void main() {
 
     expect(service.initialized, isTrue);
   });
+
+  test('disposed fake ignores later initialize and impact calls', () async {
+    final service = FakeHapticsService();
+
+    service.dispose();
+    await service.initialize();
+    await service.light();
+    await service.medium();
+
+    expect(service.disposed, isTrue);
+    expect(service.disposeCalls, 1);
+    expect(service.initialized, isFalse);
+    expect(service.lightCalls, 0);
+    expect(service.mediumCalls, 0);
+  });
 }

@@ -1,0 +1,368 @@
+{
+  "ok": true,
+  "file": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\final\\veteran-run-north-sheet-clean.png",
+  "width": 768,
+  "height": 64,
+  "errors": [],
+  "warnings": [],
+  "cells": [
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 0,
+      "nontransparent_pixels": 926,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 1,
+      "nontransparent_pixels": 937,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 2,
+      "nontransparent_pixels": 928,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 3,
+      "nontransparent_pixels": 922,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 4,
+      "nontransparent_pixels": 924,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 5,
+      "nontransparent_pixels": 938,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 6,
+      "nontransparent_pixels": 919,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 7,
+      "nontransparent_pixels": 930,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 8,
+      "nontransparent_pixels": 944,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 9,
+      "nontransparent_pixels": 938,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        48,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 10,
+      "nontransparent_pixels": 945,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    },
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "column": 11,
+      "nontransparent_pixels": 941,
+      "edge_pixels": 0,
+      "chroma_residue_pixels": 0,
+      "bbox": [
+        16,
+        4,
+        47,
+        60
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "row_name": "veteran-run-north",
+      "frame_diffs": [
+        0.02897,
+        0.03429,
+        0.03596,
+        0.03557,
+        0.02279,
+        0.02932,
+        0.03819,
+        0.03383,
+        0.03546,
+        0.03398,
+        0.03271
+      ],
+      "bbox_shift": 0.5,
+      "cells": [
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 0,
+          "nontransparent_pixels": 926,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 1,
+          "nontransparent_pixels": 937,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 2,
+          "nontransparent_pixels": 928,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 3,
+          "nontransparent_pixels": 922,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 4,
+          "nontransparent_pixels": 924,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 5,
+          "nontransparent_pixels": 938,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 6,
+          "nontransparent_pixels": 919,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 7,
+          "nontransparent_pixels": 930,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 8,
+          "nontransparent_pixels": 944,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 9,
+          "nontransparent_pixels": 938,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 10,
+          "nontransparent_pixels": 945,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 0,
+          "row_name": "veteran-run-north",
+          "column": 11,
+          "nontransparent_pixels": 941,
+          "edge_pixels": 0,
+          "chroma_residue_pixels": 0,
+          "bbox": [
+            16,
+            4,
+            47,
+            60
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
+import '../app/match_session_provider.dart';
 import '../app/rival_challenge_provider.dart';
 import '../app/router.dart';
 import '../app/tournament_provider.dart';
 import '../game/config/tournament_definitions.dart';
+import '../game/config/character_visuals.dart';
 import '../game/config/visual_palette.dart';
 import '../game/models/tournament_state.dart';
 import '../services/save_service.dart';
@@ -155,7 +157,9 @@ class _ResultPanel extends StatelessWidget {
         ? 'CHAMPION'
         : 'ELIMINATED IN ${lastMatch?.roundName.toUpperCase() ?? 'CUP'}';
     final detail = playerWon
-        ? '${TournamentDefinitions.classicCupTrophyName} unlocked'
+        ? state.championshipRewardWasNew == false
+            ? 'SHOWMAN ALREADY UNLOCKED'
+            : 'SHOWMAN UNLOCKED'
         : 'Lost to ${lastMatch?.opponentName ?? 'the rival'}';
     final score = lastMatch == null
         ? '--'
@@ -168,11 +172,16 @@ class _ResultPanel extends StatelessWidget {
       child: Row(
         key: const Key('tournament-result-panel'),
         children: [
-          Icon(
-            playerWon ? Icons.emoji_events : Icons.sports_tennis,
-            color: accent,
-            size: 38,
-          ),
+          if (playerWon)
+            Image.asset(
+              CharacterVisuals.showman.portraitAsset,
+              key: const Key('tournament-showman-reward-portrait'),
+              width: 52,
+              height: 52,
+              filterQuality: FilterQuality.none,
+            )
+          else
+            Icon(Icons.sports_tennis, color: accent, size: 38),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -545,9 +554,14 @@ class _PlayMatchButton extends ConsumerWidget {
           : () {
               ref.read(audioServiceProvider).playMenuClick();
               ref.read(rivalChallengeProvider.notifier).reset();
+              final session = ref
+                  .read(matchSessionProvider.notifier)
+                  .startClassicCupMatch(rival, round: round);
               final game = ref.read(dinkRivalsGameProvider);
-              game.setOpponentAiProfile(rival.aiProfile);
-              game.resetMatch();
+              game.configureMatch(
+                opponentCharacterId: session.opponentCharacterId,
+                opponentProfile: session.opponentProfile,
+              );
               context.go(AppRoutes.game);
             },
     );

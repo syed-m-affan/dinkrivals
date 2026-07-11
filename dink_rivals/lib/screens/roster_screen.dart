@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
+import '../app/match_session_provider.dart';
 import '../app/rival_challenge_provider.dart';
 import '../app/router.dart';
 import '../game/config/character_visuals.dart';
@@ -226,15 +227,32 @@ class RosterScreen extends ConsumerWidget {
                                           .playMenuClick();
                                       ref
                                           .read(rivalChallengeProvider.notifier)
-                                          .start(challengeRival.id);
+                                          .reset();
+                                      final session = ref
+                                          .read(
+                                            matchSessionProvider.notifier,
+                                          )
+                                          .startRivalChallenge(challengeRival);
                                       final game =
                                           ref.read(dinkRivalsGameProvider);
-                                      game.setOpponentAiProfile(
-                                        challengeRival.aiProfile,
+                                      game.configureMatch(
+                                        opponentCharacterId:
+                                            session.opponentCharacterId,
+                                        opponentProfile:
+                                            session.opponentProfile,
                                       );
-                                      game.resetMatch();
                                       context.go(AppRoutes.game);
                                     },
+                                  ),
+                                ] else if (visual.id ==
+                                    TournamentDefinitions.showman.id) ...[
+                                  const SizedBox(height: 10),
+                                  const ArcadeButton(
+                                    key: Key('roster-win-classic-cup-showman'),
+                                    label: 'WIN CLASSIC CUP',
+                                    icon: Icons.emoji_events,
+                                    compact: true,
+                                    onPressed: null,
                                   ),
                                 ],
                               ],
@@ -261,9 +279,6 @@ TournamentRival? _challengeRivalFor(String characterId) {
   }
   if (characterId == TournamentDefinitions.veteran.id) {
     return TournamentDefinitions.veteran;
-  }
-  if (characterId == TournamentDefinitions.showman.id) {
-    return TournamentDefinitions.showman;
   }
   return null;
 }

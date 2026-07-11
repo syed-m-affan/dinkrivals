@@ -4,6 +4,7 @@ param(
   [switch]$RequirePhysicalDevice,
   [switch]$RequireReleaseApk,
   [switch]$RequireProductionAdMode,
+  [switch]$RequireRcUi,
   [switch]$RunAnalyze,
   [switch]$RunTests,
   [switch]$BuildRelease
@@ -97,10 +98,11 @@ function Invoke-ToolCheck {
   )
   try {
     & $Command @Arguments
-    if ($LASTEXITCODE -eq 0) {
+    $toolExitCode = $LASTEXITCODE
+    if ($toolExitCode -eq 0) {
       Add-Check $Name "PASS" "$Command $($Arguments -join ' ')"
     } else {
-      Add-Check $Name "FAIL" "Exited with code $LASTEXITCODE."
+      Add-Check $Name "FAIL" "Exited with code $toolExitCode."
     }
   } catch {
     Add-Check $Name "FAIL" $_.Exception.Message
@@ -143,6 +145,8 @@ if ($null -ne $flutter -and $BuildRelease) {
   $buildArgs.Add("--release") | Out-Null
   Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_USE_ADMOB" $env:DINK_RIVALS_USE_ADMOB
   Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_SHOW_AD_PLACEHOLDERS" $env:DINK_RIVALS_SHOW_AD_PLACEHOLDERS
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_SHOW_QA_UI" $env:DINK_RIVALS_SHOW_QA_UI
+  Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_USE_FAKE_ADS" $env:DINK_RIVALS_USE_FAKE_ADS
   Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_USE_PRODUCTION_ADMOB_IDS" $env:DINK_RIVALS_USE_PRODUCTION_ADMOB_IDS
   Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_ADMOB_BANNER_AD_UNIT_ID" $env:DINK_RIVALS_ADMOB_BANNER_AD_UNIT_ID
   Add-DartDefineIfPresent $buildArgs "DINK_RIVALS_ADMOB_REWARDED_AD_UNIT_ID" $env:DINK_RIVALS_ADMOB_REWARDED_AD_UNIT_ID
@@ -239,6 +243,47 @@ if ($productionAdModeOk) {
   Add-Check "Production ad mode" "WARN" "Current defaults allow fake ad placeholders in non-AdMob builds."
 }
 
+$showQaUi = if (Is-Present $env:DINK_RIVALS_SHOW_QA_UI) {
+  $env:DINK_RIVALS_SHOW_QA_UI.Trim().ToLowerInvariant()
+} else {
+  "false"
+}
+$useFakeAds = if (Is-Present $env:DINK_RIVALS_USE_FAKE_ADS) {
+  $env:DINK_RIVALS_USE_FAKE_ADS.Trim().ToLowerInvariant()
+} else {
+  "false"
+}
+if ($showQaUi -ne "true" -and $useFakeAds -ne "true" -and $showPlaceholders -ne "true") {
+  Add-Check "RC UI mode" "PASS" "QA surfaces, fake ads, and placeholders are disabled."
+} elseif ($RequireRcUi) {
+  Add-Check "RC UI mode" "FAIL" "Disable DINK_RIVALS_SHOW_QA_UI, DINK_RIVALS_USE_FAKE_ADS, and DINK_RIVALS_SHOW_AD_PLACEHOLDERS."
+} else {
+  Add-Check "RC UI mode" "WARN" "QA or fake-ad UI is enabled for this environment."
+}
+
+$launcherIcon = Join-Path $projectRoot "android\app\src\main\res\mipmap-xxxhdpi\ic_launcher.png"
+$launchLogo = Join-Path $projectRoot "android\app\src\main\res\drawable-nodpi\launch_logo.png"
+if ((Test-Path $launcherIcon) -and (Get-Item $launcherIcon).Length -gt 4096 -and (Test-Path $launchLogo)) {
+  Add-Check "Branded launch assets" "PASS" "Launcher icon and splash logo are present."
+} else {
+  Add-Check "Branded launch assets" "FAIL" "Branded launcher icon or splash logo is missing."
+}
+
+$spriteRoot = Join-Path $projectRoot "assets\images\sprites\characters"
+$requiredSpriteFiles = foreach ($character in @("rookie", "rally_queen", "veteran", "showman")) {
+  foreach ($direction in @("north", "south")) {
+    foreach ($action in @("idle", "ready", "run", "dink", "drive", "lob", "smash", "hit_confirm")) {
+      Join-Path $spriteRoot "$character\$direction\$action.png"
+    }
+  }
+}
+$missingSpriteFiles = $requiredSpriteFiles | Where-Object { -not (Test-Path $_) }
+if ($missingSpriteFiles.Count -eq 0) {
+  Add-Check "Character sprite packs" "PASS" "All four north/south runtime packs are present."
+} else {
+  Add-Check "Character sprite packs" "FAIL" "Missing $($missingSpriteFiles.Count) required runtime sprite files."
+}
+
 $adb = Resolve-Adb
 try {
   $deviceLines = & $adb devices -l | Select-Object -Skip 1 |
@@ -273,7 +318,7 @@ foreach ($check in $checks) {
   Write-Host "$prefix $($check.Name): $($check.Detail)"
 }
 
-$failures = $checks | Where-Object { $_.Status -eq "FAIL" }
+$failures = @($checks | Where-Object { $_.Status -eq "FAIL" })
 if ($failures.Count -gt 0) {
   exit 1
 }

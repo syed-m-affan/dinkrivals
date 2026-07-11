@@ -13,7 +13,6 @@ import 'app/app_config.dart';
 import 'services/admob_ad_service.dart';
 import 'services/ad_service.dart';
 import 'services/audio_service.dart';
-import 'services/haptics_service.dart';
 import 'services/save_service.dart';
 
 void main() {
@@ -33,29 +32,15 @@ Future<void> _bootstrap() async {
   final initialSaveData = await saveService.load();
   final adService = _createAdService();
   await adService.initialize();
-  final audioService = FlameAudioService(
-    soundEnabled: () => initialSaveData.soundEnabled,
-  );
-  await audioService.initialize();
-  final hapticsService = FlutterHapticsService(
-    hapticsEnabled: () => initialSaveData.hapticsEnabled,
-  );
-  await hapticsService.initialize();
+  await FlameAudioService.warmCache();
 
   runApp(
     ProviderScope(
       overrides: [
-        adServiceProvider.overrideWithValue(adService),
-        audioServiceProvider.overrideWith(
-          (ref) => FlameAudioService(
-            soundEnabled: () => ref.read(saveDataProvider).soundEnabled,
-          ),
-        ),
-        hapticsServiceProvider.overrideWith(
-          (ref) => FlutterHapticsService(
-            hapticsEnabled: () => ref.read(saveDataProvider).hapticsEnabled,
-          ),
-        ),
+        adServiceProvider.overrideWith((ref) {
+          ref.onDispose(adService.dispose);
+          return adService;
+        }),
         saveServiceProvider.overrideWithValue(saveService),
         saveDataProvider.overrideWith(
           () => SaveDataNotifier(saveService, initialSaveData),
@@ -89,7 +74,7 @@ void _reportUncaughtError(Object error, StackTrace stackTrace) {
 
 AdService _createAdService() {
   if (!AppConfig.useAdMob) {
-    return FakeAdService();
+    return AppConfig.useFakeAds ? FakeAdService() : NoAdsService();
   }
   if (!AdMobConfig.canRequestConfiguredNativeAds) {
     return NoAdsService();

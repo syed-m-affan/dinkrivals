@@ -6,11 +6,14 @@ import 'package:go_router/go_router.dart';
 import '../app/ad_provider.dart';
 import '../app/audio_provider.dart';
 import '../app/game_provider.dart';
+import '../app/match_session_provider.dart';
 import '../app/rival_challenge_provider.dart';
 import '../app/router.dart';
 import '../app/tournament_provider.dart';
 import '../game/config/visual_palette.dart';
 import '../game/dink_rivals_game.dart';
+import '../game/models/character_unlock.dart';
+import '../game/models/match_session.dart';
 import '../game/models/opponent_serve_phase.dart';
 import '../game/systems/opponent_ai_system.dart';
 import '../game/systems/unlock_system.dart';
@@ -37,11 +40,42 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   void initState() {
     super.initState();
     _game = ref.read(dinkRivalsGameProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _ensureMatchSession();
+      }
+    });
     _showTutorial = !ref.read(saveDataProvider).tutorialSeen;
     if (_showTutorial) {
       _game.paused = true;
     }
     _game.matchOverNotifier.addListener(_handleMatchOver);
+  }
+
+  void _ensureMatchSession() {
+    if (ref.read(matchSessionProvider).active != null) {
+      return;
+    }
+    final tournament = ref.read(tournamentProvider);
+    final tournamentRival = tournament.isActive
+        ? ref.read(tournamentProvider.notifier).currentRival()
+        : null;
+    if (tournamentRival != null) {
+      ref.read(matchSessionProvider.notifier).startClassicCupMatch(
+            tournamentRival,
+            round: tournament.currentRoundName.toUpperCase(),
+          );
+      return;
+    }
+    final challengeRival =
+        ref.read(rivalChallengeProvider.notifier).currentRival();
+    if (challengeRival != null) {
+      ref
+          .read(matchSessionProvider.notifier)
+          .startRivalChallenge(challengeRival);
+      return;
+    }
+    ref.read(matchSessionProvider.notifier).startQuickMatch();
   }
 
   @override
@@ -68,16 +102,13 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     ref.read(adPlacementSystemProvider).recordMatchCompleted();
     await ref.read(saveDataProvider.notifier).recordMatchCompleted();
     await _unlockDinkStreakPaddleIfEarned();
+    final session = ref.read(matchSessionProvider).active;
     final tournament = ref.read(tournamentProvider);
-    if (tournament.isActive) {
-      final defeatedId = tournament.currentOpponentId;
-      if (_unlockSystem.shouldUnlockDefeatedRival(
-        playerWon: playerWon,
-        rivalId: defeatedId,
-        saveData: ref.read(saveDataProvider),
-      )) {
-        await ref.read(saveDataProvider.notifier).unlockCharacter(defeatedId!);
-      }
+    if (session?.mode == MatchMode.classicCup || tournament.isActive) {
+      ref.read(matchSessionProvider.notifier).complete(
+            playerScore: playerScore,
+            opponentScore: opponentScore,
+          );
       await ref.read(tournamentProvider.notifier).recordCompletedMatch(
             playerScore: playerScore,
             opponentScore: opponentScore,
@@ -87,7 +118,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       }
       return;
     }
-    final challengeId = ref.read(rivalChallengeProvider);
+    String? unlockedCharacterId;
+    final challengeId = session?.mode == MatchMode.rivalChallenge
+        ? session?.opponentCharacterId
+        : ref.read(rivalChallengeProvider);
     if (challengeId != null) {
       if (_unlockSystem.shouldUnlockDefeatedRival(
         playerWon: playerWon,
@@ -95,10 +129,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         saveData: ref.read(saveDataProvider),
       )) {
         await ref.read(saveDataProvider.notifier).unlockCharacter(challengeId);
+        unlockedCharacterId = challengeId;
       }
       ref.read(rivalChallengeProvider.notifier).reset();
-      _game.setOpponentAiProfile(OpponentAISystem.defaultProfile);
     }
+    ref.read(matchSessionProvider.notifier).complete(
+          playerScore: playerScore,
+          opponentScore: opponentScore,
+          unlockedCharacterId: unlockedCharacterId,
+        );
     if (mounted) {
       context.go(AppRoutes.endMatch);
     }
@@ -117,15 +156,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   void _setPaused(bool value) {
     _game.paused = value;
     if (value) {
-      _game.inputSystem.clearMovement();
+      _game.clearActiveInput();
     }
     setState(() => _showPause = value);
   }
 
   void _returnToMenu() {
     ref.read(rivalChallengeProvider.notifier).reset();
-    _game.setOpponentAiProfile(OpponentAISystem.defaultProfile);
-    _game.resetMatch();
+    ref.read(matchSessionProvider.notifier).clear();
+    _game.configureMatch(
+      opponentCharacterId: CharacterUnlockIds.rookie,
+      opponentProfile: OpponentAISystem.defaultProfile,
+    );
     _game.paused = false;
     context.go(AppRoutes.menu);
   }

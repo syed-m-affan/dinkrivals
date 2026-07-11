@@ -1,0 +1,26 @@
+{
+  "input": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\source\\rally_queen-ready-north-imagegen.png",
+  "source_copy": null,
+  "action": "rally_queen-ready",
+  "direction": "north",
+  "sizes": [
+    64
+  ],
+  "columns": 6,
+  "row_bounds": [
+    [
+      0,
+      724
+    ]
+  ],
+  "outputs": [
+    {
+      "cell": 64,
+      "path": "C:\\Users\\saffa\\AppIdeas\\PickleballGame\\docs\\art\\visual-overhaul\\skill-runs\\release-candidate-characters-2026-07-10\\64\\generated\\rally_queen-ready-north.png",
+      "row_bounds": [
+        0,
+        724
+      ]
+    }
+  ]
+}

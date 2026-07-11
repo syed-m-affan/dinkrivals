@@ -30,6 +30,7 @@ final dinkRivalsGameProvider = Provider<DinkRivalsGame>((ref) {
     enabled: _qaSeedEndMatch,
     winner: _qaEndMatchWinner,
   );
+  ref.onDispose(game.disposeOwnedResources);
   return game;
 });
 

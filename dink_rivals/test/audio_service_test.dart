@@ -47,6 +47,27 @@ void main() {
     expect(service.initializeCalls, 1);
   });
 
+  test('disposed fake ignores later initialize and play calls', () async {
+    final service = FakeAudioService();
+
+    service.dispose();
+    await service.initialize();
+    await service.playHit();
+    await service.playBounce();
+    await service.playPoint();
+    await service.playFault();
+    await service.playMenuClick();
+
+    expect(service.disposed, isTrue);
+    expect(service.disposeCalls, 1);
+    expect(service.initialized, isFalse);
+    expect(service.hitCalls, 0);
+    expect(service.bounceCalls, 0);
+    expect(service.pointCalls, 0);
+    expect(service.faultCalls, 0);
+    expect(service.menuClickCalls, 0);
+  });
+
   test('provider can return an initialized fake', () async {
     final fake = FakeAudioService();
     await fake.initialize();

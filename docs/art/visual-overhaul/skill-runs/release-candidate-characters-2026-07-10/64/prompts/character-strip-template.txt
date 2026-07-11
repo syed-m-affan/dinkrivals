@@ -1,0 +1,6 @@
+Generate one native pixel-art animation strip at 64x64 pixels per frame.
+Use the named character's portrait identity and requested north/back or south/front facing direction.
+Keep the character, clothing, paddle, proportions, camera, and hard-edge arcade palette consistent in every frame.
+Place the exact requested frame count in one horizontal row on pure #00FF00, with no labels, gutters, borders, blur, clipping, or green on the character.
+Animate the requested idle, ready, run, dink, drive, lob, smash, or hit-confirm motion with clearly separated readable poses.
+The retained Rookie south pack predates this run and remains the accepted imagegen production pack.

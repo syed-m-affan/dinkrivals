@@ -89,7 +89,7 @@ void main() {
       container.read(saveDataProvider).isCharacterUnlocked(
             CharacterUnlockIds.rallyQueen,
           ),
-      isTrue,
+      isFalse,
     );
   });
 
@@ -247,7 +247,8 @@ void main() {
     expect(container.read(rivalChallengeProvider), isNull);
   });
 
-  testWidgets('winning Showman challenge unlocks Showman', (tester) async {
+  testWidgets('Showman cannot unlock through a direct challenge',
+      (tester) async {
     final game = DinkRivalsGame();
     final container = await _container(game);
     addTearDown(container.dispose);
@@ -268,7 +269,7 @@ void main() {
         container.read(saveDataProvider).isCharacterUnlocked(
               CharacterUnlockIds.showman,
             ),
-        isTrue);
+        isFalse);
     expect(container.read(rivalChallengeProvider), isNull);
   });
 

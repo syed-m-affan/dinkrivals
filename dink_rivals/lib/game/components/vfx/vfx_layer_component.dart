@@ -41,6 +41,8 @@ class VfxLayerComponent extends Component {
   final DinkRivalsGame game;
   final Map<VfxSprite, ui.Image> _sprites = {};
   final List<_ActiveVfx> _effects = [];
+  final Paint _effectPaint = Paint()..filterQuality = FilterQuality.none;
+  final Paint _trailPaint = Paint()..filterQuality = FilterQuality.none;
   final List<_TrailSample> _trailSamples = List<_TrailSample>.generate(
     _maxTrailSamples,
     (_) => _TrailSample(),
@@ -105,8 +107,7 @@ class VfxLayerComponent extends Component {
         image,
         Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
         dst,
-        Paint()
-          ..filterQuality = FilterQuality.none
+        _effectPaint
           ..colorFilter = ColorFilter.mode(
             Color.fromRGBO(255, 255, 255, opacity),
             BlendMode.modulate,
@@ -346,8 +347,7 @@ class VfxLayerComponent extends Component {
         image,
         Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
         dst,
-        Paint()
-          ..filterQuality = FilterQuality.none
+        _trailPaint
           ..colorFilter = ColorFilter.mode(
             Color.fromRGBO(255, 255, 255, opacity),
             BlendMode.modulate,
